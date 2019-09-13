@@ -1,3 +1,4 @@
-export function getsymbol(a: string) {
-  return Symbol.for(a);
-}
+import html, { h } from "./html";
+
+export { html };
+export { h as createElemet, h };
