@@ -1,3 +1,5 @@
+import { isstring, isarray, isobject, isfunction } from "./util"
+
 export default class setlikearray extends Array {
   constructor() {
     super();
