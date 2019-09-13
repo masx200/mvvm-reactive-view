@@ -17,8 +17,8 @@
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {
-        "htm": "^2.2.1",
-        "dom-element-attribute-agent-proxy": "https://github.com/masx200/dom-element-attribute-agent-proxy.git"
+        "dom-element-attribute-agent-proxy": "https://github.com/masx200/dom-element-attribute-agent-proxy.git",
+        "htm": "^2.2.1"
     },
     "devDependencies": {
         "rollup": "^1.21.2",

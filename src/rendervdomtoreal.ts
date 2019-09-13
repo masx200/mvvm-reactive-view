@@ -3,17 +3,23 @@ import createeleattr from "dom-element-attribute-agent-proxy";
 // import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 
-export default function render(vdom: Virtualdom | string): HTMLElement | Text {
+export default function render(
+  vdom: Virtualdom | string
+): HTMLElement | Text | SVGSVGElement {
   if (typeof vdom === "string") {
     return createtextnode(vdom);
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
-    let element: HTMLElement;
+    let element: HTMLElement | SVGSVGElement;
     if (typeof vdom.type === "string") {
       if (vdom.type === "script") {
         /* 禁止加载脚本 */
         return createtextnode("");
+      } else if (vdom.type === "svg") {
+        /* 没想到svg的创建方式这么特别?否则显示不出svg */
+        element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      } else {
+        element = createnativeelement(vdom.type);
       }
-      element = createnativeelement(vdom.type);
     } else if (typeof vdom.type == "function") {
       element = createcostumelemet(vdom.type);
     } else {
@@ -26,7 +32,10 @@ export default function render(vdom: Virtualdom | string): HTMLElement | Text {
 
       element
     );
-
+    if (vdom.type === "svg") {
+      /* 没想到svg的创建方式这么特别?否则显示不出svg */
+      element.innerHTML = element.innerHTML;
+    }
     return element;
   } else {
     throw TypeError("invalid element type!");
