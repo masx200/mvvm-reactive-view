@@ -1,6 +1,6 @@
 export default function(
   ele:
-    | HTMLElement
+     HTMLElement
     | Text
     | Array<HTMLElement | Text | SVGSVGElement>
     | SVGSVGElement,
@@ -8,8 +8,11 @@ export default function(
 ) {
   container.innerHTML = "";
   if (ele instanceof Array) {
-    ele.forEach(e => container.appendChild(e));
+    ele.forEach(e => appendchild(container,e));
   } else {
-    container.appendChild(ele);
+    appendchild(container,ele);
   }
+}
+function appendchild(container,ele){
+container.appendChild(ele);
 }
