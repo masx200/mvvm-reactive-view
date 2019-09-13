@@ -1,10 +1,17 @@
 export default function(
   ele:
+    | Array<
+        | HTMLElement
+        | Text
+        | SVGSVGElement
+        | DocumentFragment
+        | SVGElement
+        | Element
+      >
     | SVGElement
     | DocumentFragment
     | HTMLElement
     | Text
-    | Array<HTMLElement | Text | SVGSVGElement | DocumentFragment | SVGElement>
     | SVGSVGElement
     | Element,
   container: HTMLElement | SVGSVGElement | SVGElement | Element
