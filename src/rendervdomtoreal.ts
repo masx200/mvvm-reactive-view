@@ -67,5 +67,5 @@ function createsvgelement() {
   return document.createElementNS("http://www.w3.org/2000/svg", "svg");
 }
 function createnonescript(){
-return  createtextnode("");
+return  document.createDocumentFragment()
 }
