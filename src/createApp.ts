@@ -4,7 +4,7 @@ import render from "./rendervdomtoreal";
 import mount from "./mount";
 export default function(
   vdom: Virtualdom | string | Array<Virtualdom | string>,
-  container: HTMLElement
+  container: HTMLElement | Element
 ) {
   const el = container;
   if (!isvalidvdom(vdom)) {

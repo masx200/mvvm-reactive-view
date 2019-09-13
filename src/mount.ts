@@ -5,8 +5,9 @@ export default function(
     | HTMLElement
     | Text
     | Array<HTMLElement | Text | SVGSVGElement | DocumentFragment | SVGElement>
-    | SVGSVGElement,
-  container: HTMLElement | SVGSVGElement
+    | SVGSVGElement
+    | Element,
+  container: HTMLElement | SVGSVGElement | SVGElement | Element
 ) {
   container.innerHTML = "";
   let eles: Array<any>;
@@ -19,8 +20,8 @@ export default function(
   eles.forEach(e => appendchild(container, e));
 }
 export function appendchild(
-  container: HTMLElement | SVGSVGElement,
-  ele: HTMLElement | SVGElement
+  container: HTMLElement | SVGSVGElement | SVGElement | Element,
+  ele: HTMLElement | SVGElement | Element
 ) {
   container.appendChild(ele);
 }
