@@ -17,11 +17,11 @@
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {
-        "core-js": "^3.2.1",
         "dom-element-attribute-agent-proxy": "https://github.com/masx200/dom-element-attribute-agent-proxy.git",
         "htm": "^2.2.1"
     },
     "devDependencies": {
+        "core-js": "^3.2.1",
         "rollup": "^1.21.2",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",

@@ -1,3 +1,4 @@
+import { appendchild } from "./dom";
 export default function(
   ele:
     | Array<
@@ -25,10 +26,4 @@ export default function(
     eles = [ele];
   }
   eles.forEach(e => appendchild(container, e));
-}
-export function appendchild(
-  container: HTMLElement | SVGSVGElement | SVGElement | Element,
-  ele: HTMLElement | SVGElement | Element
-) {
-  container.appendChild(ele);
 }

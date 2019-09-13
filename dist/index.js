@@ -13,6 +13,7 @@ function isarray(a) {
 
 class Virtualdom {
     constructor(type = "", props = {}, children = []) {
+        this.props = {};
         this.children = [];
         Object.assign(this, { type, props, children });
         Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
@@ -61,6 +62,26 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
+function appendchild(container, ele) {
+    container.appendChild(ele);
+}
+function createsvgelement() {
+    return document.createElementNS(svgnamespace, "svg");
+}
+function createnonescript() {
+    return document.createDocumentFragment();
+}
+function createnativeelement(type) {
+    return document.createElement(type);
+}
+function createElementNS(namespace, name) {
+    return document.createElementNS(namespace, name);
+}
+function createtextnode(data) {
+    return document.createTextNode(data);
+}
+const svgnamespace = "http://www.w3.org/2000/svg";
+
 function mount (ele, container) {
     container.innerHTML = "";
     let eles;
@@ -71,9 +92,6 @@ function mount (ele, container) {
         eles = [ele];
     }
     eles.forEach(e => appendchild(container, e));
-}
-function appendchild(container, ele) {
-    container.appendChild(ele);
 }
 
 function isobject$1(a) {
@@ -163,7 +181,6 @@ class setlikearray extends Array {
     }
 }
 
-const svgnamespace = "http://www.w3.org/2000/svg";
 function throwinvalideletype() {
     throw TypeError("invalid element type!");
 }
@@ -211,26 +228,11 @@ function render(vdom, namespace) {
         throwinvalideletype();
     }
 }
-function createnativeelement(type) {
-    return document.createElement(type);
-}
-function createElementNS(namespace, name) {
-    return document.createElementNS(namespace, name);
-}
-function createtextnode(data) {
-    return document.createTextNode(data);
-}
 const customElementsarray = new setlikearray();
 function createcostumelemet(initclass) {
     customElementsarray.push(initclass);
     customElements.define("c-" + customElementsarray.indexOf(initclass), initclass);
     return new initclass();
-}
-function createsvgelement() {
-    return document.createElementNS(svgnamespace, "svg");
-}
-function createnonescript() {
-    return document.createDocumentFragment();
 }
 
 function createApp (vdom, container) {

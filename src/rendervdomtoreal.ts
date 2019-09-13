@@ -1,4 +1,11 @@
-const svgnamespace = "http://www.w3.org/2000/svg";
+import {
+  svgnamespace,
+  createsvgelement,
+  createnonescript,
+  createnativeelement,
+  createElementNS,
+  createtextnode
+} from "./dom";
 function throwinvalideletype() {
   throw TypeError("invalid element type!");
 }
@@ -65,15 +72,7 @@ export default function render(
     // throw TypeError("invalid element type!");
   }
 }
-export function createnativeelement(type: string) {
-  return document.createElement(type);
-}
-export function createElementNS(namespace: string, name: string) {
-  return document.createElementNS(namespace, name);
-}
-export function createtextnode(data: string) {
-  return document.createTextNode(data);
-}
+
 export interface Class {
   new (): object;
   (): object;
@@ -87,10 +86,4 @@ function createcostumelemet(initclass: Class | Function): HTMLElement {
     initclass
   );
   return new initclass();
-}
-export function createsvgelement() {
-  return document.createElementNS(svgnamespace, "svg");
-}
-export function createnonescript() {
-  return document.createDocumentFragment();
 }
