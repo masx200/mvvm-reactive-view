@@ -1,3 +1,4 @@
+function throwinvalideletype(){throw TypeError("invalid element type!");}
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
 // import { isstring, isarray, isobject, isfunction } from "./util";
@@ -25,7 +26,8 @@ export default function render(
     } else if (typeof vdom.type == "function") {
       element = createcostumelemet(vdom.type);
     } else {
-      throw TypeError("invalid element type!");
+throwinvalideletype()    
+ // throw TypeError("invalid element type!");
     }
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
@@ -40,7 +42,9 @@ export default function render(
     }
     return element;
   } else {
-    throw TypeError("invalid element type!");
+  
+throwinvalideletype()
+ // throw TypeError("invalid element type!");
   }
 }
 function createnativeelement(type: string) {
