@@ -11,7 +11,11 @@
     "rootDir": "./",
     "allowJs": true,
     "sourceMap": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"] // 此处映射是相对于"baseUrl"
+    }
   },
   "exclude": ["node_modules", "**/node_modules/*"],
   "include": ["src/**/*.ts"]

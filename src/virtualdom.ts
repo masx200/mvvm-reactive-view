@@ -1,4 +1,8 @@
+import { Class } from "./rendervdomtoreal";
 export default class Virtualdom {
+  type: string | Function | undefined | Class;
+  props: object | undefined;
+  children: Array<Virtualdom | string> = [];
   constructor(
     type: Function | string = "",
     props: object = {},

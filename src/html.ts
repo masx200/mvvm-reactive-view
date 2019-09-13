@@ -1,15 +1,15 @@
 import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
-import htm from "htm/dist/htm.mjs";
+import htm from "htm";
 export function h(
   type: Function | string = "",
   props: any = {},
   ...children: Array<Virtualdom | string>
-): Virtualdom {
+): Virtualdom | Array<Virtualdom | string> {
   // | Array<Virtualdom | string>
   // if(isarray()){}
   /* add fragment element */
-  if ("" === type) {
+  if (typeof type === "string" && "" === type) {
     return children;
   }
   return new Virtualdom(
