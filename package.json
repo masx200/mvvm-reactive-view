@@ -1,0 +1,15 @@
+{
+    "name": "mvvm-reactive-view",
+    "version": "1.0.0",
+    "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
+    "main": "index.js",
+    "scripts": {},
+    "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
+    "keywords": [],
+    "author": "masx200 <34191203+masx200@users.noreply.github.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/masx200/mvvm-reactive-view/issues"
+    },
+    "homepage": "https://github.com/masx200/mvvm-reactive-view#readme"
+}
