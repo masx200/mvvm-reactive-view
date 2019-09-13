@@ -90,7 +90,7 @@ core-js@^3.2.1:
 
 "dom-element-attribute-agent-proxy@https://github.com/masx200/dom-element-attribute-agent-proxy.git":
   version "1.0.1"
-  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#6cac111705d30da0d6b74e4a67b82c8971783da6"
+  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#3815d949b3feea63e62e6ca4d022e413486c78e5"
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"

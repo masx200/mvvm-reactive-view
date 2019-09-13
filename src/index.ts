@@ -1,4 +1,4 @@
-import "core-js/features/array/flat";
+// import "core-js/features/array/flat";
 import html, { h } from "./html";
 
 export { html };

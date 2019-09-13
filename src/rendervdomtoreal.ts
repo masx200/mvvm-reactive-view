@@ -49,6 +49,8 @@ export default function render(
           /* 没想到svg的创建方式这么特别?否则显示不出svg */
           //   element.innerHTML = element.innerHTML;
           return render(e, svgnamespace);
+        } else if (namespace) {
+          return render(e, namespace);
         } else {
           return render(e);
         }

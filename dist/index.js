@@ -23,9 +23,9 @@ var n=function(t,r,u,e){for(var p=1;p<r.length;p++){var s=r[p],h="number"==typeo
 
 function h(type = "", props = {}, ...children) {
     if (typeof type === "string" && "" === type) {
-        return children;
+        return children.flat();
     }
-    return new Virtualdom(isstring(type) || isfunction(type) ? type : "", isobject(props) ? props : {}, children);
+    return new Virtualdom(isstring(type) || isfunction(type) ? type : "", isobject(props) ? props : {}, children.flat());
 }
 const html = htm.bind(h);
 function isvalidvdom(v) {
@@ -40,7 +40,9 @@ function isvalidvdom(v) {
             : true;
     }
     else if (v instanceof Virtualdom) {
-        flag = true;
+        if (isvalidvdom(v.children)) {
+            flag = true;
+        }
     }
     else {
         if (isstring(v)) {
@@ -61,12 +63,17 @@ function assertvalidvirtualdom(...args) {
 
 function mount (ele, container) {
     container.innerHTML = "";
+    let eles;
     if (ele instanceof Array) {
-        ele.forEach(e => container.appendChild(e));
+        eles = ele;
     }
     else {
-        container.appendChild(ele);
+        eles = [ele];
     }
+    eles.forEach(e => appendchild(container, e));
+}
+function appendchild(container, ele) {
+    container.appendChild(ele);
 }
 
 function isobject$1(a) {
@@ -76,7 +83,9 @@ function isstring$1(a) {
     return typeof a === "string";
 }
 function createeleattragentreadwrite(ele) {
-    if (!(ele instanceof HTMLElement || ele instanceof SVGSVGElement)) {
+    if (!(ele instanceof HTMLElement ||
+        ele instanceof SVGElement ||
+        ele instanceof Element)) {
         throw TypeError("invalid HTMLElement!");
     }
     var temp = Object.create(null);
@@ -144,15 +153,21 @@ class setlikearray extends Array {
     }
     push(...items) {
         items.forEach(item => {
-            if (!this.includes(item)) {
-                super.push(item);
+            if (isfunction(item) || isobject(item)) {
+                if (!this.includes(item)) {
+                    super.push(item);
+                }
             }
         });
         return this.length;
     }
 }
 
-function render(vdom) {
+const svgnamespace = "http://www.w3.org/2000/svg";
+function throwinvalideletype() {
+    throw TypeError("invalid element type!");
+}
+function render(vdom, namespace) {
     if (typeof vdom === "string") {
         return createtextnode(vdom);
     }
@@ -160,35 +175,47 @@ function render(vdom) {
         let element;
         if (typeof vdom.type === "string") {
             if (vdom.type === "script") {
-                return createtextnode("");
+                return createnonescript();
             }
             else if (vdom.type === "svg") {
                 element = createsvgelement();
             }
             else {
-                element = createnativeelement(vdom.type);
+                element = namespace
+                    ? createElementNS(namespace, vdom.type)
+                    : createnativeelement(vdom.type);
             }
         }
         else if (typeof vdom.type == "function") {
             element = createcostumelemet(vdom.type);
         }
         else {
-            throw TypeError("invalid element type!");
+            throwinvalideletype();
         }
         var attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
-        mount(vdom.children.map(e => render(e)), element);
-        if (vdom.type === "svg") {
-            element.innerHTML = element.innerHTML;
-        }
+        mount(vdom.children.map(e => {
+            if (vdom.type === "svg") {
+                return render(e, svgnamespace);
+            }
+            else if (namespace) {
+                return render(e, namespace);
+            }
+            else {
+                return render(e);
+            }
+        }), element);
         return element;
     }
     else {
-        throw TypeError("invalid element type!");
+        throwinvalideletype();
     }
 }
 function createnativeelement(type) {
     return document.createElement(type);
+}
+function createElementNS(namespace, name) {
+    return document.createElementNS(namespace, name);
 }
 function createtextnode(data) {
     return document.createTextNode(data);
@@ -200,7 +227,10 @@ function createcostumelemet(initclass) {
     return new initclass();
 }
 function createsvgelement() {
-    return document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    return document.createElementNS(svgnamespace, "svg");
+}
+function createnonescript() {
+    return document.createDocumentFragment();
 }
 
 function createApp (vdom, container) {

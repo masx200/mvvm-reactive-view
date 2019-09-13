@@ -46,10 +46,6 @@ var vdom = html`
     </svg>
   </h1>
   <div>
-    <link
-      href="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/main.b9c7ffd191cff11a9b96.css"
-      rel="stylesheet"
-    />
     <div>
       <noscript>You need to enable JavaScript to run this app.</noscript>
       <div id="root">
@@ -334,3 +330,4 @@ createApp(vdom, document.getElementById("root"));
 console.log(vdom);
 console.log(createApp);
 console.log(h);
+console.log([].flat);
