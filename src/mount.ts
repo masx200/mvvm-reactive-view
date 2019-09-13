@@ -1,18 +1,26 @@
 export default function(
   ele:
-     HTMLElement
+    | SVGElement
+    | DocumentFragment
+    | HTMLElement
     | Text
-    | Array<HTMLElement | Text | SVGSVGElement>
+    | Array<HTMLElement | Text | SVGSVGElement | DocumentFragment | SVGElement>
     | SVGSVGElement,
   container: HTMLElement | SVGSVGElement
 ) {
   container.innerHTML = "";
+  let eles: Array<any>;
   if (ele instanceof Array) {
-    ele.forEach(e => appendchild(container,e));
+    eles = ele;
   } else {
-    appendchild(container,ele);
+    // appendchild(container, ele);
+    eles = [ele];
   }
+  eles.forEach(e => appendchild(container, e));
 }
-function appendchild(container,ele){
-container.appendChild(ele);
+export function appendchild(
+  container: HTMLElement | SVGSVGElement,
+  ele: HTMLElement | SVGElement
+) {
+  container.appendChild(ele);
 }

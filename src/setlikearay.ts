@@ -1,4 +1,4 @@
-import { isstring, isarray, isobject, isfunction } from "./util"
+import { isstring, isarray, isobject, isfunction } from "./util";
 
 export default class setlikearray extends Array {
   constructor() {
@@ -7,11 +7,11 @@ export default class setlikearray extends Array {
   }
   push(...items: any[]): number {
     items.forEach(item => {
-if(isfunction(item)||isobject(item)){
-      if (!this.includes(item)) {
-        super.push(item);
+      if (isfunction(item) || isobject(item)) {
+        if (!this.includes(item)) {
+          super.push(item);
+        }
       }
-}
     });
 
     return this.length;

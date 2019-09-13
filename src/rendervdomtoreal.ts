@@ -1,4 +1,7 @@
-function throwinvalideletype(){throw TypeError("invalid element type!");}
+const svgnamespace = "http://www.w3.org/2000/svg";
+function throwinvalideletype() {
+  throw TypeError("invalid element type!");
+}
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
 // import { isstring, isarray, isobject, isfunction } from "./util";
@@ -6,7 +9,7 @@ import Virtualdom from "./virtualdom";
 
 export default function render(
   vdom: Virtualdom | string
-): HTMLElement | Text | SVGSVGElement {
+): HTMLElement | Text | SVGSVGElement | DocumentFragment {
   if (typeof vdom === "string") {
     return createtextnode(vdom);
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
@@ -14,9 +17,8 @@ export default function render(
     if (typeof vdom.type === "string") {
       if (vdom.type === "script") {
         /* 禁止加载脚本 */
-        
-  return createnonescript()
 
+        return createnonescript();
       } else if (vdom.type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
@@ -26,8 +28,8 @@ export default function render(
     } else if (typeof vdom.type == "function") {
       element = createcostumelemet(vdom.type);
     } else {
-throwinvalideletype()    
- // throw TypeError("invalid element type!");
+      throwinvalideletype();
+      // throw TypeError("invalid element type!");
     }
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
@@ -42,15 +44,14 @@ throwinvalideletype()
     }
     return element;
   } else {
-  
-throwinvalideletype()
- // throw TypeError("invalid element type!");
+    throwinvalideletype();
+    // throw TypeError("invalid element type!");
   }
 }
-function createnativeelement(type: string) {
+export function createnativeelement(type: string) {
   return document.createElement(type);
 }
-function createtextnode(data: string) {
+export function createtextnode(data: string) {
   return document.createTextNode(data);
 }
 export interface Class {
@@ -67,9 +68,9 @@ function createcostumelemet(initclass: Class | Function): HTMLElement {
   );
   return new initclass();
 }
-function createsvgelement() {
+export function createsvgelement() {
   return document.createElementNS("http://www.w3.org/2000/svg", "svg");
 }
-function createnonescript(){
-return  document.createDocumentFragment()
+export function createnonescript() {
+  return document.createDocumentFragment();
 }

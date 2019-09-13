@@ -33,7 +33,9 @@ export function isvalidvdom(v: any) {
       ? false
       : true;
   } else if (v instanceof Virtualdom) {
-    flag = true;
+    if (isvalidvdom(v.children)) {
+      flag = true;
+    }
   } else {
     if (isstring(v)) {
       flag = true;

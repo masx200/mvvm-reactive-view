@@ -85,7 +85,7 @@ commander@^2.20.0:
 
 "dom-element-attribute-agent-proxy@https://github.com/masx200/dom-element-attribute-agent-proxy.git":
   version "1.0.1"
-  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#ba6e03df8baf54e85937677e4b5aea9ffb258f81"
+  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#6cac111705d30da0d6b74e4a67b82c8971783da6"
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
