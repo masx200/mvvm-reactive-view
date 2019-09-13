@@ -4,7 +4,9 @@
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "main": "dist/index.js",
     "types": "src/index.ts",
-    "scripts": {},
+    "scripts": {
+        "build": "tsc -b tsconfig.json && rollup -c rollup.config.js"
+    },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
     "author": "masx200 <34191203+masx200@users.noreply.github.com>",
