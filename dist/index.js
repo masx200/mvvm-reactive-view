@@ -138,6 +138,10 @@ function createeleattragentreadwrite(ele) {
 }
 
 class setlikearray extends Array {
+    constructor() {
+        super();
+        Object.defineProperty(this, Symbol.toStringTag, { value: "setlikearray" });
+    }
     push(...items) {
         items.forEach(item => {
             if (!this.includes(item)) {
@@ -159,7 +163,7 @@ function render(vdom) {
                 return createtextnode("");
             }
             else if (vdom.type === "svg") {
-                element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                element = createsvgelement();
             }
             else {
                 element = createnativeelement(vdom.type);
@@ -195,8 +199,23 @@ function createcostumelemet(initclass) {
     customElements.define("c-" + customElementsarray.indexOf(initclass), initclass);
     return new initclass();
 }
+function createsvgelement() {
+    return document.createElementNS("http://www.w3.org/2000/svg", "svg");
+}
 
 function createApp (vdom, container) {
+    const el = container;
+    if (!isvalidvdom(vdom)) {
+        throw TypeError("invalid Virtualdom " + "\n" + JSON.stringify(vdom, null, 4));
+    }
+    if (!(el instanceof HTMLElement)) {
+        throw TypeError("invalid container HTMLElement!");
+    }
+    if (el === document.body ||
+        el === document.documentElement ||
+        el === document.head) {
+        throw Error("Do not mount  to <html> or <body> <head>- mount to normal elements instead.");
+    }
     let elesarray;
     if (vdom instanceof Array) {
         elesarray = vdom;
@@ -205,6 +224,7 @@ function createApp (vdom, container) {
         elesarray = [vdom];
     }
     mount(elesarray.map(e => render(e)), container);
+    return container;
 }
 
 export { createApp, h as createElemet, h, assertvalidvirtualdom as html };

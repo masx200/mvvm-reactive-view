@@ -1,4 +1,4 @@
-import { html, createApp } from "../dist/index.js";
+import { html, createApp, h } from "../dist/index.js";
 var vdom = html`
   <h1>
     <svg
@@ -332,3 +332,5 @@ var vdom = html`
 `;
 createApp(vdom, document.getElementById("root"));
 console.log(vdom);
+console.log(createApp);
+console.log(h);

@@ -22,7 +22,7 @@ export function h(
 const html = htm.bind(h);
 
 /* 如果出现未闭合标签会产生错误的vdom */
-function isvalidvdom(v: any) {
+export function isvalidvdom(v: any) {
   var flag = false;
   if (isarray(v)) {
     flag = v

@@ -16,7 +16,7 @@ export default function render(
         return createtextnode("");
       } else if (vdom.type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
-        element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        element = createsvgelement();
       } else {
         element = createnativeelement(vdom.type);
       }
@@ -60,4 +60,7 @@ function createcostumelemet(initclass: Class | Function): HTMLElement {
     initclass
   );
   return new initclass();
+}
+function createsvgelement() {
+  return document.createElementNS("http://www.w3.org/2000/svg", "svg");
 }
