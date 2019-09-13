@@ -1,7 +1,7 @@
 {
     "module": "dist/index.js",
     "name": "mvvm-reactive-view",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "main": "dist/index.js",
     "types": "src/index.ts",

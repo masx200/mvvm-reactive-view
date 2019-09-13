@@ -1,6 +1,6 @@
 import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
-import htm from "htm";
+import htm from "htm/dist/htm.module.js";
 export function h(
   type: Function | string = "",
   props: any = {},
