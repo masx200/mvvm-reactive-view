@@ -14,7 +14,7 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"] // 此处映射是相对于"baseUrl"
+      "*": ["node_modules/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"],
