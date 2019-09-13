@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../src/index.ts"],"sourcesContent":["export function getsymbol(a: string) {\r\n  return Symbol.for(a);\r\n}\r\n"],"names":[],"mappings":"SAAgB,SAAS,CAAC,CAAS;IACjC,OAAO,MAAM,CAAC,GAAG,CAAC,CAAC,CAAC,CAAC;CACtB;;;;"}
