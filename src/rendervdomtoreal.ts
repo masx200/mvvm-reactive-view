@@ -10,6 +10,7 @@ export default function render(vdom: Virtualdom | string): HTMLElement | Text {
     let element: HTMLElement;
     if (typeof vdom.type === "string") {
       if (vdom.type === "script") {
+        /* 禁止加载脚本 */
         return createtextnode("");
       }
       element = createnativeelement(vdom.type);
