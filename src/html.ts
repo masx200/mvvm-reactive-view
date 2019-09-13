@@ -10,12 +10,12 @@ export function h(
   // if(isarray()){}
   /* add fragment element */
   if (typeof type === "string" && "" === type) {
-    return children;
+    return children.flat();
   }
   return new Virtualdom(
     isstring(type) || isfunction(type) ? type : "",
     isobject(props) ? props : {},
-    children
+    children.flat()
   );
 }
 
