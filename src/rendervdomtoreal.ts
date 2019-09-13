@@ -13,7 +13,9 @@ export default function render(
     if (typeof vdom.type === "string") {
       if (vdom.type === "script") {
         /* 禁止加载脚本 */
-        return createtextnode("");
+        
+  return createnonescript()
+
       } else if (vdom.type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
@@ -63,4 +65,7 @@ function createcostumelemet(initclass: Class | Function): HTMLElement {
 }
 function createsvgelement() {
   return document.createElementNS("http://www.w3.org/2000/svg", "svg");
+}
+function createnonescript(){
+return  createtextnode("");
 }
