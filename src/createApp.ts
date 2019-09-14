@@ -21,9 +21,7 @@ export default function(
     el === document.documentElement ||
     el === document.head
   ) {
-    throw Error(
-      "Do not mount  to <html> or <body> <head>- mount to normal elements instead."
-    );
+    throw Error("Do not mount  to <html> or <body> <head>.");
   }
   let elesarray: Array<string | Virtualdom>;
   if (vdom instanceof Array) {

@@ -1,14 +1,15 @@
-import flattenDepth from "lodash/flattenDepth";
+// import flattenDepth from "lodash/flattenDepth";
 // import flattenDepth from "core-js-pure/features/array/flat";
 if (typeof Array.prototype.flat !== "function") {
-  Array.prototype.flat = function(depth: number = 1) {
-    return flattenDepth(this, depth);
-  };
-  //arrayflat;
+  Array.prototype.flat =
+    //   function(depth: number = 1) {
+    //     return flattenDepth(this, depth);
+    //   };
+    arrayflat;
 }
 
-/* function arrayflat(depth: number = 1) {
-  if (depth === 1) {
+function arrayflat(depth: number = 1) {
+  if (depth <= 1) {
     return this.reduce(
       (acc: { concat: (arg0: any) => void }, val: any) => acc.concat(val),
       []
@@ -24,6 +25,7 @@ function flattenDeep(arr1: any[]) {
     []
   );
 }
+/*
 export function flat(arr: any, depth?: any) {
   return arrayflat.call(arr, depth);
 }
