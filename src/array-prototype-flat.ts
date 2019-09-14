@@ -1,5 +1,5 @@
 if (typeof Array.prototype.flat !== "function") {
-  Array.prototype.flat = function(depth = 1) {
+  Array.prototype.flat = function(depth: number = 1) {
     if (depth === 1) {
       return this.reduce(
         (acc: { concat: (arg0: any) => void }, val: any) => acc.concat(val),
