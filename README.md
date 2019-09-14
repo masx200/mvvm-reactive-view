@@ -13,3 +13,9 @@ cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
 ```powershell
 yarn add https://github.com/masx200/mvvm-reactive-view.git
 ```
+
+# webcomponent custom-elements polyfill
+
+```html
+<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
+```
