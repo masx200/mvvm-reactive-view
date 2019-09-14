@@ -2,7 +2,7 @@ import {
   createRef,
   html,
   createApp,
-  h,
+  // h,
   createElemet,
   createState,
   watch
@@ -405,3 +405,18 @@ console.log(vdom3);
 watch(state1, console.log);
 watch(state2, console.log);
 document.body.appendChild(createApp(vdom3, document.createElement("div")));
+//////////////////////
+const state3 = createState("<a>绑定innerhtml</a>");
+const vdom4 = html`
+  <div *text=${state3}></div>
+  <div *html=${state3}></div>
+`;
+// setInterval(() => {
+//   state3.value = String(Math.random());
+// }, 2000);
+watch(state1, state => (state3.value = state.value));
+watch(state2, state => (state1.value = state.value));
+console.log(state3);
+watch(state3, console.log);
+console.log(vdom4);
+document.body.appendChild(createApp(vdom4, document.createElement("div")));

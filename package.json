@@ -6,7 +6,8 @@
     "main": "dist/index.js",
     "types": "src/index.ts",
     "scripts": {
-        "build": " rollup -c rollup.config.js"
+        "build": " rollup -c rollup.config.js",
+        "test": "live-server"
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],

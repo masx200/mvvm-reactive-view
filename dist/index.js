@@ -219,6 +219,13 @@ function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
 
+function watch(state, callback) {
+    state[subscribesymbol](callback);
+    requestAnimationFrame(() => {
+        state[addallistenerssymbol]();
+    });
+}
+
 var directives = {
     ref(ele, ref, vdom) {
         if (typeof ref == "object") {
@@ -234,6 +241,14 @@ var directives = {
                 ele.innerHTML = html;
             });
         }
+        else if (html instanceof Primitivestate) {
+            watch(html, (state) => {
+                ele.innerHTML = String(state.value);
+            });
+            requestAnimationFrame(() => {
+                ele.innerHTML = String(html.value);
+            });
+        }
         else {
             throw TypeError("invalid html");
         }
@@ -242,6 +257,14 @@ var directives = {
         if (typeof text == "string") {
             requestAnimationFrame(() => {
                 ele.textContent = text;
+            });
+        }
+        else if (text instanceof Primitivestate) {
+            watch(text, (state) => {
+                ele.textContent = String(state.value);
+            });
+            requestAnimationFrame(() => {
+                ele.textContent = String(text.value);
             });
         }
         else {
@@ -546,10 +569,6 @@ function createstate (init) {
             }
         }
     });
-}
-
-function watch(state, callback) {
-    state[subscribesymbol](callback);
 }
 
 export { createApp, h as createElemet, createref as createRef, createstate as createState, h, assertvalidvirtualdom as html, watch };
