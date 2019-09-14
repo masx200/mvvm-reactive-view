@@ -1,3 +1,4 @@
+export const eventlistenerssymbol = Symbol("eventlisteners");
 import { isArray, isFunction, isString } from "./util";
 export default function(
   element: Element,
@@ -18,9 +19,11 @@ function addlisteners(
   callarray: Array<EventListener>
 ) {
   callarray.forEach((call: EventListener) => {
+    ele[eventlistenerssymbol].push([event, call]);
     domaddlisten(ele, event, call);
   });
 }
+
 function domaddlisten(ele: Element, event: string, call: EventListener) {
   ele.addEventListener(event, call);
 }

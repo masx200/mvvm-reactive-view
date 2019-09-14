@@ -1,6 +1,7 @@
 import primitivestate, { dispatchsymbol } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 export default class Virtualdom {
+  element: undefined | Element;
   type: string | Function | undefined | Class;
   props: object = {};
   children: Array<Virtualdom | string> = [];

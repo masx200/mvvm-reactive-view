@@ -197,6 +197,28 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
+const eventlistenerssymbol = Symbol("eventlisteners");
+function onevent (element, eventname, callback) {
+    if (typeof callback === "function") {
+        addlisteners(element, eventname, [callback]);
+    }
+    else if (isarray(callback)) {
+        addlisteners(element, eventname, callback);
+    }
+    else {
+        throw TypeError("invalid EventListener");
+    }
+}
+function addlisteners(ele, event, callarray) {
+    callarray.forEach((call) => {
+        ele[eventlistenerssymbol].push([event, call]);
+        domaddlisten(ele, event, call);
+    });
+}
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
 var directives = {
     ref(ele, ref, vdom) {
         if (typeof ref == "object") {
@@ -227,26 +249,6 @@ var directives = {
         }
     }
 };
-
-function onevent (element, eventname, callback) {
-    if (typeof callback === "function") {
-        addlisteners(element, eventname, [callback]);
-    }
-    else if (isarray(callback)) {
-        addlisteners(element, eventname, callback);
-    }
-    else {
-        throw TypeError("invalid EventListener");
-    }
-}
-function addlisteners(ele, event, callarray) {
-    callarray.forEach((call) => {
-        domaddlisten(ele, event, call);
-    });
-}
-function domaddlisten(ele, event, call) {
-    ele.addEventListener(event, call);
-}
 
 class setlikearray extends Array {
     constructor() {
@@ -427,6 +429,7 @@ function createeleattragentreadwrite(ele) {
     });
 }
 
+const virtualdomsymbol = Symbol("virtualdom");
 function throwinvalideletype() {
     throw TypeError("invalid element type!");
 }
@@ -457,6 +460,8 @@ function render(vdom, namespace) {
         }
         var attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
+        element[virtualdomsymbol] = vdom;
+        vdom.element = element;
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.value;
             primitivestate[subscribesymbol]((state) => {
@@ -474,6 +479,9 @@ function render(vdom, namespace) {
                 throw new Error("invalid directives " + name);
             }
         });
+        if (!element[eventlistenerssymbol]) {
+            element[eventlistenerssymbol] = [];
+        }
         Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });

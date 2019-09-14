@@ -1,3 +1,5 @@
+export const virtualdomsymbol = Symbol("virtualdom");
+import { eventlistenerssymbol } from "./onevent";
 import { subscribesymbol, addallistenerssymbol } from "./primitivestate";
 import directives from "./directives";
 import onevent from "./onevent";
@@ -54,7 +56,8 @@ export default function render(
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
     /* 添加常量的属性 */
-
+    element[virtualdomsymbol] = vdom;
+    vdom.element = element;
     /* 添加绑定属性 */
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
@@ -76,6 +79,10 @@ export default function render(
         throw new Error("invalid directives " + name);
       }
     });
+    if (!element[eventlistenerssymbol]) {
+      element[eventlistenerssymbol] = [];
+    }
+
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
       onevent(element, event, callbacks);
     });
