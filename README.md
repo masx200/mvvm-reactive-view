@@ -50,9 +50,19 @@ import {
   createRef,
   createElemet
 } from "https://masx200.github.io/mvvm-reactive-view/dist/index.js";
-
+const inputref = createRef();
 const vdom = html`
   <div>hello world!</div>
+  <input
+    @input=${e => console.log(e)}
+    *ref=${inputref}
+    @change=${e => console.log(e, inputref)}
+    id="code16"
+    readonly=""
+    class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
+    value=""
+  />
+
   <h1>mvvm-reactive-view</h1>
 `;
 
@@ -67,4 +77,14 @@ createApp(vdom, document.getElementById("root"));
 <script type="module" src="./index.js"></script>
 ```
 
-# 可在 webpack 中, 使用 babel-plugin-htm 预编译
+# 可在 webpack 中, 使用 babel-plugin-htm 预编译成虚拟 dom
+
+# 事件绑定
+
+属性名为'@'+事件名称,属性值绑定为回调函数
+
+# 使用指令
+
+属性名为'\*'+指令名称,属性值为值
+
+现已支持的指令有 'ref','html','text'
