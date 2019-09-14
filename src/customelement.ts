@@ -2,7 +2,11 @@ import { isfunction } from "./util";
 import { Class } from "./rendervdomtoreal";
 import setlikearray from "./setlikearay";
 const customElementsarray = new setlikearray();
-export function createcostumelemet(initclass: Class | Function): HTMLElement {
+export function createcostumelemet(
+  initclass: Class | Function,
+
+  children?: any[]
+): HTMLElement {
   if (isclassextendsHTMLElement(initclass)) {
     customElementsarray.push(initclass);
     const elementname = getcustomelementname(initclass);
@@ -11,7 +15,7 @@ export function createcostumelemet(initclass: Class | Function): HTMLElement {
       customElements.define(elementname, initclass);
     }
 
-    return new initclass();
+    return Reflect.construct(initclass, [children]); // (children);
   } else {
     throw TypeError("invalid custom element class !");
   }

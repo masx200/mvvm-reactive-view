@@ -43,30 +43,31 @@ export default function render(
           : createnativeelement(vdom.type);
       }
     } else if (typeof vdom.type == "function") {
-      element = createcostumelemet(vdom.type);
+      element = createcostumelemet(vdom.type, vdom.children);
     } else {
       throwinvalideletype();
       // throw TypeError("invalid element type!");
     }
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
+    /* 自定义组件不添加children,而是从构造函数传入 */
+    if (typeof vdom.type !== "function") {
+      mount(
+        vdom.children.map(e => {
+          if (vdom.type === "svg") {
+            /* 没想到svg的创建方式这么特别?否则显示不出svg */
+            //   element.innerHTML = element.innerHTML;
+            return render(e, svgnamespace);
+          } else if (namespace) {
+            return render(e, namespace);
+          } else {
+            return render(e);
+          }
+        }),
 
-    mount(
-      vdom.children.map(e => {
-        if (vdom.type === "svg") {
-          /* 没想到svg的创建方式这么特别?否则显示不出svg */
-          //   element.innerHTML = element.innerHTML;
-          return render(e, svgnamespace);
-        } else if (namespace) {
-          return render(e, namespace);
-        } else {
-          return render(e);
-        }
-      }),
-
-      element
-    );
-
+        element
+      );
+    }
     return element;
   } else {
     throwinvalideletype();
@@ -75,6 +76,5 @@ export default function render(
 }
 
 export interface Class {
-  new (): object;
-  (): object;
+  new (children?: any[]): HTMLElement;
 }
