@@ -899,5 +899,9 @@ function createApp (vdom, container) {
     return container;
 }
 
-export { createApp, h as createElemet, h, assertvalidvirtualdom as html };
+function createref (init) {
+    return { value: init };
+}
+
+export { createApp, h as createElemet, createref as createRef, h, assertvalidvirtualdom as html };
 //# sourceMappingURL=index.js.map
