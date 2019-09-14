@@ -664,7 +664,9 @@ var directives = {
     },
     html(ele, html) {
         if (typeof html == "string") {
-            ele.innerHTML = html;
+            requestAnimationFrame(() => {
+                ele.innerHTML = html;
+            });
         }
         else {
             throw TypeError("invalid html");
@@ -672,7 +674,9 @@ var directives = {
     },
     text(ele, text) {
         if (typeof text == "string") {
-            ele.textContent = text;
+            requestAnimationFrame(() => {
+                ele.textContent = text;
+            });
         }
         else {
             throw TypeError("invalid text");

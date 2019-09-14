@@ -357,3 +357,10 @@ document.body.appendChild(createApp(myele1, document.createElement("div")));
 
 console.log(Object.fromEntries);
 console.log(setImmediate);
+
+const vdom2 = html`
+  <div *text=${"<a>绑定textcontent</a>"}></div>
+  <div *html=${"<a>绑定innerhtml</a>"}></div>
+`;
+console.log(vdom2);
+document.body.appendChild(createApp(vdom2, document.createElement("div")));

@@ -7,15 +7,25 @@ export default {
     }
   },
   html(ele: Element, html: string) {
+    // ele.innerHTML = html;
+    // console.log(ele.outerHTML);
     if (typeof html == "string") {
-      ele.innerHTML = html;
+      requestAnimationFrame(() => {
+        ele.innerHTML = html;
+        //   console.log(ele.outerHTML);
+      });
     } else {
       throw TypeError("invalid html");
     }
   },
   text(ele: Element, text: string) {
+    // ele.textContent = text;
+    // console.log(ele.outerHTML);
     if (typeof text == "string") {
-      ele.textContent = text;
+      requestAnimationFrame(() => {
+        ele.textContent = text;
+        //   console.log(ele.outerHTML);
+      });
     } else {
       throw TypeError("invalid text");
     }
