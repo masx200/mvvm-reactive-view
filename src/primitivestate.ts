@@ -6,7 +6,7 @@ export const dispatchsymbol = getsymbol("dispatch");
 export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
-export default class {
+export default class Primitivestate {
   value: string | number | boolean | undefined;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];

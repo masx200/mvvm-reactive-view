@@ -1,7 +1,7 @@
 import isprimitive from "./isprimitive";
-import primitivestate, { dispatchsymbol } from "./primitivestate";
+import Primitivestate, { dispatchsymbol } from "./primitivestate";
 export default function(init: string | number | boolean | undefined) {
-  return new Proxy(new primitivestate(init), {
+  return new Proxy(new Primitivestate(init), {
     set(target, key, value) {
       if (key === "value" && isprimitive(value)) {
         if (target[key] !== value) {

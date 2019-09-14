@@ -82,7 +82,7 @@ const dispatchsymbol = getsymbol("dispatch");
 const subscribesymbol = getsymbol("subscribe");
 const removeallistenerssymbol = getsymbol("removeallisteners");
 const addallistenerssymbol = getsymbol("addallisteners");
-class primitivestate {
+class Primitivestate {
     constructor(init) {
         this[_a] = new EventTarget();
         this[_b] = [];
@@ -135,10 +135,10 @@ class Virtualdom {
             type,
             bindattr: Object.fromEntries(propsentries
                 .filter(([key]) => /[A-Za-z]/.test(key[0]))
-                .filter(e => e[1] instanceof primitivestate)),
+                .filter(e => e[1] instanceof Primitivestate)),
             props: Object.fromEntries(propsentries
                 .filter(([key]) => /[A-Za-z]/.test(key[0]))
-                .filter(e => !(e[1] instanceof primitivestate))),
+                .filter(e => !(e[1] instanceof Primitivestate))),
             children,
             onevent: Object.fromEntries(propsentries
                 .filter(([key]) => /\@/.test(key[0]))
@@ -526,7 +526,7 @@ function createref (init) {
 }
 
 function createstate (init) {
-    return new Proxy(new primitivestate(init), {
+    return new Proxy(new Primitivestate(init), {
         set(target, key, value) {
             if (key === "value" && isprimitive(value)) {
                 if (target[key] !== value) {
