@@ -1,4 +1,11 @@
-import { createRef, html, createApp, h, createElemet } from "../dist/index.js";
+import {
+  createRef,
+  html,
+  createApp,
+  h,
+  createElemet,
+  createState
+} from "../dist/index.js";
 const inputref = createRef();
 var vdom = html`
   <h1>
@@ -364,3 +371,30 @@ const vdom2 = html`
 `;
 console.log(vdom2);
 document.body.appendChild(createApp(vdom2, document.createElement("div")));
+
+const state1 = createState("<a>绑定textcontent</a>");
+
+const state2 = createState("<a>绑定innerhtml</a>");
+setInterval(() => {
+  state2.value = state2.value + "qw";
+  //   if (state2.value.length > 60) {
+  //     state2.value = "";
+  //   }
+  state1.value = state2.value;
+}, 2000);
+const vdom3 = html`
+  <textarea value=${state1}></textarea>
+  <input value=${state2} style='width:100%' @change=${[
+  e => {
+    state2.value = e.target.value;
+  }
+]}  
+@input=${[
+  e => {
+    state2.value = e.target.value;
+  }
+]}
+></input>
+`;
+console.log(vdom3);
+document.body.appendChild(createApp(vdom3, document.createElement("div")));

@@ -30,18 +30,6 @@ var fromPairs_1 = fromPairs;
 if ("function" !== typeof Object.fromEntries)
     Object.fromEntries = fromPairs_1;
 
-const globalthis = new Function("return this")();
-if (!globalthis.globalThis) {
-    globalthis.globalThis = globalthis;
-}
-const setImmediate = async (fn, ...args) => {
-    await Promise.resolve();
-    return fn(...args);
-};
-if (typeof globalthis.setImmediate !== "function") {
-    globalthis.setImmediate = setImmediate;
-}
-
 if (typeof Array.prototype.flat !== "function") {
     Array.prototype.flat =
         arrayflat;
@@ -58,6 +46,15 @@ function flattenDeep(arr1) {
     return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
 }
 
+function isundefined(a) {
+    return typeof a === "undefined";
+}
+function isnumber(a) {
+    return typeof a === "number";
+}
+function isboolean(a) {
+    return typeof a === "boolean";
+}
 function isobject(a) {
     return typeof a === "object" && a !== null;
 }
@@ -70,6 +67,61 @@ function isfunction(a) {
 function isarray(a) {
     return a instanceof Array && Array.isArray(a);
 }
+function getsymbol(a) {
+    return Symbol(a);
+}
+
+function isprimitive (a) {
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
+}
+
+var _a, _b;
+const eventtargetsymbol = Symbol("eventtatget");
+const memlisteners = Symbol("memlisteners");
+const dispatchsymbol = getsymbol("dispatch");
+const subscribesymbol = getsymbol("subscribe");
+const removeallistenerssymbol = getsymbol("removeallisteners");
+const addallistenerssymbol = getsymbol("addallisteners");
+class primitivestate {
+    constructor(init) {
+        this[_a] = new EventTarget();
+        this[_b] = [];
+        if (isprimitive(init)) {
+            this.value = init;
+        }
+        else {
+            throw TypeError("invalid primitive");
+        }
+        Object.defineProperty(this, Symbol.toStringTag, {
+            value: "primitivestate"
+        });
+    }
+    [(_a = eventtargetsymbol, _b = memlisteners, Symbol.toPrimitive)]() {
+        return this.value;
+    }
+    valueOf() {
+        return this.value;
+    }
+    toString() {
+        return String(this.value);
+    }
+    [dispatchsymbol]() {
+        this[eventtargetsymbol].dispatchEvent(new Event("value"));
+    }
+    [subscribesymbol](callback) {
+        this[memlisteners].push(["value", callback]);
+    }
+    [removeallistenerssymbol]() {
+        this[memlisteners].forEach(([value, callback]) => {
+            this[eventtargetsymbol].removeEventListener(value, callback);
+        });
+    }
+    [addallistenerssymbol]() {
+        this[memlisteners].forEach(([value, callback]) => {
+            this[eventtargetsymbol].addEventListener(value, callback);
+        });
+    }
+}
 
 class Virtualdom {
     constructor(type = "", props = {}, children = []) {
@@ -77,10 +129,16 @@ class Virtualdom {
         this.children = [];
         this.directives = {};
         this.onevent = {};
+        this.bindattr = {};
         const propsentries = Object.entries(props);
         Object.assign(this, {
             type,
-            props: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0]))),
+            bindattr: Object.fromEntries(propsentries
+                .filter(([key]) => /[A-Za-z]/.test(key[0]))
+                .filter(e => e[1] instanceof primitivestate)),
+            props: Object.fromEntries(propsentries
+                .filter(([key]) => /[A-Za-z]/.test(key[0]))
+                .filter(e => !(e[1] instanceof primitivestate))),
             children,
             onevent: Object.fromEntries(propsentries
                 .filter(([key]) => /\@/.test(key[0]))
@@ -140,7 +198,7 @@ function assertvalidvirtualdom(...args) {
 }
 
 var directives = {
-    ref(ele, ref) {
+    ref(ele, ref, vdom) {
         if (typeof ref == "object") {
             ref.value = ele;
         }
@@ -148,7 +206,7 @@ var directives = {
             throw TypeError("invalid ref");
         }
     },
-    html(ele, html) {
+    html(ele, html, vdom) {
         if (typeof html == "string") {
             requestAnimationFrame(() => {
                 ele.innerHTML = html;
@@ -158,7 +216,7 @@ var directives = {
             throw TypeError("invalid html");
         }
     },
-    text(ele, text) {
+    text(ele, text, vdom) {
         if (typeof text == "string") {
             requestAnimationFrame(() => {
                 ele.textContent = text;
@@ -336,12 +394,15 @@ function createeleattragentreadwrite(ele) {
             return false;
         },
         getOwnPropertyDescriptor(target, key) {
+            const otherdescipter = {
+                enumerable: true,
+                configurable: true,
+                writable: true
+            };
             if (isinputtextortextarea && key === "value") {
                 return {
                     value: Reflect.get(ele, "value"),
-                    enumerable: true,
-                    configurable: true,
-                    writable: true
+                    ...otherdescipter
                 };
             }
             else {
@@ -349,9 +410,7 @@ function createeleattragentreadwrite(ele) {
                 if (attr) {
                     return {
                         value: attr,
-                        enumerable: true,
-                        configurable: true,
-                        writable: true
+                        ...otherdescipter
                     };
                 }
                 else {
@@ -398,9 +457,18 @@ function render(vdom, namespace) {
         }
         var attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
+        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+            attribute1[key] = primitivestate.value;
+            primitivestate[subscribesymbol](() => {
+                attribute1[key] = primitivestate.value;
+            });
+            requestAnimationFrame(() => {
+                primitivestate[addallistenerssymbol]();
+            });
+        });
         Object.entries(vdom.directives).forEach(([name, value]) => {
             if (name in directives && typeof directives[name] === "function") {
-                directives[name](element, value);
+                directives[name](element, value, vdom);
             }
             else {
                 throw new Error("invalid directives " + name);
@@ -457,5 +525,21 @@ function createref (init) {
     return { value: init };
 }
 
-export { createApp, h as createElemet, createref as createRef, h, assertvalidvirtualdom as html };
+function createstate (init) {
+    return new Proxy(new primitivestate(init), {
+        set(target, key, value) {
+            if (key === "value" && isprimitive(value)) {
+                if (target[key] !== value) {
+                    target[dispatchsymbol]();
+                }
+                return Reflect.set(target, key, value);
+            }
+            else {
+                return false;
+            }
+        }
+    });
+}
+
+export { createApp, h as createElemet, createref as createRef, createstate as createState, h, assertvalidvirtualdom as html };
 //# sourceMappingURL=index.js.map

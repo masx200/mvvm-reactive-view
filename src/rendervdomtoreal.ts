@@ -1,3 +1,4 @@
+import { subscribesymbol, addallistenerssymbol } from "./primitivestate";
 import directives from "./directives";
 import onevent from "./onevent";
 import { createcostumelemet } from "./customelement";
@@ -52,12 +53,25 @@ export default function render(
     }
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
+    /* 添加常量的属性 */
+
+    /* 添加绑定属性 */
+
+    Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+      attribute1[key] = primitivestate.value;
+      primitivestate[subscribesymbol](() => {
+        attribute1[key] = primitivestate.value;
+      });
+      requestAnimationFrame(() => {
+        primitivestate[addallistenerssymbol]();
+      });
+    });
 
     /* 添加事件绑定和指令执行 */
 
     Object.entries(vdom.directives).forEach(([name, value]) => {
       if (name in directives && typeof directives[name] === "function") {
-        directives[name](element, value);
+        directives[name](element, value, vdom);
       } else {
         throw new Error("invalid directives " + name);
       }
