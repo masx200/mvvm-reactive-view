@@ -582,7 +582,7 @@ function isfunction(a) {
     return typeof a === "function";
 }
 function isarray(a) {
-    return a instanceof Array;
+    return a instanceof Array && Array.isArray(a);
 }
 
 class Virtualdom {
@@ -590,14 +590,18 @@ class Virtualdom {
         this.props = {};
         this.children = [];
         this.directives = {};
-        this.on = {};
+        this.onevent = {};
         const propsentries = Object.entries(props);
         Object.assign(this, {
             type,
             props: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0]))),
             children,
-            on: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0]))),
-            directives: Object.fromEntries(propsentries.filter(([key]) => /\*/.test(key[0])))
+            onevent: Object.fromEntries(propsentries
+                .filter(([key]) => /\@/.test(key[0]))
+                .map(([key, value]) => [key.slice(1), value])),
+            directives: Object.fromEntries(propsentries
+                .filter(([key]) => /\*/.test(key[0]))
+                .map(([key, value]) => [key.slice(1), value]))
         });
         Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
     }
@@ -649,6 +653,53 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
+var directives = {
+    ref(ele, ref) {
+        if (typeof ref == "object") {
+            ref.value = ele;
+        }
+        else {
+            throw TypeError("invalid ref");
+        }
+    },
+    html(ele, html) {
+        if (typeof html == "string") {
+            ele.innerHTML = html;
+        }
+        else {
+            throw TypeError("invalid html");
+        }
+    },
+    text(ele, text) {
+        if (typeof text == "string") {
+            ele.textContent = text;
+        }
+        else {
+            throw TypeError("invalid text");
+        }
+    }
+};
+
+function onevent (element, eventname, callback) {
+    if (typeof callback === "function") {
+        addlisteners(element, eventname, [callback]);
+    }
+    else if (isarray(callback)) {
+        addlisteners(element, eventname, callback);
+    }
+    else {
+        throw TypeError("invalid EventListener");
+    }
+}
+function addlisteners(ele, event, callarray) {
+    callarray.forEach((call) => {
+        domaddlisten(ele, event, call);
+    });
+}
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
 class setlikearray extends Array {
     constructor() {
         super();
@@ -667,7 +718,7 @@ class setlikearray extends Array {
 }
 
 const customElementsarray = new setlikearray();
-function createcostumelemet(initclass) {
+function createcostumelemet(initclass, children) {
     if (isclassextendsHTMLElement(initclass)) {
         customElementsarray.push(initclass);
         const elementname = getcustomelementname(initclass);
@@ -675,7 +726,7 @@ function createcostumelemet(initclass) {
         else {
             customElements.define(elementname, initclass);
         }
-        return new initclass();
+        return Reflect.construct(initclass, [children]);
     }
     else {
         throw TypeError("invalid custom element class !");
@@ -850,24 +901,37 @@ function render(vdom, namespace) {
             }
         }
         else if (typeof vdom.type == "function") {
-            element = createcostumelemet(vdom.type);
+            element = createcostumelemet(vdom.type, vdom.children);
         }
         else {
             throwinvalideletype();
         }
         var attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
-        mount(vdom.children.map(e => {
-            if (vdom.type === "svg") {
-                return render(e, svgnamespace);
-            }
-            else if (namespace) {
-                return render(e, namespace);
+        Object.entries(vdom.directives).forEach(([name, value]) => {
+            if (name in directives && typeof directives[name] === "function") {
+                directives[name](element, value);
             }
             else {
-                return render(e);
+                throw new Error("invalid directives " + name);
             }
-        }), element);
+        });
+        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
+            onevent(element, event, callbacks);
+        });
+        if (typeof vdom.type !== "function") {
+            mount(vdom.children.map(e => {
+                if (vdom.type === "svg") {
+                    return render(e, svgnamespace);
+                }
+                else if (namespace) {
+                    return render(e, namespace);
+                }
+                else {
+                    return render(e);
+                }
+            }), element);
+        }
         return element;
     }
     else {

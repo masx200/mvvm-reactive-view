@@ -9,9 +9,9 @@ export function isfunction(a: any) {
 }
 
 export function isarray(a: any) {
-  return a instanceof Array;
+  return a instanceof Array && Array.isArray(a);
 }
-
+export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export function getsymbol(a: string) {
   return Symbol.for(a);
 }

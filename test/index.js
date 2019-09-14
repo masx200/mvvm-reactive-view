@@ -1,4 +1,5 @@
-import { html, createApp, h, createElemet } from "../dist/index.js";
+import { createRef, html, createApp, h, createElemet } from "../dist/index.js";
+const inputref = createRef();
 var vdom = html`
   <h1>
     <svg
@@ -198,6 +199,7 @@ var vdom = html`
                     <p></p>
                     <p>
                       <input
+                        @input=${e => console.log(e)}
                         id="password"
                         placeholder="输入密码"
                         name="password"
@@ -213,6 +215,7 @@ var vdom = html`
                     <p></p>
                     <p>
                       <input
+                        @input=${e => console.log(e)}
                         id="key"
                         placeholder="输入代号"
                         name="key"
@@ -235,6 +238,8 @@ var vdom = html`
                     <span id="myhezi"
                       ><p>
                         <input
+                          *ref=${inputref}
+                          @change=${e => console.log(e, inputref)}
                           id="code16"
                           readonly=""
                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
@@ -326,8 +331,9 @@ var vdom = html`
     </svg>
   </h1>
 `;
-createApp(vdom, document.getElementById("root"));
 console.log(vdom);
+createApp(vdom, document.getElementById("root"));
+
 console.log(createApp);
 console.log(h);
 console.log([].flat);

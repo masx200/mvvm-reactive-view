@@ -1,3 +1,5 @@
+import directives from "./directives";
+import onevent from "./onevent";
 import { createcostumelemet } from "./customelement";
 import {
   svgnamespace,
@@ -50,6 +52,19 @@ export default function render(
     }
     var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
+
+    /* 添加事件绑定和指令执行 */
+
+    Object.entries(vdom.directives).forEach(([name, value]) => {
+      if (name in directives && typeof directives[name] === "function") {
+        directives[name](element, value);
+      } else {
+        throw new Error("invalid directives " + name);
+      }
+    });
+    Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
+      onevent(element, event, callbacks);
+    });
     /* 自定义组件不添加children,而是从构造函数传入 */
     if (typeof vdom.type !== "function") {
       mount(

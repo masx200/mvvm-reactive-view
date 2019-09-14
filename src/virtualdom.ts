@@ -4,7 +4,7 @@ export default class Virtualdom {
   props: object | undefined = {};
   children: Array<Virtualdom | string> = [];
   directives: object = {};
-  on: object = {};
+  onevent: object = {};
   constructor(
     type: Function | string = "",
     props: object = {},
@@ -17,9 +17,15 @@ export default class Virtualdom {
         propsentries.filter(([key]) => /[A-Za-z]/.test(key[0]))
       ),
       children,
-      on: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0]))),
+      onevent: Object.fromEntries(
+        propsentries
+          .filter(([key]) => /\@/.test(key[0]))
+          .map(([key, value]) => [key.slice(1), value])
+      ),
       directives: Object.fromEntries(
-        propsentries.filter(([key]) => /\*/.test(key[0]))
+        propsentries
+          .filter(([key]) => /\*/.test(key[0]))
+          .map(([key, value]) => [key.slice(1), value])
       )
     });
     Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
