@@ -1,23 +1,7 @@
 import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 import htm from "htm/dist/htm.module.js";
-export function h(
-  type: Function | string = "",
-  props: any = {},
-  ...children: Array<Virtualdom | string>
-): Virtualdom | Array<Virtualdom | string> {
-  // | Array<Virtualdom | string>
-  // if(isarray()){}
-  /* add fragment element */
-  if (typeof type === "string" && "" === type) {
-    return children.flat();
-  }
-  return new Virtualdom(
-    isstring(type) || isfunction(type) ? type : "",
-    isobject(props) ? props : {},
-    children.flat()
-  );
-}
+import h from "./createelement";
 
 const html = htm.bind(h);
 
