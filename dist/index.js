@@ -169,59 +169,94 @@ function isobject$1(a) {
 function isstring$1(a) {
     return typeof a === "string";
 }
-function createeleattragentreadwrite(ele) {
+function asserthtmlelement(ele) {
     if (!(ele instanceof HTMLElement ||
         ele instanceof SVGElement ||
         ele instanceof Element)) {
         throw TypeError("invalid HTMLElement!");
     }
+    else
+        return true;
+}
+function createeleattragentreadwrite(ele) {
+    asserthtmlelement(ele);
+    const isinputtextortextarea = (ele.tagName === "INPUT" && Reflect.get(ele, "type") === "text") ||
+        ele.tagName === "TEXTAREA";
     var temp = Object.create(null);
     return new Proxy(temp, {
         ownKeys() {
-            return Reflect.ownKeys(ele.attributes).filter(k => !/\d/.test(String(k)[0]));
+            const keys = Reflect.ownKeys(ele.attributes).filter(k => !/\d/.test(String(k)[0]));
+            return isinputtextortextarea
+                ? Array.from(new Set([...keys, "value"]))
+                : keys;
         },
         get(target, key) {
-            var v = ele.getAttribute(String(key));
-            if (!v) {
-                return;
+            if (isinputtextortextarea && key === "value") {
+                return Reflect.get(ele, "value");
             }
-            if (isstring$1(v)) {
-                try {
-                    return JSON.parse(String(v));
+            else {
+                var v = ele.getAttribute(String(key));
+                if (!v) {
+                    return;
                 }
-                catch (error) {
-                    return v;
+                if (isstring$1(v)) {
+                    try {
+                        return JSON.parse(String(v));
+                    }
+                    catch (error) {
+                        return v;
+                    }
                 }
+                else
+                    return;
             }
-            else
-                return;
         },
         set(t, key, v) {
-            ele.setAttribute(String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
-            return true;
+            if (isinputtextortextarea && key === "value") {
+                return Reflect.set(ele, "value", v);
+            }
+            else {
+                ele.setAttribute(String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
+                return true;
+            }
         },
         deleteProperty(t, k) {
             ele.removeAttribute(String(k));
             return true;
         },
         has(target, key) {
-            return ele.hasAttribute(String(key));
+            if (isinputtextortextarea && key === "value") {
+                return true;
+            }
+            else {
+                return ele.hasAttribute(String(key));
+            }
         },
         defineProperty() {
             return false;
         },
         getOwnPropertyDescriptor(target, key) {
-            var attr = ele.getAttribute(String(key));
-            if (attr) {
+            if (isinputtextortextarea && key === "value") {
                 return {
-                    value: attr,
+                    value: Reflect.get(ele, "value"),
                     enumerable: true,
                     configurable: true,
                     writable: true
                 };
             }
             else {
-                return;
+                var attr = ele.getAttribute(String(key));
+                if (attr) {
+                    return {
+                        value: attr,
+                        enumerable: true,
+                        configurable: true,
+                        writable: true
+                    };
+                }
+                else {
+                    return;
+                }
             }
         },
         setPrototypeOf() {
