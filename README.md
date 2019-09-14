@@ -40,6 +40,8 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 # 快速上手,可在浏览器中运行而不需要编译工具
 
+`index.js`
+
 ```js
 import {
   html,
@@ -56,6 +58,8 @@ const vdom = html`
 
 createApp(vdom, document.getElementById("root"));
 ```
+
+`index.html`
 
 ```html
 <script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
