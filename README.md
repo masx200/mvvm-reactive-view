@@ -20,6 +20,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+  watch,
   html,
   h,
   createApp,
@@ -47,6 +48,7 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 ```js
 import {
+  watch,
   html,
   h,
   createApp,
@@ -69,7 +71,7 @@ const vdom = html`
   />
   <h1>mvvm-reactive-view</h1>
 `;
-
+watch(state1, console.log);
 createApp(vdom, document.getElementById("root"));
 ```
 
@@ -178,4 +180,10 @@ class Primitivestate {
 
   constructor(init: string | number | boolean);
 }
+```
+
+使用`watch`函数来监听状态的变化,执行回调函数
+
+```ts
+function watch(state: Primitivestate, callback: Function): void;
 ```

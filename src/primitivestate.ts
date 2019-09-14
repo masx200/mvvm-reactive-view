@@ -34,9 +34,9 @@ export default class Primitivestate {
   [dispatchsymbol]() {
     this[eventtargetsymbol].dispatchEvent(new Event("value"));
   }
-  [subscribesymbol](callback: EventListener) {
+  [subscribesymbol](callback: Function) {
     // this[eventtargetsymbol].addEventListener("value", callback);
-    this[memlisteners].push(["value", callback]);
+    this[memlisteners].push(["value", () => callback(this)]);
   }
   [removeallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {

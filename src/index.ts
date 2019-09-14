@@ -11,3 +11,5 @@ import createRef from "./createref";
 export { createRef };
 import createState from "./createstate";
 export { createState };
+import { watch } from "./watch";
+export { watch };

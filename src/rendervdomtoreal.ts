@@ -59,8 +59,8 @@ export default function render(
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
       attribute1[key] = primitivestate.value;
-      primitivestate[subscribesymbol](() => {
-        attribute1[key] = primitivestate.value;
+      primitivestate[subscribesymbol]((state: { value: any }) => {
+        attribute1[key] = state.value;
       });
       requestAnimationFrame(() => {
         primitivestate[addallistenerssymbol]();

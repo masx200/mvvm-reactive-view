@@ -4,7 +4,8 @@ import {
   createApp,
   h,
   createElemet,
-  createState
+  createState,
+  watch
 } from "../dist/index.js";
 const inputref = createRef();
 var vdom = html`
@@ -341,9 +342,9 @@ var vdom = html`
 console.log(vdom);
 createApp(vdom, document.getElementById("root"));
 
-console.log(createApp);
-console.log(h);
-console.log([].flat);
+// console.log(createApp);
+// console.log(h);
+// console.log([].flat);
 
 document.body.appendChild(
   createApp(
@@ -362,8 +363,8 @@ console.log(myele1);
 document.body.appendChild(createApp(myele1, document.createElement("div")));
 document.body.appendChild(createApp(myele1, document.createElement("div")));
 
-console.log(Object.fromEntries);
-console.log(setImmediate);
+// console.log(Object.fromEntries);
+// console.log(setImmediate);
 
 const vdom2 = html`
   <div *text=${"<a>绑定textcontent</a>"}></div>
@@ -375,15 +376,19 @@ document.body.appendChild(createApp(vdom2, document.createElement("div")));
 const state1 = createState("<a>绑定textcontent</a>");
 
 const state2 = createState("<a>绑定innerhtml</a>");
-setInterval(() => {
+/* setInterval(() => {
   state2.value = state2.value + "qw";
   //   if (state2.value.length > 60) {
   //     state2.value = "";
   //   }
   state1.value = state2.value;
-}, 2000);
+}, 2000); */
 const vdom3 = html`
-  <textarea value=${state1}></textarea>
+  <textarea value=${state1} @input=${[
+  e => {
+    state1.value = e.target.value;
+  }
+]}></textarea>
   <input value=${state2} style='width:100%' @change=${[
   e => {
     state2.value = e.target.value;
@@ -397,4 +402,6 @@ const vdom3 = html`
 ></input>
 `;
 console.log(vdom3);
+watch(state1, console.log);
+watch(state2, console.log);
 document.body.appendChild(createApp(vdom3, document.createElement("div")));

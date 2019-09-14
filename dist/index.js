@@ -109,7 +109,7 @@ class Primitivestate {
         this[eventtargetsymbol].dispatchEvent(new Event("value"));
     }
     [subscribesymbol](callback) {
-        this[memlisteners].push(["value", callback]);
+        this[memlisteners].push(["value", () => callback(this)]);
     }
     [removeallistenerssymbol]() {
         this[memlisteners].forEach(([value, callback]) => {
@@ -459,8 +459,8 @@ function render(vdom, namespace) {
         Object.assign(attribute1, vdom.props);
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.value;
-            primitivestate[subscribesymbol](() => {
-                attribute1[key] = primitivestate.value;
+            primitivestate[subscribesymbol]((state) => {
+                attribute1[key] = state.value;
             });
             requestAnimationFrame(() => {
                 primitivestate[addallistenerssymbol]();
@@ -529,10 +529,9 @@ function createstate (init) {
     return new Proxy(new Primitivestate(init), {
         set(target, key, value) {
             if (key === "value" && isprimitive(value)) {
-                if (target[key] !== value) {
-                    target[dispatchsymbol]();
-                }
-                return Reflect.set(target, key, value);
+                Reflect.set(target, key, value);
+                target[dispatchsymbol]();
+                return true;
             }
             else {
                 return false;
@@ -541,5 +540,9 @@ function createstate (init) {
     });
 }
 
-export { createApp, h as createElemet, createref as createRef, createstate as createState, h, assertvalidvirtualdom as html };
+function watch(state, callback) {
+    state[subscribesymbol](callback);
+}
+
+export { createApp, h as createElemet, createref as createRef, createstate as createState, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map
