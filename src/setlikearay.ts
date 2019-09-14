@@ -1,5 +1,5 @@
 import { isstring, isarray, isobject, isfunction } from "./util";
-
+// import {isclassextendsHTMLElement} from './customelement';
 export default class setlikearray extends Array {
   constructor() {
     super();
