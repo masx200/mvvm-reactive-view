@@ -348,3 +348,6 @@ let myele1 = createElemet(class extends HTMLElement {});
 console.log(myele1);
 document.body.appendChild(createApp(myele1, document.createElement("div")));
 document.body.appendChild(createApp(myele1, document.createElement("div")));
+
+console.log(Object.fromEntries);
+console.log(setImmediate);

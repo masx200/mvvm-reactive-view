@@ -1,9 +1,41 @@
+/**
+ * The inverse of `_.toPairs`; this method returns an object composed
+ * from key-value `pairs`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Array
+ * @param {Array} pairs The key-value pairs.
+ * @returns {Object} Returns the new object.
+ * @example
+ *
+ * _.fromPairs([['a', 1], ['b', 2]]);
+ * // => { 'a': 1, 'b': 2 }
+ */
+function fromPairs(pairs) {
+  var index = -1,
+      length = pairs == null ? 0 : pairs.length,
+      result = {};
+
+  while (++index < length) {
+    var pair = pairs[index];
+    result[pair[0]] = pair[1];
+  }
+  return result;
+}
+
+var fromPairs_1 = fromPairs;
+
+if ("function" !== typeof Object.fromEntries)
+    Object.fromEntries = fromPairs_1;
+
 const globalthis = new Function("return this")();
 const setImmediate = async (fn, ...args) => {
     await Promise.resolve();
     return fn(...args);
 };
-if (typeof setImmediate !== "function") {
+if (typeof globalthis.setImmediate !== "function") {
     globalthis.setImmediate = setImmediate;
 }
 
@@ -39,7 +71,16 @@ class Virtualdom {
     constructor(type = "", props = {}, children = []) {
         this.props = {};
         this.children = [];
-        Object.assign(this, { type, props, children });
+        this.directives = {};
+        this.on = {};
+        const propsentries = Object.entries(props);
+        Object.assign(this, {
+            type,
+            props: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0]))),
+            children,
+            on: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0]))),
+            directives: Object.fromEntries(propsentries.filter(([key]) => /\*/.test(key[0])))
+        });
         Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
     }
 }

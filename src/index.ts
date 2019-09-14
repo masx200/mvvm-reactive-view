@@ -1,3 +1,4 @@
+import "./Object-fromEntries";
 import "./setImmediate";
 import "./array-prototype-flat";
 import html from "./html";
