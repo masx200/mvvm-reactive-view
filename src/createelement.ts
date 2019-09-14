@@ -10,7 +10,7 @@ export default function h(
   /* add fragment element */
   var typenormalized = isstring(type) || isfunction(type) ? type : "";
   var propsnormalized = isobject(props) ? props : {};
-  var childrennormalized = children.flat();
+  var childrennormalized = children.flat(Infinity);
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }

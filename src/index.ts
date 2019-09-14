@@ -1,4 +1,4 @@
-// import "core-js/features/array/flat";
+import "./array-prototype-flat";
 import html from "./html";
 import h from "./createelement";
 export { html };

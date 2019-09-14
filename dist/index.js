@@ -1,3 +1,17 @@
+if (typeof Array.prototype.flat !== "function") {
+    Array.prototype.flat = function (depth = 1) {
+        if (depth === 1) {
+            return this.reduce((acc, val) => acc.concat(val), []);
+        }
+        else {
+            function flattenDeep(arr1) {
+                return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
+            }
+            return flattenDeep(this);
+        }
+    };
+}
+
 function isobject(a) {
     return typeof a === "object" && a !== null;
 }
@@ -25,7 +39,7 @@ var n=function(t,r,u,e){for(var p=1;p<r.length;p++){var s=r[p],h="number"==typeo
 function h(type = "", props = {}, ...children) {
     var typenormalized = isstring(type) || isfunction(type) ? type : "";
     var propsnormalized = isobject(props) ? props : {};
-    var childrennormalized = children.flat();
+    var childrennormalized = children.flat(Infinity);
     if (typeof typenormalized === "string" && "" === typenormalized) {
         return childrennormalized;
     }
