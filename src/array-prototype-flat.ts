@@ -6,17 +6,14 @@ if (typeof Array.prototype.flat !== "function") {
         []
       );
     } else {
-      function flattenDeep(arr1: any[]) {
-        return arr1.reduce(
-          (
-            acc: { concat: { (arg0: any): void; (arg0: any): void } },
-            val: any
-          ) =>
-            Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val),
-          []
-        );
-      }
       return flattenDeep(this);
     }
   };
+}
+function flattenDeep(arr1: any[]) {
+  return arr1.reduce(
+    (acc: { concat: { (arg0: any): void; (arg0: any): void } }, val: any) =>
+      Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val),
+    []
+  );
 }

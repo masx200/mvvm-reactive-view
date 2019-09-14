@@ -4,12 +4,12 @@ if (typeof Array.prototype.flat !== "function") {
             return this.reduce((acc, val) => acc.concat(val), []);
         }
         else {
-            function flattenDeep(arr1) {
-                return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
-            }
             return flattenDeep(this);
         }
     };
+}
+function flattenDeep(arr1) {
+    return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
 }
 
 function isobject(a) {
