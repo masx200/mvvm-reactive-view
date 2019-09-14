@@ -1,4 +1,5 @@
 import flattenDepth from "lodash/flattenDepth";
+// import flattenDepth from "core-js-pure/features/array/flat";
 if (typeof Array.prototype.flat !== "function") {
   Array.prototype.flat = function(depth: number = 1) {
     return flattenDepth(this, depth);
