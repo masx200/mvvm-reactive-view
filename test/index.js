@@ -1,4 +1,4 @@
-import { html, createApp, h } from "../dist/index.js";
+import { html, createApp, h, createElemet } from "../dist/index.js";
 var vdom = html`
   <h1>
     <svg
@@ -331,3 +331,20 @@ console.log(vdom);
 console.log(createApp);
 console.log(h);
 console.log([].flat);
+
+document.body.appendChild(
+  createApp(
+    createElemet(class extends HTMLElement {}),
+    document.createElement("div")
+  )
+);
+document.body.appendChild(
+  createApp(
+    createElemet(class extends HTMLElement {}),
+    document.createElement("div")
+  )
+);
+let myele1 = createElemet(class extends HTMLElement {});
+console.log(myele1);
+document.body.appendChild(createApp(myele1, document.createElement("div")));
+document.body.appendChild(createApp(myele1, document.createElement("div")));

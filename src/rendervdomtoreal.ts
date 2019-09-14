@@ -1,3 +1,4 @@
+import { createcostumelemet } from "./customelement";
 import {
   svgnamespace,
   createsvgelement,
@@ -76,14 +77,4 @@ export default function render(
 export interface Class {
   new (): object;
   (): object;
-}
-import setlikearray from "./setlikearay";
-const customElementsarray = new setlikearray();
-function createcostumelemet(initclass: Class | Function): HTMLElement {
-  customElementsarray.push(initclass);
-  customElements.define(
-    "c-" + customElementsarray.indexOf(initclass),
-    initclass
-  );
-  return new initclass();
 }

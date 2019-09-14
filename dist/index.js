@@ -66,6 +66,37 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
+class setlikearray extends Array {
+    constructor() {
+        super();
+        Object.defineProperty(this, Symbol.toStringTag, { value: "setlikearray" });
+    }
+    push(...items) {
+        items.forEach(item => {
+            if (isfunction(item) || isobject(item)) {
+                if (!this.includes(item)) {
+                    super.push(item);
+                }
+            }
+        });
+        return this.length;
+    }
+}
+
+const customElementsarray = new setlikearray();
+function createcostumelemet(initclass) {
+    customElementsarray.push(initclass);
+    const elementname = getcustomelementname(initclass);
+    if (customElements.get(elementname) === initclass) ;
+    else {
+        customElements.define(elementname, initclass);
+    }
+    return new initclass();
+}
+function getcustomelementname(initclass) {
+    return "c-" + customElementsarray.indexOf(initclass);
+}
+
 function appendchild(container, ele) {
     container.appendChild(ele);
 }
@@ -168,23 +199,6 @@ function createeleattragentreadwrite(ele) {
     });
 }
 
-class setlikearray extends Array {
-    constructor() {
-        super();
-        Object.defineProperty(this, Symbol.toStringTag, { value: "setlikearray" });
-    }
-    push(...items) {
-        items.forEach(item => {
-            if (isfunction(item) || isobject(item)) {
-                if (!this.includes(item)) {
-                    super.push(item);
-                }
-            }
-        });
-        return this.length;
-    }
-}
-
 function throwinvalideletype() {
     throw TypeError("invalid element type!");
 }
@@ -231,12 +245,6 @@ function render(vdom, namespace) {
     else {
         throwinvalideletype();
     }
-}
-const customElementsarray = new setlikearray();
-function createcostumelemet(initclass) {
-    customElementsarray.push(initclass);
-    customElements.define("c-" + customElementsarray.indexOf(initclass), initclass);
-    return new initclass();
 }
 
 function createApp (vdom, container) {
