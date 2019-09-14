@@ -1,3 +1,4 @@
+import "./setImmediate";
 import "./array-prototype-flat";
 import html from "./html";
 import h from "./createelement";

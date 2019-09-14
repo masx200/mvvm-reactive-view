@@ -1,12 +1,22 @@
+const globalthis = new Function("return this")();
+const setImmediate = async (fn, ...args) => {
+    await Promise.resolve();
+    return fn(...args);
+};
+if (typeof setImmediate !== "function") {
+    globalthis.setImmediate = setImmediate;
+}
+
 if (typeof Array.prototype.flat !== "function") {
-    Array.prototype.flat = function (depth = 1) {
-        if (depth === 1) {
-            return this.reduce((acc, val) => acc.concat(val), []);
-        }
-        else {
-            return flattenDeep(this);
-        }
-    };
+    Array.prototype.flat = arrayflat;
+}
+function arrayflat(depth = 1) {
+    if (depth === 1) {
+        return this.reduce((acc, val) => acc.concat(val), []);
+    }
+    else {
+        return flattenDeep(this);
+    }
 }
 function flattenDeep(arr1) {
     return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
