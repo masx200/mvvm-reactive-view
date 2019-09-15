@@ -54,7 +54,6 @@ https://github.com/hyperhype/hyperscript
 
 https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 
-
 # 快速上手,可在浏览器中运行而不需要编译工具
 
 `index.js`
@@ -86,7 +85,7 @@ const vdom = html`
   <h1 style=${stylestate}>mvvm-reactive-view</h1>
 `;
 watch(state1, console.log);
-console.log(vdom,inputref);
+console.log(vdom, inputref);
 createApp(vdom, document.getElementById("root"));
 ```
 
@@ -130,7 +129,7 @@ createApp(vdom, document.getElementById("root"));
 
 `@input=${e => (state1.value = e.target.value)}`
 
-# 支持绑定状态到 TextNode
+# 支持绑定状态到 TextNode 文字节点
 
 ```js
 const objstate2 = createState(`ssssssssssss`);
