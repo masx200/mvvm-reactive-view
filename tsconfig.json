@@ -13,6 +13,7 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "baseUrl": ".",
+    "noFallthroughCasesInSwitch": true,
     "paths": {
       "*": ["node_modules/*"]
     }
