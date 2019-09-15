@@ -22,7 +22,12 @@ export default {
     // console.log(ele.outerHTML);
     if (typeof html == "string") {
       requestAnimationFrame(() => {
-        ele.innerHTML = html;
+
+
+setelehtml(ele,html)
+
+
+       /* ele.innerHTML = html;*/
         //   console.log(ele.outerHTML);
       });
     } else if (html instanceof Primitivestate) {
