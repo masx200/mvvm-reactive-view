@@ -1,8 +1,9 @@
+import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
-import Primitivestate, { dispatchsymbol } from "./primitivestate";
+import ReactiveState, { dispatchsymbol } from "./primitivestate";
 export default function(init: string | number | boolean | undefined) {
   if (isprimitive(init)) {
-    return new Proxy(new Primitivestate(init), {
+    return new Proxy(new ReactiveState(init), {
       set(target, key, value) {
         if (key === "value" && isprimitive(value)) {
           // if (target[key] !== value) {
@@ -15,5 +16,8 @@ export default function(init: string | number | boolean | undefined) {
         }
       }
     });
+  } else if (isobject(init)) {
+  } else {
+    throw TypeError("invalid State");
   }
 }

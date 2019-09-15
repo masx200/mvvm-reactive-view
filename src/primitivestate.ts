@@ -1,4 +1,4 @@
-import { getsymbol } from "./util";
+import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
 export const eventtargetsymbol = Symbol("eventtatget");
 export const memlisteners = Symbol("memlisteners");
@@ -6,37 +6,52 @@ export const dispatchsymbol = getsymbol("dispatch");
 export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
-export default class Primitivestate {
-  value: string | number | boolean | undefined;
+export default class ReactiveState extends Array {
+  value: string | number | boolean | undefined | object;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];
-  constructor(init: string | number | boolean) {
-    if (isprimitive(init)) {
+  constructor(init: string | number | boolean | object | undefined) {
+    super();
+    if (isprimitive(init) || isobject(init)) {
       this.value = init;
     } else {
-      throw TypeError("invalid primitive");
+      throw TypeError("invalid State");
     }
     // this[eventtargetsymbol] = new EventTarget();
 
     Object.defineProperty(this, Symbol.toStringTag, {
-      value: "primitivestate"
+      value: "ReactiveState"
     });
   }
   [Symbol.toPrimitive]() {
-    return this.value;
+    //return this.value;
+    let value = this.value;
+    return isprimitive(value)
+      ? value
+      : isobject(value)
+      ? JSON.stringify(value)
+      : void 0;
   }
   valueOf() {
     return this.value;
   }
   toString() {
-    return String(this.value);
+    let value = this.value;
+    return isprimitive(value)
+      ? String(value)
+      : isobject(value)
+      ? JSON.stringify(value)
+      : "";
   }
-  [dispatchsymbol]() {
-    this[eventtargetsymbol].dispatchEvent(new Event("value"));
+  [dispatchsymbol](eventname?: string) {
+    let name = eventname ? String(eventname) : "value";
+
+    this[eventtargetsymbol].dispatchEvent(new Event(name));
   }
-  [subscribesymbol](callback: Function) {
+  [subscribesymbol](callback: Function, eventname?: string) {
     // this[eventtargetsymbol].addEventListener("value", callback);
-    this[memlisteners].push(["value", () => callback(this)]);
+    let name = eventname ? String(eventname) : "value";
+    this[memlisteners].push([name, () => callback(this)]);
   }
   [removeallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
