@@ -74,7 +74,7 @@ export default function render(
       // throw TypeError("invalid element type!");
     }
 ;
-(()=>{
+((element,vdom)=>{
 
 
 
@@ -115,7 +115,7 @@ Object.entries(vdom.directives).forEach(([name, value]) => {
       onevent(element, event, callbacks);
     });
 
-})();
+})(element,vdom);
     /* 自定义组件不添加children,而是从构造函数传入 */
     if (typeof type !== "function") {
       mount(
