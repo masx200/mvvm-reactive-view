@@ -33,7 +33,9 @@ setelehtml(ele,html)
     } else if (html instanceof Primitivestate) {
       //   const primitivestate = html;
       watch(html, (state: { value: any }) => {
-        ele.innerHTML = String(state);
+        /*ele.innerHTML = String(state);*/
+
+setelehtml(ele,String(state);)
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.innerHTML = String(state.value);
