@@ -155,7 +155,7 @@ function createElemet(
 ): Virtualdom | Array<Virtualdom | string>;
 ```
 
-使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上
+使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function createApp(
