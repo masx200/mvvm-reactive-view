@@ -21,3 +21,6 @@ export function createtextnode(data: string) {
   return document.createTextNode(data);
 }
 export const svgnamespace = "http://www.w3.org/2000/svg";
+export function changetext(textnode: Text, value: string) {
+  textnode.nodeValue = String(value);
+}

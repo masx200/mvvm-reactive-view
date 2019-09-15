@@ -1,3 +1,10 @@
+export const reactivestatesymbol = Symbol("reactivestate");
+import { watch } from "./watch";
+import ReactiveState, {
+  changetextnodesymbol,
+  dispatchsymbol,
+  textnodesymbol
+} from "./primitivestate";
 import Reflect from "./reflect";
 export const virtualdomsymbol = Symbol("virtualdom");
 import { eventlistenerssymbol } from "./onevent";
@@ -11,7 +18,8 @@ import {
   createnonescript,
   createnativeelement,
   createElementNS,
-  createtextnode
+  createtextnode,
+  changetext
 } from "./dom";
 function throwinvalideletype() {
   throw TypeError("invalid element type!");
@@ -22,7 +30,7 @@ import createeleattr from "dom-element-attribute-agent-proxy";
 import Virtualdom from "./virtualdom";
 
 export default function render(
-  vdom: Virtualdom | string,
+  vdom: Virtualdom | string | ReactiveState,
   namespace?: string
 ):
   | HTMLElement
@@ -33,6 +41,15 @@ export default function render(
   | Element {
   if (typeof vdom === "string") {
     return createtextnode(vdom);
+  } else if (vdom instanceof ReactiveState) {
+    const reactive = vdom;
+    const textnode = createtextnode(String(reactive));
+    textnode[reactivestatesymbol] = reactive;
+    reactive[textnodesymbol] = textnode;
+    watch(reactive, (state: { value: string }) => {
+      changetext(textnode, String(state));
+    });
+    return textnode;
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
     let element: HTMLElement | SVGSVGElement | SVGElement | Element;
     if (typeof vdom.type === "string") {
@@ -63,12 +80,13 @@ export default function render(
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
       attribute1[key] = primitivestate.value;
-      primitivestate[subscribesymbol]((state: { value: any }) => {
+      watch(primitivestate, (state: { value: any }) => {
         attribute1[key] = state.value;
       });
+      /*     primitivestate[subscribesymbol]();
       requestAnimationFrame(() => {
         primitivestate[addallistenerssymbol]();
-      });
+      }); */
     });
 
     /* 添加事件绑定和指令执行 */

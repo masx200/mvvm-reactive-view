@@ -1,3 +1,4 @@
+import ReactiveState, { dispatchsymbol } from "./primitivestate";
 import Reflect from "./reflect";
 import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
@@ -8,22 +9,25 @@ const html = htm.bind(h);
 
 /* 如果出现未闭合标签会产生错误的vdom */
 export function isvalidvdom(v: any) {
-  var flag = false;
-  if (isarray(v)) {
+  let flag = false;
+  if (Array.isArray(v)) {
     flag = v
       .map((ele: any) => {
-        return isstring(ele) || ele instanceof Virtualdom;
+        return isvalidvdom(ele);
+        //isstring(ele) || ele instanceof Virtualdom;
       })
       .includes(false)
       ? false
       : true;
   } else if (v instanceof Virtualdom) {
     if (isvalidvdom(v.children)) {
-      flag = true;
+      return true;
     }
+  } else if (v instanceof ReactiveState) {
+    return true;
   } else {
     if (isstring(v)) {
-      flag = true;
+      return true;
     }
   }
   return flag;

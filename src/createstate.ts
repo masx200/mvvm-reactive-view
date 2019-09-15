@@ -2,11 +2,19 @@ import Reflect from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
 import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
-import ReactiveState, { dispatchsymbol } from "./primitivestate";
-export default function createstate(init: string | number | boolean | undefined) {
+import ReactiveState, {
+  dispatchsymbol,
+  textnodesymbol
+} from "./primitivestate";
+export default function createstate(
+  init: string | number | boolean | undefined | ReactiveState | object
+) {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
       set(target, key, value) {
+        if (key === textnodesymbol) {
+          return Reflect.set(target, key, value);
+        }
         if (key === "value" && isprimitive(value)) {
           // if (target[key] !== value) {
           Reflect.set(target, key, value);
@@ -18,13 +26,10 @@ export default function createstate(init: string | number | boolean | undefined)
         }
       }
     });
-  } 
-else if(init instanceof ReactiveState){
-// 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
-return createstate(init .value)
-}
-
-else if (isobject(init)) {
+  } else if (init instanceof ReactiveState) {
+    // 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
+    return createstate(init.value);
+  } else if (isobject(init)) {
     return new Proxy(new ReactiveState(init), {
       deleteProperty(target, key) {
         const myvalue = Reflect.get(target, "value");
@@ -61,6 +66,9 @@ else if (isobject(init)) {
         );
       },
       set(target, key, value) {
+        if (key === textnodesymbol) {
+          return Reflect.set(target, key, value);
+        }
         const myvalue = Reflect.get(target, "value");
         if (key === "value" && isobject(value)) {
           // if (target[key] !== value) {
@@ -75,7 +83,7 @@ else if (isobject(init)) {
 
           //
         } else if (key === "length") {
-          Reflect.set(target, key, value);
+          Reflect.set(myvalue, key, value);
           target[dispatchsymbol](key);
         } else {
           return false;

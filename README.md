@@ -4,9 +4,9 @@
 
 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象
 
-由于使用了Proxy，所以不支持ie浏览器，而且proxy不可polyfill
+由于使用了 Proxy，所以不支持 ie 浏览器，而且 proxy 不可 polyfill
 
-# 安装npm模块
+# 安装 npm 模块
 
 ```powershell
 cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
@@ -119,6 +119,16 @@ createApp(vdom, document.getElementById("root"));
 
 `@input=${e => (state1.value = e.target.value)}`
 
+# 支持绑定状态到 TextNode
+
+```js
+const objstate2 = createState(`ssssssssssss`);
+const vdomobj = html`
+  <div>${objstate2}</div>
+  <div>${objstate2}</div>
+  ${objstate2}
+`;
+```
 
 # API
 
@@ -174,16 +184,16 @@ class Virtualdom {
 使用`createState`来生成一个引用形式的状态
 
 ```ts
-function createState(init: string | number | boolean|object): ReactiveState;
+function createState(init: string | number | boolean | object): ReactiveState;
 ```
 
 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值
 
 ```ts
 class ReactiveState {
-  value: string | number | boolean | undefined|object;
+  value: string | number | boolean | undefined | object;
 
-  constructor(init: string | number | boolean|object);
+  constructor(init: string | number | boolean | object);
 }
 ```
 

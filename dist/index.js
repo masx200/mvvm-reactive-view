@@ -46,6 +46,8 @@ function flattenDeep(arr1) {
     return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
 }
 
+var Reflect = window.Reflect;
+
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -76,13 +78,23 @@ function isprimitive (a) {
 }
 
 var _a, _b;
+const textnodesymbol = Symbol("textnode");
 const eventtargetsymbol = Symbol("eventtatget");
 const memlisteners = Symbol("memlisteners");
 const dispatchsymbol = getsymbol("dispatch");
 const subscribesymbol = getsymbol("subscribe");
 const removeallistenerssymbol = getsymbol("removeallisteners");
 const addallistenerssymbol = getsymbol("addallisteners");
-class ReactiveState extends Array {
+const forkarryaprototype = {};
+Reflect.ownKeys(Array.prototype).forEach(key => {
+    forkarryaprototype[key] = Array.prototype[key];
+});
+class forkarray {
+}
+Object.assign(forkarray.prototype, forkarryaprototype);
+forkarray.prototype.constructor = forkarray;
+Reflect.deleteProperty(forkarray.prototype, "length");
+class ReactiveState extends forkarray {
     constructor(init) {
         super();
         this[_a] = new EventTarget();
@@ -172,7 +184,7 @@ var n=function(t,r,u,e){for(var p=1;p<r.length;p++){var s=r[p],h="number"==typeo
 function h(type = "", props = {}, ...children) {
     var typenormalized = isstring(type) || isfunction(type) ? type : "";
     var propsnormalized = isobject(props) ? props : {};
-    var childrennormalized = children.flat(Infinity);
+    var childrennormalized = children.flat(1);
     if (typeof typenormalized === "string" && "" === typenormalized) {
         return childrennormalized;
     }
@@ -181,11 +193,11 @@ function h(type = "", props = {}, ...children) {
 
 const html = htm.bind(h);
 function isvalidvdom(v) {
-    var flag = false;
-    if (isarray(v)) {
+    let flag = false;
+    if (Array.isArray(v)) {
         flag = v
             .map((ele) => {
-            return isstring(ele) || ele instanceof Virtualdom;
+            return isvalidvdom(ele);
         })
             .includes(false)
             ? false
@@ -193,12 +205,15 @@ function isvalidvdom(v) {
     }
     else if (v instanceof Virtualdom) {
         if (isvalidvdom(v.children)) {
-            flag = true;
+            return true;
         }
+    }
+    else if (v instanceof ReactiveState) {
+        return true;
     }
     else {
         if (isstring(v)) {
-            flag = true;
+            return true;
         }
     }
     return flag;
@@ -211,6 +226,21 @@ function assertvalidvirtualdom(...args) {
     else {
         throw new TypeError("invalid Virtualdom!" + "\n" + JSON.stringify(vdom, null, 4));
     }
+}
+
+function watch(state, callback, statekey) {
+    if (!(state instanceof ReactiveState && isfunction(callback))) {
+        throw TypeError("invalid state or callback");
+    }
+    if (statekey) {
+        state[subscribesymbol](callback, statekey);
+    }
+    else {
+        state[subscribesymbol](callback);
+    }
+    requestAnimationFrame(() => {
+        state[addallistenerssymbol]();
+    });
 }
 
 const eventlistenerssymbol = Symbol("eventlisteners");
@@ -233,21 +263,6 @@ function addlisteners(ele, event, callarray) {
 }
 function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
-}
-
-function watch(state, callback, statekey) {
-    if (!(state instanceof ReactiveState && isfunction(callback))) {
-        throw TypeError("invalid state or callback");
-    }
-    if (statekey) {
-        state[subscribesymbol](callback, statekey);
-    }
-    else {
-        state[subscribesymbol](callback);
-    }
-    requestAnimationFrame(() => {
-        state[addallistenerssymbol]();
-    });
 }
 
 var directives = {
@@ -296,8 +311,6 @@ var directives = {
         }
     }
 };
-
-var Reflect = window.Reflect;
 
 class setlikearray extends Array {
     constructor() {
@@ -359,6 +372,9 @@ function createtextnode(data) {
     return document.createTextNode(data);
 }
 const svgnamespace = "http://www.w3.org/2000/svg";
+function changetext(textnode, value) {
+    textnode.nodeValue = String(value);
+}
 
 function mount (ele, container) {
     container.innerHTML = "";
@@ -374,6 +390,7 @@ function mount (ele, container) {
 
 const t$1=window.Reflect,e$1="value";function r$1(t){return "object"==typeof t&&null!==t}function n$1(t){return "string"==typeof t}function createeleattr(i){!function(t){if(t instanceof HTMLElement||t instanceof SVGElement||t instanceof Element)return !0;throw TypeError("invalid HTMLElement!")}(i);const o="INPUT"===i.tagName&&"text"===t$1.get(i,"type")||"TEXTAREA"===i.tagName;var u=Object.create(null);return new Proxy(u,{ownKeys(){const r=t$1.ownKeys(i.attributes).filter(t=>!/\d/.test(String(t)[0]));return o?Array.from(new Set([...r,e$1])):r},get(r,u){if(o&&u===e$1)return t$1.get(i,e$1);var a=i.getAttribute(String(u));if(a&&n$1(a))try{return JSON.parse(String(a))}catch(t){return a}},set(u,a,s){return o&&a===e$1?t$1.set(i,e$1,s):"style"===a?(i.setAttribute(String(a),n$1(s)?s:r$1(s)?(g=s,Object.entries(g).map(([t,e])=>t+":"+e).join(";")):String(s)),!0):(i.setAttribute(String(a),r$1(s)?JSON.stringify(s):String(s)),!0);var g;},deleteProperty:(t,e)=>(i.removeAttribute(String(e)),!0),has:(t,r)=>!(!o||r!==e$1)||i.hasAttribute(String(r)),defineProperty:()=>!1,getOwnPropertyDescriptor(r,n){const u={enumerable:!0,configurable:!0,writable:!0};if(o&&n===e$1)return {value:t$1.get(i,e$1),...u};var a=i.getAttribute(String(n));return a?{value:a,...u}:void 0}})}
 
+const reactivestatesymbol = Symbol("reactivestate");
 const virtualdomsymbol = Symbol("virtualdom");
 function throwinvalideletype() {
     throw TypeError("invalid element type!");
@@ -381,6 +398,16 @@ function throwinvalideletype() {
 function render(vdom, namespace) {
     if (typeof vdom === "string") {
         return createtextnode(vdom);
+    }
+    else if (vdom instanceof ReactiveState) {
+        const reactive = vdom;
+        const textnode = createtextnode(String(reactive));
+        textnode[reactivestatesymbol] = reactive;
+        reactive[textnodesymbol] = textnode;
+        watch(reactive, (state) => {
+            changetext(textnode, String(state));
+        });
+        return textnode;
     }
     else if (vdom instanceof Virtualdom && "type" in vdom) {
         let element;
@@ -409,11 +436,8 @@ function render(vdom, namespace) {
         vdom.element = element;
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.value;
-            primitivestate[subscribesymbol]((state) => {
+            watch(primitivestate, (state) => {
                 attribute1[key] = state.value;
-            });
-            requestAnimationFrame(() => {
-                primitivestate[addallistenerssymbol]();
             });
         });
         Object.entries(vdom.directives).forEach(([name, value]) => {
@@ -480,10 +504,13 @@ function createRef(init) {
 
 const t$2=window.Reflect;function e$2(t){return "object"==typeof t&&null!==t}function o(t){return "function"==typeof t}function deepobserve(r,n){if("function"!=typeof n)throw Error("observe callback is not valid function !");return "function"!=typeof Proxy?(setTimeout(()=>{throw Error("\u4e0d\u652f\u6301Proxy!")},0),r):o(r)||e$2(r)?function r(n,f,i=[],u=n){if("function"!=typeof f)throw Error("observe callback is not valid function !");if(o(n)||e$2(n)){let c;return c=e$2(n)?{}:()=>{},t$2.setPrototypeOf(c,null),(c=>new Proxy(c,{defineProperty:(e,o,r)=>t$2.defineProperty(n,o,r),deleteProperty:(e,o)=>(f(u,[...i,o],void 0,t$2.get(n,o)),t$2.deleteProperty(n,o)),ownKeys:()=>t$2.ownKeys(n),has:(e,o)=>t$2.has(n,o),getPrototypeOf:()=>t$2.getPrototypeOf(n),setPrototypeOf:(e,o)=>t$2.setPrototypeOf(n,o),construct(e,o){if("function"==typeof n)return t$2.construct(n,o)},apply(e,o,r){if("function"==typeof n)return t$2.apply(n,o,r)},getOwnPropertyDescriptor(e,o){var r=t$2.getOwnPropertyDescriptor(n,o);return r?(r.configurable=!0,r):void 0},set:(e,o,r)=>("function"==typeof f&&f(u,[...i,o],r,t$2.get(n,o)),t$2.set(n,o,r)),get(u,c){var p=t$2.get(n,c);return o(p)||e$2(p)?r(p,f,[...i,c],n):p}}))(c)}return n}(r,n,[],r):r}
 
-function createstate (init) {
+function createstate(init) {
     if (isprimitive(init)) {
         return new Proxy(new ReactiveState(init), {
             set(target, key, value) {
+                if (key === textnodesymbol) {
+                    return Reflect.set(target, key, value);
+                }
                 if (key === "value" && isprimitive(value)) {
                     Reflect.set(target, key, value);
                     target[dispatchsymbol]();
@@ -494,6 +521,9 @@ function createstate (init) {
                 }
             }
         });
+    }
+    else if (init instanceof ReactiveState) {
+        return createstate(init.value);
     }
     else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
@@ -530,6 +560,9 @@ function createstate (init) {
                 ]));
             },
             set(target, key, value) {
+                if (key === textnodesymbol) {
+                    return Reflect.set(target, key, value);
+                }
                 const myvalue = Reflect.get(target, "value");
                 if (key === "value" && isobject(value)) {
                     Reflect.set(target, key, value);
@@ -541,7 +574,7 @@ function createstate (init) {
                     target[dispatchsymbol](key);
                 }
                 else if (key === "length") {
-                    Reflect.set(target, key, value);
+                    Reflect.set(myvalue, key, value);
                     target[dispatchsymbol](key);
                 }
                 else {

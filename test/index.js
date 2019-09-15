@@ -411,7 +411,7 @@ const vdom4 = html`
   <div *text=${state3}></div>
   <div *html=${state3}></div>
 
-<script/>
+  <script />
 `;
 // setInterval(() => {
 //   state3.value = String(Math.random());
@@ -425,22 +425,41 @@ document.body.appendChild(createApp(vdom4, document.createElement("div")));
 
 /////////////////////
 const objstate = createState({ a: "w", 6: "xxxxxxx", tttttttt: "true" });
+const objstate2 = createState(`{ a: "w", 6: "xxxxxxx", tttttttt: "true" }`);
 watch(objstate, console.log);
+watch(objstate2, console.log);
 console.log(objstate);
 requestAnimationFrame(() => {
-  objstate.push("qqqqqqqqq");
-  objstate.length = 10;
-
-  objstate.push(Math.random());
-  objstate.push(Math.random());
+  //
+  //   objstate.length = 10;
+  objstate2.value = 2222222222222;
+  //   objstate.push(Math.random());
+  //   objstate.push(Math.random());
   objstate.unshift(Math.random());
-  objstate.sort();
+  //   objstate.sort();
+  objstate.push("qqqqqqqqq");
 });
 const vdomobj = html`
-  <div ></div>
-  <div >${objstate}
-</div>
-${objstate}
-
+  <div>${objstate2}</div>
+  <div>${objstate}</div>
+  ${objstate}
 `;
 document.body.appendChild(createApp(vdomobj, document.createElement("div")));
+console.log(vdomobj);
+const objstatearray = createState([
+  { a: "w", 6: "xxxxxxx", tttttttt: "true" },
+  1,
+  true,
+  "test"
+]);
+watch(objstatearray, console.log);
+requestAnimationFrame(() => {
+  //   objstatearray.push(Math.random());
+
+  objstatearray.unshift(Math.random());
+  //   objstatearray.sort();
+  objstatearray.push("qqqqqqqqq");
+  objstatearray.length = 10;
+  objstatearray.push(Math.random());
+});
+console.log(objstatearray);

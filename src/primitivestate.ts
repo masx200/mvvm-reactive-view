@@ -1,5 +1,7 @@
 import Reflect from "./reflect";
 import { getsymbol, isobject } from "./util";
+export const textnodesymbol = Symbol("textnode");
+export const changetextnodesymbol = Symbol("changetextnode");
 import isprimitive from "./isprimitive";
 export const eventtargetsymbol = Symbol("eventtatget");
 export const memlisteners = Symbol("memlisteners");
@@ -7,7 +9,19 @@ export const dispatchsymbol = getsymbol("dispatch");
 export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
-export default class ReactiveState extends Array {
+const forkarryaprototype = {};
+Reflect.ownKeys(Array.prototype).forEach(key => {
+  forkarryaprototype[key] = Array.prototype[key];
+});
+class forkarray {}
+Object.assign(forkarray.prototype, forkarryaprototype);
+forkarray.prototype.constructor = forkarray;
+Reflect.deleteProperty(forkarray.prototype, "length");
+export default class ReactiveState extends forkarray {
+  /*  [changetextnodesymbol](textnode: Text) {
+    this[textnodesymbol] = textnode;
+  } */
+  [textnodesymbol]: Text | undefined;
   value: string | number | boolean | undefined | object;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];
