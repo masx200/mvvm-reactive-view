@@ -4,7 +4,9 @@
 
 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图
 
-# 局部安装
+由于使用了Proxy，所以不支持ie浏览器，而且proxy不可polyfill
+
+# 安装npm模块
 
 ```powershell
 cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
