@@ -3,7 +3,7 @@ import deepobserve from "deep-observe-agent-proxy";
 import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, { dispatchsymbol } from "./primitivestate";
-export default function(init: string | number | boolean | undefined) {
+export default function createstate(init: string | number | boolean | undefined) {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
       set(target, key, value) {
@@ -18,7 +18,13 @@ export default function(init: string | number | boolean | undefined) {
         }
       }
     });
-  } else if (isobject(init)) {
+  } 
+else if(init instanceof ReactiveState){
+// 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
+return createstate(init .value)
+}
+
+else if (isobject(init)) {
     return new Proxy(new ReactiveState(init), {
       deleteProperty(target, key) {
         const myvalue = Reflect.get(target, "value");
