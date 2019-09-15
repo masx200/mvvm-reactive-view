@@ -410,6 +410,8 @@ const state3 = createState("<a>绑定innerhtml</a>");
 const vdom4 = html`
   <div *text=${state3}></div>
   <div *html=${state3}></div>
+
+<script/>
 `;
 // setInterval(() => {
 //   state3.value = String(Math.random());
