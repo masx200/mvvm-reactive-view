@@ -48,7 +48,17 @@ export default class ReactiveState /* extends forkarray  */ {
   constructor(init: string | number | boolean | object | undefined) {
     //super();
     if (isprimitive(init) || isobject(init)) {
-      this.value = init;
+
+
+Object.defineProperty(this, "value", {
+      value: init,
+      configurable: true,
+writable:true
+    });
+
+
+
+     // this.value = init;
     } else {
       throw TypeError("invalid State");
     }
