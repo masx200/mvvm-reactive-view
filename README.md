@@ -2,7 +2,7 @@
 
 面向未来的,轻量级,响应式,mvvm,构建视图,声明式,组件化,基于 webcomponent ,基于 Proxy,基于虚拟 dom,支持 jsx 和 hyperscript,前端 javascript 库
 
-不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图
+不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象
 
 由于使用了Proxy，所以不支持ie浏览器，而且proxy不可polyfill
 
