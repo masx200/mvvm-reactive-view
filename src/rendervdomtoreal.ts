@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 export const virtualdomsymbol = Symbol("virtualdom");
 import { eventlistenerssymbol } from "./onevent";
 import { subscribesymbol, addallistenerssymbol } from "./primitivestate";

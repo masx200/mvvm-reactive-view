@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
 export const eventtargetsymbol = Symbol("eventtatget");

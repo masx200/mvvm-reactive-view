@@ -297,6 +297,8 @@ var directives = {
     }
 };
 
+var Reflect$1 = window.Reflect;
+
 class setlikearray extends Array {
     constructor() {
         super();
@@ -323,7 +325,7 @@ function createcostumelemet(initclass, children) {
         else {
             customElements.define(elementname, initclass);
         }
-        return Reflect.construct(initclass, [children]);
+        return Reflect$1.construct(initclass, [children]);
     }
     else {
         throw TypeError("invalid custom element class !");
@@ -685,7 +687,7 @@ function createstate (init) {
         return new Proxy(new ReactiveState(init), {
             set(target, key, value) {
                 if (key === "value" && isprimitive(value)) {
-                    Reflect.set(target, key, value);
+                    Reflect$1.set(target, key, value);
                     target[dispatchsymbol]();
                     return true;
                 }
@@ -697,36 +699,51 @@ function createstate (init) {
     }
     else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
-            get(target, key) {
-                const value = Reflect.get(target, "value");
-                if (Reflect.has(target, key)) {
-                    return Reflect.get(target, key);
+            deleteProperty(target, key) {
+                const myvalue = Reflect$1.get(target, "value");
+                if (Reflect$1.has(myvalue, key)) {
+                    Reflect$1.deleteProperty(myvalue, key);
+                    target[dispatchsymbol](key);
+                    return true;
                 }
-                else if (Reflect.has(value, key)) {
-                    return observedeepagent(Reflect.get(value, key), () => {
+                else {
+                    return false;
+                }
+            },
+            has(target, key) {
+                const myvalue = Reflect$1.get(target, "value");
+                return Reflect$1.has(target, key) || Reflect$1.has(myvalue, key);
+            },
+            get(target, key) {
+                const value = Reflect$1.get(target, "value");
+                if (Reflect$1.has(target, key)) {
+                    return Reflect$1.get(target, key);
+                }
+                else if (Reflect$1.has(value, key)) {
+                    return observedeepagent(Reflect$1.get(value, key), () => {
                         target[dispatchsymbol](key);
                     });
                 }
             },
             ownKeys(target) {
                 return Array.from(new Set([
-                    ...Reflect.ownKeys(target),
-                    ...Reflect.ownKeys(Reflect.get(target, "value"))
+                    ...Reflect$1.ownKeys(target),
+                    ...Reflect$1.ownKeys(Reflect$1.get(target, "value"))
                 ]));
             },
             set(target, key, value) {
-                const myvalue = Reflect.get(target, "value");
+                const myvalue = Reflect$1.get(target, "value");
                 if (key === "value" && isobject(value)) {
-                    Reflect.set(target, key, value);
+                    Reflect$1.set(target, key, value);
                     target[dispatchsymbol]();
                     return true;
                 }
-                else if (!Reflect.has(target, key)) {
-                    Reflect.set(myvalue, key, value);
+                else if (!Reflect$1.has(target, key)) {
+                    Reflect$1.set(myvalue, key, value);
                     target[dispatchsymbol](key);
                 }
                 else if (key === "length") {
-                    Reflect.set(target, key, value);
+                    Reflect$1.set(target, key, value);
                     target[dispatchsymbol](key);
                 }
                 else {

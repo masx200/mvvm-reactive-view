@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { isFunction } from "./util";
 import ReactiveState, {
   subscribesymbol,

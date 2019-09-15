@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 export function appendchild(
   container: HTMLElement | SVGSVGElement | SVGElement | Element,
   ele: HTMLElement | SVGElement | Element

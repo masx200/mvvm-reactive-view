@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { isfunction } from "./util";
 import { Class } from "./rendervdomtoreal";
 import setlikearray from "./setlikearay";

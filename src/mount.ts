@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { appendchild } from "./dom";
 export default function(
   ele:

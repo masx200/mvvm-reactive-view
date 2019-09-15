@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";

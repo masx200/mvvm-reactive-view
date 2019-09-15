@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 import htm from "htm/dist/htm.module.js";

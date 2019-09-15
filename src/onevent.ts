@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 export const eventlistenerssymbol = Symbol("eventlisteners");
 import { isArray, isFunction, isString } from "./util";
 export default function(

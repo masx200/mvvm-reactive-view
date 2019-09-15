@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 // import flattenDepth from "lodash/flattenDepth";
 // import flattenDepth from "core-js-pure/features/array/flat";
 if (typeof Array.prototype.flat !== "function") {

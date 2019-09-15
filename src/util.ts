@@ -1,3 +1,4 @@
+import Reflect from "./reflect";
 export function isundefined(a: any) {
   return typeof a === "undefined";
 }
