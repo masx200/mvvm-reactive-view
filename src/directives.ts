@@ -22,14 +22,14 @@ export default {
     } else if (html instanceof Primitivestate) {
       //   const primitivestate = html;
       watch(html, (state: { value: any }) => {
-        ele.innerHTML = String(state.value);
+        ele.innerHTML = String(state);
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.innerHTML = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("html");
-        ele.innerHTML = String(html.value);
+        ele.innerHTML = String(html);
       });
     } else {
       throw TypeError("invalid html");
@@ -46,14 +46,14 @@ export default {
     } else if (text instanceof Primitivestate) {
       //   const primitivestate = text;
       watch(text, (state: { value: any }) => {
-        ele.textContent = String(state.value);
+        ele.textContent = String(state);
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.textContent = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("text");
-        ele.textContent = String(text.value);
+        ele.textContent = String(text);
       });
     } else {
       throw TypeError("invalid text");
