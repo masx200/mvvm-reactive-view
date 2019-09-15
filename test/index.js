@@ -436,3 +436,11 @@ requestAnimationFrame(() => {
   objstate.unshift(Math.random());
   objstate.sort();
 });
+const vdomobj = html`
+  <div ></div>
+  <div >${objstate}
+</div>
+${objstate}
+
+`;
+document.body.appendChild(createApp(vdomobj, document.createElement("div")));
