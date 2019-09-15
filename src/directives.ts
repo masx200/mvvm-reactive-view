@@ -56,20 +56,27 @@ setelehtml(ele,String(html))
     // console.log(ele.outerHTML);
     if (typeof text == "string") {
       requestAnimationFrame(() => {
-        ele.textContent = text;
+
+
+seteletext(ele,text)
+    /*    ele.textContent = text;*/
         //   console.log(ele.outerHTML);
       });
     } else if (text instanceof Primitivestate) {
       //   const primitivestate = text;
       watch(text, (state: { value: any }) => {
-        ele.textContent = String(state);
+      seteletext(ele,String(state))
+
+ /* ele.textContent = String(state);*/
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.textContent = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("text");
-        ele.textContent = String(text);
+     seteletext(ele,String(text))
+
+ /*  ele.textContent = String(text);*/
       });
     } else {
       throw TypeError("invalid text");
