@@ -426,8 +426,8 @@ document.body.appendChild(createApp(vdom4, document.createElement("div")));
 /////////////////////
 const objstate = createState({ a: "w", 6: "xxxxxxx", tttttttt: "true" });
 const objstate2 = createState(`{ a: "w", 6: "xxxxxxx", tttttttt: "true" }`);
-watch(objstate, console.log);
-watch(objstate2, console.log);
+// watch(objstate, console.log);
+// watch(objstate2, console.log);
 console.log(objstate);
 requestAnimationFrame(() => {
   //
@@ -469,6 +469,10 @@ requestAnimationFrame(() => {
   objstatearray.push(Math.random());
 });
 console.log(objstatearray);
-setInterval(() => {
+let timer = setInterval(() => {
   objstate2.value += String(Math.random());
 }, 1000);
+setTimeout(() => {
+  clearInterval(timer);
+}, 10000);
+console.log([objstate2, createState(objstate2)]);
