@@ -11,6 +11,8 @@ export default function createstate(
 ) {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
+
+deleteProperty(target, key) {return false},
       set(target, key, value) {
         if (key === textnodesymbol) {
           return Reflect.set(target, key, value);
