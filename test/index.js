@@ -420,3 +420,8 @@ console.log(state3);
 watch(state3, console.log);
 console.log(vdom4);
 document.body.appendChild(createApp(vdom4, document.createElement("div")));
+
+/////////////////////
+const objstate = createState({ a: "w", 6: "xxxxxxx", tttttttt: "true" });
+console.log(objstate);
+watch(objstate, console.log);
