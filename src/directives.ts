@@ -1,3 +1,9 @@
+export function seteletext(e,v){
+e.textContent=v
+}
+export function setelehtml(e,v){
+e.innerHTML = v;
+}
 import Reflect from "./reflect";
 import { watch } from "./watch";
 import { subscribesymbol, addallistenerssymbol } from "./primitivestate";
