@@ -1,3 +1,5 @@
+export const requestAnimationFrame=window.requestAnimationFrame
+
 export function seteletext(e,v){
 e.textContent=v
 }
