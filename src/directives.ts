@@ -35,14 +35,17 @@ setelehtml(ele,html)
       watch(html, (state: { value: any }) => {
         /*ele.innerHTML = String(state);*/
 
-setelehtml(ele,String(state);)
+setelehtml(ele,String(state))
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.innerHTML = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("html");
-        ele.innerHTML = String(html);
+      /*  ele.innerHTML = String(html);*/
+
+setelehtml(ele,String(html))
+
       });
     } else {
       throw TypeError("invalid html");
