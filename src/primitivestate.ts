@@ -18,6 +18,11 @@ Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
 Reflect.deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState /* extends forkarray  */ {
+  [addallistenerssymbol]() {
+    this[memlisteners].forEach(([value, callback]) => {
+      this[eventtargetsymbol].addEventListener(value, callback);
+    });
+  }
   /*  [changetextnodesymbol](textnode: Text) {
     this[textnodesymbol] = textnode;
   } */
@@ -38,15 +43,7 @@ export default class ReactiveState /* extends forkarray  */ {
       value: "ReactiveState"
     });
   }
-  [Symbol.toPrimitive]() {
-    //return this.value;
-    let value = this.value;
-    return isprimitive(value)
-      ? value
-      : isobject(value)
-      ? JSON.stringify(value)
-      : void 0;
-  }
+
   valueOf() {
     return this.value;
   }
@@ -76,9 +73,13 @@ export default class ReactiveState /* extends forkarray  */ {
       this[eventtargetsymbol].removeEventListener(value, callback);
     });
   }
-  [addallistenerssymbol]() {
-    this[memlisteners].forEach(([value, callback]) => {
-      this[eventtargetsymbol].addEventListener(value, callback);
-    });
+  [Symbol.toPrimitive]() {
+    //return this.value;
+    let value = this.value;
+    return isprimitive(value)
+      ? value
+      : isobject(value)
+      ? JSON.stringify(value)
+      : void 0;
   }
 }

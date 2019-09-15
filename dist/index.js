@@ -97,13 +97,10 @@ class ReactiveState {
             value: "ReactiveState"
         });
     }
-    [(_a = eventtargetsymbol, _b = memlisteners, Symbol.toPrimitive)]() {
-        let value = this.value;
-        return isprimitive(value)
-            ? value
-            : isobject(value)
-                ? JSON.stringify(value)
-                : void 0;
+    [addallistenerssymbol]() {
+        this[memlisteners].forEach(([value, callback]) => {
+            this[eventtargetsymbol].addEventListener(value, callback);
+        });
     }
     valueOf() {
         return this.value;
@@ -116,7 +113,7 @@ class ReactiveState {
                 ? JSON.stringify(value)
                 : "";
     }
-    [dispatchsymbol](eventname) {
+    [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
         let name = eventname ? String(eventname) : "value";
         if (name !== "value") {
             this[eventtargetsymbol].dispatchEvent(new Event(name));
@@ -132,10 +129,13 @@ class ReactiveState {
             this[eventtargetsymbol].removeEventListener(value, callback);
         });
     }
-    [addallistenerssymbol]() {
-        this[memlisteners].forEach(([value, callback]) => {
-            this[eventtargetsymbol].addEventListener(value, callback);
-        });
+    [Symbol.toPrimitive]() {
+        let value = this.value;
+        return isprimitive(value)
+            ? value
+            : isobject(value)
+                ? JSON.stringify(value)
+                : void 0;
     }
 }
 
