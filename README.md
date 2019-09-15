@@ -169,21 +169,21 @@ class Virtualdom {
 使用`createState`来生成一个引用形式的状态
 
 ```ts
-function createState(init: string | number | boolean): Primitivestate;
+function createState(init: string | number | boolean|object): ReactiveState;
 ```
 
 状态`Primitivestate`类,可修改其`value`属性来改变状态的值
 
 ```ts
-class Primitivestate {
-  value: string | number | boolean | undefined;
+class ReactiveState {
+  value: string | number | boolean | undefined:object;
 
-  constructor(init: string | number | boolean);
+  constructor(init: string | number | boolean:object);
 }
 ```
 
 使用`watch`函数来监听状态的变化,执行回调函数
 
 ```ts
-function watch(state: Primitivestate, callback: Function): void;
+function watch(state: ReactiveState, callback: Function): void;
 ```
