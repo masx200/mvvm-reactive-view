@@ -86,7 +86,7 @@ const vdom = html`
   <h1 style=${stylestate}>mvvm-reactive-view</h1>
 `;
 watch(state1, console.log);
-console.log(vdom);
+console.log(vdom,inputref);
 createApp(vdom, document.getElementById("root"));
 ```
 
