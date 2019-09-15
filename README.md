@@ -117,6 +117,9 @@ createApp(vdom, document.getElementById("root"));
 
 给表单元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
 
+`@input=${e => (state1.value = e.target.value)}`
+
+
 # API
 
 `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
