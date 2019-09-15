@@ -402,8 +402,8 @@ const vdom3 = html`
 ></input>
 `;
 console.log(vdom3);
-watch(state1, console.log);
-watch(state2, console.log);
+// watch(state1, console.log);
+// watch(state2, console.log);
 document.body.appendChild(createApp(vdom3, document.createElement("div")));
 //////////////////////
 const state3 = createState("<a>绑定innerhtml</a>");
@@ -419,7 +419,7 @@ const vdom4 = html`
 watch(state1, state => (state3.value = state.value));
 watch(state2, state => (state1.value = state.value));
 console.log(state3);
-watch(state3, console.log);
+// watch(state3, console.log);
 console.log(vdom4);
 document.body.appendChild(createApp(vdom4, document.createElement("div")));
 
@@ -431,29 +431,35 @@ watch(objstate2, console.log);
 console.log(objstate);
 requestAnimationFrame(() => {
   //
-  //   objstate.length = 10;
+  objstate.length = 10;
   objstate2.value = 2222222222222;
   //   objstate.push(Math.random());
   //   objstate.push(Math.random());
-  objstate.unshift(Math.random());
-  //   objstate.sort();
-  objstate.push("qqqqqqqqq");
 });
-const vdomobj = html`
-  <div>${objstate2}</div>
-  <div>${objstate}</div>
-  ${objstate}
-`;
-document.body.appendChild(createApp(vdomobj, document.createElement("div")));
-console.log(vdomobj);
+
 const objstatearray = createState([
   { a: "w", 6: "xxxxxxx", tttttttt: "true" },
   1,
   true,
   "test"
 ]);
-watch(objstatearray, console.log);
+
+const vdomobj = html`
+  <div>${objstate2}</div>
+  <div>${objstatearray}</div>
+  ${objstate}
+`;
+document.body.appendChild(createApp(vdomobj, document.createElement("div")));
+console.log(vdomobj);
+
+/* requestAnimationFrame(() => {
+  //   watch(objstatearray, console.log);
+}); */
+
 requestAnimationFrame(() => {
+  objstatearray.unshift(Math.random());
+  //   objstate.sort();
+  objstatearray.push("qqqqqqqqq");
   //   objstatearray.push(Math.random());
 
   objstatearray.unshift(Math.random());
@@ -463,3 +469,6 @@ requestAnimationFrame(() => {
   objstatearray.push(Math.random());
 });
 console.log(objstatearray);
+setInterval(() => {
+  objstate2.value += String(Math.random());
+}, 1000);

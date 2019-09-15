@@ -46,8 +46,6 @@ function flattenDeep(arr1) {
     return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
 }
 
-var Reflect = window.Reflect;
-
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -85,18 +83,8 @@ const dispatchsymbol = getsymbol("dispatch");
 const subscribesymbol = getsymbol("subscribe");
 const removeallistenerssymbol = getsymbol("removeallisteners");
 const addallistenerssymbol = getsymbol("addallisteners");
-const forkarryaprototype = {};
-Reflect.ownKeys(Array.prototype).forEach(key => {
-    forkarryaprototype[key] = Array.prototype[key];
-});
-class forkarray {
-}
-Object.assign(forkarray.prototype, forkarryaprototype);
-forkarray.prototype.constructor = forkarray;
-Reflect.deleteProperty(forkarray.prototype, "length");
-class ReactiveState extends forkarray {
+class ReactiveState {
     constructor(init) {
-        super();
         this[_a] = new EventTarget();
         this[_b] = [];
         if (isprimitive(init) || isobject(init)) {
@@ -311,6 +299,8 @@ var directives = {
         }
     }
 };
+
+var Reflect = window.Reflect;
 
 class setlikearray extends Array {
     constructor() {

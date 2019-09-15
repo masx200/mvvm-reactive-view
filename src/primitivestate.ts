@@ -9,15 +9,15 @@ export const dispatchsymbol = getsymbol("dispatch");
 export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
-const forkarryaprototype = {};
+/* const forkarryaprototype = {};
 Reflect.ownKeys(Array.prototype).forEach(key => {
   forkarryaprototype[key] = Array.prototype[key];
-});
-class forkarray {}
+}); */
+/* class forkarray {}
 Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
-Reflect.deleteProperty(forkarray.prototype, "length");
-export default class ReactiveState extends forkarray {
+Reflect.deleteProperty(forkarray.prototype, "length"); */
+export default class ReactiveState /* extends forkarray  */ {
   /*  [changetextnodesymbol](textnode: Text) {
     this[textnodesymbol] = textnode;
   } */
@@ -26,7 +26,7 @@ export default class ReactiveState extends forkarray {
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];
   constructor(init: string | number | boolean | object | undefined) {
-    super();
+    //super();
     if (isprimitive(init) || isobject(init)) {
       this.value = init;
     } else {
