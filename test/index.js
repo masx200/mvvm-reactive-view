@@ -423,9 +423,14 @@ document.body.appendChild(createApp(vdom4, document.createElement("div")));
 
 /////////////////////
 const objstate = createState({ a: "w", 6: "xxxxxxx", tttttttt: "true" });
-console.log(objstate);
 watch(objstate, console.log);
-objstate.push("qqqqqqqqq");
-objstate.length = 1;
+console.log(objstate);
+requestAnimationFrame(() => {
+  objstate.push("qqqqqqqqq");
+  objstate.length = 10;
 
-objstate.push(Math.random());
+  objstate.push(Math.random());
+  objstate.push(Math.random());
+  objstate.unshift(Math.random());
+  objstate.sort();
+});

@@ -505,7 +505,7 @@ function createstate (init) {
                     return true;
                 }
                 else {
-                    return false;
+                    return true;
                 }
             },
             has(target, key) {

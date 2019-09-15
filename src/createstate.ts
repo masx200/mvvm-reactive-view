@@ -27,7 +27,7 @@ export default function(init: string | number | boolean | undefined) {
           target[dispatchsymbol](key);
           return true;
         } else {
-          return false;
+          return true;
         }
       },
       has(target, key) {
