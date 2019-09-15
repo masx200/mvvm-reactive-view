@@ -3,7 +3,7 @@ export default Reflect
 
 
 
-export const {apply,construct}=Reflect
+export const {apply,construct,defineProperty,deleteProperty,get,getOwnPropertyDescriptor,getPrototypeOf,has}=Reflect
 /*
 Reflect.apply()
 对一个函数进行调用操作，同时可以传入一个数组作为调用参数。和 Function.prototype.apply() 功能类似。
@@ -13,7 +13,7 @@ Reflect.defineProperty()
 和 Object.defineProperty() 类似。
 Reflect.deleteProperty()
 作为函数的delete操作符，相当于执行 delete target[name]。
-Reflect.enumerate()
+//Reflect.enumerate()
 该方法会返回一个包含有目标对象身上所有可枚举的自身字符串属性以及继承字符串属性的迭代器，for...in 操作遍历到的正是这些属性。
 Reflect.get()
 获取对象身上某个属性的值，类似于 target[name]。
