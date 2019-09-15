@@ -246,7 +246,7 @@ function setelehtml(e, v) {
     e.innerHTML = v;
 }
 var directives = {
-    ref(ele, ref, vdom) {
+    ref(ele, ref) {
         if (typeof ref == "object") {
             ref.value = ele;
         }
@@ -254,7 +254,7 @@ var directives = {
             throw TypeError("invalid ref");
         }
     },
-    html(ele, html, vdom) {
+    html(ele, html) {
         if (typeof html == "string") {
             requestAnimationFrame(() => {
                 setelehtml(ele, html);
@@ -272,7 +272,7 @@ var directives = {
             throw TypeError("invalid html");
         }
     },
-    text(ele, text, vdom) {
+    text(ele, text) {
         if (typeof text == "string") {
             requestAnimationFrame(() => {
                 seteletext(ele, text);
@@ -645,7 +645,7 @@ function createstate(init) {
             defineProperty() {
                 return false;
             },
-            deleteProperty(target, key) {
+            deleteProperty() {
                 return false;
             },
             set(target, key, value) {
