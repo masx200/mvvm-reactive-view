@@ -212,7 +212,8 @@ function assertvalidvirtualdom(...args) {
         return vdom;
     }
     else {
-        throw new TypeError("invalid Virtualdom!" + "\n" + JSON.stringify(vdom, null, 4));
+        throw new TypeError("invalid Virtualdom!");
+        console.error(vdom);
     }
 }
 
@@ -270,10 +271,10 @@ var directives = {
         }
         else if (html instanceof ReactiveState) {
             watch(html, (state) => {
-                ele.innerHTML = String(state.value);
+                ele.innerHTML = String(state);
             });
             requestAnimationFrame(() => {
-                ele.innerHTML = String(html.value);
+                ele.innerHTML = String(html);
             });
         }
         else {
@@ -288,10 +289,10 @@ var directives = {
         }
         else if (text instanceof ReactiveState) {
             watch(text, (state) => {
-                ele.textContent = String(state.value);
+                ele.textContent = String(state);
             });
             requestAnimationFrame(() => {
-                ele.textContent = String(text.value);
+                ele.textContent = String(text);
             });
         }
         else {
@@ -303,10 +304,6 @@ var directives = {
 var Reflect = window.Reflect;
 
 class setlikearray extends Array {
-    constructor() {
-        super();
-        Object.defineProperty(this, Symbol.toStringTag, { value: "setlikearray" });
-    }
     push(...items) {
         items.forEach(item => {
             if (isfunction(item) || isobject(item)) {
@@ -400,22 +397,23 @@ function render(vdom, namespace) {
         return textnode;
     }
     else if (vdom instanceof Virtualdom && "type" in vdom) {
+        const { type } = vdom;
         let element;
-        if (typeof vdom.type === "string") {
-            if (vdom.type === "script") {
+        if (typeof type === "string") {
+            if (type === "script") {
                 return createnonescript();
             }
-            else if (vdom.type === "svg") {
+            else if (type === "svg") {
                 element = createsvgelement();
             }
             else {
                 element = namespace
-                    ? createElementNS(namespace, vdom.type)
-                    : createnativeelement(vdom.type);
+                    ? createElementNS(namespace, type)
+                    : createnativeelement(type);
             }
         }
-        else if (typeof vdom.type == "function") {
-            element = createcostumelemet(vdom.type, vdom.children);
+        else if (typeof type == "function") {
+            element = createcostumelemet(type, vdom.children);
         }
         else {
             throwinvalideletype();
@@ -444,9 +442,9 @@ function render(vdom, namespace) {
         Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
-        if (typeof vdom.type !== "function") {
+        if (typeof type !== "function") {
             mount(vdom.children.map(e => {
-                if (vdom.type === "svg") {
+                if (type === "svg") {
                     return render(e, svgnamespace);
                 }
                 else if (namespace) {
@@ -467,7 +465,8 @@ function render(vdom, namespace) {
 function createApp(vdom, container) {
     const el = container;
     if (!isvalidvdom(vdom)) {
-        throw TypeError("invalid Virtualdom " + "\n" + JSON.stringify(vdom, null, 4));
+        throw TypeError("invalid Virtualdom ");
+        console.error(vdom);
     }
     if (!(el instanceof HTMLElement)) {
         throw TypeError("invalid container HTMLElement!");

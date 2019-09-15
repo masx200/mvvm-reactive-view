@@ -9,9 +9,8 @@ export default function createApp(
 ) {
   const el = container;
   if (!isvalidvdom(vdom)) {
-    throw TypeError(
-      "invalid Virtualdom "    );
-console.error(vdom)
+    throw TypeError("invalid Virtualdom ");
+    console.error(vdom);
   }
   if (!(el instanceof HTMLElement)) {
     throw TypeError("invalid container HTMLElement!");

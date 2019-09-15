@@ -51,22 +51,23 @@ export default function render(
     });
     return textnode;
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
+    const { type } = vdom;
     let element: HTMLElement | SVGSVGElement | SVGElement | Element;
-    if (typeof vdom.type === "string") {
-      if (vdom.type === "script") {
+    if (typeof type === "string") {
+      if (type === "script") {
         /* 禁止加载脚本 */
 
         return createnonescript();
-      } else if (vdom.type === "svg") {
+      } else if (type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
       } else {
         element = namespace
-          ? createElementNS(namespace, vdom.type)
-          : createnativeelement(vdom.type);
+          ? createElementNS(namespace, type)
+          : createnativeelement(type);
       }
-    } else if (typeof vdom.type == "function") {
-      element = createcostumelemet(vdom.type, vdom.children);
+    } else if (typeof type == "function") {
+      element = createcostumelemet(type, vdom.children);
     } else {
       throwinvalideletype();
       // throw TypeError("invalid element type!");
@@ -106,10 +107,10 @@ export default function render(
       onevent(element, event, callbacks);
     });
     /* 自定义组件不添加children,而是从构造函数传入 */
-    if (typeof vdom.type !== "function") {
+    if (typeof type !== "function") {
       mount(
         vdom.children.map(e => {
-          if (vdom.type === "svg") {
+          if (type === "svg") {
             /* 没想到svg的创建方式这么特别?否则显示不出svg */
             //   element.innerHTML = element.innerHTML;
             return render(e, svgnamespace);

@@ -2,10 +2,10 @@ import Reflect from "./reflect";
 import { isstring, isarray, isobject, isfunction } from "./util";
 // import {isclassextendsHTMLElement} from './customelement';
 export default class setlikearray extends Array {
-  constructor() {
+  /*   constructor() {
     super();
     Object.defineProperty(this, Symbol.toStringTag, { value: "setlikearray" });
-  }
+  } */
   push(...items: any[]): number {
     items.forEach(item => {
       if (isfunction(item) || isobject(item)) {
