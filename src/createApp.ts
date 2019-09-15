@@ -2,7 +2,7 @@ import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";
 import mount from "./mount";
-export default function(
+export default function createApp(
   vdom: Virtualdom | string | Array<Virtualdom | string>,
   container: HTMLElement | Element
 ) {

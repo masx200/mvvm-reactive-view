@@ -82,34 +82,50 @@ const dispatchsymbol = getsymbol("dispatch");
 const subscribesymbol = getsymbol("subscribe");
 const removeallistenerssymbol = getsymbol("removeallisteners");
 const addallistenerssymbol = getsymbol("addallisteners");
-class Primitivestate {
+class ReactiveState extends Array {
     constructor(init) {
+        super();
         this[_a] = new EventTarget();
         this[_b] = [];
-        if (isprimitive(init)) {
+        if (isprimitive(init) || isobject(init)) {
             this.value = init;
         }
         else {
-            throw TypeError("invalid primitive");
+            throw TypeError("invalid State");
         }
         Object.defineProperty(this, Symbol.toStringTag, {
-            value: "primitivestate"
+            value: "ReactiveState"
         });
     }
     [(_a = eventtargetsymbol, _b = memlisteners, Symbol.toPrimitive)]() {
-        return this.value;
+        let value = this.value;
+        return isprimitive(value)
+            ? value
+            : isobject(value)
+                ? JSON.stringify(value)
+                : void 0;
     }
     valueOf() {
         return this.value;
     }
     toString() {
-        return String(this.value);
+        let value = this.value;
+        return isprimitive(value)
+            ? String(value)
+            : isobject(value)
+                ? JSON.stringify(value)
+                : "";
     }
-    [dispatchsymbol]() {
+    [dispatchsymbol](eventname) {
+        let name = eventname ? String(eventname) : "value";
+        if (name !== "value") {
+            this[eventtargetsymbol].dispatchEvent(new Event(name));
+        }
         this[eventtargetsymbol].dispatchEvent(new Event("value"));
     }
-    [subscribesymbol](callback) {
-        this[memlisteners].push(["value", () => callback(this)]);
+    [subscribesymbol](callback, eventname) {
+        let name = eventname ? String(eventname) : "value";
+        this[memlisteners].push([name, () => callback(this)]);
     }
     [removeallistenerssymbol]() {
         this[memlisteners].forEach(([value, callback]) => {
@@ -135,10 +151,10 @@ class Virtualdom {
             type,
             bindattr: Object.fromEntries(propsentries
                 .filter(([key]) => /[A-Za-z]/.test(key[0]))
-                .filter(e => e[1] instanceof Primitivestate)),
+                .filter(e => e[1] instanceof ReactiveState)),
             props: Object.fromEntries(propsentries
                 .filter(([key]) => /[A-Za-z]/.test(key[0]))
-                .filter(e => !(e[1] instanceof Primitivestate))),
+                .filter(e => !(e[1] instanceof ReactiveState))),
             children,
             onevent: Object.fromEntries(propsentries
                 .filter(([key]) => /\@/.test(key[0]))
@@ -219,8 +235,16 @@ function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
 
-function watch(state, callback) {
-    state[subscribesymbol](callback);
+function watch(state, callback, statekey) {
+    if (!(state instanceof ReactiveState && isfunction(callback))) {
+        throw TypeError("invalid state or callback");
+    }
+    if (statekey) {
+        state[subscribesymbol](callback, statekey);
+    }
+    else {
+        state[subscribesymbol](callback);
+    }
     requestAnimationFrame(() => {
         state[addallistenerssymbol]();
     });
@@ -241,7 +265,7 @@ var directives = {
                 ele.innerHTML = html;
             });
         }
-        else if (html instanceof Primitivestate) {
+        else if (html instanceof ReactiveState) {
             watch(html, (state) => {
                 ele.innerHTML = String(state.value);
             });
@@ -259,7 +283,7 @@ var directives = {
                 ele.textContent = text;
             });
         }
-        else if (text instanceof Primitivestate) {
+        else if (text instanceof ReactiveState) {
             watch(text, (state) => {
                 ele.textContent = String(state.value);
             });
@@ -528,7 +552,7 @@ function render(vdom, namespace) {
     }
 }
 
-function createApp (vdom, container) {
+function createApp(vdom, container) {
     const el = container;
     if (!isvalidvdom(vdom)) {
         throw TypeError("invalid Virtualdom " + "\n" + JSON.stringify(vdom, null, 4));
@@ -552,24 +576,165 @@ function createApp (vdom, container) {
     return container;
 }
 
-function createref (init) {
+function createRef(init) {
     return { value: init };
 }
 
-function createstate (init) {
-    return new Proxy(new Primitivestate(init), {
-        set(target, key, value) {
-            if (key === "value" && isprimitive(value)) {
-                Reflect.set(target, key, value);
-                target[dispatchsymbol]();
-                return true;
-            }
-            else {
-                return false;
-            }
+function isobject$2(a) {
+    return typeof a === "object" && a !== null;
+}
+function isfunction$1(a) {
+    return typeof a === "function";
+}
+function deepobserveaddpath(target, callback, patharray = [], ancestor = target) {
+    if (typeof callback !== "function") {
+        throw Error("observe callback is not valid function !");
+    }
+    if (isfunction$1(target) || isobject$2(target)) {
+        let forkobj;
+        if (isobject$2(target)) {
+            forkobj = {};
         }
-    });
+        else {
+            forkobj = () => { };
+        }
+        Reflect.setPrototypeOf(forkobj, null);
+        return (forkobj => {
+            return new Proxy(forkobj, {
+                defineProperty(t, p, a) {
+                    return Reflect.defineProperty(target, p, a);
+                },
+                deleteProperty(t, p) {
+                    callback(ancestor, [...patharray, p], undefined, Reflect.get(target, p));
+                    return Reflect.deleteProperty(target, p);
+                },
+                ownKeys() {
+                    return Reflect.ownKeys(target);
+                },
+                has(t, p) {
+                    return Reflect.has(target, p);
+                },
+                getPrototypeOf() {
+                    return Reflect.getPrototypeOf(target);
+                },
+                setPrototypeOf(t, v) {
+                    return Reflect.setPrototypeOf(target, v);
+                },
+                construct(t, argumentslist) {
+                    if (typeof target === "function") {
+                        return Reflect.construct(target, argumentslist);
+                    }
+                },
+                apply(t, thisarg, argarray) {
+                    if (typeof target === "function") {
+                        return Reflect.apply(target, thisarg, argarray);
+                    }
+                },
+                getOwnPropertyDescriptor(t, k) {
+                    var descripter = Reflect.getOwnPropertyDescriptor(target, k);
+                    if (descripter) {
+                        descripter.configurable = true;
+                        return descripter;
+                    }
+                    else {
+                        return;
+                    }
+                },
+                set(t, k, v) {
+                    if (typeof callback === "function") {
+                        callback(ancestor, [...patharray, k], v, Reflect.get(target, k));
+                    }
+                    return Reflect.set(target, k, v);
+                },
+                get(t, k) {
+                    var value = Reflect.get(target, k);
+                    if (isfunction$1(value) || isobject$2(value)) {
+                        return deepobserveaddpath(value, callback, [...patharray, k], target);
+                    }
+                    else {
+                        return value;
+                    }
+                }
+            });
+        })(forkobj);
+    }
+    else {
+        return target;
+    }
+}
+function observedeepagent(target, callback) {
+    if (typeof callback !== "function") {
+        throw Error("observe callback is not valid function !");
+    }
+    if (typeof Proxy !== "function") {
+        setTimeout(() => {
+            throw Error("不支持Proxy!");
+        }, 0);
+        return target;
+    }
+    if (isfunction$1(target) || isobject$2(target)) {
+        return deepobserveaddpath(target, callback, [], target);
+    }
+    else {
+        return target;
+    }
 }
 
-export { createApp, h as createElemet, createref as createRef, createstate as createState, h, assertvalidvirtualdom as html, watch };
+function createstate (init) {
+    if (isprimitive(init)) {
+        return new Proxy(new ReactiveState(init), {
+            set(target, key, value) {
+                if (key === "value" && isprimitive(value)) {
+                    Reflect.set(target, key, value);
+                    target[dispatchsymbol]();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+    }
+    else if (isobject(init)) {
+        return new Proxy(new ReactiveState(init), {
+            get(target, key) {
+                const value = Reflect.get(target, "value");
+                if (Reflect.has(target, key)) {
+                    return Reflect.get(target, key);
+                }
+                else if (Reflect.has(value, key)) {
+                    return observedeepagent(Reflect.get(value, key), () => {
+                        target[dispatchsymbol](key);
+                    });
+                }
+            },
+            ownKeys(target) {
+                return Array.from(new Set([
+                    ...Reflect.ownKeys(target),
+                    ...Reflect.ownKeys(Reflect.get(target, "value"))
+                ]));
+            },
+            set(target, key, value) {
+                const myvalue = Reflect.get(target, "value");
+                if (key === "value" && isobject(value)) {
+                    Reflect.set(target, key, value);
+                    target[dispatchsymbol]();
+                    return true;
+                }
+                else if (!Reflect.has(target, key)) {
+                    Reflect.set(myvalue, key, value);
+                    target[dispatchsymbol](key);
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+    }
+    else {
+        throw TypeError("invalid State");
+    }
+}
+
+export { createApp, h as createElemet, createRef, createstate as createState, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map

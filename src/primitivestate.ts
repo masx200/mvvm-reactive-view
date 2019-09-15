@@ -45,8 +45,11 @@ export default class ReactiveState extends Array {
   }
   [dispatchsymbol](eventname?: string) {
     let name = eventname ? String(eventname) : "value";
+    if (name !== "value") {
+      this[eventtargetsymbol].dispatchEvent(new Event(name));
+    }
 
-    this[eventtargetsymbol].dispatchEvent(new Event(name));
+    this[eventtargetsymbol].dispatchEvent(new Event("value"));
   }
   [subscribesymbol](callback: Function, eventname?: string) {
     // this[eventtargetsymbol].addEventListener("value", callback);
