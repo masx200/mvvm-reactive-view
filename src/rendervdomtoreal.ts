@@ -73,7 +73,17 @@ export default function render(
       throwinvalideletype();
       // throw TypeError("invalid element type!");
     }
-    var attribute1 = createeleattr(element);
+
+
+Object.entries(vdom.directives).forEach(([name, value]) => {
+      if (name in directives && typeof directives[name] === "function") {
+        directives[name](element, value, vdom);
+      } else {
+        throw new Error("invalid directives " + name);
+      }
+    });
+   
+ var attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
     /* 添加常量的属性 */
     element[virtualdomsymbol] = vdom;
@@ -93,13 +103,7 @@ export default function render(
 
     /* 添加事件绑定和指令执行 */
 
-    Object.entries(vdom.directives).forEach(([name, value]) => {
-      if (name in directives && typeof directives[name] === "function") {
-        directives[name](element, value, vdom);
-      } else {
-        throw new Error("invalid directives " + name);
-      }
-    });
+    
     if (!element[eventlistenerssymbol]) {
       element[eventlistenerssymbol] = [];
     }
