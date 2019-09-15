@@ -172,7 +172,7 @@ class Virtualdom {
 function createState(init: string | number | boolean|object): ReactiveState;
 ```
 
-状态`Primitivestate`类,可修改其`value`属性来改变状态的值
+响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值
 
 ```ts
 class ReactiveState {
