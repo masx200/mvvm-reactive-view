@@ -176,9 +176,9 @@ function createState(init: string | number | boolean|object): ReactiveState;
 
 ```ts
 class ReactiveState {
-  value: string | number | boolean | undefined:object;
+  value: string | number | boolean | undefined|object;
 
-  constructor(init: string | number | boolean:object);
+  constructor(init: string | number | boolean|object);
 }
 ```
 
