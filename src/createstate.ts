@@ -1,3 +1,4 @@
+import deepobserve from "deep-observe-agent-proxy";
 import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, { dispatchsymbol } from "./primitivestate";
@@ -24,7 +25,10 @@ export default function(init: string | number | boolean | undefined) {
           return Reflect.get(target, key);
         } else if (Reflect.has(value, key)) {
           /*  */
-          return Reflect.get(target, key);
+
+          return deepobserve(Reflect.get(value, key), () => {
+            target[dispatchsymbol](key);
+          });
         }
       },
       ownKeys(target) {
@@ -36,12 +40,17 @@ export default function(init: string | number | boolean | undefined) {
         );
       },
       set(target, key, value) {
+        const myvalue = Reflect.get(target, "value");
         if (key === "value" && isobject(value)) {
           // if (target[key] !== value) {
           Reflect.set(target, key, value);
           target[dispatchsymbol]();
           // }
           return true;
+        } else if (!Reflect.has(target, key)) {
+          Reflect.set(myvalue, key, value);
+          target[dispatchsymbol](key);
+          //
         } else {
           return false;
         }

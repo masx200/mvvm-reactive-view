@@ -19,6 +19,7 @@
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {},
     "devDependencies": {
+        "deep-observe-agent-proxy": "https://github.com/masx200/deep-observe-agent-proxy.git",
         "core-js": "^3.2.1",
         "core-js-pure": "^3.2.1",
         "dom-element-attribute-agent-proxy": "https://github.com/masx200/dom-element-attribute-agent-proxy.git",
