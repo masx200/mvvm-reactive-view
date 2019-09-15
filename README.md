@@ -213,3 +213,7 @@ class ReactiveState {
 ```ts
 function watch(state: ReactiveState, callback: Function): void;
 ```
+
+# 关于 Proxy
+
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
