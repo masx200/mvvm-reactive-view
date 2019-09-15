@@ -95,11 +95,11 @@ core-js@^3.2.1:
 
 "deep-observe-agent-proxy@https://github.com/masx200/deep-observe-agent-proxy.git":
   version "1.1.0"
-  resolved "https://github.com/masx200/deep-observe-agent-proxy.git#fb2a02a7b9045d8df25755a7f7dbe50c79749a07"
+  resolved "https://github.com/masx200/deep-observe-agent-proxy.git#a625b4b347e383ff6ecf5e9b1f7d1ed5d88c9ed9"
 
 "dom-element-attribute-agent-proxy@https://github.com/masx200/dom-element-attribute-agent-proxy.git":
   version "1.1.0"
-  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#fb2da274d49e2c9ec7447296020591f6de9a028c"
+  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#781cdbe4da52e4cf445fdd89d542e9f5f33f9aaa"
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
