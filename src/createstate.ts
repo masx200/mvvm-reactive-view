@@ -1,4 +1,18 @@
-import Reflect from "./reflect";
+import Reflect, {
+  apply,
+  construct,
+  defineProperty,
+  deleteProperty,
+  get,
+  getOwnPropertyDescriptor,
+  getPrototypeOf,
+  has,
+  isExtensible,
+  ownKeys,
+  preventExtensions,
+  set,
+  setPrototypeOf
+} from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
 import { getsymbol, isobject } from "./util";
 import isprimitive from "./isprimitive";
@@ -11,15 +25,19 @@ export default function createstate(
 ) {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
-
-deleteProperty(target, key) {return false},
+      defineProperty() {
+        return false;
+      },
+      deleteProperty(target, key) {
+        return false;
+      },
       set(target, key, value) {
         if (key === textnodesymbol) {
-          return Reflect.set(target, key, value);
+          return set(target, key, value);
         }
         if (key === "value" && isprimitive(value)) {
           // if (target[key] !== value) {
-          Reflect.set(target, key, value);
+          set(target, key, value);
           target[dispatchsymbol]();
           // }
           return true;
@@ -33,19 +51,22 @@ deleteProperty(target, key) {return false},
     return createstate(init.value);
   } else if (isobject(init)) {
     return new Proxy(new ReactiveState(init), {
+      defineProperty() {
+        return false;
+      },
       getOwnPropertyDescriptor(target, key) {
-        const myvalue = Reflect.get(target, "value");
+        const myvalue = get(target, "value");
 
         var descripter =
-          Reflect.getOwnPropertyDescriptor(target, key) ||
-          Reflect.getOwnPropertyDescriptor(myvalue, key);
+          getOwnPropertyDescriptor(target, key) ||
+          getOwnPropertyDescriptor(myvalue, key);
         descripter.configurable = true;
         return descripter;
       },
       deleteProperty(target, key) {
-        const myvalue = Reflect.get(target, "value");
-        if (Reflect.has(myvalue, key)) {
-          Reflect.deleteProperty(myvalue, key);
+        const myvalue = get(target, "value");
+        if (has(myvalue, key)) {
+          deleteProperty(myvalue, key);
           target[dispatchsymbol](key);
           return true;
         } else {
@@ -53,48 +74,45 @@ deleteProperty(target, key) {return false},
         }
       },
       has(target, key) {
-        const myvalue = Reflect.get(target, "value");
-        return Reflect.has(target, key) || Reflect.has(myvalue, key);
+        const myvalue = get(target, "value");
+        return has(target, key) || has(myvalue, key);
       },
       get(target, key) {
-        const value = Reflect.get(target, "value");
-        if (Reflect.has(target, key)) {
-          return Reflect.get(target, key);
-        } else if (Reflect.has(value, key)) {
+        const value = get(target, "value");
+        if (has(target, key)) {
+          return get(target, key);
+        } else if (has(value, key)) {
           /*  */
 
-          return deepobserve(Reflect.get(value, key), () => {
+          return deepobserve(get(value, key), () => {
             target[dispatchsymbol](key);
           });
         }
       },
       ownKeys(target) {
         return Array.from(
-          new Set([
-            ...Reflect.ownKeys(target),
-            ...Reflect.ownKeys(Reflect.get(target, "value"))
-          ])
+          new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
         );
       },
       set(target, key, value) {
         if (key === textnodesymbol) {
-          return Reflect.set(target, key, value);
+          return set(target, key, value);
         }
-        const myvalue = Reflect.get(target, "value");
+        const myvalue = get(target, "value");
         if (key === "value" && isobject(value)) {
           // if (target[key] !== value) {
-          Reflect.set(target, key, value);
+          set(target, key, value);
           target[dispatchsymbol]();
 
           // }
           return true;
-        } else if (!Reflect.has(target, key)) {
-          Reflect.set(myvalue, key, value);
+        } else if (!has(target, key)) {
+          set(myvalue, key, value);
           target[dispatchsymbol](key);
 
           //
         } else if (key === "length") {
-          Reflect.set(myvalue, key, value);
+          set(myvalue, key, value);
           target[dispatchsymbol](key);
         } else {
           return false;

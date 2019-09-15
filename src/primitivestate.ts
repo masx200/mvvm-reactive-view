@@ -1,4 +1,19 @@
-import Reflect from "./reflect";
+import Reflect, {
+  apply,
+  construct,
+  defineProperty,
+  deleteProperty,
+  get,
+  getOwnPropertyDescriptor,
+  getPrototypeOf,
+  has,
+  isExtensible,
+  ownKeys,
+  preventExtensions,
+  set,
+  setPrototypeOf
+} from "./reflect";
+// import Reflect from "./reflect";
 import { getsymbol, isobject } from "./util";
 export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
@@ -10,13 +25,13 @@ export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
 /* const forkarryaprototype = {};
-Reflect.ownKeys(Array.prototype).forEach(key => {
+ownKeys(Array.prototype).forEach(key => {
   forkarryaprototype[key] = Array.prototype[key];
 }); */
 /* class forkarray {}
 Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
-Reflect.deleteProperty(forkarray.prototype, "length"); */
+deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState /* extends forkarray  */ {
   [addallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {

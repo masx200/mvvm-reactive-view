@@ -1,3 +1,5 @@
+import document from "./dom";
+import { isArray } from "./util";
 import Reflect from "./reflect";
 import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
@@ -9,8 +11,8 @@ export default function createApp(
 ) {
   const el = container;
   if (!isvalidvdom(vdom)) {
-    throw TypeError("invalid Virtualdom ");
     console.error(vdom);
+    throw TypeError("invalid Virtualdom ");
   }
   if (!(el instanceof HTMLElement)) {
     throw TypeError("invalid container HTMLElement!");
@@ -24,7 +26,7 @@ export default function createApp(
     throw Error("Do not mount  to <html> or <body> <head>.");
   }
   let elesarray: Array<string | Virtualdom>;
-  if (vdom instanceof Array) {
+  if (Array.isArray(vdom)) {
     elesarray = vdom;
   } else {
     elesarray = [vdom];

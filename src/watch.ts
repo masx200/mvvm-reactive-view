@@ -1,4 +1,4 @@
-import {requestAnimationFrame}from "./directives.ts"
+import { requestAnimationFrame } from "./directives";
 import Reflect from "./reflect";
 import { isFunction } from "./util";
 import ReactiveState, {

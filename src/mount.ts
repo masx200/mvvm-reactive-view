@@ -20,7 +20,7 @@ export default function(
 ) {
   container.innerHTML = "";
   let eles: Array<any>;
-  if (ele instanceof Array) {
+  if (Array.isArray(ele)) {
     eles = ele;
   } else {
     // appendchild(container, ele);

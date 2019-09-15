@@ -1,10 +1,10 @@
-export const requestAnimationFrame=window.requestAnimationFrame
+export const requestAnimationFrame = window.requestAnimationFrame;
 
-export function seteletext(e,v){
-e.textContent=v
+export function seteletext(e, v) {
+  e.textContent = v;
 }
-export function setelehtml(e,v){
-e.innerHTML = v;
+export function setelehtml(e, v) {
+  e.innerHTML = v;
 }
 import Reflect from "./reflect";
 import { watch } from "./watch";
@@ -24,12 +24,9 @@ export default {
     // console.log(ele.outerHTML);
     if (typeof html == "string") {
       requestAnimationFrame(() => {
+        setelehtml(ele, html);
 
-
-setelehtml(ele,html)
-
-
-       /* ele.innerHTML = html;*/
+        /* ele.innerHTML = html;*/
         //   console.log(ele.outerHTML);
       });
     } else if (html instanceof Primitivestate) {
@@ -37,17 +34,16 @@ setelehtml(ele,html)
       watch(html, (state: { value: any }) => {
         /*ele.innerHTML = String(state);*/
 
-setelehtml(ele,String(state))
+        setelehtml(ele, String(state));
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.innerHTML = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("html");
-      /*  ele.innerHTML = String(html);*/
+        /*  ele.innerHTML = String(html);*/
 
-setelehtml(ele,String(html))
-
+        setelehtml(ele, String(html));
       });
     } else {
       throw TypeError("invalid html");
@@ -58,27 +54,25 @@ setelehtml(ele,String(html))
     // console.log(ele.outerHTML);
     if (typeof text == "string") {
       requestAnimationFrame(() => {
-
-
-seteletext(ele,text)
-    /*    ele.textContent = text;*/
+        seteletext(ele, text);
+        /*    ele.textContent = text;*/
         //   console.log(ele.outerHTML);
       });
     } else if (text instanceof Primitivestate) {
       //   const primitivestate = text;
       watch(text, (state: { value: any }) => {
-      seteletext(ele,String(state))
+        seteletext(ele, String(state));
 
- /* ele.textContent = String(state);*/
+        /* ele.textContent = String(state);*/
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.textContent = String(state.value);
       //   });
       requestAnimationFrame(() => {
         // console.log("text");
-     seteletext(ele,String(text))
+        seteletext(ele, String(text));
 
- /*  ele.textContent = String(text);*/
+        /*  ele.textContent = String(text);*/
       });
     } else {
       throw TypeError("invalid text");

@@ -1,4 +1,19 @@
-import Reflect from "./reflect";
+import Reflect, {
+  apply,
+  construct,
+  defineProperty,
+  deleteProperty,
+  get,
+  getOwnPropertyDescriptor,
+  getPrototypeOf,
+  has,
+  isExtensible,
+  ownKeys,
+  preventExtensions,
+  set,
+  setPrototypeOf
+} from "./reflect";
+// import Reflect from "./reflect";
 import { isfunction } from "./util";
 import { Class } from "./rendervdomtoreal";
 import setlikearray from "./setlikearay";
@@ -16,7 +31,7 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     }
 
-    return Reflect.construct(initclass, [children]); // (children);
+    return construct(initclass, [children]); // (children);
   } else {
     throw TypeError("invalid custom element class !");
   }

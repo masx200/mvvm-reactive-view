@@ -14,9 +14,10 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "noFallthroughCasesInSwitch": true,
-    "paths": {
+
+    /*  "paths": {
       "*": ["node_modules/*"]
-    },
+    }, */
     "importHelpers": true
   }
   //"exclude": ["node_modules", "**/node_modules/*"]

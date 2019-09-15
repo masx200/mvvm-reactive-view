@@ -218,8 +218,8 @@ function assertvalidvirtualdom(...args) {
         return vdom;
     }
     else {
-        throw new TypeError("invalid Virtualdom!");
         console.error(vdom);
+        throw new TypeError("invalid Virtualdom!");
     }
 }
 
@@ -236,6 +236,84 @@ function watch(state, callback, statekey) {
     requestAnimationFrame(() => {
         state[addallistenerssymbol]();
     });
+}
+
+const requestAnimationFrame = window.requestAnimationFrame;
+function seteletext(e, v) {
+    e.textContent = v;
+}
+function setelehtml(e, v) {
+    e.innerHTML = v;
+}
+var directives = {
+    ref(ele, ref, vdom) {
+        if (typeof ref == "object") {
+            ref.value = ele;
+        }
+        else {
+            throw TypeError("invalid ref");
+        }
+    },
+    html(ele, html, vdom) {
+        if (typeof html == "string") {
+            requestAnimationFrame(() => {
+                setelehtml(ele, html);
+            });
+        }
+        else if (html instanceof ReactiveState) {
+            watch(html, (state) => {
+                setelehtml(ele, String(state));
+            });
+            requestAnimationFrame(() => {
+                setelehtml(ele, String(html));
+            });
+        }
+        else {
+            throw TypeError("invalid html");
+        }
+    },
+    text(ele, text, vdom) {
+        if (typeof text == "string") {
+            requestAnimationFrame(() => {
+                seteletext(ele, text);
+            });
+        }
+        else if (text instanceof ReactiveState) {
+            watch(text, (state) => {
+                seteletext(ele, String(state));
+            });
+            requestAnimationFrame(() => {
+                seteletext(ele, String(text));
+            });
+        }
+        else {
+            throw TypeError("invalid text");
+        }
+    }
+};
+
+const document = window.document;
+function appendchild(container, ele) {
+    container.appendChild(ele);
+}
+function createsvgelement() {
+    return document.createElementNS(svgnamespace, "svg");
+}
+function createnonescript() {
+    return document.createDocumentFragment();
+}
+function createnativeelement(type) {
+    return document.createElement(type);
+}
+function createElementNS(namespace, name) {
+    return document.createElementNS(namespace, name);
+}
+function createtextnode(data) {
+    return document.createTextNode(data);
+}
+const svgnamespace = "http://www.w3.org/2000/svg";
+function changetext(textnode, value) {
+    textnode.nodeValue = String(value);
 }
 
 const eventlistenerssymbol = Symbol("eventlisteners");
@@ -260,54 +338,8 @@ function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
 
-var directives = {
-    ref(ele, ref, vdom) {
-        if (typeof ref == "object") {
-            ref.value = ele;
-        }
-        else {
-            throw TypeError("invalid ref");
-        }
-    },
-    html(ele, html, vdom) {
-        if (typeof html == "string") {
-            requestAnimationFrame(() => {
-                ele.innerHTML = html;
-            });
-        }
-        else if (html instanceof ReactiveState) {
-            watch(html, (state) => {
-                ele.innerHTML = String(state);
-            });
-            requestAnimationFrame(() => {
-                ele.innerHTML = String(html);
-            });
-        }
-        else {
-            throw TypeError("invalid html");
-        }
-    },
-    text(ele, text, vdom) {
-        if (typeof text == "string") {
-            requestAnimationFrame(() => {
-                ele.textContent = text;
-            });
-        }
-        else if (text instanceof ReactiveState) {
-            watch(text, (state) => {
-                ele.textContent = String(state);
-            });
-            requestAnimationFrame(() => {
-                ele.textContent = String(text);
-            });
-        }
-        else {
-            throw TypeError("invalid text");
-        }
-    }
-};
-
-var Reflect = window.Reflect;
+const Reflect = window.Reflect;
+const { apply, construct, defineProperty, deleteProperty, get, getOwnPropertyDescriptor, getPrototypeOf, has, isExtensible, ownKeys, preventExtensions, set, setPrototypeOf } = Reflect;
 
 class setlikearray extends Array {
     push(...items) {
@@ -331,7 +363,7 @@ function createcostumelemet(initclass, children) {
         else {
             customElements.define(elementname, initclass);
         }
-        return Reflect.construct(initclass, [children]);
+        return construct(initclass, [children]);
     }
     else {
         throw TypeError("invalid custom element class !");
@@ -346,33 +378,10 @@ function isclassextendsHTMLElement(initclass) {
         initclass.prototype instanceof HTMLElement);
 }
 
-function appendchild(container, ele) {
-    container.appendChild(ele);
-}
-function createsvgelement() {
-    return document.createElementNS(svgnamespace, "svg");
-}
-function createnonescript() {
-    return document.createDocumentFragment();
-}
-function createnativeelement(type) {
-    return document.createElement(type);
-}
-function createElementNS(namespace, name) {
-    return document.createElementNS(namespace, name);
-}
-function createtextnode(data) {
-    return document.createTextNode(data);
-}
-const svgnamespace = "http://www.w3.org/2000/svg";
-function changetext(textnode, value) {
-    textnode.nodeValue = String(value);
-}
-
 function mount (ele, container) {
     container.innerHTML = "";
     let eles;
-    if (ele instanceof Array) {
+    if (Array.isArray(ele)) {
         eles = ele;
     }
     else {
@@ -471,8 +480,8 @@ function render(vdom, namespace) {
 function createApp(vdom, container) {
     const el = container;
     if (!isvalidvdom(vdom)) {
-        throw TypeError("invalid Virtualdom ");
         console.error(vdom);
+        throw TypeError("invalid Virtualdom ");
     }
     if (!(el instanceof HTMLElement)) {
         throw TypeError("invalid container HTMLElement!");
@@ -483,7 +492,7 @@ function createApp(vdom, container) {
         throw Error("Do not mount  to <html> or <body> <head>.");
     }
     let elesarray;
-    if (vdom instanceof Array) {
+    if (Array.isArray(vdom)) {
         elesarray = vdom;
     }
     else {
@@ -502,12 +511,18 @@ const t$2=window.Reflect;function e$2(t){return "object"==typeof t&&null!==t}fun
 function createstate(init) {
     if (isprimitive(init)) {
         return new Proxy(new ReactiveState(init), {
+            defineProperty() {
+                return false;
+            },
+            deleteProperty(target, key) {
+                return false;
+            },
             set(target, key, value) {
                 if (key === textnodesymbol) {
-                    return Reflect.set(target, key, value);
+                    return set(target, key, value);
                 }
                 if (key === "value" && isprimitive(value)) {
-                    Reflect.set(target, key, value);
+                    set(target, key, value);
                     target[dispatchsymbol]();
                     return true;
                 }
@@ -522,17 +537,20 @@ function createstate(init) {
     }
     else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
+            defineProperty() {
+                return false;
+            },
             getOwnPropertyDescriptor(target, key) {
-                const myvalue = Reflect.get(target, "value");
-                var descripter = Reflect.getOwnPropertyDescriptor(target, key) ||
-                    Reflect.getOwnPropertyDescriptor(myvalue, key);
+                const myvalue = get(target, "value");
+                var descripter = getOwnPropertyDescriptor(target, key) ||
+                    getOwnPropertyDescriptor(myvalue, key);
                 descripter.configurable = true;
                 return descripter;
             },
             deleteProperty(target, key) {
-                const myvalue = Reflect.get(target, "value");
-                if (Reflect.has(myvalue, key)) {
-                    Reflect.deleteProperty(myvalue, key);
+                const myvalue = get(target, "value");
+                if (has(myvalue, key)) {
+                    deleteProperty(myvalue, key);
                     target[dispatchsymbol](key);
                     return true;
                 }
@@ -541,42 +559,39 @@ function createstate(init) {
                 }
             },
             has(target, key) {
-                const myvalue = Reflect.get(target, "value");
-                return Reflect.has(target, key) || Reflect.has(myvalue, key);
+                const myvalue = get(target, "value");
+                return has(target, key) || has(myvalue, key);
             },
             get(target, key) {
-                const value = Reflect.get(target, "value");
-                if (Reflect.has(target, key)) {
-                    return Reflect.get(target, key);
+                const value = get(target, "value");
+                if (has(target, key)) {
+                    return get(target, key);
                 }
-                else if (Reflect.has(value, key)) {
-                    return deepobserve(Reflect.get(value, key), () => {
+                else if (has(value, key)) {
+                    return deepobserve(get(value, key), () => {
                         target[dispatchsymbol](key);
                     });
                 }
             },
             ownKeys(target) {
-                return Array.from(new Set([
-                    ...Reflect.ownKeys(target),
-                    ...Reflect.ownKeys(Reflect.get(target, "value"))
-                ]));
+                return Array.from(new Set([...ownKeys(target), ...ownKeys(get(target, "value"))]));
             },
             set(target, key, value) {
                 if (key === textnodesymbol) {
-                    return Reflect.set(target, key, value);
+                    return set(target, key, value);
                 }
-                const myvalue = Reflect.get(target, "value");
+                const myvalue = get(target, "value");
                 if (key === "value" && isobject(value)) {
-                    Reflect.set(target, key, value);
+                    set(target, key, value);
                     target[dispatchsymbol]();
                     return true;
                 }
-                else if (!Reflect.has(target, key)) {
-                    Reflect.set(myvalue, key, value);
+                else if (!has(target, key)) {
+                    set(myvalue, key, value);
                     target[dispatchsymbol](key);
                 }
                 else if (key === "length") {
-                    Reflect.set(myvalue, key, value);
+                    set(myvalue, key, value);
                     target[dispatchsymbol](key);
                 }
                 else {

@@ -37,8 +37,8 @@ function assertvalidvirtualdom(...args: any[]) {
   if (isvalidvdom(vdom)) {
     return vdom;
   } else {
-    throw new TypeError("invalid Virtualdom!");
     console.error(vdom);
+    throw new TypeError("invalid Virtualdom!");
   }
 }
 export default assertvalidvirtualdom;
