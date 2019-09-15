@@ -31,6 +31,15 @@ export default function createstate(
     return createstate(init.value);
   } else if (isobject(init)) {
     return new Proxy(new ReactiveState(init), {
+      getOwnPropertyDescriptor(target, key) {
+        const myvalue = Reflect.get(target, "value");
+
+        var descripter =
+          Reflect.getOwnPropertyDescriptor(target, key) ||
+          Reflect.getOwnPropertyDescriptor(myvalue, key);
+        descripter.configurable = true;
+        return descripter;
+      },
       deleteProperty(target, key) {
         const myvalue = Reflect.get(target, "value");
         if (Reflect.has(myvalue, key)) {

@@ -3,7 +3,7 @@ import ReactiveState, { dispatchsymbol } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {
-  element: undefined | Element;
+  element: undefined | Element = undefined;
   type: string | Function | undefined | Class;
   props: object = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
@@ -41,6 +41,9 @@ export default class Virtualdom {
           .map(([key, value]) => [key.slice(1), value])
       )
     });
-    Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
+    Object.defineProperty(this, Symbol.toStringTag, {
+      value: "virtualdom",
+      configurable: true
+    });
   }
 }

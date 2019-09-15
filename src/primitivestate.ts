@@ -26,7 +26,7 @@ export default class ReactiveState /* extends forkarray  */ {
   /*  [changetextnodesymbol](textnode: Text) {
     this[textnodesymbol] = textnode;
   } */
-  [textnodesymbol]: Text | undefined;
+  [textnodesymbol]: Text | undefined = undefined;
   value: string | number | boolean | undefined | object;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];
@@ -40,7 +40,8 @@ export default class ReactiveState /* extends forkarray  */ {
     // this[eventtargetsymbol] = new EventTarget();
 
     Object.defineProperty(this, Symbol.toStringTag, {
-      value: "ReactiveState"
+      value: "ReactiveState",
+      configurable: true
     });
   }
 

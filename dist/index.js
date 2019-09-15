@@ -75,7 +75,7 @@ function isprimitive (a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
 
-var _a, _b;
+var _a, _b, _c;
 const textnodesymbol = Symbol("textnode");
 const eventtargetsymbol = Symbol("eventtatget");
 const memlisteners = Symbol("memlisteners");
@@ -85,8 +85,9 @@ const removeallistenerssymbol = getsymbol("removeallisteners");
 const addallistenerssymbol = getsymbol("addallisteners");
 class ReactiveState {
     constructor(init) {
-        this[_a] = new EventTarget();
-        this[_b] = [];
+        this[_a] = undefined;
+        this[_b] = new EventTarget();
+        this[_c] = [];
         if (isprimitive(init) || isobject(init)) {
             this.value = init;
         }
@@ -94,7 +95,8 @@ class ReactiveState {
             throw TypeError("invalid State");
         }
         Object.defineProperty(this, Symbol.toStringTag, {
-            value: "ReactiveState"
+            value: "ReactiveState",
+            configurable: true
         });
     }
     [addallistenerssymbol]() {
@@ -113,7 +115,7 @@ class ReactiveState {
                 ? JSON.stringify(value)
                 : "";
     }
-    [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
+    [(_a = textnodesymbol, _b = eventtargetsymbol, _c = memlisteners, dispatchsymbol)](eventname) {
         let name = eventname ? String(eventname) : "value";
         if (name !== "value") {
             this[eventtargetsymbol].dispatchEvent(new Event(name));
@@ -141,6 +143,7 @@ class ReactiveState {
 
 class Virtualdom {
     constructor(type = "", props = {}, children = []) {
+        this.element = undefined;
         this.props = {};
         this.children = [];
         this.directives = {};
@@ -163,7 +166,10 @@ class Virtualdom {
                 .filter(([key]) => /\*/.test(key[0]))
                 .map(([key, value]) => [key.slice(1), value]))
         });
-        Object.defineProperty(this, Symbol.toStringTag, { value: "virtualdom" });
+        Object.defineProperty(this, Symbol.toStringTag, {
+            value: "virtualdom",
+            configurable: true
+        });
     }
 }
 
@@ -516,6 +522,13 @@ function createstate(init) {
     }
     else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
+            getOwnPropertyDescriptor(target, key) {
+                const myvalue = Reflect.get(target, "value");
+                var descripter = Reflect.getOwnPropertyDescriptor(target, key) ||
+                    Reflect.getOwnPropertyDescriptor(myvalue, key);
+                descripter.configurable = true;
+                return descripter;
+            },
             deleteProperty(target, key) {
                 const myvalue = Reflect.get(target, "value");
                 if (Reflect.has(myvalue, key)) {

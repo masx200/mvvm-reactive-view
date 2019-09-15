@@ -13,7 +13,7 @@ import {
     <h1>
       <svg
         style="
-    width: 200px;
+    width: 100%;
     height: 200px;
 "
         class="octicon octicon-book"
@@ -31,7 +31,7 @@ import {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 3046.7 875.7"
         style="
-    width: 200px;
+    width: 100%;
     height: 200px;
 "
       >
@@ -300,7 +300,7 @@ import {
     <h1>
       <svg
         style="
-    width: 200px;
+    width:100%;
     height: 200px;
 "
         class="octicon octicon-book"
@@ -316,7 +316,7 @@ import {
         ></path></svg
       ><svg
         style="
-    width: 200px;
+    width: 100%;
     height: 200px;
 "
         xmlns="http://www.w3.org/2000/svg"
@@ -347,13 +347,13 @@ import {
   createApp(vdom, document.getElementById("root"));
 })();
 (() => {
-  const stylestate = createState({ display: "block", width: "700px" });
+  const stylestate = createState({ display: "block", width: "100%" });
   const inputref = createRef();
   const state1 = createState("hello");
   const vdom = html`
-    <div style=${{ display: "block", width: "500px" }}>hello world!</div>
+    <div style=${{ display: "block", width: "100%" }}>hello world!</div>
     <input
-      style="width:800px"
+      style="width:100%"
       @input=${e => (state1.value = e.target.value)}
       *ref=${inputref}
       @change=${e => (state1.value = e.target.value)}
@@ -469,9 +469,9 @@ import {
     true,
     "test"
   ]);
-  const stylestate = createState({ display: "block", width: "700px" });
+  const stylestate = createState({ display: "block", width: "100%" });
   const vdomobj = html`
-    <div style=${{ display: "block", width: "500px" }}>${objstate2}</div>
+    <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
     <div style=${stylestate}>${objstatearray}</div>
     ${objstate}
   `;
@@ -502,4 +502,6 @@ import {
     clearInterval(timer);
   }, 10000);
   console.log([objstate2, createState(objstate2)]);
+  console.log(Object.getOwnPropertyDescriptors(objstatearray));
+  console.log(Object.entries(objstate));
 })();
