@@ -725,9 +725,14 @@ function createstate (init) {
                     Reflect.set(myvalue, key, value);
                     target[dispatchsymbol](key);
                 }
+                else if (key === "length") {
+                    Reflect.set(target, key, value);
+                    target[dispatchsymbol](key);
+                }
                 else {
                     return false;
                 }
+                return true;
             }
         });
     }

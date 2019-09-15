@@ -45,15 +45,21 @@ export default function(init: string | number | boolean | undefined) {
           // if (target[key] !== value) {
           Reflect.set(target, key, value);
           target[dispatchsymbol]();
+
           // }
           return true;
         } else if (!Reflect.has(target, key)) {
           Reflect.set(myvalue, key, value);
           target[dispatchsymbol](key);
+
           //
+        } else if (key === "length") {
+          Reflect.set(target, key, value);
+          target[dispatchsymbol](key);
         } else {
           return false;
         }
+        return true;
       }
     });
   } else {
