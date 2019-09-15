@@ -390,7 +390,74 @@ function mount (ele, container) {
     eles.forEach(e => appendchild(container, e));
 }
 
-const t$1=window.Reflect,e$1="value";function r$1(t){return "object"==typeof t&&null!==t}function n$1(t){return "string"==typeof t}function createeleattr(i){!function(t){if(t instanceof HTMLElement||t instanceof SVGElement||t instanceof Element)return !0;throw TypeError("invalid HTMLElement!")}(i);const o="INPUT"===i.tagName&&"text"===t$1.get(i,"type")||"TEXTAREA"===i.tagName;var u=Object.create(null);return new Proxy(u,{ownKeys(){const r=t$1.ownKeys(i.attributes).filter(t=>!/\d/.test(String(t)[0]));return o?Array.from(new Set([...r,e$1])):r},get(r,u){if(o&&u===e$1)return t$1.get(i,e$1);var a=i.getAttribute(String(u));if(a&&n$1(a))try{return JSON.parse(String(a))}catch(t){return a}},set(u,a,s){return o&&a===e$1?t$1.set(i,e$1,s):"style"===a?(i.setAttribute(String(a),n$1(s)?s:r$1(s)?(g=s,Object.entries(g).map(([t,e])=>t+":"+e).join(";")):String(s)),!0):(i.setAttribute(String(a),r$1(s)?JSON.stringify(s):String(s)),!0);var g;},deleteProperty:(t,e)=>(i.removeAttribute(String(e)),!0),has:(t,r)=>!(!o||r!==e$1)||i.hasAttribute(String(r)),defineProperty:()=>!1,getOwnPropertyDescriptor(r,n){const u={enumerable:!0,configurable:!0,writable:!0};if(o&&n===e$1)return {value:t$1.get(i,e$1),...u};var a=i.getAttribute(String(n));return a?{value:a,...u}:void 0}})}
+const t$1 = window.Reflect,
+  { get: o, ownKeys: f, set: g } = t$1,
+  y = "value";
+function b(t) {
+  return "object" == typeof t && null !== t;
+}
+function S(t) {
+  return "string" == typeof t;
+}
+function createeleattr(t) {
+  !(function(t) {
+    if (
+      t instanceof HTMLElement ||
+      t instanceof SVGElement ||
+      t instanceof Element
+    )
+      return !0;
+    throw TypeError("invalid HTMLElement!");
+  })(t);
+  const e =
+    ("INPUT" === t.tagName && "text" === o(t, "type")) ||
+    "TEXTAREA" === t.tagName;
+  var r = Object.create(null);
+  return new Proxy(r, {
+    ownKeys() {
+      const r = f(t.attributes).filter(t => !/\d/.test(String(t)[0]));
+      return e ? Array.from(new Set([...r, y])) : r;
+    },
+    get(n) {
+      if (e && n === y) return o(t, y);
+      var i = t.getAttribute(String(n));
+      if (i && S(i))
+        try {
+          return JSON.parse(String(i));
+        } catch (t) {
+          return i;
+        }
+    },
+    set(n, i) {
+      return e && n === y
+        ? g(t, y, i)
+        : "style" === n
+        ? (t.setAttribute(
+            String(n),
+            S(i)
+              ? i
+              : b(i)
+              ? ((o = i),
+                Object.entries(o)
+                  .map(([t, e]) => t + ":" + e)
+                  .join(";"))
+              : String(i)
+          ),
+          !0)
+        : (t.setAttribute(String(n), b(i) ? JSON.stringify(i) : String(i)), !0);
+      var o;
+    },
+    deleteProperty: (e, r) => (t.removeAttribute(String(r)), !0),
+    has: (r, n) => !(!e || n !== y) || t.hasAttribute(String(n)),
+    defineProperty: () => !1,
+    getOwnPropertyDescriptor(n) {
+      const i = { enumerable: !0, configurable: !0, writable: !0 };
+      if (e && n === y) return { value: o(t, y), ...i };
+      var s = t.getAttribute(String(n));
+      return s ? { value: s, ...i } : void 0;
+    }
+  });
+}
 
 const reactivestatesymbol = Symbol("reactivestate");
 const virtualdomsymbol = Symbol("virtualdom");
@@ -506,7 +573,71 @@ function createRef(init) {
     return { value: init };
 }
 
-const t$2=window.Reflect;function e$2(t){return "object"==typeof t&&null!==t}function o(t){return "function"==typeof t}function deepobserve(r,n){if("function"!=typeof n)throw Error("observe callback is not valid function !");return "function"!=typeof Proxy?(setTimeout(()=>{throw Error("\u4e0d\u652f\u6301Proxy!")},0),r):o(r)||e$2(r)?function r(n,f,i=[],u=n){if("function"!=typeof f)throw Error("observe callback is not valid function !");if(o(n)||e$2(n)){let c;return c=e$2(n)?{}:()=>{},t$2.setPrototypeOf(c,null),(c=>new Proxy(c,{defineProperty:(e,o,r)=>t$2.defineProperty(n,o,r),deleteProperty:(e,o)=>(f(u,[...i,o],void 0,t$2.get(n,o)),t$2.deleteProperty(n,o)),ownKeys:()=>t$2.ownKeys(n),has:(e,o)=>t$2.has(n,o),getPrototypeOf:()=>t$2.getPrototypeOf(n),setPrototypeOf:(e,o)=>t$2.setPrototypeOf(n,o),construct(e,o){if("function"==typeof n)return t$2.construct(n,o)},apply(e,o,r){if("function"==typeof n)return t$2.apply(n,o,r)},getOwnPropertyDescriptor(e,o){var r=t$2.getOwnPropertyDescriptor(n,o);return r?(r.configurable=!0,r):void 0},set:(e,o,r)=>("function"==typeof f&&f(u,[...i,o],r,t$2.get(n,o)),t$2.set(n,o,r)),get(u,c){var p=t$2.get(n,c);return o(p)||e$2(p)?r(p,f,[...i,c],n):p}}))(c)}return n}(r,n,[],r):r}
+const t$2 = window.Reflect,
+  {
+    apply: e$1,
+    construct: r$1,
+    defineProperty: o$1,
+    get: f$1,
+    getOwnPropertyDescriptor: i,
+    getPrototypeOf: p,
+    has: u$1,
+    set: l,
+    setPrototypeOf: a
+  } = t$2;
+function P(t) {
+  return "object" == typeof t && null !== t;
+}
+function d(t) {
+  return "function" == typeof t;
+}
+function deepobserve(n, y) {
+  if ("function" != typeof y)
+    throw Error("observe callback is not valid function !");
+  if ("function" != typeof Proxy) throw Error("Proxy unsupported!");
+  return d(n) || P(n)
+    ? (function n(y, c, s = [], w = y) {
+        if ("function" != typeof c) throw Error("observe callback invalid !");
+        if (d(y) || P(y)) {
+          let v;
+          return (
+            (v = P(y) ? {} : () => {}),
+            a(v, null),
+            (v =>
+              new Proxy(v, {
+                defineProperty: (t, e, r) => o$1(y, e, r),
+                deleteProperty: (e, r) => (
+                  c(w, [...s, r], void 0, f$1(y, r)), t$2.deleteProperty(y, r)
+                ),
+                ownKeys: () => t$2.ownKeys(y),
+                has: (t, e) => u$1(y, e),
+                getPrototypeOf: () => p(y),
+                setPrototypeOf: (t, e) => a(y, e),
+                construct(e) {
+                  if ("function" == typeof y) return r$1(y, e);
+                },
+                apply(r, o) {
+                  if ("function" == typeof y) return e$1(y, r, o);
+                },
+                getOwnPropertyDescriptor(e) {
+                  var r = i(y, e);
+                  return r ? ((r.configurable = !0), r) : void 0;
+                },
+                set: (t, e, r) => (
+                  "function" == typeof c && c(w, [...s, e], r, f$1(y, e)),
+                  l(y, e, r)
+                ),
+                get(e) {
+                  var r = f$1(y, e);
+                  return d(r) || P(r) ? n(r, c, [...s, e], y) : r;
+                }
+              }))(v)
+          );
+        }
+        return y;
+      })(n, y, [], n)
+    : n;
+}
 
 function createstate(init) {
     if (isprimitive(init)) {
