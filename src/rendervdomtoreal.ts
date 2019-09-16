@@ -73,7 +73,41 @@ export default function render(
       throwinvalideletype();
       // throw TypeError("invalid element type!");
     }
-;
+handleprops(element,vdom);
+
+    /* 自定义组件不添加children,而是从构造函数传入 */
+    if (typeof type !== "function") {
+      mount(
+        vdom.children.map(e => {
+          if (type === "svg") {
+            /* 没想到svg的创建方式这么特别?否则显示不出svg */
+            //   element.innerHTML = element.innerHTML;
+            return render(e, svgnamespace);
+          } else if (namespace) {
+            return render(e, namespace);
+          } else {
+            return render(e);
+          }
+        }),
+
+        element
+      );
+    }
+    return element;
+  } else {
+    throwinvalideletype();
+    // throw TypeError("invalid element type!");
+  }
+}
+
+export interface Class {
+  new (children?: any[]): HTMLElement;
+}
+
+
+
+
+function handleprops(element,vdom){
 ((element,vdom)=>{
 
 
@@ -116,31 +150,5 @@ Object.entries(vdom.directives).forEach(([name, value]) => {
     });
 
 })(element,vdom);
-    /* 自定义组件不添加children,而是从构造函数传入 */
-    if (typeof type !== "function") {
-      mount(
-        vdom.children.map(e => {
-          if (type === "svg") {
-            /* 没想到svg的创建方式这么特别?否则显示不出svg */
-            //   element.innerHTML = element.innerHTML;
-            return render(e, svgnamespace);
-          } else if (namespace) {
-            return render(e, namespace);
-          } else {
-            return render(e);
-          }
-        }),
 
-        element
-      );
-    }
-    return element;
-  } else {
-    throwinvalideletype();
-    // throw TypeError("invalid element type!");
-  }
-}
-
-export interface Class {
-  new (children?: any[]): HTMLElement;
 }
