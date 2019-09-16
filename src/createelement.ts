@@ -22,6 +22,6 @@ typenormalized=typenormalized.trim().toLowerCase()
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }
-
+propsnormalized=Object.fromEntries(Object.entries(propsnormalized).map(([key,value])=>[key.trim().toLowerCase(),value]))
   return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }
