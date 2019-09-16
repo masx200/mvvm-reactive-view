@@ -52,7 +52,7 @@ export default {
       requestAnimationFrame(() => {
         seteletext(ele, text);
         /*    ele.textContent = text;*/
-        //   console.log(ele.outerHTML);
+  /*      //   console.log(ele.outerHTML);
       });
     } else if (text instanceof Primitivestate) {
       //   const primitivestate = text;
@@ -60,7 +60,7 @@ export default {
         seteletext(ele, String(state));
 
         /* ele.textContent = String(state);*/
-      });
+   /*   });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
       //     ele.textContent = String(state.value);
       //   });
@@ -69,7 +69,7 @@ export default {
         seteletext(ele, String(text));
 
         /*  ele.textContent = String(text);*/
-      });
+  /*    });
     } else {
       throw TypeError("invalid text");
     }
