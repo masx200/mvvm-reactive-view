@@ -36,4 +36,4 @@ export function changetext(textnode: Text, value: string) {
 }
 export default document;
 
-export const svgnamespace = "http://www.w3.org/1998/Math/MathML"
+export const mathnamespace = "http://www.w3.org/1998/Math/MathML"
