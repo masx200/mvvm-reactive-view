@@ -176,4 +176,14 @@ Object.entries(vdom.directives).forEach(([name, value]) => {
 if (!element[bindstatesymbol]) {
       element[bindstatesymbol] = new Set;
     }
+
+[Object.values(vdom.bindattr),Object.values(vdom.directives)].flat().filter(e=>e instanceof ReactiveState)
+
+.forEach(e=>element[bindstatesymbol].add(e))
+
+
+
+
+
+
 }
