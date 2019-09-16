@@ -77,7 +77,31 @@ function createhtmlandtextdirective(seteletext,errorname){
 
 return function(ele,text){
 
+if (typeof text == "string") {
+      requestAnimationFrame(() => {
+        seteletext(ele, text);
+        /*    ele.textContent = text;*/
+        //   console.log(ele.outerHTML);
+      });
+    } else if (text instanceof Primitivestate) {
+      //   const primitivestate = text;
+      watch(text, (state: { value: any }) => {
+        seteletext(ele, String(state));
 
+        /* ele.textContent = String(state);*/
+      });
+      //   primitivestate[subscribesymbol]((state: { value: any }) => {
+      //     ele.textContent = String(state.value);
+      //   });
+      requestAnimationFrame(() => {
+        // console.log("text");
+        seteletext(ele, String(text));
+
+        /*  ele.textContent = String(text);*/
+      });
+    } else {
+      throw TypeError("invalid "+errorname);
+    }
 }
 
 
