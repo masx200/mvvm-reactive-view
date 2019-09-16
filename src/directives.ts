@@ -13,6 +13,15 @@ export default {
     }
   },
   html(ele: Element, html: string | Primitivestate) {
+
+
+createhtmlandtextdirective(setelehtml,"html")
+
+
+
+
+
+
     // ele.innerHTML = html;
     // console.log(ele.outerHTML);
   /*  if (typeof html == "string") {
@@ -46,6 +55,16 @@ export default {
   },
   text(ele: Element, text: string | Primitivestate) {
   
+
+
+
+createhtmlandtextdirective(seteletext,"text")
+
+
+
+
+
+
 /*
 
   // ele.textContent = text;
