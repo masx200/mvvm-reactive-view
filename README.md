@@ -115,7 +115,7 @@ createApp(vdom, document.getElementById("root"));
 
 指令`*ref`用来获取元素的引用
 
-`*ref=${inputref}`
+`*ref=${ref}`
 
 指令`*html`用来设置元素的`innerHTML`
 
