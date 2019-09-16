@@ -17,6 +17,7 @@ export const {
   set,
   setPrototypeOf
 } = Reflect;
+export {};
 /*
 apply()
 对一个函数进行调用操作，同时可以传入一个数组作为调用参数。和 Function.prototype.apply() 功能类似。
