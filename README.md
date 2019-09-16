@@ -111,7 +111,7 @@ createApp(vdom, document.getElementById("root"));
 
 属性名为'\*'+指令名称,属性值为值
 
-现已支持的指令有 'ref','html','text'
+现已支持的指令有 `'ref','html','text'`
 
 指令`*ref`用来获取元素的引用
 
