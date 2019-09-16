@@ -1,3 +1,5 @@
+export const bindstatesymbol=Symbol("bindstate")
+
 import {requestAnimationFrame}from "./directives.ts"
 export const reactivestatesymbol = Symbol("reactivestate");
 import { watch } from "./watch";
