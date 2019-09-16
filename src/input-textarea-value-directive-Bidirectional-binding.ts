@@ -18,7 +18,7 @@ directives({
           (e: { target: { value: string | number | boolean | object } }) => {
             return (value.value = e.target.value);
           }
-        ];
+        ].filter(Boolean);
       });
     } else {
       throw TypeError("invalid ReactiveState or element");

@@ -255,7 +255,7 @@ extenddirectives({
                 const eventsarray = [ origin ].flat(Infinity);
                 vdom.onevent[eventname] = [ ...eventsarray, e => {
                     return value.value = e.target.value;
-                } ];
+                } ].filter(Boolean);
             });
         } else {
             throw TypeError("invalid ReactiveState or element");
@@ -791,6 +791,9 @@ function createstate(init) {
             getOwnPropertyDescriptor(target, key) {
                 const myvalue = get(target, "value");
                 const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
+                if (descripter) {
+                    descripter.configurable = true;
+                }
                 return descripter;
             },
             deleteProperty(target, key) {

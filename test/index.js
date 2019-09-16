@@ -9,7 +9,12 @@ import {
   watch
 } from "../dist/index.js";
 (() => {
+  const inputpassword = createState("");
   const inputref = createRef();
+  const inputref2 = createRef();
+  console.log(inputref2);
+  console.log(inputpassword);
+  watch(inputpassword,console.log)
   const vdom = html`
     <h1>
       <svg
@@ -226,6 +231,8 @@ import {
                       <p></p>
                       <p>
                         <input
+                          *ref=${inputref2}
+                          *value=${inputpassword}
                           @input=${e => console.log(e)}
                           id="key"
                           placeholder="输入代号"

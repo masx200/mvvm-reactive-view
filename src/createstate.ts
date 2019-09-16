@@ -53,7 +53,10 @@ export default function createstate(
         const descripter =
           getOwnPropertyDescriptor(target, key) ||
           getOwnPropertyDescriptor(myvalue, key);
-        // descripter.configurable = true;
+        if (descripter) {
+          descripter.configurable = true;
+        }
+
         return descripter;
       },
       deleteProperty(target, key) {
