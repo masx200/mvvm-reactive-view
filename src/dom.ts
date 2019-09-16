@@ -16,7 +16,7 @@ export function appendchild(
   container.appendChild(ele);
 }
 export function createsvgelement() {
-  return document.createElementNS(svgnamespace, "svg");
+  return createElementNS(svgnamespace, "svg");
 }
 export function createnonescript() {
   return document.createDocumentFragment();
@@ -41,5 +41,5 @@ export const mathnamespace = "http://www.w3.org/1998/Math/MathML"
 
 
 export function createmathelement() {
-  return document.createElementNS(mathnamespace, "math");
+  return createElementNS(mathnamespace, "math");
 }
