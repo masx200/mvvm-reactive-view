@@ -131,12 +131,18 @@ createApp(vdom, document.getElementById("root"));
 
 给表单元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
 
-`value=${state1}`
+```
+<textarea
 
-`@input=${e => (state1.value = e.target.value)}`
+value=${state1}
 
-`@change=${e => (state1.value = e.target.value)}`
+@input=${e => (state1.value = e.target.value)}
 
+@change=${e => (state1.value = e.target.value)}
+
+/>
+
+```
 # 支持绑定状态到 TextNode 文字节点
 
 ```js
