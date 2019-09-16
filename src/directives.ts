@@ -43,7 +43,10 @@ export default {
     }
   },
   text(ele: Element, text: string | Primitivestate) {
-    // ele.textContent = text;
+  
+/*
+
+  // ele.textContent = text;
     // console.log(ele.outerHTML);
     if (typeof text == "string") {
       requestAnimationFrame(() => {
@@ -70,6 +73,8 @@ export default {
     } else {
       throw TypeError("invalid text");
     }
+
+*/
   }
 };
 function createhtmlandtextdirective(seteletext,errorname){
