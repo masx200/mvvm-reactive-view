@@ -17,5 +17,5 @@ export default function h(
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }
-  return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
+  return new Virtualdom(typenormalized.toLowerCase(), propsnormalized, childrennormalized);
 }
