@@ -129,7 +129,7 @@ createApp(vdom, document.getElementById("root"));
 
 # 表单双向绑定
 
-给表单元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
+给表单`input`或者`textarea`元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
 
 ```
 <textarea
