@@ -121,9 +121,9 @@ createApp(vdom, document.getElementById("root"));
 
 指令`*text`用来设置元素的`textContent`
 
-指令`*value`只是一个简单的表单元素双向绑定语法糖
+指令`*value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
-
+`*value=${state}`
 
 # 自行扩展自定义指令
 
