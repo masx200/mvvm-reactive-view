@@ -10,7 +10,7 @@ if(value instanceof ReactiveState &&(vdom.type==="input"||vdom.type==="textarea"
 {
 
 
-vdom.bindattr[value]=value
+vdom.bindattr["value"]=value
 
 
 ["change","input"].forEach(eventname=>{
