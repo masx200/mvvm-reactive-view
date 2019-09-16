@@ -6,7 +6,7 @@
 
 ## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟dom
 
-## 由于使用了 Proxy，所以不支持 ie 浏览器，而且 proxy 不可 polyfill
+## 由于使用了 Proxy，所以不支持 IE 浏览器，而且 proxy 不可 polyfill
 
 # 安装 npm 模块
 
