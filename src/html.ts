@@ -1,6 +1,5 @@
-import ReactiveState, { dispatchsymbol } from "./primitivestate";
-import Reflect from "./reflect";
-import { isstring, isarray, isobject, isfunction } from "./util";
+import ReactiveState from "./primitivestate";
+import { isstring } from "./util";
 import Virtualdom from "./virtualdom";
 import htm from "htm/dist/htm.module.js";
 import h from "./createelement";
@@ -33,7 +32,7 @@ export function isvalidvdom(v: any) {
   return flag;
 }
 function assertvalidvirtualdom(...args: any[]) {
-  var vdom = html(...args);
+  const vdom = html(...args);
   if (isvalidvdom(vdom)) {
     return vdom;
   } else {

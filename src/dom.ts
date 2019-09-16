@@ -2,13 +2,12 @@ const document = window.document;
 //import { seteletext, setelehtml } from "./directives";
 //export { seteletext, setelehtml };
 
-export function seteletext(e, v) {
+export function seteletext(e: Element, v: string) {
   e.textContent = v;
 }
-export function setelehtml(e, v) {
+export function setelehtml(e: Element, v: string) {
   e.innerHTML = v;
 }
-import Reflect from "./reflect";
 export function appendchild(
   container: HTMLElement | SVGSVGElement | SVGElement | Element,
   ele: HTMLElement | SVGElement | Element
@@ -36,9 +35,7 @@ export function changetext(textnode: Text, value: string) {
 }
 export default document;
 
-export const mathnamespace = "http://www.w3.org/1998/Math/MathML"
-
-
+export const mathnamespace = "http://www.w3.org/1998/Math/MathML";
 
 export function createmathelement() {
   return createElementNS(mathnamespace, "math");

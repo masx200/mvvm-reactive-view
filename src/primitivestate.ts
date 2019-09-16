@@ -1,18 +1,3 @@
-import Reflect, {
-  apply,
-  construct,
-  defineProperty,
-  deleteProperty,
-  get,
-  getOwnPropertyDescriptor,
-  getPrototypeOf,
-  has,
-  isExtensible,
-  ownKeys,
-  preventExtensions,
-  set,
-  setPrototypeOf
-} from "./reflect";
 // import Reflect from "./reflect";
 import { getsymbol, isobject } from "./util";
 export const textnodesymbol = Symbol("textnode");
@@ -48,17 +33,13 @@ export default class ReactiveState /* extends forkarray  */ {
   constructor(init: string | number | boolean | object | undefined) {
     //super();
     if (isprimitive(init) || isobject(init)) {
+      Object.defineProperty(this, "value", {
+        value: init,
+        configurable: true,
+        writable: true
+      });
 
-
-Object.defineProperty(this, "value", {
-      value: init,
-      configurable: true,
-writable:true
-    });
-
-
-
-     // this.value = init;
+      // this.value = init;
     } else {
       throw TypeError("invalid State");
     }
@@ -74,7 +55,7 @@ writable:true
     return this.value;
   }
   toString() {
-    let value = this.value;
+    const value = this.value;
     return isprimitive(value)
       ? String(value)
       : isobject(value)
@@ -82,7 +63,7 @@ writable:true
       : "";
   }
   [dispatchsymbol](eventname?: string) {
-    let name = eventname ? String(eventname) : "value";
+    const name = eventname ? String(eventname) : "value";
     if (name !== "value") {
       this[eventtargetsymbol].dispatchEvent(new Event(name));
     }
@@ -91,7 +72,7 @@ writable:true
   }
   [subscribesymbol](callback: Function, eventname?: string) {
     // this[eventtargetsymbol].addEventListener("value", callback);
-    let name = eventname ? String(eventname) : "value";
+    const name = eventname ? String(eventname) : "value";
     this[memlisteners].push([name, () => callback(this)]);
   }
   [removeallistenerssymbol]() {
@@ -101,7 +82,7 @@ writable:true
   }
   [Symbol.toPrimitive]() {
     //return this.value;
-    let value = this.value;
+    const value = this.value;
     return isprimitive(value)
       ? value
       : isobject(value)

@@ -1,23 +1,15 @@
-export const bindstatesymbol=Symbol("bindstate")
+export const bindstatesymbol = Symbol("bindstate");
 
-import {requestAnimationFrame}from "./directives.ts"
 export const reactivestatesymbol = Symbol("reactivestate");
 import { watch } from "./watch";
-import ReactiveState, {
-  changetextnodesymbol,
-  dispatchsymbol,
-  textnodesymbol
-} from "./primitivestate";
-import Reflect from "./reflect";
+import ReactiveState, { textnodesymbol } from "./primitivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
-import { eventlistenerssymbol } from "./onevent";
-import { subscribesymbol, addallistenerssymbol } from "./primitivestate";
 import directives from "./directives";
 import onevent from "./onevent";
 import { createcostumelemet } from "./customelement";
 import {
-mathnamespace,
-createmathelement,
+  mathnamespace,
+  createmathelement,
   svgnamespace,
   createsvgelement,
   createnonescript,
@@ -63,19 +55,13 @@ export default function render(
         /* 禁止加载脚本 */
 
         return createnonescript();
-      } 
-
-
-else if (type === "svg") {
+      } else if (type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
-      } 
-
-else if (type === "math") {
+      } else if (type === "math") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createmathelement();
-      } 
-else {
+      } else {
         element = namespace
           ? createElementNS(namespace, type)
           : createnativeelement(type);
@@ -86,7 +72,7 @@ else {
       throwinvalideletype();
       // throw TypeError("invalid element type!");
     }
-handleprops(element,vdom);
+    handleprops(element, vdom);
 
     /* 自定义组件不添加children,而是从构造函数传入 */
     if (typeof type !== "function") {
@@ -96,17 +82,9 @@ handleprops(element,vdom);
             /* 没想到svg的创建方式这么特别?否则显示不出svg */
             //   element.innerHTML = element.innerHTML;
             return render(e, svgnamespace);
-          }
-
-
-else if(type==="math")
-{
-
-return render(e, mathnamespace);
-
-}
-
- else if (namespace) {
+          } else if (type === "math") {
+            return render(e, mathnamespace);
+          } else if (namespace) {
             return render(e, namespace);
           } else {
             return render(e);
@@ -127,23 +105,20 @@ export interface Class {
   new (children?: any[]): HTMLElement;
 }
 
-
-
-
-function handleprops(element,vdom){
-((element,vdom)=>{
-
-
-
-Object.entries(vdom.directives).forEach(([name, value]) => {
+function handleprops(
+  element: HTMLElement | Element | SVGSVGElement | SVGElement,
+  vdom: Virtualdom
+) {
+  ((element, vdom) => {
+    Object.entries(vdom.directives).forEach(([name, value]) => {
       if (name in directives && typeof directives[name] === "function") {
         directives[name](element, value, vdom);
       } else {
         throw new Error("invalid directives " + name);
       }
     });
-   
- var attribute1 = createeleattr(element);
+
+    const attribute1 = createeleattr(element);
     Object.assign(attribute1, vdom.props);
     /* 添加常量的属性 */
     element[virtualdomsymbol] = vdom;
@@ -163,27 +138,21 @@ Object.entries(vdom.directives).forEach(([name, value]) => {
 
     /* 添加事件绑定和指令执行 */
 
-    
-  /*  if (!element[eventlistenerssymbol]) {
+    /*  if (!element[eventlistenerssymbol]) {
       element[eventlistenerssymbol] = [];
     }
 */
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
       onevent(element, event, callbacks);
     });
+  })(element, vdom);
+  if (!element[bindstatesymbol]) {
+    element[bindstatesymbol] = new Set();
+  }
 
-})(element,vdom);
-if (!element[bindstatesymbol]) {
-      element[bindstatesymbol] = new Set;
-    }
+  [Object.values(vdom.bindattr), Object.values(vdom.directives)]
+    .flat()
+    .filter(e => e instanceof ReactiveState)
 
-[Object.values(vdom.bindattr),Object.values(vdom.directives)].flat().filter(e=>e instanceof ReactiveState)
-
-.forEach(e=>element[bindstatesymbol].add(e))
-
-
-
-
-
-
+    .forEach(e => element[bindstatesymbol].add(e));
 }

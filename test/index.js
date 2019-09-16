@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   createRef,
   html,
@@ -9,7 +10,7 @@ import {
 } from "../dist/index.js";
 (() => {
   const inputref = createRef();
-  var vdom = html`
+  const vdom = html`
     <h1>
       <svg
         style="
@@ -384,7 +385,7 @@ import {
       document.createElement("div")
     )
   );
-  let myele1 = createElemet(class extends HTMLElement {});
+  const myele1 = createElemet(class extends HTMLElement {});
   console.log(myele1);
   document.body.appendChild(createApp(myele1, document.createElement("div")));
   document.body.appendChild(createApp(myele1, document.createElement("div")));
@@ -495,7 +496,7 @@ import {
     objstatearray.push(Math.random());
   });
   console.log(objstatearray);
-  let timer = setInterval(() => {
+  const timer = setInterval(() => {
     objstate2.value += String(Math.random());
   }, 1000);
   setTimeout(() => {
@@ -506,33 +507,31 @@ import {
   console.log(Object.entries(objstate));
 })();
 
-document.body.appendChild(createApp(
+document.body.appendChild(
+  createApp(
+    html`
+      <math>
+        <mrow>
+          <mrow>
+            <msup>
+              <mi>a</mi>
+              <mn>2</mn>
+            </msup>
+            <mo>+</mo>
+            <msup>
+              <mi>b</mi>
+              <mn>2</mn>
+            </msup>
+          </mrow>
+          <mo>=</mo>
+          <msup>
+            <mi>c</mi>
+            <mn>2</mn>
+          </msup>
+        </mrow>
+      </math>
+    `,
 
-
-
-
-html`<math>
-    <mrow>
-      <mrow>
-        <msup>
-          <mi>a</mi>
-          <mn>2</mn>
-        </msup>
-        <mo>+</mo>
-        <msup>
-          <mi>b</mi>
-          <mn>2</mn>
-        </msup>
-      </mrow>
-      <mo>=</mo>
-      <msup>
-        <mi>c</mi>
-        <mn>2</mn>
-      </msup>
-    </mrow>
-  </math>`
-
-
-, document.createElement("div")));
-
-
+    document.createElement("div")
+  )
+);

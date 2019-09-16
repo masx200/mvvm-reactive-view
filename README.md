@@ -4,12 +4,11 @@
 
 ## 基于 Proxy,基于虚拟 dom,支持 jsx 和 hyperscript,前端 javascript 库
 
-
- 关于 Proxy
+关于 Proxy
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
 
-## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟dom
+## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟 dom
 
 ## 由于使用了 Proxy，所以不支持 IE 浏览器，而且 proxy 不可 polyfill
 
@@ -29,7 +28,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
-directives,
+  directives,
   watch,
   html,
   h,
@@ -68,7 +67,7 @@ https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 
 ```js
 import {
-directives,
+  directives,
   watch,
   html,
   h,
@@ -106,8 +105,7 @@ createApp(vdom, document.getElementById("root"));
 <script type="module" src="./index.js"></script>
 ```
 
-
-# 使用webcomponents
+# 使用 webcomponents
 
 ```js
 
@@ -136,7 +134,6 @@ document.body.appendChild(
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
 
 `value=${state1}`
-
 
 # 事件绑定
 
@@ -171,14 +168,11 @@ document.body.appendChild(
 # 扩展自定义指令
 
 ```js
-directives({value(element,value,vdom){
+directives({ value(element, value, vdom) {} });
 
-
-}})
-
-
-html`<input *value=${myvalue}>`
-
+html`
+  <input *value=${myvalue} />
+`;
 ```
 
 # 表单双向绑定
@@ -186,17 +180,15 @@ html`<input *value=${myvalue}>`
 给表单`input`或者`textarea`元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
 
 ```js
-html`<textarea
-
-value=${state1}
-
-@input=${e => (state1.value = e.target.value)}
-
-@change=${e => (state1.value = e.target.value)}
-
-/>`
-
+html`
+  <textarea
+    value=${state1}
+    @input=${e => (state1.value = e.target.value)}
+    @change=${e => (state1.value = e.target.value)}
+  />
+`;
 ```
+
 # 支持绑定状态到 TextNode 文字节点
 
 ```js
@@ -219,7 +211,6 @@ function directives(options:object):void;
 
 options[name]=function(element,value,vdom);
 ```
-
 
 ## `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
 
@@ -251,6 +242,7 @@ function createRef(
   value: any;
 };
 ```
+
 ## 虚拟 `dom` `Virtualdom`类
 
 ```ts
@@ -291,23 +283,18 @@ class ReactiveState {
 function watch(state: ReactiveState, callback: Function): void;
 ```
 
-# 懒加载 
+# 懒加载
 
 尚在开发中
 
-
-# 组件化 
-
-尚在开发中
-
-
-# 条件渲染 
+# 组件化
 
 尚在开发中
 
+# 条件渲染
+
+尚在开发中
 
 # 列表渲染
-
- 
 
 尚在开发中

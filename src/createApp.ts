@@ -1,6 +1,4 @@
 import document from "./dom";
-import { isArray } from "./util";
-import Reflect from "./reflect";
 import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";
@@ -8,7 +6,7 @@ import mount from "./mount";
 export default function createApp(
   vdom: Virtualdom | string | Array<Virtualdom | string>,
   container: HTMLElement | Element
-) {
+): HTMLElement | Element {
   const el = container;
   if (!isvalidvdom(vdom)) {
     console.error(vdom);

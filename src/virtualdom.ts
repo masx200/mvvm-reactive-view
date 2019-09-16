@@ -1,5 +1,4 @@
-import Reflect from "./reflect";
-import ReactiveState, { dispatchsymbol } from "./primitivestate";
+import ReactiveState from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {

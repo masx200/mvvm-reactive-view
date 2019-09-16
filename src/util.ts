@@ -1,4 +1,4 @@
-import Reflect from "./reflect";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function isundefined(a: any) {
   return typeof a === "undefined";
 }
@@ -12,6 +12,8 @@ export function isboolean(a: any) {
 export function isobject(a: any) {
   return typeof a === "object" && a !== null;
 }
+export function isstring(a: string): true;
+export function isstring(a): boolean;
 export function isstring(a: any) {
   return typeof a === "string";
 }

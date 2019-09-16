@@ -1,6 +1,5 @@
-import ReactiveState, { dispatchsymbol } from "./primitivestate";
-import Reflect from "./reflect";
-import { isstring, isarray, isobject, isfunction } from "./util";
+import ReactiveState from "./primitivestate";
+import { isstring, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 export default function h(
   type: Function | string = "",
@@ -11,17 +10,21 @@ export default function h(
   // if(isarray()){}
   /* add fragment element */
   //   console.log(type, props, children);
-  var typenormalized = isstring(type) || isfunction(type) ? type : "";
-  var propsnormalized = isobject(props) ? props : {};
-  var childrennormalized = children.flat(1);
-if(isstring(typenormalized)){
-typenormalized=typenormalized.trim().toLowerCase()
-
-}
+  let typenormalized = isstring(type) || isfunction(type) ? type : "";
+  let propsnormalized = isobject(props) ? props : {};
+  const childrennormalized = children.flat(1);
+  if (typeof typenormalized === "string") {
+    typenormalized = typenormalized.trim().toLowerCase();
+  }
 
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }
-propsnormalized=Object.fromEntries(Object.entries(propsnormalized).map(([key,value])=>[key.trim().toLowerCase(),value]))
+  propsnormalized = Object.fromEntries(
+    Object.entries(propsnormalized).map(([key, value]) => [
+      key.trim().toLowerCase(),
+      value
+    ])
+  );
   return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }

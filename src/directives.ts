@@ -1,31 +1,18 @@
 import { seteletext, setelehtml } from "./dom";
 
-
 export const requestAnimationFrame = window.requestAnimationFrame;
 
-
-
-/*
-export function seteletext(e, v) {
-  e.textContent = v;
-}
-export function setelehtml(e, v) {
-  e.innerHTML = v;
-}*/
-import Reflect from "./reflect";
 import { watch } from "./watch";
-import { subscribesymbol, addallistenerssymbol } from "./primitivestate";
-import Virtualdom from "./virtualdom";
 import Primitivestate from "./primitivestate";
 export default {
-  ref(ele: Element, ref: { value: any }, vdom: any) {
+  ref(ele: Element, ref: { value: any }) {
     if (typeof ref == "object") {
       ref.value = ele;
     } else {
       throw TypeError("invalid ref");
     }
   },
-  html(ele: Element, html: string | Primitivestate, vdom: any) {
+  html(ele: Element, html: string | Primitivestate) {
     // ele.innerHTML = html;
     // console.log(ele.outerHTML);
     if (typeof html == "string") {
@@ -55,7 +42,7 @@ export default {
       throw TypeError("invalid html");
     }
   },
-  text(ele: Element, text: string | Primitivestate, vdom: any) {
+  text(ele: Element, text: string | Primitivestate) {
     // ele.textContent = text;
     // console.log(ele.outerHTML);
     if (typeof text == "string") {

@@ -1,6 +1,8 @@
 import "./Object-fromEntries";
 // import "./setImmediate";
 import "./array-prototype-flat";
+import "./input-textarea-value-directive-Bidirectional-binding";
+
 import html from "./html";
 import h from "./createelement";
 export { html };
@@ -13,9 +15,6 @@ import createState from "./createstate";
 export { createState };
 import { watch } from "./watch";
 export { watch };
-import directives from "./extend-directive.ts"
+import directives from "./extend-directive";
 
-
-
-
-export{directives}
+export { directives };

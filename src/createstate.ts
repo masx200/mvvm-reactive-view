@@ -1,20 +1,13 @@
-import Reflect, {
-  apply,
-  construct,
-  defineProperty,
+import {
   deleteProperty,
   get,
   getOwnPropertyDescriptor,
-  getPrototypeOf,
   has,
-  isExtensible,
   ownKeys,
-  preventExtensions,
-  set,
-  setPrototypeOf
+  set
 } from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
-import { getsymbol, isobject } from "./util";
+import { isobject } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, {
   dispatchsymbol,
@@ -22,13 +15,13 @@ import ReactiveState, {
 } from "./primitivestate";
 export default function createstate(
   init: string | number | boolean | undefined | ReactiveState | object
-) {
+): object {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
       defineProperty() {
         return false;
       },
-      deleteProperty(target, key) {
+      deleteProperty() {
         return false;
       },
       set(target, key, value) {
@@ -57,10 +50,10 @@ export default function createstate(
       getOwnPropertyDescriptor(target, key) {
         const myvalue = get(target, "value");
 
-        var descripter =
+        const descripter =
           getOwnPropertyDescriptor(target, key) ||
           getOwnPropertyDescriptor(myvalue, key);
-       // descripter.configurable = true;
+        // descripter.configurable = true;
         return descripter;
       },
       deleteProperty(target, key) {

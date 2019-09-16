@@ -1,14 +1,13 @@
-import Reflect from "./reflect";
 export const eventlistenerssymbol = Symbol("eventlisteners");
-import { isArray, isFunction, isString } from "./util";
+import { isArray } from "./util";
 export default function(
   element: Element,
   eventname: string,
   callback: EventListener | Array<EventListener>
 ) {
-if (!element[eventlistenerssymbol]) {
-      element[eventlistenerssymbol] = [];
-    }
+  if (!element[eventlistenerssymbol]) {
+    element[eventlistenerssymbol] = [];
+  }
   if (typeof callback === "function") {
     addlisteners(element, eventname, [callback]);
   } else if (isArray(callback)) {

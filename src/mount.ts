@@ -1,4 +1,3 @@
-import Reflect from "./reflect";
 import { appendchild } from "./dom";
 export default function(
   ele:
@@ -17,7 +16,7 @@ export default function(
     | SVGSVGElement
     | Element,
   container: HTMLElement | SVGSVGElement | SVGElement | Element
-) {
+): void {
   container.innerHTML = "";
   let eles: Array<any>;
   if (Array.isArray(ele)) {

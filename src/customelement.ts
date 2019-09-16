@@ -1,23 +1,24 @@
-import Reflect, {
-  apply,
-  construct,
-  defineProperty,
-  deleteProperty,
-  get,
-  getOwnPropertyDescriptor,
-  getPrototypeOf,
-  has,
-  isExtensible,
-  ownKeys,
-  preventExtensions,
-  set,
-  setPrototypeOf
-} from "./reflect";
-// import Reflect from "./reflect";
-import { isfunction } from "./util";
-import { Class } from "./rendervdomtoreal";
 import setlikearray from "./setlikearay";
 const customElementsarray = new setlikearray();
+function getcustomelementname(initclass: any): string {
+  return "c-" + customElementsarray.indexOf(initclass);
+}
+import { isfunction } from "./util";
+export function isclassextendsHTMLElement(initclass: {
+  prototype: any;
+}): boolean {
+  return !!(
+    isfunction(initclass) &&
+    initclass.prototype &&
+    initclass.prototype instanceof HTMLElement
+  );
+}
+
+import { construct } from "./reflect";
+// import Reflect from "./reflect";
+
+import { Class } from "./rendervdomtoreal";
+
 export function createcostumelemet(
   initclass: Class | Function,
 
@@ -35,14 +36,4 @@ export function createcostumelemet(
   } else {
     throw TypeError("invalid custom element class !");
   }
-}
-function getcustomelementname(initclass: any) {
-  return "c-" + customElementsarray.indexOf(initclass);
-}
-export function isclassextendsHTMLElement(initclass: { prototype: any }) {
-  return !!(
-    isfunction(initclass) &&
-    initclass.prototype &&
-    initclass.prototype instanceof HTMLElement
-  );
 }

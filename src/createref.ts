@@ -1,4 +1,3 @@
-import Reflect from "./reflect";
-export default function createRef(init: any) {
+export default function createRef(init: any): object {
   return { value: init };
 }
