@@ -15,18 +15,18 @@ export default {
   html(ele: Element, html: string | Primitivestate) {
     // ele.innerHTML = html;
     // console.log(ele.outerHTML);
-    if (typeof html == "string") {
+  /*  if (typeof html == "string") {
       requestAnimationFrame(() => {
         setelehtml(ele, html);
 
         /* ele.innerHTML = html;*/
         //   console.log(ele.outerHTML);
-      });
+ /*     });
     } else if (html instanceof Primitivestate) {
       //   const primitivestate = html;
       watch(html, (state: { value: any }) => {
         /*ele.innerHTML = String(state);*/
-
+/*
         setelehtml(ele, String(state));
       });
       //   primitivestate[subscribesymbol]((state: { value: any }) => {
@@ -35,12 +35,14 @@ export default {
       requestAnimationFrame(() => {
         // console.log("html");
         /*  ele.innerHTML = String(html);*/
-
+/*
         setelehtml(ele, String(html));
       });
     } else {
       throw TypeError("invalid html");
     }
+
+*/
   },
   text(ele: Element, text: string | Primitivestate) {
   
