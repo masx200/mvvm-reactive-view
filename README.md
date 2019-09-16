@@ -286,6 +286,18 @@ class ReactiveState {
 function watch(state: ReactiveState, callback: Function): void;
 ```
 
+
+
+
+# 组件化 
+
+尚在开发中
+
+
+# 条件渲染 
+
+尚在开发中
+
 # 关于 Proxy
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
