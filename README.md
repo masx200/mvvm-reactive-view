@@ -24,6 +24,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+directives,
   watch,
   html,
   h,
@@ -62,6 +63,7 @@ https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 
 ```js
 import {
+directives,
   watch,
   html,
   h,
@@ -143,6 +145,19 @@ const vdomobj = html`
 ```
 
 # API
+
+使用`directives`函数来扩展指令
+
+```ts
+
+function directives(options:object):void;
+
+
+
+
+
+```
+
 
 `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
 
