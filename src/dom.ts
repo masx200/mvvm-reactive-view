@@ -1,6 +1,13 @@
 const document = window.document;
-import { seteletext, setelehtml } from "./directives";
-export { seteletext, setelehtml };
+//import { seteletext, setelehtml } from "./directives";
+//export { seteletext, setelehtml };
+
+export function seteletext(e, v) {
+  e.textContent = v;
+}
+export function setelehtml(e, v) {
+  e.innerHTML = v;
+}
 import Reflect from "./reflect";
 export function appendchild(
   container: HTMLElement | SVGSVGElement | SVGElement | Element,
