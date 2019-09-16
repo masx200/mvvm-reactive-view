@@ -17,7 +17,11 @@ export default function h(
     typenormalized = typenormalized.trim().toLowerCase();
   }
 
-  if (typeof typenormalized === "string" && "" === typenormalized) {
+  if (
+
+//typeof typenormalized === "string" && 
+
+"" === typenormalized) {
     return childrennormalized;
   }
   /* propsnormalized = Object.fromEntries(
