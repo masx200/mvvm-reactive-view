@@ -19,6 +19,7 @@
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {},
     "devDependencies": {
+"eslint": "^6.1.0",
         "core-js": "^3.2.1",
         "core-js-pure": "^3.2.1",
         "deep-observe-agent-proxy": "https://github.com/masx200/deep-observe-agent-proxy.git",
