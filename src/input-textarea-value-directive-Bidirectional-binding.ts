@@ -18,7 +18,7 @@ vdom.bindattr["value"]=value
 const origin= vdom.onevent[eventname]
 
 
-const eventsarray=[origin].flat()
+const eventsarray=[origin].flat(Infinity)
 
 
 vdom.onevent[eventname]=[...eventsarray,e => (value.value = e.target.value)]
