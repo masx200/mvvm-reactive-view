@@ -15,7 +15,14 @@ vdom.bindattr[value]=value
 
 ["change","input"].forEach(eventname=>{
 
-vdom.onevent[eventname]
+const origin= vdom.onevent[eventname]
+
+
+const eventsarray=[origin].flat()
+
+
+vdom.onevent[eventname]=[...eventsarray,]
+
 })
 
 
