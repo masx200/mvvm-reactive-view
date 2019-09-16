@@ -505,3 +505,26 @@ import {
   console.log(Object.getOwnPropertyDescriptors(objstatearray));
   console.log(Object.entries(objstate));
 })();
+
+
+
+html`<math>
+    <mrow>
+      <mrow>
+        <msup>
+          <mi>a</mi>
+          <mn>2</mn>
+        </msup>
+        <mo>+</mo>
+        <msup>
+          <mi>b</mi>
+          <mn>2</mn>
+        </msup>
+      </mrow>
+      <mo>=</mo>
+      <msup>
+        <mi>c</mi>
+        <mn>2</mn>
+      </msup>
+    </mrow>
+  </math>`
