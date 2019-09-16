@@ -14,8 +14,14 @@ export default function h(
   var typenormalized = isstring(type) || isfunction(type) ? type : "";
   var propsnormalized = isobject(props) ? props : {};
   var childrennormalized = children.flat(1);
+if(isstring(typenormalized)){
+typenormalized=typenormalized.trim().toLowerCase()
+
+}
+
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }
-  return new Virtualdom(typenormalized.toLowerCase(), propsnormalized, childrennormalized);
+
+  return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }
