@@ -13,9 +13,9 @@ import createState from "./createstate";
 export { createState };
 import { watch } from "./watch";
 export { watch };
-import extendDirectives from "./extend-directive.ts"
+import directives from "./extend-directive.ts"
 
 
 
 
-export{extendDirectives}
+export{directives}
