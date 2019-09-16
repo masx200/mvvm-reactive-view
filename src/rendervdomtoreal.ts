@@ -14,6 +14,8 @@ import directives from "./directives";
 import onevent from "./onevent";
 import { createcostumelemet } from "./customelement";
 import {
+mathnamespace,
+createmathelement,
   svgnamespace,
   createsvgelement,
   createnonescript,
