@@ -4,6 +4,11 @@
 
 ## 基于 Proxy,基于虚拟 dom,支持 jsx 和 hyperscript,前端 javascript 库
 
+
+ 关于 Proxy
+
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+
 ## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟dom
 
 ## 由于使用了 Proxy，所以不支持 IE 浏览器，而且 proxy 不可 polyfill
@@ -300,6 +305,9 @@ function watch(state: ReactiveState, callback: Function): void;
 
 尚在开发中
 
-# 关于 Proxy
 
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+# 列表渲染
+
+ 
+
+尚在开发中
