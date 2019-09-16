@@ -20,11 +20,11 @@ export default function h(
   if (typeof typenormalized === "string" && "" === typenormalized) {
     return childrennormalized;
   }
-  propsnormalized = Object.fromEntries(
+  /* propsnormalized = Object.fromEntries(
     Object.entries(propsnormalized).map(([key, value]) => [
       key.trim().toLowerCase(),
       value
     ])
-  );
+  ); */
   return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }

@@ -503,7 +503,7 @@ import {
     clearInterval(timer);
   }, 10000);
   console.log([objstate2, createState(objstate2)]);
-  console.log(Object.getOwnPropertyDescriptors(objstatearray));
+  //   console.log(Object.getOwnPropertyDescriptors(objstatearray));
   console.log(Object.entries(objstate));
 })();
 
