@@ -61,10 +61,19 @@ export default function render(
         /* 禁止加载脚本 */
 
         return createnonescript();
-      } else if (type === "svg") {
+      } 
+
+
+else if (type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
-      } else {
+      } 
+
+else if (type === "math") {
+        /* 没想到svg的创建方式这么特别?否则显示不出svg */
+        element = createmathelement();
+      } 
+else {
         element = namespace
           ? createElementNS(namespace, type)
           : createnativeelement(type);
@@ -85,7 +94,17 @@ handleprops(element,vdom);
             /* 没想到svg的创建方式这么特别?否则显示不出svg */
             //   element.innerHTML = element.innerHTML;
             return render(e, svgnamespace);
-          } else if (namespace) {
+          }
+
+
+else if(type==="math")
+{
+
+return render(e, mathnamespace);
+
+}
+
+ else if (namespace) {
             return render(e, namespace);
           } else {
             return render(e);
