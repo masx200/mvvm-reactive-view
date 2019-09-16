@@ -60,7 +60,7 @@ export default function createstate(
         var descripter =
           getOwnPropertyDescriptor(target, key) ||
           getOwnPropertyDescriptor(myvalue, key);
-        descripter.configurable = true;
+       // descripter.configurable = true;
         return descripter;
       },
       deleteProperty(target, key) {
