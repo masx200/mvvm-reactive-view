@@ -146,22 +146,20 @@ const vdomobj = html`
 
 # API
 
-使用`directives`函数来扩展指令
+## 使用`directives`函数来扩展指令
 
 ```ts
 
 function directives(options:object):void;
 
 
-
-
-
+options[name]=function(element,value,vdom);
 ```
 
 
-`html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
+## `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
 
-`h`等同于`createElemet`,用来生成虚拟 `dom`
+## `h`等同于`createElemet`,用来生成虚拟 `dom`
 
 ```ts
 function createElemet(
@@ -171,7 +169,7 @@ function createElemet(
 ): Virtualdom | Array<Virtualdom | string>;
 ```
 
-使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
+## 使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function createApp(
@@ -180,7 +178,7 @@ function createApp(
 ): HTMLElement | Element;
 ```
 
-使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
+## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
 
 ```ts
 function createRef(
@@ -189,8 +187,7 @@ function createRef(
   value: any;
 };
 ```
-
-虚拟 `dom` `Virtualdom`类
+## 虚拟 `dom` `Virtualdom`类
 
 ```ts
 class Virtualdom {
@@ -208,13 +205,13 @@ class Virtualdom {
 }
 ```
 
-使用`createState`来生成一个引用形式的状态
+## 使用`createState`来生成一个引用形式的状态
 
 ```ts
 function createState(init: string | number | boolean | object): ReactiveState;
 ```
 
-响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值
+## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值
 
 ```ts
 class ReactiveState {
@@ -224,7 +221,7 @@ class ReactiveState {
 }
 ```
 
-使用`watch`函数来监听状态的变化,执行回调函数
+## 使用`watch`函数来监听状态的变化,执行回调函数
 
 ```ts
 function watch(state: ReactiveState, callback: Function): void;
