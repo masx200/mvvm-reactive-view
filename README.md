@@ -103,7 +103,7 @@ createApp(vdom, document.getElementById("root"));
 
 # 事件绑定
 
-属性名为'@'+事件名称,属性值绑定为回调函数
+属性名为'@'+事件名称,属性值绑定为回调函数或者回调函数组成的数组
 
 `@change=${e => (state1.value = e.target.value)}`
 
