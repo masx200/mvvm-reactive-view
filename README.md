@@ -115,29 +115,30 @@ createApp(vdom, document.getElementById("root"));
 `@change=${e => (state1.value = e.target.value)}`
 
 `@input=${[e => (state1.value = e.target.value),console.log]}`
+
 # 使用指令
 
 属性名为'\*'+指令名称,属性值为值
 
 现已支持的指令有 `'ref','html','text'，"value"`
 
-指令`*ref`用来获取元素的引用
+### 指令`*ref`用来获取元素的引用
 
 `*ref=${ref}`
 
-指令`*html`用来设置元素的`innerHTML`
+### 指令`*html`用来设置元素的`innerHTML`
 
 `*html=${state}`
 
-指令`*text`用来设置元素的`textContent`
+### 指令`*text`用来设置元素的`textContent`
 
 `*text=${state}`
 
-指令`*value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
+### 指令`*value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
 `*value=${state}`
 
-# 自行扩展自定义指令
+# 扩展自定义指令
 
 ```js
 directives({value(element,value,vdom){
