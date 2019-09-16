@@ -173,5 +173,7 @@ Object.entries(vdom.directives).forEach(([name, value]) => {
     });
 
 })(element,vdom);
-
+if (!element[bindstatesymbol]) {
+      element[bindstatesymbol] = new Set;
+    }
 }
