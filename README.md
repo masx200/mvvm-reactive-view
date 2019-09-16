@@ -147,8 +147,8 @@ html`<input *value=${myvalue}>`
 
 给表单`input`或者`textarea`元素添加 `change` 和 `input`事件回调,改变状态的`value`属性值,即可
 
-```
-<textarea
+```js
+html`<textarea
 
 value=${state1}
 
@@ -156,7 +156,7 @@ value=${state1}
 
 @change=${e => (state1.value = e.target.value)}
 
-/>
+/>`
 
 ```
 # 支持绑定状态到 TextNode 文字节点
