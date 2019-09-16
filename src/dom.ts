@@ -41,5 +41,5 @@ export const mathnamespace = "http://www.w3.org/1998/Math/MathML"
 
 
 export function createmathelement() {
-  return document.createElementNS(mathnamespace, "svg");
+  return document.createElementNS(mathnamespace, "math");
 }
