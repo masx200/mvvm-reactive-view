@@ -6,6 +6,9 @@ export default function(
   eventname: string,
   callback: EventListener | Array<EventListener>
 ) {
+if (!element[eventlistenerssymbol]) {
+      element[eventlistenerssymbol] = [];
+    }
   if (typeof callback === "function") {
     addlisteners(element, eventname, [callback]);
   } else if (isArray(callback)) {
