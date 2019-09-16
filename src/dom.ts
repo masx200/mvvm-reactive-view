@@ -28,3 +28,5 @@ export function changetext(textnode: Text, value: string) {
   textnode.nodeValue = String(value);
 }
 export default document;
+
+export const svgnamespace = "http://www.w3.org/1998/Math/MathML"
