@@ -101,6 +101,19 @@ createApp(vdom, document.getElementById("root"));
 <script type="module" src="./index.js"></script>
 ```
 
+
+# 使用webcomponents
+
+```js
+
+var mycom=class extends HTMLElement{}
+
+var vdom=html`<${mycom}/>`
+
+
+
+```
+
 # 属性单向绑定
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
