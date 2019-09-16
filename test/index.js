@@ -541,6 +541,15 @@ document.body.appendChild(
           </msup>
         </mrow>
       </math>
+
+<svg width="100%" height="100%" xml:base="">
+    <defs>
+      <marker id="arrow" viewBox="0 -5 10 10" refX="0" refY="0" markerWidth="20" markerHeight="20" orient="auto">
+        <path d="M0,-5L10,0L0,5"></path>
+      </marker>
+    </defs>
+    <line x1="100" y1="100" x2="333" y2="333" marker-start="url(#arrow)" class="link"></line>
+  </svg>
     `,
 
     document.createElement("div")
