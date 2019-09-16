@@ -10,6 +10,8 @@ if(value instanceof ReactiveState &&(vdom.type==="input"||vdom.type==="textarea"
 {
 
 
+vdom.bindattr[value]=value
+
 
 
 }else{
