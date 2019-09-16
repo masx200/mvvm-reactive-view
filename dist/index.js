@@ -441,73 +441,116 @@ function mount (ele, container) {
     eles.forEach(e => appendchild(container, e));
 }
 
-const t$1 = window.Reflect,
-  { get: o, ownKeys: f, set: g } = t$1,
-  y = "value";
-function b(t) {
-  return "object" == typeof t && null !== t;
+const Reflect$1 = window.Reflect;
+const { get: get$1, ownKeys: ownKeys$1, set: set$1 } = Reflect$1;
+const valuestring = "value";
+function isobject$1(a) {
+    return typeof a === "object" && a !== null;
 }
-function S(t) {
-  return "string" == typeof t;
+function isstring$1(a) {
+    return typeof a === "string";
 }
-function createeleattr(t) {
-  !(function(t) {
-    if (
-      t instanceof HTMLElement ||
-      t instanceof SVGElement ||
-      t instanceof Element
-    )
-      return !0;
-    throw TypeError("invalid HTMLElement!");
-  })(t);
-  const e =
-    ("INPUT" === t.tagName && "text" === o(t, "type")) ||
-    "TEXTAREA" === t.tagName;
-  var r = Object.create(null);
-  return new Proxy(r, {
-    ownKeys() {
-      const r = f(t.attributes).filter(t => !/\d/.test(String(t)[0]));
-      return e ? Array.from(new Set([...r, y])) : r;
-    },
-    get(n) {
-      if (e && n === y) return o(t, y);
-      var i = t.getAttribute(String(n));
-      if (i && S(i))
-        try {
-          return JSON.parse(String(i));
-        } catch (t) {
-          return i;
-        }
-    },
-    set(n, i) {
-      return e && n === y
-        ? g(t, y, i)
-        : "style" === n
-        ? (t.setAttribute(
-            String(n),
-            S(i)
-              ? i
-              : b(i)
-              ? ((o = i),
-                Object.entries(o)
-                  .map(([t, e]) => t + ":" + e)
-                  .join(";"))
-              : String(i)
-          ),
-          !0)
-        : (t.setAttribute(String(n), b(i) ? JSON.stringify(i) : String(i)), !0);
-      var o;
-    },
-    deleteProperty: (e, r) => (t.removeAttribute(String(r)), !0),
-    has: (r, n) => !(!e || n !== y) || t.hasAttribute(String(n)),
-    defineProperty: () => !1,
-    getOwnPropertyDescriptor(n) {
-      const i = { enumerable: !0, configurable: !0, writable: !0 };
-      if (e && n === y) return { value: o(t, y), ...i };
-      var s = t.getAttribute(String(n));
-      return s ? { value: s, ...i } : void 0;
+function objtostylestring(o) {
+    return Object.entries(o)
+        .map(([key, value]) => key + ":" + value)
+        .join(";");
+}
+function asserthtmlelement(ele) {
+    if (!(ele instanceof HTMLElement ||
+        ele instanceof SVGElement ||
+        ele instanceof Element)) {
+        throw TypeError("invalid HTMLElement!");
     }
-  });
+    else
+        return true;
+}
+function createeleattragentreadwrite(ele) {
+    asserthtmlelement(ele);
+    const isinputtextortextarea = (ele.tagName === "INPUT" && get$1(ele, "type") === "text") ||
+        ele.tagName === "TEXTAREA";
+    var temp = Object.create(null);
+    return new Proxy(temp, {
+        ownKeys() {
+            const keys = ownKeys$1(ele.attributes).filter(k => !/\d/.test(String(k)[0]));
+            return isinputtextortextarea
+                ? Array.from(new Set([...keys, valuestring]))
+                : keys;
+        },
+        get(target, key) {
+            if (isinputtextortextarea && key === valuestring) {
+                return get$1(ele, valuestring);
+            }
+            else {
+                var v = ele.getAttribute(String(key));
+                if (!v) {
+                    return;
+                }
+                if (isstring$1(v)) {
+                    try {
+                        return JSON.parse(String(v));
+                    }
+                    catch (error) {
+                        return v;
+                    }
+                }
+                else
+                    return;
+            }
+        },
+        set(t, key, v) {
+            if (isinputtextortextarea && key === valuestring) {
+                return set$1(ele, valuestring, v);
+            }
+            else if (key === "style") {
+                ele.setAttribute(String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
+                return true;
+            }
+            else {
+                ele.setAttribute(String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
+                return true;
+            }
+        },
+        deleteProperty(t, k) {
+            ele.removeAttribute(String(k));
+            return true;
+        },
+        has(target, key) {
+            if (isinputtextortextarea && key === valuestring) {
+                return true;
+            }
+            else {
+                return ele.hasAttribute(String(key));
+            }
+        },
+        defineProperty() {
+            return false;
+        },
+        getOwnPropertyDescriptor(target, key) {
+            const otherdescipter = {
+                enumerable: true,
+                configurable: true,
+                writable: true
+            };
+            if (isinputtextortextarea && key === valuestring) {
+                return {
+                    value: get$1(ele, valuestring),
+                    ...otherdescipter
+                };
+            }
+            else {
+                var attr = ele.getAttribute(String(key));
+                if (attr) {
+                    return {
+                        value: attr,
+                        ...otherdescipter
+                    };
+                }
+                else {
+                    return;
+                }
+            }
+        }
+    });
 }
 
 const bindstatesymbol = Symbol("bindstate");
@@ -588,7 +631,7 @@ function handleprops(element, vdom) {
                 throw new Error("invalid directives " + name);
             }
         });
-        const attribute1 = createeleattr(element);
+        const attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
         element[virtualdomsymbol] = vdom;
         vdom.element = element;
@@ -640,70 +683,103 @@ function createRef(init) {
     return { value: init };
 }
 
-const t$2 = window.Reflect,
-  {
-    apply: e$1,
-    construct: r$1,
-    defineProperty: o$1,
-    get: f$1,
-    getOwnPropertyDescriptor: i,
-    getPrototypeOf: p,
-    has: u$1,
-    set: l,
-    setPrototypeOf: a
-  } = t$2;
-function P(t) {
-  return "object" == typeof t && null !== t;
+const Reflect$2 = window.Reflect;
+const { apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf$1 } = Reflect$2;
+function isobject$2(a) {
+    return typeof a === "object" && a !== null;
 }
-function d(t) {
-  return "function" == typeof t;
+function isfunction$1(a) {
+    return typeof a === "function";
 }
-function deepobserve(n, y) {
-  if ("function" != typeof y)
-    throw Error("observe callback is not valid function !");
-  if ("function" != typeof Proxy) throw Error("Proxy unsupported!");
-  return d(n) || P(n)
-    ? (function n(y, c, s = [], w = y) {
-        if ("function" != typeof c) throw Error("observe callback invalid !");
-        if (d(y) || P(y)) {
-          let v;
-          return (
-            (v = P(y) ? {} : () => {}),
-            a(v, null),
-            (v =>
-              new Proxy(v, {
-                defineProperty: (t, e, r) => o$1(y, e, r),
-                deleteProperty: (e, r) => (
-                  c(w, [...s, r], void 0, f$1(y, r)), t$2.deleteProperty(y, r)
-                ),
-                ownKeys: () => t$2.ownKeys(y),
-                has: (t, e) => u$1(y, e),
-                getPrototypeOf: () => p(y),
-                setPrototypeOf: (t, e) => a(y, e),
-                construct(e) {
-                  if ("function" == typeof y) return r$1(y, e);
-                },
-                apply(r, o) {
-                  if ("function" == typeof y) return e$1(y, r, o);
-                },
-                getOwnPropertyDescriptor(e) {
-                  var r = i(y, e);
-                  return r ? ((r.configurable = !0), r) : void 0;
-                },
-                set: (t, e, r) => (
-                  "function" == typeof c && c(w, [...s, e], r, f$1(y, e)),
-                  l(y, e, r)
-                ),
-                get(e) {
-                  var r = f$1(y, e);
-                  return d(r) || P(r) ? n(r, c, [...s, e], y) : r;
-                }
-              }))(v)
-          );
+function deepobserveaddpath(target, callback, patharray = [], ancestor = target) {
+    if (typeof callback !== "function") {
+        throw Error("observe callback invalid !");
+    }
+    if (isfunction$1(target) || isobject$2(target)) {
+        let forkobj;
+        if (isobject$2(target)) {
+            forkobj = {};
         }
-        return y;
-      })(n, y, [], n)
-    : n;
+        else {
+            forkobj = () => { };
+        }
+        setPrototypeOf$1(forkobj, null);
+        return (forkobj => {
+            return new Proxy(forkobj, {
+                defineProperty(t, p, a) {
+                    return defineProperty$1(target, p, a);
+                },
+                deleteProperty(t, p) {
+                    callback(ancestor, [...patharray, p], undefined, get$2(target, p));
+                    return Reflect$2.deleteProperty(target, p);
+                },
+                ownKeys() {
+                    return Reflect$2.ownKeys(target);
+                },
+                has(t, p) {
+                    return has$1(target, p);
+                },
+                getPrototypeOf() {
+                    return getPrototypeOf$1(target);
+                },
+                setPrototypeOf(t, v) {
+                    return setPrototypeOf$1(target, v);
+                },
+                construct(t, argumentslist) {
+                    if (typeof target === "function") {
+                        return construct$1(target, argumentslist);
+                    }
+                },
+                apply(t, thisarg, argarray) {
+                    if (typeof target === "function") {
+                        return apply$1(target, thisarg, argarray);
+                    }
+                },
+                getOwnPropertyDescriptor(t, k) {
+                    var descripter = getOwnPropertyDescriptor$1(target, k);
+                    if (descripter) {
+                        descripter.configurable = true;
+                        return descripter;
+                    }
+                    else {
+                        return;
+                    }
+                },
+                set(t, k, v) {
+                    if (typeof callback === "function") {
+                        callback(ancestor, [...patharray, k], v, get$2(target, k));
+                    }
+                    return set$2(target, k, v);
+                },
+                get(t, k) {
+                    var value = get$2(target, k);
+                    if (isfunction$1(value) || isobject$2(value)) {
+                        return deepobserveaddpath(value, callback, [...patharray, k], target);
+                    }
+                    else {
+                        return value;
+                    }
+                }
+            });
+        })(forkobj);
+    }
+    else {
+        return target;
+    }
+}
+function observedeepagent(target, callback) {
+    if (typeof callback !== "function") {
+        throw Error("observe callback is not valid function !");
+    }
+    if (typeof Proxy !== "function") {
+        throw Error("Proxy unsupported!");
+    }
+    if (isfunction$1(target) || isobject$2(target)) {
+        return deepobserveaddpath(target, callback, [], target);
+    }
+    else {
+        return target;
+    }
 }
 
 function createstate(init) {
@@ -765,7 +841,7 @@ function createstate(init) {
                     return get(target, key);
                 }
                 else if (has(value, key)) {
-                    return deepobserve(get(value, key), () => {
+                    return observedeepagent(get(value, key), () => {
                         target[dispatchsymbol](key);
                     });
                 }
