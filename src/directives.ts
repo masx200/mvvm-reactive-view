@@ -72,4 +72,13 @@ export default {
     }
   }
 };
-function createhtmlandtextdirective(){}
+function createhtmlandtextdirective(seteletext,errorname){
+
+
+return function(ele,text){
+
+
+}
+
+
+}
