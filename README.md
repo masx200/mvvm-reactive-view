@@ -286,7 +286,9 @@ class ReactiveState {
 function watch(state: ReactiveState, callback: Function): void;
 ```
 
+# 懒加载 
 
+尚在开发中
 
 
 # 组件化 
