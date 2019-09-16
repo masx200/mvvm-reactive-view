@@ -119,7 +119,11 @@ createApp(vdom, document.getElementById("root"));
 
 指令`*html`用来设置元素的`innerHTML`
 
+`*html=${state}`
+
 指令`*text`用来设置元素的`textContent`
+
+`*text=${state}`
 
 指令`*value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
