@@ -110,6 +110,18 @@ var mycom=class extends HTMLElement{}
 
 var vdom=html`<${mycom}/>`
 
+document.body.appendChild(
+    createApp(
+      vdom,
+      document.createElement("div")
+    )
+
+
+document.body.appendChild(
+    createApp(
+      createElemet(class extends HTMLElement {}),
+      document.createElement("div")
+    )
 
 
 ```
