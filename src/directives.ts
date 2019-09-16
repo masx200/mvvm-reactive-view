@@ -15,7 +15,7 @@ export default {
   html(ele: Element, html: string | Primitivestate) {
 
 
-createhtmlandtextdirective(setelehtml,"html")
+createhtmlandtextdirective(setelehtml,"html")(ele,html)
 
 
 
@@ -58,7 +58,7 @@ createhtmlandtextdirective(setelehtml,"html")
 
 
 
-createhtmlandtextdirective(seteletext,"text")
+createhtmlandtextdirective(seteletext,"text")(ele,text)
 
 
 
