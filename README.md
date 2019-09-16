@@ -111,7 +111,7 @@ createApp(vdom, document.getElementById("root"));
 
 属性名为'\*'+指令名称,属性值为值
 
-现已支持的指令有 `'ref','html','text'`
+现已支持的指令有 `'ref','html','text'，"value"`
 
 指令`*ref`用来获取元素的引用
 
@@ -120,6 +120,8 @@ createApp(vdom, document.getElementById("root"));
 指令`*html`用来设置元素的`innerHTML`
 
 指令`*text`用来设置元素的`textContent`
+
+指令`*value`只是一个简单的表单元素双向绑定语法糖
 
 # 属性单向绑定
 
