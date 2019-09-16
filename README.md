@@ -205,11 +205,11 @@ const vdomobj = html`
 ## 使用`directives`函数来扩展指令
 
 ```ts
+function directives(options: { [s: string]: Extendfun }): void;
 
-function directives(options:object):void;
-
-
-options[name]=function(element,value,vdom);
+interface Extendfun {
+  (element: Element, value: any, vdom: Virtualdom): void;
+}
 ```
 
 ## `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
