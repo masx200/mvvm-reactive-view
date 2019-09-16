@@ -21,7 +21,7 @@ const origin= vdom.onevent[eventname]
 const eventsarray=[origin].flat()
 
 
-vdom.onevent[eventname]=[...eventsarray,]
+vdom.onevent[eventname]=[...eventsarray,e => (value.value = e.target.value)]
 
 })
 
