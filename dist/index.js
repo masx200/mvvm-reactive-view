@@ -707,7 +707,7 @@ function createRef(init) {
 
 const Reflect$3 = window.Reflect;
 
-const {apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf$1} = Reflect$3;
+const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf$1} = Reflect$3;
 
 function isobject$2(a) {
     return typeof a === "object" && a !== null;
@@ -722,24 +722,24 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
         throw Error("observe callback invalid !");
     }
     if (isfunction$1(target) || isobject$2(target)) {
-        let forkobj;
+        let fakeobj;
         if (isobject$2(target)) {
-            forkobj = {};
+            fakeobj = {};
         } else {
-            forkobj = () => {};
+            fakeobj = () => {};
         }
-        setPrototypeOf$1(forkobj, null);
-        return (forkobj => {
-            return new Proxy(forkobj, {
+        setPrototypeOf$1(fakeobj, null);
+        return (fakeobj => {
+            return new Proxy(fakeobj, {
                 defineProperty(t, p, a) {
                     return defineProperty$1(target, p, a);
                 },
                 deleteProperty(t, p) {
                     callback(ancestor, [ ...patharray, p ], undefined, get$2(target, p));
-                    return Reflect$3.deleteProperty(target, p);
+                    return deleteProperty$1(target, p);
                 },
                 ownKeys() {
-                    return Reflect$3.ownKeys(target);
+                    return ownKeys$2(target);
                 },
                 has(t, p) {
                     return has$1(target, p);
@@ -784,7 +784,7 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
                     }
                 }
             });
-        })(forkobj);
+        })(fakeobj);
     } else {
         return target;
     }
@@ -792,7 +792,7 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
 
 function observedeepagent(target, callback) {
     if (typeof callback !== "function") {
-        throw Error("observe callback is not valid function !");
+        throw Error("observe callback  invalid function ");
     }
     if (typeof Proxy !== "function") {
         throw Error("Proxy unsupported!");
