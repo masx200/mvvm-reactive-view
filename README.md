@@ -122,7 +122,14 @@ document.body.appendChild(
 
 document.body.appendChild(
     createApp(
-      createElemet(class extends HTMLElement {}),
+      createElemet(class extends HTMLElement {
+
+static defaultProps = {
+        name: 'HelloKitty',
+        myAge: 18
+  }
+
+}),
       document.createElement("div")
     )
 
@@ -189,7 +196,7 @@ html`
 `;
 ```
 
-# 支持绑定状态到 TextNode 文字节点
+# 支持绑定状态到  文字节点
 
 ```js
 const objstate2 = createState(`ssssssssssss`);
