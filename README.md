@@ -107,6 +107,10 @@ createApp(vdom, document.getElementById("root"));
 
 # 使用 webcomponents
 
+可以通过静态属性 static defaultProps 来设置默认值
+
+通过props来传递参数给元素，以json格式传递
+
 ```js
 
 var mycom=class extends HTMLElement{}
