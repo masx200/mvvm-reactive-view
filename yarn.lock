@@ -260,8 +260,8 @@ doctrine@^3.0.0:
     esutils "^2.0.2"
 
 "dom-element-attribute-agent-proxy@https://github.com/masx200/dom-element-attribute-agent-proxy.git":
-  version "1.1.1"
-  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#b266231e2d09d7c329c886d4907187188a1c9cc4"
+  version "1.1.2"
+  resolved "https://github.com/masx200/dom-element-attribute-agent-proxy.git#9e31c5deeed8457abbf076429d514af1f127d52b"
 
 emoji-regex@^7.0.1:
   version "7.0.3"

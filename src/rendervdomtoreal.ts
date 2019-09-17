@@ -5,7 +5,7 @@ import { watch } from "./watch";
 import ReactiveState, { textnodesymbol } from "./primitivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
-import onevent from "./onevent";
+import onevent, { eventlistenerssymbol } from "./onevent";
 import { createcostumelemet } from "./customelement";
 import {
   mathnamespace,
@@ -67,7 +67,17 @@ export default function render(
           : createnativeelement(type);
       }
     } else if (typeof type == "function") {
-      element = createcostumelemet(type, vdom.children);
+      const propsjson = JSON.parse(
+        JSON.stringify({
+          ...vdom.props,
+          ...Object.fromEntries(
+            Object.entries(vdom.bindattr).map(([key, value]) => {
+              return [key, value.value];
+            })
+          )
+        })
+      );
+      element = createcostumelemet(type, propsjson, vdom.children);
     } else {
       throwinvalideletype();
       // throw TypeError("invalid element type!");
@@ -102,9 +112,9 @@ export default function render(
 }
 
 export interface Class {
-  new (children?: any[]): HTMLElement;
+  new (propsjson?: object, children?: any[]): HTMLElement;
 }
-
+import { isReactiveState } from "./primitivestate";
 function handleprops(
   element: HTMLElement | Element | SVGSVGElement | SVGElement,
   vdom: Virtualdom
@@ -138,10 +148,10 @@ function handleprops(
 
     /* 添加事件绑定和指令执行 */
 
-    /*  if (!element[eventlistenerssymbol]) {
+    if (!element[eventlistenerssymbol]) {
       element[eventlistenerssymbol] = [];
     }
-*/
+
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
       onevent(element, event, callbacks);
     });
@@ -152,7 +162,10 @@ function handleprops(
 
   [Object.values(vdom.bindattr), Object.values(vdom.directives)]
     .flat()
-    .filter(e => e instanceof ReactiveState)
+    .filter(
+      e => isReactiveState(e)
+      // e instanceof ReactiveState
+    )
 
     .forEach(e => element[bindstatesymbol].add(e));
 }

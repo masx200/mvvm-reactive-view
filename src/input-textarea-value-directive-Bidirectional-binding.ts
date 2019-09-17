@@ -1,10 +1,15 @@
-import ReactiveState from "./primitivestate";
+import ReactiveState, {
+  // ReactiveState,
+  isReactiveState
+} from "./primitivestate";
 import directives from "./extend-directive";
 import Virtualdom from "./virtualdom";
 directives({
-  value(element: any, value: { value: any }, vdom: Virtualdom) {
+  value(element: any, value: ReactiveState, vdom: Virtualdom) {
     if (
-      value instanceof ReactiveState &&
+      isReactiveState(value) &&
+      //   value instanceof ReactiveState
+
       (vdom.type === "input" || vdom.type === "textarea")
     ) {
       vdom.bindattr["value"] = value;
@@ -13,12 +18,18 @@ directives({
 
         const eventsarray = [origin].flat(Infinity);
 
-        vdom.onevent[eventname] = [
-          ...eventsarray,
-          (e: { target: { value: string | number | boolean | object } }) => {
-            return (value.value = e.target.value);
-          }
-        ].filter(Boolean);
+        // vdom.onevent[eventname] =
+        Reflect.set(
+          vdom.onevent,
+          eventname,
+          eventsarray
+            .concat([
+              (e: any) => {
+                return (value.value = e.target.value);
+              }
+            ])
+            .filter(Boolean)
+        );
       });
     } else {
       throw TypeError("invalid ReactiveState or element");

@@ -1,6 +1,7 @@
 import { requestAnimationFrame } from "./directives";
 import { isFunction } from "./util";
 import ReactiveState, {
+  isReactiveState,
   subscribesymbol,
   removeallistenerssymbol,
   addallistenerssymbol
@@ -10,7 +11,13 @@ export function watch(
   callback: Function,
   statekey?: string
 ): void {
-  if (!(state instanceof ReactiveState && isFunction(callback))) {
+  if (
+    !(
+      isReactiveState(state) &&
+      // state instanceof ReactiveState
+      isFunction(callback)
+    )
+  ) {
     throw TypeError("invalid state or callback");
   }
 

@@ -1,14 +1,19 @@
-import ReactiveState from "./primitivestate";
+export function isVirtualdom(a: any): a is Virtualdom {
+  return a instanceof Virtualdom;
+}
+import ReactiveState, { isReactiveState } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {
   element: undefined | Element = undefined;
   type: string | Function | undefined | Class;
-  props: object = {};
+  props: { [key: string]: string | object } = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
   directives: object = {};
-  onevent: object = {};
-  bindattr: object = {};
+  onevent: {
+    [key: string]: EventListener | Array<EventListener | Function> | Function;
+  } = {};
+  bindattr: { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",
     props: object = {},
@@ -21,12 +26,18 @@ export default class Virtualdom {
       bindattr: Object.fromEntries(
         propsentries
           .filter(([key]) => /[A-Za-z]/.test(key[0]))
-          .filter(e => e[1] instanceof ReactiveState)
+          .filter(
+            e => isReactiveState(e[1])
+            // e[1] instanceof ReactiveState
+          )
       ),
       props: Object.fromEntries(
         propsentries
           .filter(([key]) => /[A-Za-z]/.test(key[0]))
-          .filter(e => !(e[1] instanceof ReactiveState))
+          .filter(
+            e => !isReactiveState(e[1])
+            //    e[1] instanceof ReactiveState
+          )
       ),
       children,
       onevent: Object.fromEntries(

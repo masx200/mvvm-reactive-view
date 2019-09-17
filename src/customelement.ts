@@ -21,7 +21,7 @@ import { Class } from "./rendervdomtoreal";
 
 export function createcostumelemet(
   initclass: Class | Function,
-
+  propsjson?: object,
   children?: any[]
 ): HTMLElement {
   if (isclassextendsHTMLElement(initclass)) {
@@ -32,7 +32,7 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     }
 
-    return construct(initclass, [children]); // (children);
+    return construct(initclass, [propsjson, children]); // (children);
   } else {
     throw TypeError("invalid custom element class !");
   }

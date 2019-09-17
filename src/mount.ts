@@ -16,7 +16,7 @@ export default function(
     | SVGSVGElement
     | Element,
   container: HTMLElement | SVGSVGElement | SVGElement | Element
-): void {
+) {
   container.innerHTML = "";
   let eles: Array<any>;
   if (Array.isArray(ele)) {
@@ -26,4 +26,5 @@ export default function(
     eles = [ele];
   }
   eles.forEach(e => appendchild(container, e));
+  return container;
 }

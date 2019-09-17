@@ -1,3 +1,6 @@
+export function isReactiveState(a: any): a is ReactiveState {
+  return a instanceof ReactiveState;
+}
 // import Reflect from "./reflect";
 import { getsymbol, isobject } from "./util";
 export const textnodesymbol = Symbol("textnode");

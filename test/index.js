@@ -14,9 +14,9 @@ import {
   const inputref2 = createRef();
   console.log(inputref2);
   console.log(inputpassword);
-  watch(inputpassword,console.log)
+  watch(inputpassword, console.log);
   const vdom = html`
-    <h1>
+    <h1 style="padding-top: 127.6px;">
       <svg
         style="
     width: 100%;
@@ -306,27 +306,42 @@ import {
       <div></div>
     </div>
     <h1>
-      
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     version="1.1"
-     baseProfile="full"
-
-style="
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+        baseProfile="full"
+        style="
     width:600px;
     height: 600px;
-">
-  <g fill-opacity="0.7" stroke="black" stroke-width="0.1cm">
-    <circle cx="6cm" cy="2cm" r="100" fill="red"
-                    transform="translate(0,50)" />
-    <circle cx="6cm" cy="2cm" r="100" fill="blue"
-                    transform="translate(70,150)" />
-    <circle cx="6cm" cy="2cm" r="100" fill="green"
-                    transform="translate(-70,150)" />
-  </g>
-</svg>
+"
+      >
+        <g fill-opacity="0.7" stroke="black" stroke-width="0.1cm">
+          <circle
+            cx="6cm"
+            cy="2cm"
+            r="100"
+            fill="red"
+            transform="translate(0,50)"
+          />
+          <circle
+            cx="6cm"
+            cy="2cm"
+            r="100"
+            fill="blue"
+            transform="translate(70,150)"
+          />
+          <circle
+            cx="6cm"
+            cy="2cm"
+            r="100"
+            fill="green"
+            transform="translate(-70,150)"
+          />
+        </g>
+      </svg>
 
-<svg
+      <svg
         style="
     width: 100%;
     height: 200px;
@@ -384,11 +399,23 @@ style="
 // console.log(h);
 // console.log([].flat);
 (() => {
+  var myvdom1111111 = createElemet(
+    class extends HTMLElement {
+      constructor(...argwwwuments) {
+        super();
+        console.log(argwwwuments);
+      }
+    },
+    {
+      style: {
+        display: "block"
+      }
+    },
+    "hhhhhhhhhhhhtests"
+  );
+  console.log(myvdom1111111);
   document.body.appendChild(
-    createApp(
-      createElemet(class extends HTMLElement {}),
-      document.createElement("div")
-    )
+    createApp(myvdom1111111, document.createElement("div"))
   );
   document.body.appendChild(
     createApp(
@@ -517,41 +544,38 @@ style="
   //   console.log(Object.getOwnPropertyDescriptors(objstatearray));
   console.log(Object.entries(objstate));
 })();
-
-document.body.appendChild(
-  createApp(
-    html`
-      <math>
+(() => {
+  var vdom = html`
+    <math>
+      <mrow>
         <mrow>
-          <mrow>
-            <msup>
-              <mi>a</mi>
-              <mn>2</mn>
-            </msup>
-            <mo>+</mo>
-            <msup>
-              <mi>b</mi>
-              <mn>2</mn>
-            </msup>
-          </mrow>
-          <mo>=</mo>
           <msup>
-            <mi>c</mi>
+            <mi>a</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mi>b</mi>
             <mn>2</mn>
           </msup>
         </mrow>
-      </math>
+        <mo>=</mo>
+        <msup>
+          <mi>c</mi>
+          <mn>2</mn>
+        </msup>
+      </mrow>
+    </math>
 
-<svg width="100%" height="100%" xml:base="">
-    <defs>
-      <marker id="arrow" viewBox="0 -5 10 10" refX="0" refY="0" markerWidth="20" markerHeight="20" orient="auto">
-        <path d="M0,-5L10,0L0,5"></path>
-      </marker>
-    </defs>
-    <line x1="100" y1="100" x2="333" y2="333" marker-start="url(#arrow)" class="link"></line>
-  </svg>
-    `,
-
-    document.createElement("div")
-  )
-);
+    <!-- <svg width="100%" height="100%" xml:base="">
+  <defs>
+    <marker id="arrow" viewBox="0 -5 10 10" refX="0" refY="0" markerWidth="20" markerHeight="20" orient="auto">
+      <path d="M0,-5L10,0L0,5"></path>
+    </marker>
+  </defs>
+  <line x1="100" y1="100" x2="333" y2="333" marker-start="url(#arrow)" class="link"></line>
+</svg> -->
+  `;
+  document.body.appendChild(createApp(vdom, document.createElement("div")));
+  console.log(vdom);
+})();

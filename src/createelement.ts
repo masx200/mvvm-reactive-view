@@ -11,17 +11,20 @@ export default function h(
   /* add fragment element */
   //   console.log(type, props, children);
   let typenormalized = isstring(type) || isfunction(type) ? type : "";
-  let propsnormalized = isobject(props) ? props : {};
+  const propsnormalized = isobject(props) ? props : {};
   const childrennormalized = children.flat(1);
-  if (typeof typenormalized === "string") {
+  if (
+    isstring(typenormalized)
+    //   typeof typenormalized === "string"
+  ) {
     typenormalized = typenormalized.trim().toLowerCase();
   }
 
   if (
+    //typeof typenormalized === "string" &&
 
-//typeof typenormalized === "string" && 
-
-"" === typenormalized) {
+    "" === typenormalized
+  ) {
     return childrennormalized;
   }
   /* propsnormalized = Object.fromEntries(

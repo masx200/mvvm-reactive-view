@@ -1,12 +1,12 @@
 {
- 
-"publishConfig": { "registry": "https://npm.pkg.github.com/@masx200" },
-
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/@masx200"
+    },
     "main": "dist/index.js",
     "types": "src/index.ts",
     "module": "dist/index.js",
     "name": "mvvm-reactive-view",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "scripts": {
         "build": " rollup -c rollup.config.js",

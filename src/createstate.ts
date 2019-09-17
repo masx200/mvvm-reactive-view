@@ -11,7 +11,8 @@ import { isobject } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, {
   dispatchsymbol,
-  textnodesymbol
+  textnodesymbol,
+  isReactiveState
 } from "./primitivestate";
 export default function createstate(
   init: string | number | boolean | undefined | ReactiveState | object
@@ -39,7 +40,10 @@ export default function createstate(
         }
       }
     });
-  } else if (init instanceof ReactiveState) {
+  } else if (
+    isReactiveState(init)
+    // init instanceof ReactiveState
+  ) {
     // 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
     return createstate(init.value);
   } else if (isobject(init)) {

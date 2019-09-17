@@ -1,6 +1,6 @@
-import ReactiveState from "./primitivestate";
-import { isstring } from "./util";
-import Virtualdom from "./virtualdom";
+import { isReactiveState } from "./primitivestate";
+import { isstring, isArray } from "./util";
+import { isVirtualdom } from "./virtualdom";
 import htm from "htm/dist/htm.module.js";
 import h from "./createelement";
 
@@ -9,7 +9,7 @@ const html = htm.bind(h);
 /* 如果出现未闭合标签会产生错误的vdom */
 export function isvalidvdom(v: any) {
   let flag = false;
-  if (Array.isArray(v)) {
+  if (isArray(v)) {
     flag = v
       .map((ele: any) => {
         return isvalidvdom(ele);
@@ -18,11 +18,18 @@ export function isvalidvdom(v: any) {
       .includes(false)
       ? false
       : true;
-  } else if (v instanceof Virtualdom) {
+    return flag;
+  } else if (
+    isVirtualdom(v)
+    // v instanceof Virtualdom
+  ) {
     if (isvalidvdom(v.children)) {
       return true;
     }
-  } else if (v instanceof ReactiveState) {
+  } else if (
+    isReactiveState(v)
+    //  v instanceof ReactiveState
+  ) {
     return true;
   } else {
     if (isstring(v)) {
