@@ -23,7 +23,7 @@ function throwinvalideletype() {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
-// import { isstring, isarray, isobject, isfunction } from "./util";
+ import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 
 export default function render(
@@ -67,6 +67,24 @@ export default function render(
           : createnativeelement(type);
       }
     } else if (typeof type == "function") {
+
+
+//添加默认props
+
+
+/*static defaultProps = {
+        name: 'Omi',
+        myAge: 18
+  }*/
+if(isobject(type["defaultProps"])){
+
+vdom.props={...
+type["defaultProps"],...vdom.props
+}
+}
+
+
+
       const propsjson = JSON.parse(
         JSON.stringify({
           ...vdom.props,
