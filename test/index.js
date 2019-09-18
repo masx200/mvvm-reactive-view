@@ -419,7 +419,18 @@ import {
   );
   document.body.appendChild(
     createApp(
-      createElemet(class extends HTMLElement {}),
+      createElemet(class extends HTMLElement {
+
+
+
+
+static defaultProps = {
+        name: 'HelloKitty',
+        myAge: 18
+  }
+
+
+}),
       document.createElement("div")
     )
   );
