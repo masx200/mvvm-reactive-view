@@ -1,3 +1,4 @@
+import "../polyfill/custom-elements.min.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   createRef,
@@ -65,7 +66,7 @@ import {
       <div>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
-          <div >
+          <div>
             <div class="container-fluid fixed-top" id="my导航栏">
               <nav
                 class="navbar navbar-default navbar navbar-expand-sm bg-light navbar-light"
@@ -419,22 +420,34 @@ import {
   );
   document.body.appendChild(
     createApp(
-      createElemet(class extends HTMLElement {
-
-
-
-
-static defaultProps = {
-        name: 'HelloKitty',
-        myAge: 18
-  }
-
-
-}),
+      createElemet(
+        (() => {
+          var Aaaaaaaaaa = class extends HTMLElement {};
+          /* 其他浏览器不支持 
+          static defaultProps = {
+            name: "HelloKitty",
+            myAge: 18
+          };
+          
+          */
+          Aaaaaaaaaa.defaultProps = {
+            name: "HelloKitty",
+            myAge: 18
+          };
+          return Aaaaaaaaaa;
+        })()
+      ),
       document.createElement("div")
     )
   );
-  const myele1 = createElemet(class extends HTMLElement {});
+  const myele1 = createElemet(
+    class extends HTMLElement {
+      static defaultProps = {
+        name: "aaaaaaaaaaHelloKitty",
+        myAge: 1999999999999998
+      };
+    }
+  );
   console.log(myele1);
   document.body.appendChild(createApp(myele1, document.createElement("div")));
   document.body.appendChild(createApp(myele1, document.createElement("div")));

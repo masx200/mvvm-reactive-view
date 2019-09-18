@@ -1,3 +1,4 @@
+import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
@@ -55,4 +56,29 @@ export default [
     ],
     plugins: [resolve(), commonjs(), myterserplugin]
   }
+  /*   {
+    input: "./test/index.js",
+    output: [
+      {
+        file: "./test/index-es5.js",
+        format: "esm",
+        sourcemap: true
+      }
+    ],
+    plugins: [
+      terser({
+        compress: false,
+        mangle: false,
+        output: {
+          ecma: 5,
+          comments: !1,
+          beautify: true
+        }
+      }),
+      babel({
+        plugins: ["@babel/plugin-proposal-class-properties"],
+        presets: ["@babel/preset-env"]
+      })
+    ]
+  } */
 ];
