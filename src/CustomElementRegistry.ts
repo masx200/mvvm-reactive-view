@@ -38,6 +38,9 @@ return elementname;
 
   }
   
+
+
+//如果已经注册自定义组件，则返回注册的名称
 }
 if (!customElements[elementset]) {
   customElements[elementset] = new Set();
