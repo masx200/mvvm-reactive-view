@@ -15,7 +15,7 @@ export default function RandomDefineCustomElement(
   initclass: Function,
   extendsname?: string
 ): string {
-  //
+  //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
   
   if (!customElements[elementset].has(initclass)) {
 
