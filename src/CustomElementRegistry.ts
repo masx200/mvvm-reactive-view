@@ -16,8 +16,12 @@ export default function RandomDefineCustomElement(
   extendsname?: string
 ): string {
   //
-  const elementname = getrandomstringandnumber();
+  
   if (!customElements[elementset].has(initclass)) {
+
+const elementname = getrandomstringandnumber();
+
+
     if (customElements.get(elementname)) {
       return RandomDefineCustomElement(initclass,extendsname);
     } else {
@@ -27,8 +31,13 @@ export default function RandomDefineCustomElement(
         customElements.define(elementname, initclass);
       }
     }
+
+return elementname;
+
+
+
   }
-  return elementname;
+  
 }
 if (!customElements[elementset]) {
   customElements[elementset] = new Set();
