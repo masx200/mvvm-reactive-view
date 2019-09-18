@@ -1,5 +1,5 @@
-import setlikearray from "./setlikearay";
-const customElementsarray = new setlikearray();
+//import setlikearray from "./setlikearay";
+const customElementsarray = new Set;
 function getcustomelementname(initclass: any): string {
   return "c-" + customElementsarray.indexOf(initclass);
 }
