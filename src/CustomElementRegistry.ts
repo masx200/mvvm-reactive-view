@@ -95,15 +95,15 @@ function getrandomhexnumber() {
     .map((v, i) => i)
     [Math.floor(Math.random() * 16)].toString(16); */
 }
-function getrandomstringandnumber() {
+function getrandomstringandnumber(length?:number=1) {
   return (
-    Array(16)
+    Array(length)
       .fill(undefined)
       .map(() => getrandomcharactor())
 
       .join("") +
     "-" +
-    Array(16)
+    Array(length)
       .fill(undefined)
       .map(() => getrandomhexnumber())
       .join("")
