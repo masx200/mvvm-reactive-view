@@ -65,7 +65,7 @@ import {
       <div>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
-          <div>
+          <div >
             <div class="container-fluid fixed-top" id="my导航栏">
               <nav
                 class="navbar navbar-default navbar navbar-expand-sm bg-light navbar-light"
@@ -303,7 +303,7 @@ import {
         ></script>
       </div>
 
-      <div></div>
+      <div contenteditable></div>
     </div>
     <h1>
       <svg
