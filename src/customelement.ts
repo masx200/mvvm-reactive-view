@@ -1,7 +1,7 @@
 //import setlikearray from "./setlikearay";
 
 // const customElementsarray = new Set;
-import RamdomDefineElement from "./CustomElementRegistry";
+import RandomDefineCustomElement from "./CustomElementRegistry";
 /* function getcustomelementname(initclass: any): string {
   return customElements(initclass);
 } */
@@ -34,7 +34,7 @@ export function createcostumelemet(
     } else {
       customElements.define(elementname, initclass);
     } */
-    RamdomDefineElement(initclass);
+    RandomDefineCustomElement(initclass);
     return construct(initclass, [propsjson, children]); // (children);
   } else {
     throw TypeError("invalid custom element class !");

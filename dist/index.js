@@ -264,16 +264,34 @@ extenddirectives({
     }
 });
 
+const Reflect$1 = window.Reflect;
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
+
+window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
+
 const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
 
 const elementset = Symbol.for("elementset");
 
 const elementmap = Symbol.for("elementmap");
 
-function RandomDefineElement(initclass) {
+function RandomDefineCustomElement(initclass, extendsname) {
+    const elementname = getrandomstringandnumber();
     if (!customElements$1[elementset].has(initclass)) {
-        customElements$1.define(getrandomstringandnumber(), initclass);
+        if (customElements$1.get(elementname)) {
+            return RandomDefineCustomElement(initclass);
+        } else {
+            if (extendsname) {
+                customElements$1.define(elementname, initclass, {
+                    extends: extendsname
+                });
+            } else {
+                customElements$1.define(elementname, initclass);
+            }
+        }
     }
+    return elementname;
 }
 
 if (!customElements$1[elementset]) {
@@ -290,13 +308,21 @@ customElements$1.define = function(name, constructor, options) {
     customElements$1[elementmap].set(name, constructor);
 };
 
-function getrandomstringandnumber() {
-    return Object.keys(Array(26).fill(undefined)).map((v, i) => 97 + i).map(n => String.fromCharCode(n))[Math.floor(Math.random() * 26)] + "-" + Array.from(String(Math.random())).filter(a => /\d/.test(a)).join("");
-}
-
 customElements$1[Symbol.iterator] = () => {
     return customElements$1[elementmap][Symbol.iterator].call(customElements$1[elementmap]);
 };
+
+function getrandomcharactor() {
+    return get(Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n)), Math.floor(Math.random() * 26));
+}
+
+function getrandomhexnumber() {
+    return get(Array(16).fill(undefined).map((v, i) => i), Math.floor(Math.random() * 16)).toString(16);
+}
+
+function getrandomstringandnumber() {
+    return Array(16).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(16).fill(undefined).map(() => getrandomhexnumber()).join("");
+}
 
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
@@ -431,17 +457,13 @@ function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
 
-const Reflect$1 = window.Reflect;
-
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
-
 function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
 }
 
 function createcostumelemet(initclass, propsjson, children) {
     if (isclassextendsHTMLElement(initclass)) {
-        RandomDefineElement(initclass);
+        RandomDefineCustomElement(initclass);
         return construct(initclass, [ propsjson, children ]);
     } else {
         throw TypeError("invalid custom element class !");
@@ -925,5 +947,5 @@ if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof c
     throw new TypeError(" browser not supported !");
 }
 
-export { createApp, h as createElemet, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
+export { RandomDefineCustomElement, createApp, h as createElemet, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map

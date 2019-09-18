@@ -12,7 +12,7 @@ import "./Object-fromEntries";
 import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
 
-import "./CustomElementRegistry";
+import RandomDefineCustomElement from "./CustomElementRegistry";
 import html from "./html";
 import h from "./createelement";
 export { html };
@@ -28,3 +28,4 @@ export { watch };
 import directives from "./extend-directive";
 
 export { directives };
+export { RandomDefineCustomElement };
