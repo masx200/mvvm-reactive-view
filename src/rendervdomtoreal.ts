@@ -78,9 +78,10 @@ export default function render(
   }*/
 if(isobject(type["defaultProps"])){
 
-vdom.props={...
+vdom.props=JSON.parse(
+        JSON.stringify({...
 type["defaultProps"],...vdom.props
-}
+}))
 }
 
 
