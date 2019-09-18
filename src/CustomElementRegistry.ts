@@ -19,7 +19,7 @@ export default function RandomDefineCustomElement(
   const elementname = getrandomstringandnumber();
   if (!customElements[elementset].has(initclass)) {
     if (customElements.get(elementname)) {
-      return RandomDefineCustomElement(initclass);
+      return RandomDefineCustomElement(initclass,extendsname);
     } else {
       if (extendsname) {
         customElements.define(elementname, initclass, { extends: extendsname });
@@ -34,7 +34,7 @@ if (!customElements[elementset]) {
   customElements[elementset] = new Set();
 }
 if (!customElements[elementmap]) {
-  customElements[elementmap] = new Map();
+  customElements[elementmap] = {};
 }
 /* customElements.get = function name(name) {
   return customElements[elementmap].get(name);
@@ -52,12 +52,11 @@ customElements.define = function(
     options
   );
   customElements[elementset].add(constructor);
-  customElements[elementmap].set(name, constructor);
+  customElements[elementmap][name]=constructor;
 };
 
 customElements[Symbol.iterator] = () => {
-  return customElements[elementmap][Symbol.iterator].call(
-    customElements[elementmap]
+  return Object.entries(customElements[elementmap])[Symbol.iterator]()
   );
 };
 function getrandomcharactor() {
