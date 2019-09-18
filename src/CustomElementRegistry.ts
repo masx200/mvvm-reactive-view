@@ -13,17 +13,17 @@ const elementset = Symbol.for("elementset");
 const elementmap = Symbol.for("elementmap");
 export default function RandomDefineCustomElement(
   initclass: Function,
-  extendsname?: string
+  extendsname?: string,length?:number=1
 ): string {
   //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
   
   if (!customElements[elementset].has(initclass)) {
 
-const elementname = getrandomstringandnumber();
+const elementname = getrandomstringandnumber(length);
 
 
     if (customElements.get(elementname)) {
-      return RandomDefineCustomElement(initclass,extendsname);
+      return RandomDefineCustomElement(initclass,extendsname,length);
     } else {
       if (extendsname) {
         customElements.define(elementname, initclass, { extends: extendsname });
