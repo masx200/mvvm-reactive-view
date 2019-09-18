@@ -264,6 +264,40 @@ extenddirectives({
     }
 });
 
+const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
+
+const elementset = Symbol.for("elementset");
+
+const elementmap = Symbol.for("elementmap");
+
+function RandomDefineElement(initclass) {
+    if (!customElements$1[elementset].has(initclass)) {
+        customElements$1.define(getrandomstringandnumber(), initclass);
+    }
+}
+
+if (!customElements$1[elementset]) {
+    customElements$1[elementset] = new Set;
+}
+
+if (!customElements$1[elementmap]) {
+    customElements$1[elementmap] = new Map;
+}
+
+customElements$1.define = function(name, constructor, options) {
+    CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
+    customElements$1[elementset].add(constructor);
+    customElements$1[elementmap].set(name, constructor);
+};
+
+function getrandomstringandnumber() {
+    return Object.keys(Array(26).fill(undefined)).map((v, i) => 97 + i).map(n => String.fromCharCode(n))[Math.floor(Math.random() * 26)] + "-" + Array.from(String(Math.random())).filter(a => /\d/.test(a)).join("");
+}
+
+customElements$1[Symbol.iterator] = () => {
+    return customElements$1[elementmap][Symbol.iterator].call(customElements$1[elementmap]);
+};
+
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
 }
@@ -397,28 +431,9 @@ function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
 
-class Setlikearray extends Array {
-    push(...items) {
-        items.forEach(item => {
-            if (isfunction(item) || isobject(item)) {
-                if (!this.includes(item)) {
-                    super.push(item);
-                }
-            }
-        });
-        return this.length;
-    }
-}
-
 const Reflect$1 = window.Reflect;
 
 const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
-
-const customElementsarray = new Setlikearray;
-
-function getcustomelementname(initclass) {
-    return "c-" + customElementsarray.indexOf(initclass);
-}
 
 function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
@@ -426,11 +441,7 @@ function isclassextendsHTMLElement(initclass) {
 
 function createcostumelemet(initclass, propsjson, children) {
     if (isclassextendsHTMLElement(initclass)) {
-        customElementsarray.push(initclass);
-        const elementname = getcustomelementname(initclass);
-        if (customElements.get(elementname) === initclass) ; else {
-            customElements.define(elementname, initclass);
-        }
+        RandomDefineElement(initclass);
         return construct(initclass, [ propsjson, children ]);
     } else {
         throw TypeError("invalid custom element class !");
@@ -486,9 +497,12 @@ function createeleattragentreadwrite(ele) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
-                var v = getattribute(ele, String(key));
+                const v = getattribute(ele, String(key));
                 if (!v) {
                     return;
+                }
+                if (v === "") {
+                    return true;
                 }
                 if (isstring$1(v)) {
                     try {
@@ -506,6 +520,9 @@ function createeleattragentreadwrite(ele) {
                 setattribute(ele, String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
                 return true;
             } else {
+                if (v === true) {
+                    v = "";
+                }
                 setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
                 return true;
             }
@@ -536,10 +553,14 @@ function createeleattragentreadwrite(ele) {
                     ...otherdescipter
                 };
             } else {
-                var attr = getattribute(ele, String(key));
-                if (attr) {
+                const attr = getattribute(ele, String(key));
+                let outvalue;
+                if (attr === "") {
+                    outvalue = true;
+                }
+                if (outvalue) {
                     return {
-                        value: attr,
+                        value: outvalue,
                         ...otherdescipter
                     };
                 } else {
@@ -615,6 +636,12 @@ function render(vdom, namespace) {
                 element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
             }
         } else if (typeof type == "function") {
+            if (isobject(type["defaultProps"])) {
+                vdom.props = JSON.parse(JSON.stringify({
+                    ...type["defaultProps"],
+                    ...vdom.props
+                }));
+            }
             const propsjson = JSON.parse(JSON.stringify({
                 ...vdom.props,
                 ...Object.fromEntries(Object.entries(vdom.bindattr).map(([key, value]) => {
@@ -892,6 +919,10 @@ function createstate(init) {
     } else {
         throw TypeError("invalid State");
     }
+}
+
+if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof customElements !== "object" || typeof CustomElementRegistry !== "function") {
+    throw new TypeError(" browser not supported !");
 }
 
 export { createApp, h as createElemet, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };

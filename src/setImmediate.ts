@@ -1,4 +1,4 @@
-export const globalthis = new Function("return this")();
+/* export const globalthis = new Function("return this")();
 if (!globalthis.globalThis) {
   globalthis.globalThis = globalthis;
 }
@@ -11,3 +11,4 @@ if (typeof globalthis.setImmediate !== "function") {
   globalthis.setImmediate = setImmediate;
 }
 export { setImmediate };
+ */

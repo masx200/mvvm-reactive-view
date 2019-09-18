@@ -1,8 +1,10 @@
 //import setlikearray from "./setlikearay";
-const customElementsarray = new Set;
-function getcustomelementname(initclass: any): string {
-  return "c-" + customElementsarray.indexOf(initclass);
-}
+
+// const customElementsarray = new Set;
+import RamdomDefineElement from "./CustomElementRegistry";
+/* function getcustomelementname(initclass: any): string {
+  return customElements(initclass);
+} */
 import { isfunction } from "./util";
 export function isclassextendsHTMLElement(initclass: {
   prototype: any;
@@ -25,13 +27,14 @@ export function createcostumelemet(
   children?: any[]
 ): HTMLElement {
   if (isclassextendsHTMLElement(initclass)) {
-    customElementsarray.push(initclass);
-    const elementname = getcustomelementname(initclass);
-    if (customElements.get(elementname) === initclass) {
+    // customElementsarray.push(initclass);
+    /*   const elementname =
+     getcustomelementname(initclass); */
+    /* if (customElements.get(elementname) === initclass) {
     } else {
       customElements.define(elementname, initclass);
-    }
-
+    } */
+    RamdomDefineElement(initclass);
     return construct(initclass, [propsjson, children]); // (children);
   } else {
     throw TypeError("invalid custom element class !");
