@@ -268,6 +268,25 @@ const Reflect$1 = window.Reflect;
 
 const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
 
+function isclassextendsHTMLElement(initclass) {
+    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
+}
+
+function createcostumelemet(initclass, propsjson, children) {
+    if (isclassextendsHTMLElement(initclass)) {
+        RandomDefineCustomElement(initclass);
+        return construct(initclass, [ propsjson, children ]);
+    } else {
+        throw TypeError("invalid custom element class !");
+    }
+}
+
+function 使用value从表中查询key(表, 组件状态名) {
+    return Object.entries(表).find(v => {
+        return v[1] === 组件状态名;
+    })[0];
+}
+
 window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
 
 const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
@@ -276,11 +295,16 @@ const elementset = Symbol.for("elementset");
 
 const elementmap = Symbol.for("elementmap");
 
-function RandomDefineCustomElement(initclass, extendsname) {
-    const elementname = getrandomstringandnumber();
+var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
+
+function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
+    if (!isclassextendsHTMLElement(initclass)) {
+        throw TypeError("invalid custom element class !");
+    }
     if (!customElements$1[elementset].has(initclass)) {
+        const elementname = getrandomstringandnumber(length);
         if (customElements$1.get(elementname)) {
-            return RandomDefineCustomElement(initclass);
+            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
         } else {
             if (extendsname) {
                 customElements$1.define(elementname, initclass, {
@@ -290,8 +314,10 @@ function RandomDefineCustomElement(initclass, extendsname) {
                 customElements$1.define(elementname, initclass);
             }
         }
+        return elementname;
+    } else {
+        return 使用value从表中查询key(customElements$1[elementmap], initclass);
     }
-    return elementname;
 }
 
 if (!customElements$1[elementset]) {
@@ -299,17 +325,21 @@ if (!customElements$1[elementset]) {
 }
 
 if (!customElements$1[elementmap]) {
-    customElements$1[elementmap] = new Map;
+    customElements$1[elementmap] = {};
 }
 
 customElements$1.define = function(name, constructor, options) {
+    if (!isclassextendsHTMLElement(constructor)) {
+        throw TypeError("invalid custom element class !");
+    }
     CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
     customElements$1[elementset].add(constructor);
-    customElements$1[elementmap].set(name, constructor);
+    customElements$1[elementmap][name] = constructor;
 };
 
 customElements$1[Symbol.iterator] = () => {
-    return customElements$1[elementmap][Symbol.iterator].call(customElements$1[elementmap]);
+    const entries = Object.entries(customElements$1[elementmap]);
+    return entries[Symbol.iterator].call(entries);
 };
 
 function getrandomcharactor() {
@@ -320,8 +350,8 @@ function getrandomhexnumber() {
     return get(Array(16).fill(undefined).map((v, i) => i), Math.floor(Math.random() * 16)).toString(16);
 }
 
-function getrandomstringandnumber() {
-    return Array(16).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(16).fill(undefined).map(() => getrandomhexnumber()).join("");
+function getrandomstringandnumber(length = 4) {
+    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumber()).join("");
 }
 
 function isVirtualdom(a) {
@@ -455,19 +485,6 @@ function addlisteners(ele, event, callarray) {
 
 function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
-}
-
-function isclassextendsHTMLElement(initclass) {
-    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-}
-
-function createcostumelemet(initclass, propsjson, children) {
-    if (isclassextendsHTMLElement(initclass)) {
-        RandomDefineCustomElement(initclass);
-        return construct(initclass, [ propsjson, children ]);
-    } else {
-        throw TypeError("invalid custom element class !");
-    }
 }
 
 function mount(ele, container) {
@@ -947,5 +964,7 @@ if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof c
     throw new TypeError(" browser not supported !");
 }
 
-export { RandomDefineCustomElement, createApp, h as createElemet, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
+const Fragment = "";
+
+export { Fragment, RandomDefineCustomElement as RandomDefine, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map

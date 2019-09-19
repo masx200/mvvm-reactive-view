@@ -28,7 +28,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
-Fragment,
+  Fragment,
   directives,
   watch,
   html,
@@ -64,26 +64,29 @@ https://github.com/hyperhype/hyperscript
 
 https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 
-
 https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx
 
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 ```json
-{"plugins":[
-  ["babel-plugin-htm", {
-    "tag": "html",
-"pragma": "h"
-  }]
-,["@babel/plugin-transform-react-jsx", {
-      "pragma": "h", 
-      "pragmaFrag": "Fragment"
-      
-    }]
-
-
-]}
-
+{
+  "plugins": [
+    [
+      "babel-plugin-htm",
+      {
+        "tag": "html",
+        "pragma": "h"
+      }
+    ],
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "h",
+        "pragmaFrag": "Fragment"
+      }
+    ]
+  ]
+}
 ```
 
 # 快速上手,可在浏览器中运行而不需要编译工具
@@ -134,7 +137,7 @@ createApp(vdom, document.getElementById("root"));
 
 可以通过静态属性 static `defaultProps` 来设置默认值
 
-通过props来传递参数给元素，以json格式传递
+通过 props 来传递参数给元素，以 json 格式传递
 
 ```js
 
@@ -151,7 +154,7 @@ document.body.appendChild(
 
 document.body.appendChild(
     createApp(
-      createElemet(class extends HTMLElement {
+      createElement(class extends HTMLElement {
 
 static defaultProps = {
         name: 'HelloKitty',
@@ -225,7 +228,7 @@ html`
 `;
 ```
 
-# 支持绑定状态到  文字节点
+# 支持绑定状态到 文字节点
 
 ```js
 const objstate2 = createState(`ssssssssssss`);
