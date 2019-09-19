@@ -35,7 +35,7 @@ Fragment,
   h,
   createApp,
   createRef,
-  createElemet,
+  createElement,
   createState
 } from "mvvm-reactive-view";
 ```
@@ -98,7 +98,7 @@ import {
   h,
   createApp,
   createRef,
-  createElemet,
+  createElement,
   createState
 } from "https://masx200.github.io/mvvm-reactive-view/dist/index.js";
 const inputref = createRef();
@@ -248,12 +248,12 @@ interface Extendfun {
 }
 ```
 
-## `html`用来解析字符串模板,调用`createElemet`,转换成虚拟 `dom`
+## `html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
-## `h`等同于`createElemet`,用来生成虚拟 `dom`
+## `h`等同于`createElement`,用来生成虚拟 `dom`
 
 ```ts
-function createElemet(
+function createElement(
   type: Function | string = "",
   props: any = {},
   ...children: Array<Virtualdom | string>
