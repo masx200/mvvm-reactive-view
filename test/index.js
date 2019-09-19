@@ -603,3 +603,4 @@ import {
   document.body.appendChild(createApp(vdom, document.createElement("div")));
   console.log(vdom);
 })();
+console.log(customElements)
