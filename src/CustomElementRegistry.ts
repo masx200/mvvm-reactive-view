@@ -93,7 +93,14 @@ if(!isclassextendsHTMLElement(constructor)){throw TypeError("invalid custom elem
 };
 
 customElements[Symbol.iterator] = () => {
-  return Object.entries(customElements[elementmap])[Symbol.iterator]()
+   
+
+const entries=
+
+Object.entries(customElements[elementmap])
+
+
+return entries[Symbol.iterator].call(entries)
   );
 };
 function getrandomcharactor() {
