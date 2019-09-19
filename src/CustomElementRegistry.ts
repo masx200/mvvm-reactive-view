@@ -1,11 +1,10 @@
-import {isclassextendsHTMLElement}from"./customelement"
+import { isclassextendsHTMLElement } from "./customelement";
 
-
-function 使用value从表中查询key(表,组件状态名) {
-    return Object.entries(表).find(v => {
-      return v[1] === 组件状态名;
-    })[0];
-  }
+function 使用value从表中查询key(表: object, 组件状态名: any) {
+  return Object.entries(表).find(v => {
+    return v[1] === 组件状态名;
+  })[0];
+}
 
 import { get, getPrototypeOf } from "./reflect";
 interface ElementDefinitionOptions {
@@ -20,28 +19,25 @@ const { customElements, CustomElementRegistry } = window;
 // export default customElements;
 const elementset = Symbol.for("elementset");
 const elementmap = Symbol.for("elementmap");
-export default 
-(initclass,extendsname?)=>RandomDefineCustomElement(initclass, extendsname)
+export default (initclass: Function, extendsname?: string) =>
+  RandomDefineCustomElement(initclass, extendsname);
 
 function RandomDefineCustomElement(
   initclass: Function,
-  extendsname?: string,length?:number=1
+  extendsname?: string,
+  length = 1
 ): string {
+  if (!isclassextendsHTMLElement(initclass)) {
+    throw TypeError("invalid custom element class !");
+  }
 
+  //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
 
-if(!isclassextendsHTMLElement(initclass)){throw TypeError("invalid custom element class !");}
- 
-
-
- //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
-  
   if (!customElements[elementset].has(initclass)) {
-
-const elementname = getrandomstringandnumber(length);
-
+    const elementname = getrandomstringandnumber(length);
 
     if (customElements.get(elementname)) {
-      return RandomDefineCustomElement(initclass,extendsname,length+1);
+      return RandomDefineCustomElement(initclass, extendsname, length + 1);
     } else {
       if (extendsname) {
         customElements.define(elementname, initclass, { extends: extendsname });
@@ -50,23 +46,12 @@ const elementname = getrandomstringandnumber(length);
       }
     }
 
-return elementname;
-
-
-
+    return elementname;
+  } else {
+    return 使用value从表中查询key(customElements[elementmap], initclass);
   }
-  
-else{
 
-
-
-return 使用value从表中查询key(customElements[elementmap],initclass)
-
-
-
-}
-
-//如果已经注册自定义组件，则返回注册的名称
+  //如果已经注册自定义组件，则返回注册的名称
 }
 if (!customElements[elementset]) {
   customElements[elementset] = new Set();
@@ -83,8 +68,10 @@ customElements.define = function(
   constructor: Function,
   options?: ElementDefinitionOptions
 ): void {
-if(!isclassextendsHTMLElement(constructor)){throw TypeError("invalid custom element class !");}
- 
+  if (!isclassextendsHTMLElement(constructor)) {
+    throw TypeError("invalid custom element class !");
+  }
+
   CustomElementRegistry.prototype.define.call(
     customElements,
     name,
@@ -92,19 +79,13 @@ if(!isclassextendsHTMLElement(constructor)){throw TypeError("invalid custom elem
     options
   );
   customElements[elementset].add(constructor);
-  customElements[elementmap][name]=constructor;
+  customElements[elementmap][name] = constructor;
 };
 
 customElements[Symbol.iterator] = () => {
-   
+  const entries = Object.entries(customElements[elementmap]);
 
-const entries=
-
-Object.entries(customElements[elementmap])
-
-
-return entries[Symbol.iterator].call(entries)
-  
+  return entries[Symbol.iterator].call(entries);
 };
 function getrandomcharactor() {
   return get(
@@ -130,7 +111,7 @@ function getrandomhexnumber() {
     .map((v, i) => i)
     [Math.floor(Math.random() * 16)].toString(16); */
 }
-function getrandomstringandnumber(length?:number=4) {
+function getrandomstringandnumber(length = 4) {
   return (
     Array(length)
       .fill(undefined)

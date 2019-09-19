@@ -1,15 +1,27 @@
 import "../polyfill/custom-elements.min.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
+  Fragment,
   createRef,
   html,
   createApp,
-  // h,
-  createElemet,
+  h,
+  createElement,
   createState,
   watch,
-RandomDefineCustomElement
+  RandomDefine
 } from "../dist/index.js";
+console.log([
+  Fragment,
+  createRef,
+  html,
+  createApp,
+  h,
+  createElement,
+  createState,
+  watch,
+  RandomDefine
+]);
 (() => {
   const inputpassword = createState("");
   const inputref = createRef();
@@ -401,7 +413,7 @@ RandomDefineCustomElement
 // console.log(h);
 // console.log([].flat);
 (() => {
-  var myvdom1111111 = createElemet(
+  var myvdom1111111 = createElement(
     class extends HTMLElement {
       constructor(...argwwwuments) {
         super();
@@ -421,7 +433,7 @@ RandomDefineCustomElement
   );
   document.body.appendChild(
     createApp(
-      createElemet(
+      createElement(
         (() => {
           var Aaaaaaaaaa = class extends HTMLElement {};
           /* 其他浏览器不支持 
@@ -441,7 +453,7 @@ RandomDefineCustomElement
       document.createElement("div")
     )
   );
-  const myele1 = createElemet(
+  const myele1 = createElement(
     class extends HTMLElement {
       static defaultProps = {
         name: "aaaaaaaaaaHelloKitty",
@@ -604,16 +616,19 @@ RandomDefineCustomElement
   document.body.appendChild(createApp(vdom, document.createElement("div")));
   console.log(vdom);
 })();
-const mytestclass=class extends HTMLElement {
-      constructor(...argwwwuments) {
-        super();
-       // console.log(argwwwuments);
-      }
-    }
-customElements.define("mejej-rjeken",mytestclass)
-console.log(RandomDefineCustomElement(mytestclass))
+const mytestclass = class extends HTMLElement {
+  constructor(...argwwwuments) {
+    super();
+    // console.log(argwwwuments);
+  }
+};
+customElements.define("mejej-rjeken", mytestclass);
+console.log(mytestclass, RandomDefine(mytestclass));
 
-console.log(Array(3000).fill().map(()=>RandomDefineCustomElement(class extends HTMLElement{})))
+console.log(
+  Array(999)
+    .fill()
+    .map(() => RandomDefine(class extends HTMLElement {}))
+);
 
-
-console.log(customElements)
+console.log(customElements, [...customElements]);
