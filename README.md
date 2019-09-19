@@ -156,14 +156,16 @@ document.body.appendChild(
 
 document.body.appendChild(
     createApp(
-      createElement(class extends HTMLElement {
+      createElement(
+class extends HTMLElement {
 
 static defaultProps = {
         name: 'HelloKitty',
         myAge: 18
   }
 
-}),
+}
+),
       document.createElement("div")
     )
 
