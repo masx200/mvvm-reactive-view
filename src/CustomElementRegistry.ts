@@ -101,7 +101,7 @@ Object.entries(customElements[elementmap])
 
 
 return entries[Symbol.iterator].call(entries)
-  );
+  
 };
 function getrandomcharactor() {
   return get(
