@@ -12,7 +12,7 @@ import "./Object-fromEntries";
 import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
 
-import RandomDefineCustomElement from "./CustomElementRegistry";
+import RandomDefine from "./CustomElementRegistry";
 import html from "./html";
 import h from "./createelement";
 export { html };
@@ -28,5 +28,5 @@ export { watch };
 import directives from "./extend-directive";
 
 export { directives };
-export { RandomDefineCustomElement };
+export { RandomDefine };
 export const Fragment=""
