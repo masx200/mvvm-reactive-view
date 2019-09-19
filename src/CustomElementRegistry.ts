@@ -27,7 +27,10 @@ export default function RandomDefineCustomElement(
 
 
 if(!isclassextendsHTMLElement(initclass)){throw TypeError("invalid custom element class !");}
-  //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
+ 
+
+
+ //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
   
   if (!customElements[elementset].has(initclass)) {
 
@@ -77,6 +80,8 @@ customElements.define = function(
   constructor: Function,
   options?: ElementDefinitionOptions
 ): void {
+if(!isclassextendsHTMLElement(constructor)){throw TypeError("invalid custom element class !");}
+ 
   CustomElementRegistry.prototype.define.call(
     customElements,
     name,
