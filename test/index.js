@@ -604,5 +604,16 @@ RandomDefineCustomElement
   document.body.appendChild(createApp(vdom, document.createElement("div")));
   console.log(vdom);
 })();
-console.log(customElements)
+const mytestclass=class extends HTMLElement {
+      constructor(...argwwwuments) {
+        super();
+       // console.log(argwwwuments);
+      }
+    }
+customElements.define("mejej-rjeken",mytestclass)
+console.log(RandomDefineCustomElement(mytestclass))
+
 console.log(Array(3000).fill().map(()=>RandomDefineCustomElement(class extends HTMLElement{})))
+
+
+console.log(customElements)
