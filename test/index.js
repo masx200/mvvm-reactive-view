@@ -7,7 +7,8 @@ import {
   // h,
   createElemet,
   createState,
-  watch
+  watch,
+RandomDefineCustomElement
 } from "../dist/index.js";
 (() => {
   const inputpassword = createState("");
@@ -604,3 +605,4 @@ import {
   console.log(vdom);
 })();
 console.log(customElements)
+console.log(Array(3000).fill().map(()=>RandomDefineCustomElement(class extends HTMLElement{})))
