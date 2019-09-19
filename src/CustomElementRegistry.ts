@@ -1,3 +1,6 @@
+import {isclassextendsHTMLElement}from"./customelement"
+
+
 function 使用value从表中查询key(全局状态对应组件状态表,组件状态名) {
     return Object.entries(全局状态对应组件状态表).find(v => {
       return v[1] === 组件状态名;
