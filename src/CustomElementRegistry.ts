@@ -1,3 +1,9 @@
+function 使用value从表中查询key(全局状态对应组件状态表,组件状态名) {
+    return Object.entries(全局状态对应组件状态表).find(v => {
+      return v[1] === 组件状态名;
+    })[0];
+  }
+
 import { get, getPrototypeOf } from "./reflect";
 interface ElementDefinitionOptions {
   extends?: string;
@@ -38,7 +44,15 @@ return elementname;
 
   }
   
+else{
 
+
+
+return 使用value从表中查询key(customElements[elementmap],initclass)
+
+
+
+}
 
 //如果已经注册自定义组件，则返回注册的名称
 }
