@@ -1,8 +1,8 @@
 import {isclassextendsHTMLElement}from"./customelement"
 
 
-function 使用value从表中查询key(全局状态对应组件状态表,组件状态名) {
-    return Object.entries(全局状态对应组件状态表).find(v => {
+function 使用value从表中查询key(表,组件状态名) {
+    return Object.entries(表).find(v => {
       return v[1] === 组件状态名;
     })[0];
   }
@@ -24,6 +24,9 @@ export default function RandomDefineCustomElement(
   initclass: Function,
   extendsname?: string,length?:number=1
 ): string {
+
+
+if(!isclassextendsHTMLElement(initclass)){throw TypeError("invalid custom element class !");}
   //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
   
   if (!customElements[elementset].has(initclass)) {
