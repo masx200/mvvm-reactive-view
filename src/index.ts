@@ -16,7 +16,7 @@ import RandomDefineCustomElement from "./CustomElementRegistry";
 import html from "./html";
 import h from "./createelement";
 export { html };
-export { h as createElemet, h };
+export { h as createElement, h };
 import createApp from "./createApp";
 export { createApp };
 import createRef from "./createref";
