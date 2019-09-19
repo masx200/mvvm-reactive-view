@@ -109,7 +109,7 @@ function getrandomhexnumber() {
     .map((v, i) => i)
     [Math.floor(Math.random() * 16)].toString(16); */
 }
-function getrandomstringandnumber(length?:number=1) {
+function getrandomstringandnumber(length?:number=4) {
   return (
     Array(length)
       .fill(undefined)
