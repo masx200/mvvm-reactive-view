@@ -20,7 +20,10 @@ const { customElements, CustomElementRegistry } = window;
 // export default customElements;
 const elementset = Symbol.for("elementset");
 const elementmap = Symbol.for("elementmap");
-export default function RandomDefineCustomElement(
+export default 
+(initclass,extendsname?)=>RandomDefineCustomElement(initclass, extendsname)
+
+function RandomDefineCustomElement(
   initclass: Function,
   extendsname?: string,length?:number=1
 ): string {
