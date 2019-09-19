@@ -62,6 +62,8 @@ https://github.com/hyperhype/hyperscript
 https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 
 
+https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx
+
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 ```json
@@ -72,7 +74,7 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
   }]
 ,["@babel/plugin-transform-react-jsx", {
       "pragma": "h", 
-      
+      "pragmaFrag": "Fragment"
       
     }]
 
