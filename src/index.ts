@@ -29,3 +29,4 @@ import directives from "./extend-directive";
 
 export { directives };
 export { RandomDefineCustomElement };
+export const Fragment=""
