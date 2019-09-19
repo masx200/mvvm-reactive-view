@@ -53,13 +53,33 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
-# 使用 hyperscript 可在 webpack 中, 使用 babel-plugin-htm 预编译成虚拟 dom
+# 使用 `hyperscript` 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 ``预编译成`虚拟 dom`
 
 https://github.com/developit/htm
 
 https://github.com/hyperhype/hyperscript
 
 https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
+
+
+
+
+```json
+{"plugins":[
+  ["babel-plugin-htm", {
+    "tag": "html",
+"pragma": "h"
+  }]
+,["@babel/plugin-transform-react-jsx", {
+      "pragma": "h", 
+      
+      
+    }]
+
+
+]}
+
+```
 
 # 快速上手,可在浏览器中运行而不需要编译工具
 
