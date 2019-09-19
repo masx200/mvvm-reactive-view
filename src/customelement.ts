@@ -24,7 +24,8 @@ import { Class } from "./rendervdomtoreal";
 export function createcostumelemet(
   initclass: Class | Function,
   propsjson?: object,
-  children?: any[]
+  children?: any[],
+  options?: any
 ): HTMLElement {
   if (isclassextendsHTMLElement(initclass)) {
     // customElementsarray.push(initclass);
@@ -35,7 +36,7 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     } */
     RandomDefineCustomElement(initclass);
-    return construct(initclass, [propsjson, children]); // (children);
+    return construct(initclass, [propsjson, children, options]); // (children);
   } else {
     throw TypeError("invalid custom element class !");
   }

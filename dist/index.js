@@ -272,10 +272,10 @@ function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
 }
 
-function createcostumelemet(initclass, propsjson, children) {
+function createcostumelemet(initclass, propsjson, children, options) {
     if (isclassextendsHTMLElement(initclass)) {
         RandomDefineCustomElement(initclass);
-        return construct(initclass, [ propsjson, children ]);
+        return construct(initclass, [ propsjson, children, options ]);
     } else {
         throw TypeError("invalid custom element class !");
     }
@@ -360,6 +360,7 @@ function isVirtualdom(a) {
 
 class Virtualdom {
     constructor(type = "", props = {}, children = []) {
+        this.options = undefined;
         this.element = undefined;
         this.props = {};
         this.children = [];
@@ -687,7 +688,7 @@ function render(vdom, namespace) {
                     return [ key, value.value ];
                 }))
             }));
-            element = createcostumelemet(type, propsjson, vdom.children);
+            element = createcostumelemet(type, propsjson, vdom.children, vdom.options);
         } else {
             throwinvalideletype();
         }

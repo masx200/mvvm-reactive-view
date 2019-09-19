@@ -5,14 +5,13 @@ import ReactiveState, { isReactiveState } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {
+  options: any = undefined;
   element: undefined | Element = undefined;
   type: string | Function | undefined | Class;
   props: { [key: string]: string | object } = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
   directives: object = {};
-  onevent: {
-    [key: string]: EventListener | Array<EventListener | Function> | Function;
-  } = {};
+  onevent: object = {};
   bindattr: { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",

@@ -23,7 +23,7 @@ function throwinvalideletype() {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
- import { isstring, isarray, isobject, isfunction } from "./util";
+import { isstring, isarray, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 
 export default function render(
@@ -67,24 +67,17 @@ export default function render(
           : createnativeelement(type);
       }
     } else if (typeof type == "function") {
+      //添加默认props
 
-
-//添加默认props
-
-
-/*static defaultProps = {
+      /*static defaultProps = {
         name: 'Omi',
         myAge: 18
   }*/
-if(isobject(type["defaultProps"])){
-
-vdom.props=JSON.parse(
-        JSON.stringify({...
-type["defaultProps"],...vdom.props
-}))
-}
-
-
+      if (isobject(type["defaultProps"])) {
+        vdom.props = JSON.parse(
+          JSON.stringify({ ...type["defaultProps"], ...vdom.props })
+        );
+      }
 
       const propsjson = JSON.parse(
         JSON.stringify({
@@ -96,7 +89,12 @@ type["defaultProps"],...vdom.props
           )
         })
       );
-      element = createcostumelemet(type, propsjson, vdom.children);
+      element = createcostumelemet(
+        type,
+        propsjson,
+        vdom.children,
+        vdom.options
+      );
     } else {
       throwinvalideletype();
       // throw TypeError("invalid element type!");
@@ -132,6 +130,7 @@ type["defaultProps"],...vdom.props
 
 export interface Class {
   new (propsjson?: object, children?: any[]): HTMLElement;
+  prototype: HTMLElement;
 }
 import { isReactiveState } from "./primitivestate";
 function handleprops(
