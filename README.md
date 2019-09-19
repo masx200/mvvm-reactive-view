@@ -28,6 +28,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+Fragment,
   directives,
   watch,
   html,
