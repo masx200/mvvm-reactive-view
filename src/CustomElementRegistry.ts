@@ -38,7 +38,7 @@ const elementname = getrandomstringandnumber(length);
 
 
     if (customElements.get(elementname)) {
-      return RandomDefineCustomElement(initclass,extendsname,length);
+      return RandomDefineCustomElement(initclass,extendsname,length+1);
     } else {
       if (extendsname) {
         customElements.define(elementname, initclass, { extends: extendsname });
