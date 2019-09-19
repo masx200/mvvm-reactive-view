@@ -207,10 +207,10 @@ static defaultProps = {
 # 扩展自定义指令
 
 ```js
-directives({ value(element, value, vdom) {} });
+directives({ myfocus(element, value, vdom) {} });
 
 html`
-  <input *value=${myvalue} />
+  <input *myfocus=${myvalue} />
 `;
 ```
 
