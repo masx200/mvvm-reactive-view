@@ -38,6 +38,9 @@ export function createcostumelemet(
     RandomDefineCustomElement(initclass);
     return construct(initclass, [propsjson, children, options]); // (children);
   } else {
+
+console.error(initclass)
+
     throw TypeError("invalid custom element class !");
   }
 }
