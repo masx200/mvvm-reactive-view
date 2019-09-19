@@ -54,7 +54,9 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
-# 支持`jsx`和使用 `hyperscript` 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
+# 支持`jsx`和使用 `hyperscript`
+
+## 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
 
 https://github.com/developit/htm
 
