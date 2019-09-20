@@ -40,8 +40,6 @@ export const mathnamespace = "http://www.w3.org/1998/Math/MathML";
 export function createmathelement() {
   return createElementNS(mathnamespace, "math");
 }
-export function createComment(){
-
-return document.createComment()
-
+export function createComment() {
+  return document.createComment("");
 }
