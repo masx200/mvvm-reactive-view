@@ -7,14 +7,13 @@ if (
   throw new TypeError(" browser not supported !");
 }
 
-
 //请自行使用babel-preset-env和core-js 3
 //import "./Object-fromEntries";
 // import "./setImmediate";
 //import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
 
-import  "./CustomElementRegistry";
+import "./CustomElementRegistry";
 import html from "./html";
 import h from "./createelement";
 export { html };
@@ -31,4 +30,4 @@ import directives from "./extend-directive";
 
 export { directives };
 //export { RandomDefine };
-export const Fragment=""
+export const Fragment = "";

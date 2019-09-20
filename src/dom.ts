@@ -43,3 +43,15 @@ export function createmathelement() {
 export function createComment() {
   return document.createComment("");
 }
+export function removeNode(node: Element) {
+  let parentNode = node.parentNode;
+  if (parentNode) {
+    parentNode.removeChild(node);
+  }
+}
+export function replaceChild(newChild: Node, oldChild: Node) {
+  let parentNode = oldChild.parentNode;
+  if (parentNode) {
+    parentNode.replaceChild(newChild, oldChild);
+  }
+}
