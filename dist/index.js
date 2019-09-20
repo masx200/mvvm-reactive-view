@@ -1,32 +1,3 @@
-function fromPairs(pairs) {
-    var index = -1, length = pairs == null ? 0 : pairs.length, result = {};
-    while (++index < length) {
-        var pair = pairs[index];
-        result[pair[0]] = pair[1];
-    }
-    return result;
-}
-
-var fromPairs_1 = fromPairs;
-
-if ("function" !== typeof Object.fromEntries) Object.fromEntries = fromPairs_1;
-
-function flattenDeep(arr1) {
-    return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
-}
-
-function arrayflat(depth = 1) {
-    if (depth <= 1) {
-        return this.reduce((acc, val) => acc.concat(val), []);
-    } else {
-        return flattenDeep(this);
-    }
-}
-
-if (typeof Array.prototype.flat !== "function") {
-    Array.prototype.flat = arrayflat;
-}
-
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -277,6 +248,7 @@ function createcostumelemet(initclass, propsjson, children, options) {
         RandomDefineCustomElement(initclass);
         return construct(initclass, [ propsjson, children, options ]);
     } else {
+        console.error(initclass);
         throw TypeError("invalid custom element class !");
     }
 }
@@ -967,5 +939,5 @@ if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof c
 
 const Fragment = "";
 
-export { Fragment, RandomDefineCustomElement as RandomDefine, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
+export { Fragment, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map

@@ -4,7 +4,6 @@
 
 ## 基于 Proxy,基于虚拟 dom,支持 jsx 和 hyperscript,前端 javascript 库
 
-
 ## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟 dom
 
 ## 由于使用了 Proxy，所以不支持 IE 浏览器，而且 proxy 不可 polyfill
@@ -12,7 +11,6 @@
 关于 Proxy
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
-
 
 # 安装 npm 模块
 
@@ -70,20 +68,17 @@ https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react
 
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
-
-由于使用了ECMAScript2019的api，所以需要自行添加polyfill
+由于使用了 ECMAScript2019 的 api，所以需要自行添加 polyfill
 
 https://github.com/tc39/proposal-object-from-entries
 
 https://tc39.es/proposal-flatMap/
 
-
 还需要使用`babel-preset-env`包含`core-js@3` 和 `"@babel/plugin-proposal-class-properties"`
 
 ```json
 {
-
-"presets": [
+  "presets": [
     [
       "@babel/preset-env",
       {
@@ -93,8 +88,7 @@ https://tc39.es/proposal-flatMap/
     ]
   ],
   "plugins": [
-
-"@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-class-properties",
     [
       "babel-plugin-htm",
       {
@@ -164,34 +158,29 @@ createApp(vdom, document.getElementById("root"));
 通过 props 来传递参数给元素，以 json 格式传递
 
 ```js
+var mycom = class extends HTMLElement {};
 
-var mycom=class extends HTMLElement{}
+var vdom = html`
+  <${mycom} />
+`;
 
-var vdom=html`<${mycom}/>`
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+```
 
+```ts
 document.body.appendChild(
-    createApp(
-      vdom,
-      document.createElement("div")
-    )
-
-
-document.body.appendChild(
-    createApp(
-      createElement(
-class extends HTMLElement {
-
-static defaultProps = {
-        name: 'HelloKitty',
-        myAge: 18
-  }
-
-}
-),
-      document.createElement("div")
-    )
-
-
+  createApp(
+    createElement(
+      class extends HTMLElement {
+        static defaultProps = {
+          name: "HelloKitty",
+          myAge: 18
+        };
+      }
+    ),
+    document.createElement("div")
+  )
+);
 ```
 
 # 属性单向绑定
