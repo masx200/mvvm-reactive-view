@@ -1,4 +1,4 @@
-import "../polyfill/custom-elements.min.js";
+//import "../polyfill/custom-elements.min.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Fragment,
@@ -9,7 +9,7 @@ import {
   createElement,
   createState,
   watch,
-  RandomDefine
+  //RandomDefine
 } from "../dist/index.js";
 console.log([
   Fragment,
@@ -616,7 +616,8 @@ console.log([
   document.body.appendChild(createApp(vdom, document.createElement("div")));
   console.log(vdom);
 })();
-const mytestclass = class extends HTMLElement {
+
+/*const mytestclass = class extends HTMLElement {
   constructor(...argwwwuments) {
     super();
     // console.log(argwwwuments);
@@ -630,5 +631,5 @@ console.log(
     .fill()
     .map(() => RandomDefine(class extends HTMLElement {}))
 );
-
+*/
 console.log(customElements, [...customElements]);
