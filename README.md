@@ -73,6 +73,11 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 由于使用了ECMAScript2019的api，所以需要自行添加polyfill
 
+https://github.com/tc39/proposal-object-from-entries
+
+https://tc39.es/proposal-flatMap/
+
+
 还需要使用`babel-preset-env`包含`core-js@3` 和 `"@babel/plugin-proposal-class-properties"`
 
 ```json
