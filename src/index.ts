@@ -7,9 +7,11 @@ if (
   throw new TypeError(" browser not supported !");
 }
 
-import "./Object-fromEntries";
+
+//请自行使用babel-preset-env和core-js 3
+//import "./Object-fromEntries";
 // import "./setImmediate";
-import "./array-prototype-flat";
+//import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
 
 import  "./CustomElementRegistry";
