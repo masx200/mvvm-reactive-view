@@ -77,9 +77,9 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 "presets": [
     [
-      '@babel/preset-env',
+      "@babel/preset-env",
       {
-        "useBuiltIns": 'usage',
+        "useBuiltIns": "usage",
         "corejs": 3
       }
     ]
