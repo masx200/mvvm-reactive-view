@@ -70,9 +70,13 @@ https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react
 
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
+还需要使用`babel-preset-env`和 "@babel/plugin-proposal-class-properties"
+
 ```json
 {
   "plugins": [
+
+"@babel/plugin-proposal-class-properties",
     [
       "babel-plugin-htm",
       {
