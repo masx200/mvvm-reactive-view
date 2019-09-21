@@ -1,6 +1,5 @@
-import { seteletext, setelehtml } from "./dom";
-
 export const requestAnimationFrame = window.requestAnimationFrame;
+import { seteletext, setelehtml } from "./dom";
 
 import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from "./primitivestate";

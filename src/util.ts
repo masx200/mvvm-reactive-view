@@ -1,3 +1,4 @@
+import { has } from "./reflect";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function isundefined(a: any) {
   return typeof a === "undefined";
@@ -34,4 +35,7 @@ export function gettagtype(a: any) {
     .replace("[object ", "")
     .replace("]", "")
     .toLowerCase();
+}
+export function ispromise(a) {
+  return gettagtype(a) === "promise" && has(a, "then") && has(a, "catch");
 }

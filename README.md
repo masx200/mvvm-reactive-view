@@ -210,12 +210,13 @@ document.body.appendChild(
 `*ref=${ref}`
 
 ```ts
-
 const ref = createRef();
 
-html`<div *ref=${ref}/>`
+html`
+  <div *ref=${ref} />
+`;
 
-console.log(ref.value)
+console.log(ref.value);
 ```
 
 ### 指令`*html`用来设置元素的`innerHTML`

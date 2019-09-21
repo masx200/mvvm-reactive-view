@@ -1,3 +1,7 @@
+const Reflect$1 = window.Reflect;
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
+
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -250,10 +254,6 @@ extenddirectives({
         }
     }
 });
-
-const Reflect$1 = window.Reflect;
-
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, isExtensible: isExtensible, ownKeys: ownKeys, preventExtensions: preventExtensions, set: set, setPrototypeOf: setPrototypeOf} = Reflect$1;
 
 function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
