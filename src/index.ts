@@ -15,9 +15,9 @@ import "./input-textarea-value-directive-Bidirectional-binding";
 
 import "./CustomElementRegistry";
 import html from "./html";
-import h from "./createelement";
+import createElement from "./createelement";
 export { html };
-export { h as createElement, h };
+export { createElement, createElement as h };
 import createApp from "./createApp";
 export { createApp };
 import createRef from "./createref";

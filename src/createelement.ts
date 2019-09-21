@@ -1,12 +1,12 @@
 import ReactiveState from "./primitivestate";
 import { isstring, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
-export default function h(
+export default function createElement(
   type: Function,
   props: any,
   ...children: any[]
 ): Virtualdom;
-export default function h(
+export default function createElement(
   type: Function | string = "",
   props: any = {},
   ...children: Array<Virtualdom | string | ReactiveState>

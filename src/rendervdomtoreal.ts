@@ -24,11 +24,15 @@ function throwinvalideletype(type) {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
-import { isobject } from "./util";
+import { isobject, isArray } from "./util";
 import Virtualdom from "./virtualdom";
 
 export default function render(
-  vdom: Virtualdom | string | ReactiveState,
+  vdom:
+    | Virtualdom
+    | string
+    | ReactiveState
+    | Array<Virtualdom | string | ReactiveState>,
   namespace?: string
 ):
   | HTMLElement
@@ -36,7 +40,8 @@ export default function render(
   | SVGSVGElement
   | DocumentFragment
   | SVGElement
-  | Element {
+  | Element
+  | Array<Node | any> {
   if (typeof vdom === "string") {
     return createtextnode(vdom);
   } else if (vdom instanceof ReactiveState) {
@@ -65,6 +70,8 @@ export default function render(
       } else if (type === "math") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createmathelement();
+      } else if ("" === type) {
+        return render(vdom.children);
       } else {
         element = namespace
           ? createElementNS(namespace, type)
@@ -126,6 +133,8 @@ export default function render(
       );
     }
     return element;
+  } else if (isArray(vdom)) {
+    return vdom.map(a => render(a));
   } else {
     throwinvalideletype(vdom);
     // throw TypeError("invalid element type!");

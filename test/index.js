@@ -1,4 +1,6 @@
-//import "../polyfill/custom-elements.min.js";
+import "../polyfill/custom-elements.min.js";
+import "../polyfill/Array-prototype-flat.js";
+import "../polyfill/Object-fromEntries.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   condition,
@@ -47,9 +49,12 @@ console.log([
   document.body.appendChild(
     createApp([vdom, vdom2, vdom3], document.createElement("div"))
   );
-  setTimeout(() => {
-    mystate.value = false;
-  }, 3000);
+  setInterval(() => {
+    mystate.value = !mystate.value;
+    // setInterval(() => {
+    //   mystate.value = true;
+    // }, 1500);
+  }, 2500);
 })();
 (() => {
   const inputpassword = createState("");

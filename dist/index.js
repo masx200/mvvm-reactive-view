@@ -408,7 +408,7 @@ function htm(t) {
     return r.length > 1 ? r : r[0];
 }
 
-function h(type = "", props = {}, ...children) {
+function createElement(type = "", props = {}, ...children) {
     let typenormalized = isstring(type) || isfunction(type) ? type : "";
     const propsnormalized = isobject(props) ? props : {};
     const childrennormalized = children.flat(1);
@@ -421,7 +421,7 @@ function h(type = "", props = {}, ...children) {
     return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }
 
-const html = htm.bind(h);
+const html = htm.bind(createElement);
 
 function isvalidvdom(v) {
     let flag = false;
@@ -670,6 +670,8 @@ function render(vdom, namespace) {
                 element = createsvgelement();
             } else if (type === "math") {
                 element = createmathelement();
+            } else if ("" === type) {
+                return render(vdom.children);
             } else {
                 element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
             }
@@ -705,6 +707,8 @@ function render(vdom, namespace) {
             }), element);
         }
         return element;
+    } else if (isarray(vdom)) {
+        return vdom.map(a => render(a));
     } else {
         throwinvalideletype(vdom);
     }
@@ -1098,6 +1102,11 @@ function conditon(conditon, iftrue, iffalse) {
     if (!isReactiveState(conditon)) {
         throw TypeError("invalid ReactiveState");
     }
+    [ iftrue, iffalse ].forEach(a => {
+        if (!(isundefined(a) || isvalidvdom(a))) {
+            throw new TypeError("invalid Virtualdom");
+        }
+    });
     const vdom = new Virtualdom(Condition, {
         value: conditon
     });
@@ -1114,5 +1123,5 @@ if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof c
 
 const Fragment = "";
 
-export { Fragment, conditon as condition, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
+export { Fragment, conditon as condition, createApp, createElement, createRef, createstate as createState, extenddirectives as directives, createElement as h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map
