@@ -26,7 +26,14 @@ import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
 import { isobject, isArray } from "./util";
 import Virtualdom from "./virtualdom";
-
+export default function render(
+  vdom: Array<Virtualdom | string | ReactiveState>,
+  namespace?: string
+): Array<Node | any>;
+export default function render(
+  vdom: Virtualdom | string | ReactiveState,
+  namespace?: string
+): Node | any;
 export default function render(
   vdom:
     | Virtualdom

@@ -1,3 +1,4 @@
+import { getAttribute, setAttribute, removeAttribute } from "./dom";
 const attributeChangedCallback = "attributeChangedCallback";
 import { isFunction } from "./util";
 export class AttrChange extends HTMLElement {
@@ -15,20 +16,23 @@ export class AttrChange extends HTMLElement {
   updateStyle(this);
 } */
   setAttribute(qualifiedName: string, value: string) {
-    const oldValue = super.getAttribute(qualifiedName);
+    const oldValue = getAttribute(this, qualifiedName);
+    // super.getAttribute(qualifiedName);
 
     if (oldValue !== value) {
-      super.setAttribute(qualifiedName, value);
+      setAttribute(this, qualifiedName, value);
+      //   super.setAttribute(qualifiedName, value);
       if (isFunction(this[attributeChangedCallback])) {
         this[attributeChangedCallback](qualifiedName, oldValue, value);
       }
     }
   }
   removeAttribute(qualifiedName: string) {
-    const oldValue = super.getAttribute(qualifiedName);
+    const oldValue = getAttribute(this, qualifiedName);
 
     if (null !== oldValue) {
-      super.removeAttribute(qualifiedName);
+      //   super.removeAttribute(qualifiedName);
+      removeAttribute(this, qualifiedName);
       if (isFunction(this[attributeChangedCallback])) {
         this[attributeChangedCallback](qualifiedName, oldValue, undefined);
       }

@@ -173,6 +173,18 @@ function getdomchildren(ele) {
     return Array.from(ele.childNodes);
 }
 
+function getAttribute(ele, name) {
+    return HTMLElement.prototype.getAttribute.call(ele, name);
+}
+
+function setAttribute(ele, name, value) {
+    HTMLElement.prototype.setAttribute.call(ele, name, value);
+}
+
+function removeAttribute(ele, name) {
+    HTMLElement.prototype.removeAttribute.call(ele, name);
+}
+
 function watch(state, callback, statekey) {
     if (!(isReactiveState(state) && isfunction(callback))) {
         throw TypeError("invalid state or callback");
@@ -572,7 +584,7 @@ function createeleattragentreadwrite(ele) {
             }
         },
         deleteProperty(t, k) {
-            removeAttribute(ele, String(k));
+            removeAttribute$1(ele, String(k));
             return true;
         },
         has(target, key) {
@@ -621,7 +633,7 @@ function setattribute(ele, key, value) {
     return ele.setAttribute(key, value);
 }
 
-function removeAttribute(ele, key) {
+function removeAttribute$1(ele, key) {
     return ele.removeAttribute(key);
 }
 
@@ -975,18 +987,18 @@ const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
     setAttribute(qualifiedName, value) {
-        const oldValue = super.getAttribute(qualifiedName);
+        const oldValue = getAttribute(this, qualifiedName);
         if (oldValue !== value) {
-            super.setAttribute(qualifiedName, value);
+            setAttribute(this, qualifiedName, value);
             if (isfunction(this[attributeChangedCallback])) {
                 this[attributeChangedCallback](qualifiedName, oldValue, value);
             }
         }
     }
     removeAttribute(qualifiedName) {
-        const oldValue = super.getAttribute(qualifiedName);
+        const oldValue = getAttribute(this, qualifiedName);
         if (null !== oldValue) {
-            super.removeAttribute(qualifiedName);
+            removeAttribute(this, qualifiedName);
             if (isfunction(this[attributeChangedCallback])) {
                 this[attributeChangedCallback](qualifiedName, oldValue, undefined);
             }
@@ -1052,7 +1064,7 @@ class Condition extends AttrChange {
         setelehtml(this, "");
         if (this[falsevdomsymbol]) {
             if (!this[falseelesymbol]) {
-                this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
+                this[falseelesymbol] = render(this[falsevdomsymbol]);
             }
             const elementtomount = this[falseelesymbol];
             createApp(elementtomount, this);
@@ -1066,7 +1078,7 @@ class Condition extends AttrChange {
         setelehtml(this, "");
         if (this[truevdomsymbol]) {
             if (!this[trueelesymbol]) {
-                this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
+                this[trueelesymbol] = render(this[truevdomsymbol]);
             }
             const elementtomount = this[trueelesymbol];
             createApp(elementtomount, this);

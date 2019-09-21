@@ -38,7 +38,8 @@ class Condition extends AttrChange {
     if (this[falsevdomsymbol]) {
       if (!this[falseelesymbol]) {
         // } else {
-        this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
+        this[falseelesymbol] = render(this[falsevdomsymbol]);
+        // this[falsevdomsymbol].map(e => render(e));
       }
       //   mount(this[falseelesymbol], this);
       const elementtomount = this[falseelesymbol];
@@ -53,7 +54,8 @@ class Condition extends AttrChange {
     setelehtml(this, "");
     if (this[truevdomsymbol]) {
       if (!this[trueelesymbol]) {
-        this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
+        this[trueelesymbol] = render(this[truevdomsymbol]);
+        // this[truevdomsymbol].map(e => render(e));
       }
       //
       //   mount(this[trueelesymbol], this);
