@@ -1057,7 +1057,7 @@ class Condition extends AttrChange {
             this[handlefalse]();
         }
     }
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name) {
         if (name === "value") {
             const attrs = createeleattragentreadwrite(this);
             if (true === attrs["value"]) {

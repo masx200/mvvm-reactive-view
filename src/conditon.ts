@@ -72,7 +72,7 @@ class Condition extends AttrChange {
       : [options.false];
     // options.false;
   }
-  attributeChangedCallback(name: string, oldValue: any, newValue: any) {
+  attributeChangedCallback(name: string /* , oldValue: any, newValue: any */) {
     // console.log(name, oldValue, newValue);
     if (name === "value") {
       const attrs = createeleattr(this);
