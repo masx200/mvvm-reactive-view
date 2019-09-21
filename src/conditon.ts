@@ -48,6 +48,7 @@ class Condition extends AttrChange {
   }
   connectedCallback() {
     const attrs = createeleattr(this);
+    // console.log(attrs);
     if (true === attrs["value"]) {
       this[handletrue]();
     }
@@ -71,9 +72,11 @@ class Condition extends AttrChange {
       : [options.false];
     // options.false;
   }
-  attributeChangedCallback(name: string /* , oldValue: any, newValue: any */) {
+  attributeChangedCallback(name: string, oldValue: any, newValue: any) {
+    // console.log(name, oldValue, newValue);
     if (name === "value") {
       const attrs = createeleattr(this);
+      //   console.log(attrs);
       if (true === attrs["value"]) {
         this[handletrue]();
         //
@@ -99,7 +102,7 @@ export default function(
     | string
     | Array<Virtualdom | string | ReactiveState>
     | ReactiveState
-) {
+): Virtualdom {
   if (!isReactiveState(conditon)) {
     throw TypeError("invalid ReactiveState");
   }

@@ -24,16 +24,21 @@ console.log([
   condition
 ]);
 // console.log(createElement(Fragment));
-var mystate = createState(false);
-watch(mystate, console.log);
-console.log("mystatetest", mystate);
-var vdom = condition(
-  mystate,
-  "testtrue",
-  createElement("div", undefined, "testfalese")
-);
-console.log(vdom);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+(() => {
+  var mystate = createState(true);
+  watch(mystate, console.log);
+  console.log("mystatetest", mystate);
+  var vdom = condition(
+    mystate,
+    "testtrue",
+    createElement("div", undefined, "testfalese")
+  );
+  console.log(vdom);
+  document.body.appendChild(createApp(vdom, document.createElement("div")));
+  setTimeout(() => {
+    mystate.value = false;
+  }, 3000);
+})();
 (() => {
   const inputpassword = createState("");
   const inputref = createRef();

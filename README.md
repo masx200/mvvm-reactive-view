@@ -28,6 +28,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+  condition,
   Fragment,
   directives,
   watch,
@@ -113,6 +114,7 @@ https://tc39.es/proposal-flatMap/
 
 ```js
 import {
+  condition,
   directives,
   watch,
   html,
@@ -347,7 +349,34 @@ function watch(state: ReactiveState, callback: Function): void;
 
 # 条件渲染
 
-尚在开发中
+```ts
+function condition(
+  conditon: ReactiveState,
+  iftrue:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState,
+  iffalse?:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState
+): Virtualdom;
+```
+
+```js
+var mystate = createState(true);
+var vdom = condition(
+  mystate,
+  "testtrue",
+  createElement("div", undefined, "testfalese")
+);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+setTimeout(() => {
+  mystate.value = false;
+}, 3000);
+```
 
 # 列表渲染
 

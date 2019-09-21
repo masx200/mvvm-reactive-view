@@ -538,11 +538,11 @@ function createeleattragentreadwrite(ele) {
                 return get$1(ele, valuestring);
             } else {
                 const v = getattribute(ele, String(key));
-                if (!v) {
-                    return;
-                }
                 if (v === "") {
                     return true;
+                }
+                if (v === null) {
+                    return;
                 }
                 if (isstring$1(v)) {
                     try {
@@ -1057,7 +1057,7 @@ class Condition extends AttrChange {
             this[handlefalse]();
         }
     }
-    attributeChangedCallback(name) {
+    attributeChangedCallback(name, oldValue, newValue) {
         if (name === "value") {
             const attrs = createeleattragentreadwrite(this);
             if (true === attrs["value"]) {
