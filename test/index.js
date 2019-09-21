@@ -28,7 +28,7 @@ console.log([
 // console.log(createElement(Fragment));
 (() => {
   var mystate = createState(true);
-  watch(mystate, console.log);
+//   watch(mystate, console.log);
   console.log("mystatetest", mystate);
   var vdom = condition(
     mystate,
