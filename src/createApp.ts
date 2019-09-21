@@ -10,12 +10,18 @@ export default function createApp(
     | Node
     | Virtualdom
     | string
-    | Array<Virtualdom | string | ReactiveState>
+    | Array<Virtualdom | string | ReactiveState | Node>
     | ReactiveState,
   container: HTMLElement | Element
 ): HTMLElement | Element {
   const el = container;
-  if (!(isvalidvdom(vdom) || vdom instanceof Node || isArray(vdom))) {
+  if (
+    !(
+      isvalidvdom(vdom) ||
+      vdom instanceof Node ||
+      (isArray(vdom) && isNodeArray(vdom))
+    )
+  ) {
     console.error(vdom);
     throw TypeError("invalid Virtualdom ");
   }
@@ -44,4 +50,7 @@ export default function createApp(
 
   //
   return container;
+}
+function isNodeArray(array: any[]): array is Node[] {
+  return isArray(array) && !array.map(e => e instanceof Node).includes(false);
 }

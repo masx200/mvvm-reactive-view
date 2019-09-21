@@ -743,7 +743,7 @@ function handleprops(element, vdom) {
 
 function createApp(vdom, container) {
     const el = container;
-    if (!(isvalidvdom(vdom) || vdom instanceof Node || isarray(vdom))) {
+    if (!(isvalidvdom(vdom) || vdom instanceof Node || isarray(vdom) && isNodeArray(vdom))) {
         console.error(vdom);
         throw TypeError("invalid Virtualdom ");
     }
@@ -765,6 +765,10 @@ function createApp(vdom, container) {
         mount(elesarray, container);
     }
     return container;
+}
+
+function isNodeArray(array) {
+    return isarray(array) && !array.map(e => e instanceof Node).includes(false);
 }
 
 function createRef(init) {
