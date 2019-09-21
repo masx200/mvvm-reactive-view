@@ -15,13 +15,25 @@ import { onmounted, onunmounted } from "./elementonmountandunmount";
 // import mount from "./mount";
 import { isarray, getsymbol } from "./util";
 import createApp from "./createApp";
+import { setelehtml } from "./dom";
 class Condition extends AttrChange {
+  constructor(propsjson?: object, children?: any[], options?: any) {
+    super();
+    this[truevdomsymbol] = isarray(options.true)
+      ? options.true
+      : [options.true].filter(Boolean);
+    this[falsevdomsymbol] = isarray(options.false)
+      ? options.false
+      : [options.false].filter(Boolean);
+    // options.false;
+  }
   [falseelesymbol]: any[];
   [trueelesymbol]: any[];
   [truevdomsymbol]: any[];
   [falsevdomsymbol]: any[];
   //   [readysymbol] = false;
   [handlefalse]() {
+    setelehtml(this, "");
     if (this[falsevdomsymbol]) {
       if (!this[falseelesymbol]) {
         // } else {
@@ -37,6 +49,7 @@ class Condition extends AttrChange {
     }
   }
   [handletrue]() {
+    setelehtml(this, "");
     if (this[truevdomsymbol]) {
       if (!this[trueelesymbol]) {
         this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
@@ -67,16 +80,7 @@ class Condition extends AttrChange {
   /* disconnectedCallback() {
     //
   } */
-  constructor(propsjson?: object, children?: any[], options?: any) {
-    super();
-    this[truevdomsymbol] = isarray(options.true)
-      ? options.true
-      : [options.true];
-    this[falsevdomsymbol] = isarray(options.false)
-      ? options.false
-      : [options.false];
-    // options.false;
-  }
+
   attributeChangedCallback(name: string /* , oldValue: any, newValue: any */) {
     // console.log(name, oldValue, newValue);
     if (name === "value") {
@@ -97,7 +101,7 @@ class Condition extends AttrChange {
 }
 export default function(
   conditon: ReactiveState,
-  iftrue:
+  iftrue?:
     | Virtualdom
     | string
     | Array<Virtualdom | string | ReactiveState>

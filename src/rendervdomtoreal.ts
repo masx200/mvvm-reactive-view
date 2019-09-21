@@ -18,7 +18,8 @@ import {
   createtextnode,
   changetext
 } from "./dom";
-function throwinvalideletype() {
+function throwinvalideletype(type) {
+  console.error(type);
   throw TypeError("invalid element type!");
 }
 import mount from "./mount";
@@ -99,7 +100,7 @@ export default function render(
         vdom.options
       );
     } else {
-      throwinvalideletype();
+      throwinvalideletype(vdom);
       // throw TypeError("invalid element type!");
     }
     handleprops(element, vdom);
@@ -126,7 +127,7 @@ export default function render(
     }
     return element;
   } else {
-    throwinvalideletype();
+    throwinvalideletype(vdom);
     // throw TypeError("invalid element type!");
   }
 }

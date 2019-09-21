@@ -33,8 +33,20 @@ console.log([
     "testtrue",
     createElement("div", undefined, "testfalese")
   );
-  console.log(vdom);
-  document.body.appendChild(createApp(vdom, document.createElement("div")));
+  var vdom2 = condition(
+    mystate,
+    undefined,
+    createElement("div", undefined, "testwwwwwwwwwfalese")
+  );
+  var vdom3 = condition(
+    mystate,
+    createElement("div", undefined, "testwwwwwwwtrueeeeeeeeee"),
+    undefined
+  );
+  console.log([vdom, vdom2, vdom3]);
+  document.body.appendChild(
+    createApp([vdom, vdom2, vdom3], document.createElement("div"))
+  );
   setTimeout(() => {
     mystate.value = false;
   }, 3000);

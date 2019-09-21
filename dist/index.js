@@ -640,7 +640,8 @@ const reactivestatesymbol = Symbol("reactive");
 
 const virtualdomsymbol = Symbol("virtualdom");
 
-function throwinvalideletype() {
+function throwinvalideletype(type) {
+    console.error(type);
     throw TypeError("invalid element type!");
 }
 
@@ -687,7 +688,7 @@ function render(vdom, namespace) {
             }));
             element = createcostumelemet(type, propsjson, vdom.children, vdom.options);
         } else {
-            throwinvalideletype();
+            throwinvalideletype(vdom);
         }
         handleprops(element, vdom);
         if (typeof type !== "function") {
@@ -705,7 +706,7 @@ function render(vdom, namespace) {
         }
         return element;
     } else {
-        throwinvalideletype();
+        throwinvalideletype(vdom);
     }
 }
 
@@ -1040,10 +1041,11 @@ const handlefalse = getsymbol("handlefalse");
 class Condition extends AttrChange {
     constructor(propsjson, children, options) {
         super();
-        this[truevdomsymbol] = isarray(options.true) ? options.true : [ options.true ];
-        this[falsevdomsymbol] = isarray(options.false) ? options.false : [ options.false ];
+        this[truevdomsymbol] = isarray(options.true) ? options.true : [ options.true ].filter(Boolean);
+        this[falsevdomsymbol] = isarray(options.false) ? options.false : [ options.false ].filter(Boolean);
     }
     [handlefalse]() {
+        setelehtml(this, "");
         if (this[falsevdomsymbol]) {
             if (!this[falseelesymbol]) {
                 this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
@@ -1057,6 +1059,7 @@ class Condition extends AttrChange {
         }
     }
     [handletrue]() {
+        setelehtml(this, "");
         if (this[truevdomsymbol]) {
             if (!this[trueelesymbol]) {
                 this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
