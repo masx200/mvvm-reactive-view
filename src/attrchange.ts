@@ -16,16 +16,22 @@ export class AttrChange extends HTMLElement {
 } */
   setAttribute(qualifiedName: string, value: string) {
     const oldValue = super.getAttribute(qualifiedName);
-    super.setAttribute(qualifiedName, value);
-    if (isFunction(this[attributeChangedCallback])) {
-      this[attributeChangedCallback](qualifiedName, oldValue, value);
+
+    if (oldValue !== value) {
+      super.setAttribute(qualifiedName, value);
+      if (isFunction(this[attributeChangedCallback])) {
+        this[attributeChangedCallback](qualifiedName, oldValue, value);
+      }
     }
   }
   removeAttribute(qualifiedName: string) {
     const oldValue = super.getAttribute(qualifiedName);
-    super.removeAttribute(qualifiedName);
-    if (isFunction(this[attributeChangedCallback])) {
-      this[attributeChangedCallback](qualifiedName, oldValue, undefined);
+
+    if (null !== oldValue) {
+      super.removeAttribute(qualifiedName);
+      if (isFunction(this[attributeChangedCallback])) {
+        this[attributeChangedCallback](qualifiedName, oldValue, undefined);
+      }
     }
   }
 }

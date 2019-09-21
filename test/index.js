@@ -1,6 +1,7 @@
 //import "../polyfill/custom-elements.min.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
+  condition,
   Fragment,
   createRef,
   html,
@@ -8,7 +9,7 @@ import {
   h,
   createElement,
   createState,
-  watch,
+  watch
   //RandomDefine
 } from "../dist/index.js";
 console.log([
@@ -20,8 +21,19 @@ console.log([
   createElement,
   createState,
   watch,
-  RandomDefine
+  condition
 ]);
+// console.log(createElement(Fragment));
+var mystate = createState(false);
+watch(mystate, console.log);
+console.log("mystatetest", mystate);
+var vdom = condition(
+  mystate,
+  "testtrue",
+  createElement("div", undefined, "testfalese")
+);
+console.log(vdom);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
 (() => {
   const inputpassword = createState("");
   const inputref = createRef();
@@ -272,7 +284,7 @@ console.log([
                           <input
                             *ref=${inputref}
                             @change=${e => console.log(e, inputref)}
-                            id="code16"
+                            id="cod222222222222e16"
                             readonly=""
                             class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
                             value=""
@@ -398,7 +410,7 @@ console.log([
       @input=${e => (state1.value = e.target.value)}
       *ref=${inputref}
       @change=${e => (state1.value = e.target.value)}
-      id="code16"
+      id="co11111111111de16"
       class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
       value=${state1}
     />

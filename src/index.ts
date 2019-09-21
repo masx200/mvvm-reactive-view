@@ -31,3 +31,5 @@ import directives from "./extend-directive";
 export { directives };
 //export { RandomDefine };
 export const Fragment = "";
+import condition from "./conditon";
+export { condition };

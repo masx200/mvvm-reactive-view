@@ -1,3 +1,4 @@
+import { domaddlisten, domremovelisten } from "./dom";
 export const eventlistenerssymbol = Symbol("eventlisteners");
 import { isArray } from "./util";
 export default function(
@@ -9,14 +10,14 @@ export default function(
     element[eventlistenerssymbol] = [];
   }
   if (typeof callback === "function") {
-    addlisteners(element, eventname, [callback]);
+    firstaddlisteners(element, eventname, [callback]);
   } else if (isArray(callback)) {
-    addlisteners(element, eventname, callback);
+    firstaddlisteners(element, eventname, callback);
   } else {
     throw TypeError("invalid EventListener");
   }
 }
-function addlisteners(
+export function firstaddlisteners(
   ele: Element,
   event: string,
   callarray: Array<EventListener>
@@ -26,7 +27,27 @@ function addlisteners(
     domaddlisten(ele, event, call);
   });
 }
-
-function domaddlisten(ele: Element, event: string, call: EventListener) {
-  ele.addEventListener(event, call);
+export function removelisteners(
+  ele: Element
+  //   event: string,
+  //   callarray: Array<EventListener>
+) {
+  if (ele[eventlistenerssymbol]) {
+    ele[eventlistenerssymbol].forEach(([event, call]) => {
+      //   ele[eventlistenerssymbol].push([event, call]);
+      domremovelisten(ele, event, call);
+    });
+  }
+}
+export function readdlisteners(
+  ele: Element
+  //   event: string,
+  //   callarray: Array<EventListener>
+) {
+  if (ele[eventlistenerssymbol]) {
+    ele[eventlistenerssymbol].forEach(([event, call]) => {
+      //   ele[eventlistenerssymbol].push([event, call]);
+      domaddlisten(ele, event, call);
+    });
+  }
 }

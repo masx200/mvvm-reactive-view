@@ -34,3 +34,7 @@ export function watch(
 export function unwatch(state: ReactiveState): void {
   state[removeallistenerssymbol]();
 }
+
+export function rewatch(state: ReactiveState): void {
+  state[addallistenerssymbol]();
+}

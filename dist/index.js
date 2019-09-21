@@ -157,6 +157,14 @@ function createmathelement() {
     return createElementNS(mathnamespace, "math");
 }
 
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
+function domremovelisten(ele, event, call) {
+    ele.removeEventListener(event, call);
+}
+
 function watch(state, callback, statekey) {
     if (!(isReactiveState(state) && isfunction(callback))) {
         throw TypeError("invalid state or callback");
@@ -169,6 +177,14 @@ function watch(state, callback, statekey) {
     requestAnimationFrame(() => {
         state[addallistenerssymbol]();
     });
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
+}
+
+function rewatch(state) {
+    state[addallistenerssymbol]();
 }
 
 const requestAnimationFrame = window.requestAnimationFrame;
@@ -441,23 +457,35 @@ function onevent(element, eventname, callback) {
         element[eventlistenerssymbol] = [];
     }
     if (typeof callback === "function") {
-        addlisteners(element, eventname, [ callback ]);
+        firstaddlisteners(element, eventname, [ callback ]);
     } else if (isarray(callback)) {
-        addlisteners(element, eventname, callback);
+        firstaddlisteners(element, eventname, callback);
     } else {
         throw TypeError("invalid EventListener");
     }
 }
 
-function addlisteners(ele, event, callarray) {
+function firstaddlisteners(ele, event, callarray) {
     callarray.forEach(call => {
         ele[eventlistenerssymbol].push([ event, call ]);
         domaddlisten(ele, event, call);
     });
 }
 
-function domaddlisten(ele, event, call) {
-    ele.addEventListener(event, call);
+function removelisteners(ele) {
+    if (ele[eventlistenerssymbol]) {
+        ele[eventlistenerssymbol].forEach(([event, call]) => {
+            domremovelisten(ele, event, call);
+        });
+    }
+}
+
+function readdlisteners(ele) {
+    if (ele[eventlistenerssymbol]) {
+        ele[eventlistenerssymbol].forEach(([event, call]) => {
+            domaddlisten(ele, event, call);
+        });
+    }
 }
 
 function mount(ele, container) {
@@ -474,7 +502,7 @@ function mount(ele, container) {
 
 const Reflect$2 = window.Reflect;
 
-const {get: get$1, ownKeys: ownKeys$1, set: set$1} = Reflect$2;
+const {get: get$1, set: set$1} = Reflect$2;
 
 const valuestring = "value";
 
@@ -584,7 +612,7 @@ function createeleattragentreadwrite(ele) {
 }
 
 function attributesownkeys(ele) {
-    return ownKeys$1(ele.attributes).filter(k => !/\d/.test(String(k)[0]));
+    return ele.getAttributeNames();
 }
 
 function getattribute(ele, key) {
@@ -746,7 +774,7 @@ function createRef(init) {
 
 const Reflect$3 = window.Reflect;
 
-const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf$1} = Reflect$3;
+const {ownKeys: ownKeys$1, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf$1} = Reflect$3;
 
 function isobject$2(a) {
     return typeof a === "object" && a !== null;
@@ -778,7 +806,7 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
                     return deleteProperty$1(target, p);
                 },
                 ownKeys() {
-                    return ownKeys$2(target);
+                    return ownKeys$1(target);
                 },
                 has(t, p) {
                     return has$1(target, p);
@@ -933,11 +961,134 @@ function createstate(init) {
     }
 }
 
+const attributeChangedCallback = "attributeChangedCallback";
+
+class AttrChange extends HTMLElement {
+    setAttribute(qualifiedName, value) {
+        const oldValue = super.getAttribute(qualifiedName);
+        if (oldValue !== value) {
+            super.setAttribute(qualifiedName, value);
+            if (isfunction(this[attributeChangedCallback])) {
+                this[attributeChangedCallback](qualifiedName, oldValue, value);
+            }
+        }
+    }
+    removeAttribute(qualifiedName) {
+        const oldValue = super.getAttribute(qualifiedName);
+        if (null !== oldValue) {
+            super.removeAttribute(qualifiedName);
+            if (isfunction(this[attributeChangedCallback])) {
+                this[attributeChangedCallback](qualifiedName, oldValue, undefined);
+            }
+        }
+    }
+}
+
+function onmounted(ele) {
+    if (ele[eventlistenerssymbol]) {
+        readdlisteners(ele);
+    }
+    if (ele[bindstatesymbol]) {
+        ele[bindstatesymbol].forEach(state => {
+            rewatch(state);
+        });
+    }
+}
+
+function onunmounted(ele) {
+    if (ele[eventlistenerssymbol]) {
+        removelisteners(ele);
+    }
+    if (ele[bindstatesymbol]) {
+        ele[bindstatesymbol].forEach(state => {
+            unwatch(state);
+        });
+    }
+}
+
+const truevdomsymbol = Symbol("truevdom");
+
+const falsevdomsymbol = Symbol("falsevdom");
+
+const trueelesymbol = Symbol("trueele");
+
+const falseelesymbol = Symbol("falseele");
+
+const handletrue = getsymbol("handletrue");
+
+const handlefalse = getsymbol("handlefalse");
+
+class Condition extends AttrChange {
+    constructor(propsjson, children, options) {
+        super();
+        this[truevdomsymbol] = isarray(options.true) ? options.true : [ options.true ];
+        this[falsevdomsymbol] = isarray(options.false) ? options.false : [ options.false ];
+    }
+    [handlefalse]() {
+        if (this[falsevdomsymbol]) {
+            if (!this[falseelesymbol]) {
+                this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
+            }
+            mount(this[falseelesymbol], this);
+            this[falseelesymbol].forEach(e => onmounted(e));
+            if (this[trueelesymbol]) {
+                this[trueelesymbol].forEach(e => onunmounted(e));
+            }
+        }
+    }
+    [handletrue]() {
+        if (this[truevdomsymbol]) {
+            if (!this[trueelesymbol]) {
+                this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
+            }
+            mount(this[trueelesymbol], this);
+            this[trueelesymbol].forEach(e => onmounted(e));
+            if (this[falseelesymbol]) {
+                this[falseelesymbol].forEach(e => onunmounted(e));
+            }
+        }
+    }
+    connectedCallback() {
+        const attrs = createeleattragentreadwrite(this);
+        if (true === attrs["value"]) {
+            this[handletrue]();
+        }
+        if (false === attrs["value"]) {
+            this[handlefalse]();
+        }
+    }
+    attributeChangedCallback(name) {
+        if (name === "value") {
+            const attrs = createeleattragentreadwrite(this);
+            if (true === attrs["value"]) {
+                this[handletrue]();
+            }
+            if (false === attrs["value"]) {
+                this[handlefalse]();
+            }
+        }
+    }
+}
+
+function conditon(conditon, iftrue, iffalse) {
+    if (!isReactiveState(conditon)) {
+        throw TypeError("invalid ReactiveState");
+    }
+    const vdom = new Virtualdom(Condition, {
+        value: conditon
+    });
+    vdom.options = {
+        true: iftrue,
+        false: iffalse
+    };
+    return vdom;
+}
+
 if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof customElements !== "object" || typeof CustomElementRegistry !== "function") {
     throw new TypeError(" browser not supported !");
 }
 
 const Fragment = "";
 
-export { Fragment, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
+export { Fragment, conditon as condition, createApp, h as createElement, createRef, createstate as createState, extenddirectives as directives, h, assertvalidvirtualdom as html, watch };
 //# sourceMappingURL=index.js.map

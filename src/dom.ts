@@ -55,3 +55,15 @@ export function replaceChild(newChild: Node, oldChild: Node) {
     parentNode.replaceChild(newChild, oldChild);
   }
 }
+
+export function domaddlisten(ele: Element, event: string, call: EventListener) {
+  ele.addEventListener(event, call);
+}
+
+export function domremovelisten(
+  ele: Element,
+  event: string,
+  call: EventListener
+) {
+  ele.removeEventListener(event, call);
+}
