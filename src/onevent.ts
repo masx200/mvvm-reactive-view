@@ -28,7 +28,7 @@ export function firstaddlisteners(
   });
 }
 export function removelisteners(
-  ele: Element
+  ele: Element | Node
   //   event: string,
   //   callarray: Array<EventListener>
 ) {
@@ -40,7 +40,7 @@ export function removelisteners(
   }
 }
 export function readdlisteners(
-  ele: Element
+  ele: Element | Node
   //   event: string,
   //   callarray: Array<EventListener>
 ) {

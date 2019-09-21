@@ -1,6 +1,7 @@
-import { appendchild } from "./dom";
+import { appendchild, setelehtml } from "./dom";
 export default function(
   ele:
+    | Node
     | Array<
         | HTMLElement
         | Text
@@ -8,6 +9,7 @@ export default function(
         | DocumentFragment
         | SVGElement
         | Element
+        | Node
       >
     | SVGElement
     | DocumentFragment
@@ -17,7 +19,8 @@ export default function(
     | Element,
   container: HTMLElement | SVGSVGElement | SVGElement | Element
 ) {
-  container.innerHTML = "";
+  setelehtml(container, "");
+  //   container.innerHTML = "";
   let eles: Array<any>;
   if (Array.isArray(ele)) {
     eles = ele;

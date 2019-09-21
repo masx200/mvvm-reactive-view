@@ -56,14 +56,21 @@ export function replaceChild(newChild: Node, oldChild: Node) {
   }
 }
 
-export function domaddlisten(ele: Element, event: string, call: EventListener) {
+export function domaddlisten(
+  ele: Element | Node,
+  event: string,
+  call: EventListener
+) {
   ele.addEventListener(event, call);
 }
 
 export function domremovelisten(
-  ele: Element,
+  ele: Element | Node,
   event: string,
   call: EventListener
 ) {
   ele.removeEventListener(event, call);
+}
+export function getdomchildren(ele: Element | Node) {
+  return Array.from(ele.childNodes);
 }

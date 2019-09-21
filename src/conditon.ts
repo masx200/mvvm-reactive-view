@@ -12,8 +12,9 @@ const handletrue = getsymbol("handletrue");
 const handlefalse = getsymbol("handlefalse");
 // const readysymbol = Symbol("ready");
 import { onmounted, onunmounted } from "./elementonmountandunmount";
-import mount from "./mount";
+// import mount from "./mount";
 import { isarray, getsymbol } from "./util";
+import createApp from "./createApp";
 class Condition extends AttrChange {
   [falseelesymbol]: any[];
   [trueelesymbol]: any[];
@@ -26,8 +27,10 @@ class Condition extends AttrChange {
         // } else {
         this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
       }
-      mount(this[falseelesymbol], this);
-      this[falseelesymbol].forEach(e => onmounted(e));
+      //   mount(this[falseelesymbol], this);
+      const elementtomount = this[falseelesymbol];
+      createApp(elementtomount, this);
+      elementtomount.forEach(e => onmounted(e));
       if (this[trueelesymbol]) {
         this[trueelesymbol].forEach(e => onunmounted(e));
       }
@@ -39,8 +42,10 @@ class Condition extends AttrChange {
         this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
       }
       //
-      mount(this[trueelesymbol], this);
-      this[trueelesymbol].forEach(e => onmounted(e));
+      //   mount(this[trueelesymbol], this);
+      const elementtomount = this[trueelesymbol];
+      createApp(elementtomount, this);
+      elementtomount.forEach(e => onmounted(e));
       if (this[falseelesymbol]) {
         this[falseelesymbol].forEach(e => onunmounted(e));
       }

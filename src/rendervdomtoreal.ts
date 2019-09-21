@@ -1,6 +1,6 @@
 export const bindstatesymbol = Symbol("bindstate");
 
-export const reactivestatesymbol = Symbol("reactivestate");
+export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
 import ReactiveState, { textnodesymbol } from "./primitivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
@@ -46,6 +46,9 @@ export default function render(
     watch(reactive, (state: { value: string }) => {
       changetext(textnode, String(state));
     });
+    const element = textnode;
+    element[bindstatesymbol] = new Set();
+    element[bindstatesymbol].add(reactive);
     return textnode;
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
     const { type } = vdom;

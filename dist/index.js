@@ -169,6 +169,10 @@ function domremovelisten(ele, event, call) {
     ele.removeEventListener(event, call);
 }
 
+function getdomchildren(ele) {
+    return Array.from(ele.childNodes);
+}
+
 function watch(state, callback, statekey) {
     if (!(isReactiveState(state) && isfunction(callback))) {
         throw TypeError("invalid state or callback");
@@ -489,7 +493,7 @@ function readdlisteners(ele) {
 }
 
 function mount(ele, container) {
-    container.innerHTML = "";
+    setelehtml(container, "");
     let eles;
     if (Array.isArray(ele)) {
         eles = ele;
@@ -632,7 +636,7 @@ function isinputtextortextarea(ele) {
 
 const bindstatesymbol = Symbol("bindstate");
 
-const reactivestatesymbol = Symbol("reactivestate");
+const reactivestatesymbol = Symbol("reactive");
 
 const virtualdomsymbol = Symbol("virtualdom");
 
@@ -651,6 +655,9 @@ function render(vdom, namespace) {
         watch(reactive, state => {
             changetext(textnode, String(state));
         });
+        const element = textnode;
+        element[bindstatesymbol] = new Set;
+        element[bindstatesymbol].add(reactive);
         return textnode;
     } else if (vdom instanceof Virtualdom && "type" in vdom) {
         const {type: type} = vdom;
@@ -736,7 +743,7 @@ function handleprops(element, vdom) {
 
 function createApp(vdom, container) {
     const el = container;
-    if (!isvalidvdom(vdom)) {
+    if (!(isvalidvdom(vdom) || vdom instanceof Node || isarray(vdom))) {
         console.error(vdom);
         throw TypeError("invalid Virtualdom ");
     }
@@ -752,7 +759,11 @@ function createApp(vdom, container) {
     } else {
         elesarray = [ vdom ];
     }
-    mount(elesarray.map(e => render(e)), container);
+    if (isvalidvdom(vdom)) {
+        mount(elesarray.map(e => render(e)), container);
+    } else if (vdom instanceof Node || isarray(vdom)) {
+        mount(elesarray, container);
+    }
     return container;
 }
 
@@ -975,24 +986,38 @@ class AttrChange extends HTMLElement {
 }
 
 function onmounted(ele) {
-    if (ele[eventlistenerssymbol]) {
-        readdlisteners(ele);
-    }
-    if (ele[bindstatesymbol]) {
-        ele[bindstatesymbol].forEach(state => {
-            rewatch(state);
+    if (isarray(ele)) {
+        ele.forEach(e => {
+            onmounted(e);
         });
+    } else if (ele instanceof Node) {
+        if (ele[eventlistenerssymbol]) {
+            readdlisteners(ele);
+        }
+        if (ele[bindstatesymbol]) {
+            ele[bindstatesymbol].forEach(state => {
+                rewatch(state);
+            });
+        }
+        onmounted(getdomchildren(ele));
     }
 }
 
 function onunmounted(ele) {
-    if (ele[eventlistenerssymbol]) {
-        removelisteners(ele);
-    }
-    if (ele[bindstatesymbol]) {
-        ele[bindstatesymbol].forEach(state => {
-            unwatch(state);
+    if (isarray(ele)) {
+        ele.forEach(e => {
+            onunmounted(e);
         });
+    } else if (ele instanceof Node) {
+        if (ele[eventlistenerssymbol]) {
+            removelisteners(ele);
+        }
+        if (ele[bindstatesymbol]) {
+            ele[bindstatesymbol].forEach(state => {
+                unwatch(state);
+            });
+        }
+        onunmounted(getdomchildren(ele));
     }
 }
 
@@ -1019,8 +1044,9 @@ class Condition extends AttrChange {
             if (!this[falseelesymbol]) {
                 this[falseelesymbol] = this[falsevdomsymbol].map(e => render(e));
             }
-            mount(this[falseelesymbol], this);
-            this[falseelesymbol].forEach(e => onmounted(e));
+            const elementtomount = this[falseelesymbol];
+            createApp(elementtomount, this);
+            elementtomount.forEach(e => onmounted(e));
             if (this[trueelesymbol]) {
                 this[trueelesymbol].forEach(e => onunmounted(e));
             }
@@ -1031,8 +1057,9 @@ class Condition extends AttrChange {
             if (!this[trueelesymbol]) {
                 this[trueelesymbol] = this[truevdomsymbol].map(e => render(e));
             }
-            mount(this[trueelesymbol], this);
-            this[trueelesymbol].forEach(e => onmounted(e));
+            const elementtomount = this[trueelesymbol];
+            createApp(elementtomount, this);
+            elementtomount.forEach(e => onmounted(e));
             if (this[falseelesymbol]) {
                 this[falseelesymbol].forEach(e => onunmounted(e));
             }

@@ -4,8 +4,10 @@ import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";
 import mount from "./mount";
+import { isArray } from "./util";
 export default function createApp(
   vdom:
+    | Node
     | Virtualdom
     | string
     | Array<Virtualdom | string | ReactiveState>
@@ -13,7 +15,7 @@ export default function createApp(
   container: HTMLElement | Element
 ): HTMLElement | Element {
   const el = container;
-  if (!isvalidvdom(vdom)) {
+  if (!(isvalidvdom(vdom) || vdom instanceof Node || isArray(vdom))) {
     console.error(vdom);
     throw TypeError("invalid Virtualdom ");
   }
@@ -34,7 +36,11 @@ export default function createApp(
   } else {
     elesarray = [vdom];
   }
-  mount(elesarray.map(e => render(e)), container);
+  if (isvalidvdom(vdom)) {
+    mount(elesarray.map(e => render(e)), container);
+  } else if (vdom instanceof Node || isArray(vdom)) {
+    mount(elesarray, container);
+  }
 
   //
   return container;
