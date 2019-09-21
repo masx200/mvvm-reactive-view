@@ -71,6 +71,8 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 由于使用了 ECMAScript2019 的 api，所以需要自行添加 polyfill
 
+https://github.com/zloirock/core-js
+
 https://github.com/tc39/proposal-object-from-entries
 
 https://tc39.es/proposal-flatMap/
