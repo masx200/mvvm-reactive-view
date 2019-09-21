@@ -23,7 +23,7 @@ function throwinvalideletype() {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
-import { isstring, isarray, isobject, isfunction } from "./util";
+import { isobject } from "./util";
 import Virtualdom from "./virtualdom";
 
 export default function render(
@@ -129,7 +129,7 @@ export default function render(
 }
 
 export interface Class {
-  new (propsjson?: object, children?: any[]): HTMLElement;
+  new (propsjson?: object, children?: any[], options?: any): HTMLElement;
   prototype: HTMLElement;
 }
 import { isReactiveState } from "./primitivestate";

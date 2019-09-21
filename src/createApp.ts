@@ -1,10 +1,15 @@
+import ReactiveState from "./primitivestate";
 import document from "./dom";
 import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";
 import mount from "./mount";
 export default function createApp(
-  vdom: Virtualdom | string | Array<Virtualdom | string>,
+  vdom:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState,
   container: HTMLElement | Element
 ): HTMLElement | Element {
   const el = container;
@@ -23,7 +28,7 @@ export default function createApp(
   ) {
     throw Error("Do not mount  to <html> or <body> <head>.");
   }
-  let elesarray: Array<string | Virtualdom>;
+  let elesarray: Array<any>;
   if (Array.isArray(vdom)) {
     elesarray = vdom;
   } else {

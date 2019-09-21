@@ -7,7 +7,7 @@ import { Class } from "./rendervdomtoreal";
 export default class Virtualdom {
   options: any = undefined;
   element: undefined | Element = undefined;
-  type: string | Function | undefined | Class;
+  type: string | Function | Class;
   props: { [key: string]: string | object } = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
   directives: object = {};
