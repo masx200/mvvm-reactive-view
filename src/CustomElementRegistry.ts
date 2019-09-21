@@ -6,7 +6,7 @@ function 使用value从表中查询key(表: object, 组件状态名: any) {
   })[0];
 }
 
-import { get, getPrototypeOf } from "./reflect";
+import { get, getPrototypeOf, has } from "./reflect";
 interface ElementDefinitionOptions {
   extends?: string;
 }
@@ -69,17 +69,27 @@ customElements.define = function(
   options?: ElementDefinitionOptions
 ): void {
   if (!isclassextendsHTMLElement(constructor)) {
+    console.error(constructor);
     throw TypeError("invalid custom element class !");
   }
-
-  CustomElementRegistry.prototype.define.call(
-    customElements,
-    name,
-    constructor,
-    options
-  );
-  customElements[elementset].add(constructor);
-  customElements[elementmap][name] = constructor;
+  if (!customElements[elementset].has(constructor)) {
+    if (has(customElements[elementmap], name)) {
+      /* 防止定义重名 */
+      RandomDefineCustomElement(
+        constructor,
+        options ? options.extends : undefined
+      );
+    } else {
+      CustomElementRegistry.prototype.define.call(
+        customElements,
+        name,
+        constructor,
+        options
+      );
+      customElements[elementset].add(constructor);
+      customElements[elementmap][name] = constructor;
+    }
+  }
 };
 
 customElements[Symbol.iterator] = () => {

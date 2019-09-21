@@ -7,7 +7,7 @@ import {
   set
 } from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
-import { isobject } from "./util";
+import { isobject, isSet } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, {
   dispatchsymbol,
@@ -82,11 +82,28 @@ export default function createstate(
         if (has(target, key)) {
           return get(target, key);
         } else if (has(value, key)) {
-          /*  */
+          if (isSet(value) && (key === "add" || key === "delete")) {
+            const myvalue = value;
+            if (key === "add") {
+              return (add: any) => {
+                const returnvalue = Set.prototype[key].call(myvalue, add);
+                target[dispatchsymbol]();
+                return returnvalue;
+              };
+            } else if (key === "delete") {
+              return (dele: any) => {
+                const returnvalue = Set.prototype[key].call(myvalue, dele);
+                target[dispatchsymbol]();
+                return returnvalue;
+              };
+            }
+          } else {
+            return deepobserve(get(value, key), () => {
+              target[dispatchsymbol](key);
+            });
+          }
 
-          return deepobserve(get(value, key), () => {
-            target[dispatchsymbol](key);
-          });
+          /*  */
         }
       },
       ownKeys(target) {

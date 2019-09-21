@@ -38,6 +38,10 @@ function gettagtype(a) {
     return {}.toString.call(a).replace("[object ", "").replace("]", "").toLowerCase();
 }
 
+function isSet(a) {
+    return a instanceof Set;
+}
+
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
@@ -334,11 +338,18 @@ if (!customElements$1[elementmap]) {
 
 customElements$1.define = function(name, constructor, options) {
     if (!isclassextendsHTMLElement(constructor)) {
+        console.error(constructor);
         throw TypeError("invalid custom element class !");
     }
-    CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
-    customElements$1[elementset].add(constructor);
-    customElements$1[elementmap][name] = constructor;
+    if (!customElements$1[elementset].has(constructor)) {
+        if (has(customElements$1[elementmap], name)) {
+            RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
+        } else {
+            CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
+            customElements$1[elementset].add(constructor);
+            customElements$1[elementmap][name] = constructor;
+        }
+    }
 };
 
 customElements$1[Symbol.iterator] = () => {
@@ -530,6 +541,14 @@ function isstring$1(a) {
     return typeof a === "string";
 }
 
+function isArray(a) {
+    return Array.isArray(a);
+}
+
+function isSet$1(a) {
+    return a instanceof Set;
+}
+
 function objtostylestring(o) {
     return Object.entries(o).map(([key, value]) => key + ":" + value).join(";");
 }
@@ -575,13 +594,26 @@ function createeleattragentreadwrite(ele) {
             } else if (key === "style") {
                 setattribute(ele, String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
                 return true;
-            } else {
-                if (v === true) {
-                    v = "";
+            } else if (key === "class" && isobject$1(v)) {
+                if (isArray(v)) {
+                    setattribute(ele, String(key), v.join(" "));
+                } else if (isSet$1(v)) {
+                    setattribute(ele, String(key), [ ...v ].join(" "));
+                } else {
+                    setattribute(ele, String(key), JSON.stringify(v));
                 }
-                setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
-                return true;
+            } else {
+                if (isSet$1(v)) {
+                    setattribute(ele, String(key), JSON.stringify([ ...v ]));
+                } else {
+                    if (v === true) {
+                        v = "";
+                    }
+                    setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
+                    return true;
+                }
             }
+            return true;
         },
         deleteProperty(t, k) {
             removeAttribute$1(ele, String(k));
@@ -949,9 +981,26 @@ function createstate(init) {
                 if (has(target, key)) {
                     return get(target, key);
                 } else if (has(value, key)) {
-                    return observedeepagent(get(value, key), () => {
-                        target[dispatchsymbol](key);
-                    });
+                    if (isSet(value) && (key === "add" || key === "delete")) {
+                        const myvalue = value;
+                        if (key === "add") {
+                            return add => {
+                                const returnvalue = Set.prototype[key].call(myvalue, add);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            };
+                        } else if (key === "delete") {
+                            return dele => {
+                                const returnvalue = Set.prototype[key].call(myvalue, dele);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            };
+                        }
+                    } else {
+                        return observedeepagent(get(value, key), () => {
+                            target[dispatchsymbol](key);
+                        });
+                    }
                 }
             },
             ownKeys(target) {

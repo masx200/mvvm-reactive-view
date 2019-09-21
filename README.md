@@ -187,6 +187,24 @@ document.body.appendChild(
 );
 ```
 
+# 支持使用给元素的 class 属性赋值 Set 类型,自动转成 classnames
+
+```js
+const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
+html`
+  <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
+  <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
+    ${objstatearray}
+  </div>
+  ${objstate}
+  <div style=${stylestate} class=${classsetstate} />
+`;
+
+setTimeout(() => {
+  classsetstate.add("vvvvvvvvvvv");
+}, 5000);
+```
+
 # 属性单向绑定
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化

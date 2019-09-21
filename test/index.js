@@ -28,7 +28,7 @@ console.log([
 // console.log(createElement(Fragment));
 (() => {
   var mystate = createState(true);
-//   watch(mystate, console.log);
+  //   watch(mystate, console.log);
   console.log("mystatetest", mystate);
   var vdom = condition(
     mystate,
@@ -49,12 +49,15 @@ console.log([
   document.body.appendChild(
     createApp([vdom, vdom2, vdom3], document.createElement("div"))
   );
-  setInterval(() => {
+  var timer = setInterval(() => {
     mystate.value = !mystate.value;
     // setInterval(() => {
     //   mystate.value = true;
     // }, 1500);
   }, 2500);
+  setTimeout(() => {
+    clearInterval(timer);
+  }, 10000);
 })();
 (() => {
   const inputpassword = createState("");
@@ -580,10 +583,21 @@ console.log([
     "test"
   ]);
   const stylestate = createState({ display: "block", width: "100%" });
+  const classsetstate = createState(
+    new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"])
+  );
+  console.log("classsetstate", classsetstate);
+  watch(classsetstate,console.log)
+  setTimeout(() => {
+    classsetstate.add("vvvvvvvvvvv");
+  }, 5000);
   const vdomobj = html`
     <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
-    <div style=${stylestate}>${objstatearray}</div>
+    <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
+      ${objstatearray}
+    </div>
     ${objstate}
+    <div style=${stylestate} class=${classsetstate} />
   `;
   document.body.appendChild(createApp(vdomobj, document.createElement("div")));
   console.log(vdomobj);
@@ -667,3 +681,11 @@ console.log(
 );
 */
 console.log(customElements, [...customElements]);
+customElements.define(
+  "qqqqqqqqqq-----a",
+  class Bqqqqqqqqq extends HTMLElement {}
+);
+customElements.define(
+  "qqqqqqqqqq-----a",
+  class Aqqqqqqqqq extends HTMLElement {}
+);
