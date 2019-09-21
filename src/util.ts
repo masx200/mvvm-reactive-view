@@ -42,3 +42,6 @@ export function ispromise(a: any): a is Promise<any> {
     gettagtype(a) === "promise" && isFunction(get(a, "then")) && has(a, "catch")
   );
 }
+export function isSet(a: any): a is Set<any> {
+  return a instanceof Set;
+}
