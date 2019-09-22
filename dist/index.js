@@ -1073,7 +1073,7 @@ function htm(t) {
 function createElement(type = "", props = {}, ...children) {
     let typenormalized = isstring(type) || isfunction(type) ? type : "";
     const propsnormalized = isobject(props) ? props : {};
-    const childrennormalized = children.flat(1);
+    const childrennormalized = children.flat(Infinity);
     if (isstring(typenormalized)) {
         typenormalized = typenormalized.trim().toLowerCase();
     }
