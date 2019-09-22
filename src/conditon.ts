@@ -1,3 +1,5 @@
+import { readysymbol } from "./readysymbol";
+// import { readysymbol } from "./createComponent";
 export const invalid_ReactiveState = "invalid ReactiveState";
 import { get } from "./reflect";
 import render from "./rendervdomtoreal";
@@ -20,6 +22,7 @@ import createApp, { invalid_Virtualdom } from "./createApp";
 import { setelehtml } from "./dom";
 import { isvalidvdom } from "./html";
 class Condition extends AttrChange {
+  [readysymbol] = false;
   constructor(propsjson?: object, children?: any[], options: object = {}) {
     super();
     // if(){}
@@ -73,16 +76,21 @@ class Condition extends AttrChange {
     }
   }
   connectedCallback() {
-    const attrs = createeleattr(this);
-    // console.log(attrs);
-    if (true === attrs["value"]) {
-      this[handletrue]();
-    }
-    if (false === attrs["value"]) {
-      this[handlefalse]();
-      //
-    }
+    if (!this[readysymbol]) {
+      // createApp(this[elementsymbol], this);
+      this[readysymbol] = true;
 
+      const attrs = createeleattr(this);
+      // console.log(attrs);
+      if (true === attrs["value"]) {
+        this[handletrue]();
+      }
+      if (false === attrs["value"]) {
+        this[handlefalse]();
+        //
+      }
+    }
+    onmounted(this);
     //
   }
   disconnectedCallback() {
@@ -90,21 +98,23 @@ class Condition extends AttrChange {
   }
 
   attributeChangedCallback(name: string /* , oldValue: any, newValue: any */) {
-    // console.log(name, oldValue, newValue);
-    if (name === "value") {
-      const attrs = createeleattr(this);
-      //   console.log(attrs);
-      if (true === attrs["value"]) {
-        this[handletrue]();
-        //
+    if (this[readysymbol]) {
+      // console.log(name, oldValue, newValue);
+      if (name === "value") {
+        const attrs = createeleattr(this);
+        //   console.log(attrs);
+        if (true === attrs["value"]) {
+          this[handletrue]();
+          //
+        }
+        if (false === attrs["value"]) {
+          this[handlefalse]();
+          //
+        }
       }
-      if (false === attrs["value"]) {
-        this[handlefalse]();
-        //
-      }
-    }
 
-    //
+      //
+    }
   }
 }
 export default function(

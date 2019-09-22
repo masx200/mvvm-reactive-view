@@ -1,3 +1,4 @@
+import { readysymbol } from "./readysymbol";
 import render from "./rendervdomtoreal";
 import readonlyproxy from "./readonlyproxy";
 import ReactiveState /* , { dispatchsymbol } */ from "./primitivestate";
@@ -7,7 +8,7 @@ const elementsymbol = Symbol("element");
 const vdomsymbol = Symbol("componentinnervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
-const readysymbol = Symbol("ready");
+
 import { AttrChange } from "./attrchange";
 import {
   openctx,
@@ -34,7 +35,7 @@ import createApp, { invalid_Virtualdom } from "./createApp";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
     const defaultProps = custfun["defaultProps"];
-    return class extends AttrChange {
+    return class Component extends AttrChange {
       [readysymbol] = false;
       [mountedsymbol]: Array<Function>;
       [unmountedsymbol]: Array<Function>;

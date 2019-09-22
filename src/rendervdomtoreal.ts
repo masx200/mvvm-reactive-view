@@ -24,7 +24,7 @@ function throwinvalideletype(type) {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
-import { isobject, isArray } from "./util";
+import { isobject, isArray, isfunction, isstring } from "./util";
 import Virtualdom from "./virtualdom";
 export default function render(
   vdom: Array<Virtualdom | string | ReactiveState>,
@@ -120,7 +120,18 @@ export default function render(
     handleprops(element, vdom);
 
     /* 自定义组件不添加children,而是从构造函数传入 */
-    if (typeof type !== "function") {
+    /* web components也可以设置 childnodes,比如说slot */
+    /* https://webkit.org/blog/4096/introducing-shadow-dom-api/ */
+    /*  */
+    /* https://developer.mozilla.org/zh-CN/docs/Web/API/Element/slot */
+    if (
+      (type && isfunction(type)) ||
+      isstring(type)
+      // /
+      //   /
+
+      /* typeof type !== "function" */
+    ) {
       mount(
         vdom.children.map(e => {
           if (type === "svg") {

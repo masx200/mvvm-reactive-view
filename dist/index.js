@@ -104,6 +104,8 @@ function closectx() {
     clearUnMounted();
 }
 
+const readysymbol = Symbol("ready");
+
 const document = window.document;
 
 function seteletext(e, v) {
@@ -698,6 +700,8 @@ function isNodeArray(array) {
     return isarray(array) && !array.map(e => e instanceof Node).includes(false);
 }
 
+var _a$1;
+
 const invalid_ReactiveState = "invalid ReactiveState";
 
 const truevdomsymbol = Symbol("truevdom");
@@ -715,12 +719,13 @@ const handlefalse = getsymbol("handlefalse");
 class Condition extends AttrChange {
     constructor(propsjson, children, options = {}) {
         super();
+        this[_a$1] = false;
         const optionstrue = get(options, "true");
         const optionsfalse = get(options, "false");
         this[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
         this[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
     }
-    [handlefalse]() {
+    [(_a$1 = readysymbol, handlefalse)]() {
         setelehtml(this, "");
         if (this[falsevdomsymbol]) {
             if (!this[falseelesymbol]) {
@@ -749,25 +754,31 @@ class Condition extends AttrChange {
         }
     }
     connectedCallback() {
-        const attrs = createeleattragentreadwrite(this);
-        if (true === attrs["value"]) {
-            this[handletrue]();
-        }
-        if (false === attrs["value"]) {
-            this[handlefalse]();
-        }
-    }
-    disconnectedCallback() {
-        onunmounted(this);
-    }
-    attributeChangedCallback(name) {
-        if (name === "value") {
+        if (!this[readysymbol]) {
+            this[readysymbol] = true;
             const attrs = createeleattragentreadwrite(this);
             if (true === attrs["value"]) {
                 this[handletrue]();
             }
             if (false === attrs["value"]) {
                 this[handlefalse]();
+            }
+        }
+        onmounted(this);
+    }
+    disconnectedCallback() {
+        onunmounted(this);
+    }
+    attributeChangedCallback(name) {
+        if (this[readysymbol]) {
+            if (name === "value") {
+                const attrs = createeleattragentreadwrite(this);
+                if (true === attrs["value"]) {
+                    this[handletrue]();
+                }
+                if (false === attrs["value"]) {
+                    this[handlefalse]();
+                }
             }
         }
     }
@@ -975,7 +986,7 @@ function render(vdom, namespace) {
             throwinvalideletype(vdom);
         }
         handleprops(element, vdom);
-        if (typeof type !== "function") {
+        if (type && isfunction(type) || isstring(type)) {
             mount(vdom.children.map(e => {
                 if (type === "svg") {
                     return render(e, svgnamespace);
@@ -1262,13 +1273,11 @@ const mountedsymbol = Symbol("mounted");
 
 const unmountedsymbol = Symbol("unmounted");
 
-const readysymbol = Symbol("ready");
-
 function createComponent(custfun) {
     var _a, _b, _c;
     if (isfunction(custfun)) {
         const defaultProps = custfun["defaultProps"];
-        return _c = class extends AttrChange {
+        return _c = class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_a] = false;
