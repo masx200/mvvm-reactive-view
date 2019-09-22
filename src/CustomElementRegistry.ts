@@ -1,3 +1,14 @@
+import { isobject } from "./util";
+if (
+  //   typeof Proxy !== "function" ||
+  !isobject(window.customElements) //||
+  //   typeof customElements !== "object" ||
+
+  //||
+  //   typeof CustomElementRegistry !== "function"
+) {
+  throw new TypeError(" customElements  not supported !");
+}
 import { isclassextendsHTMLElement } from "./customelement";
 
 function 使用value从表中查询key(表: object, 组件状态名: any) {

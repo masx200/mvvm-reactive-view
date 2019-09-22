@@ -56,6 +56,10 @@ function createcostumelemet(initclass, propsjson, children, options) {
     }
 }
 
+if (!isobject(window.customElements)) {
+    throw new TypeError(" customElements  not supported !");
+}
+
 function 使用value从表中查询key(表, 组件状态名) {
     return Object.entries(表).find(v => {
         return v[1] === 组件状态名;
@@ -64,7 +68,7 @@ function 使用value从表中查询key(表, 组件状态名) {
 
 window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
 
-const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
+const {customElements: customElements, CustomElementRegistry: CustomElementRegistry} = window;
 
 const elementset = Symbol.for("elementset");
 
@@ -76,51 +80,51 @@ function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
     if (!isclassextendsHTMLElement(initclass)) {
         throw TypeError("invalid custom element class !");
     }
-    if (!customElements$1[elementset].has(initclass)) {
+    if (!customElements[elementset].has(initclass)) {
         const elementname = getrandomstringandnumber(length);
-        if (customElements$1.get(elementname)) {
+        if (customElements.get(elementname)) {
             return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
         } else {
             if (extendsname) {
-                customElements$1.define(elementname, initclass, {
+                customElements.define(elementname, initclass, {
                     extends: extendsname
                 });
             } else {
-                customElements$1.define(elementname, initclass);
+                customElements.define(elementname, initclass);
             }
         }
         return elementname;
     } else {
-        return 使用value从表中查询key(customElements$1[elementmap], initclass);
+        return 使用value从表中查询key(customElements[elementmap], initclass);
     }
 }
 
-if (!customElements$1[elementset]) {
-    customElements$1[elementset] = new Set;
+if (!customElements[elementset]) {
+    customElements[elementset] = new Set;
 }
 
-if (!customElements$1[elementmap]) {
-    customElements$1[elementmap] = {};
+if (!customElements[elementmap]) {
+    customElements[elementmap] = {};
 }
 
-customElements$1.define = function(name, constructor, options) {
+customElements.define = function(name, constructor, options) {
     if (!isclassextendsHTMLElement(constructor)) {
         console.error(constructor);
         throw TypeError("invalid custom element class !");
     }
-    if (!customElements$1[elementset].has(constructor)) {
-        if (has(customElements$1[elementmap], name)) {
+    if (!customElements[elementset].has(constructor)) {
+        if (has(customElements[elementmap], name)) {
             RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
         } else {
-            CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
-            customElements$1[elementset].add(constructor);
-            customElements$1[elementmap][name] = constructor;
+            CustomElementRegistry.prototype.define.call(customElements, name, constructor, options);
+            customElements[elementset].add(constructor);
+            customElements[elementmap][name] = constructor;
         }
     }
 };
 
-customElements$1[Symbol.iterator] = () => {
-    const entries = Object.entries(customElements$1[elementmap]);
+customElements[Symbol.iterator] = () => {
+    const entries = Object.entries(customElements[elementmap]);
     return entries[Symbol.iterator].call(entries);
 };
 
@@ -1189,7 +1193,7 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
-if (!isfunction(HTMLElement) || !isfunction(Proxy) || !isobject(customElements) || !isfunction(CustomElementRegistry)) {
+if (!isfunction(window.HTMLElement) || !isfunction(window.Proxy) || !isobject(window.customElements) || !isfunction(window.CustomElementRegistry)) {
     throw new TypeError(" browser not supported !");
 }
 

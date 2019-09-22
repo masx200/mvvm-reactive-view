@@ -1,13 +1,13 @@
 import "./CustomElementRegistry";
 import { isobject, isfunction } from "./util";
 if (
-  !isfunction(HTMLElement) ||
+  !isfunction(window.HTMLElement) ||
   //   typeof HTMLElement !== "function" ||
-  !isfunction(Proxy) ||
+  !isfunction(window.Proxy) ||
   //   typeof Proxy !== "function" ||
-  !isobject(customElements) ||
+  !isobject(window.customElements) ||
   //   typeof customElements !== "object" ||
-  !isfunction(CustomElementRegistry)
+  !isfunction(window.CustomElementRegistry)
   //||
   //   typeof CustomElementRegistry !== "function"
 ) {
