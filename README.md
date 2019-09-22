@@ -125,7 +125,7 @@ import {
   createRef,
   createElement,
   createState
-} from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js";
+} from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
 const inputref = createRef();
 const state1 = createState("hello");
 const stylestate = createState({ display: "block", width: "700px" });
