@@ -18,7 +18,7 @@ import createApp from "./createApp";
 import { setelehtml } from "./dom";
 import { isvalidvdom } from "./html";
 class Condition extends AttrChange {
-  constructor(propsjson?: object, children?: any[], options: any = {}) {
+  constructor(propsjson?: object, children?: any[], options: object = {}) {
     super();
     // if(){}
     this[truevdomsymbol] = isarray(options.true)
