@@ -39,7 +39,7 @@ function gettagtype(a) {
 }
 
 function isSet(a) {
-    return a instanceof Set;
+    return gettagtype(a) === "set" && a instanceof Set;
 }
 
 function isprimitive(a) {
@@ -95,18 +95,22 @@ class ReactiveState {
     }
     toString() {
         const value = this.value;
-        return isprimitive(value) ? String(value) : isobject(value) ? JSON.stringify(value) : "";
+        return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
     [(_a = textnodesymbol, _b = eventtargetsymbol, _c = memlisteners, dispatchsymbol)](eventname) {
         const name = eventname ? String(eventname) : "value";
         if (name !== "value") {
-            this[eventtargetsymbol].dispatchEvent(new Event(name));
+            this[eventtargetsymbol].dispatchEvent(new CustomEvent(name, {
+                detail: name
+            }));
         }
-        this[eventtargetsymbol].dispatchEvent(new Event("value"));
+        this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
+            detail: name
+        }));
     }
     [subscribesymbol](callback, eventname) {
         const name = eventname ? String(eventname) : "value";
-        this[memlisteners].push([ name, () => callback(this) ]);
+        this[memlisteners].push([ name, event => callback(this, event.detail) ]);
     }
     [removeallistenerssymbol]() {
         this[memlisteners].forEach(([value, callback]) => {
@@ -985,15 +989,19 @@ function createstate(init) {
                         const myvalue = value;
                         if (key === "add") {
                             return add => {
-                                const returnvalue = Set.prototype[key].call(myvalue, add);
-                                target[dispatchsymbol]();
-                                return returnvalue;
+                                if (!Set.prototype.has.call(myvalue, add)) {
+                                    const returnvalue = Set.prototype[key].call(myvalue, add);
+                                    target[dispatchsymbol]();
+                                    return returnvalue;
+                                }
                             };
                         } else if (key === "delete") {
                             return dele => {
-                                const returnvalue = Set.prototype[key].call(myvalue, dele);
-                                target[dispatchsymbol]();
-                                return returnvalue;
+                                if (Set.prototype.has.call(myvalue, dele)) {
+                                    const returnvalue = Set.prototype[key].call(myvalue, dele);
+                                    target[dispatchsymbol]();
+                                    return returnvalue;
+                                }
                             };
                         }
                     } else {

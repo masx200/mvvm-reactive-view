@@ -86,15 +86,19 @@ export default function createstate(
             const myvalue = value;
             if (key === "add") {
               return (add: any) => {
-                const returnvalue = Set.prototype[key].call(myvalue, add);
-                target[dispatchsymbol]();
-                return returnvalue;
+                if (!Set.prototype.has.call(myvalue, add)) {
+                  const returnvalue = Set.prototype[key].call(myvalue, add);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
               };
             } else if (key === "delete") {
               return (dele: any) => {
-                const returnvalue = Set.prototype[key].call(myvalue, dele);
-                target[dispatchsymbol]();
-                return returnvalue;
+                if (Set.prototype.has.call(myvalue, dele)) {
+                  const returnvalue = Set.prototype[key].call(myvalue, dele);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
               };
             }
           } else {

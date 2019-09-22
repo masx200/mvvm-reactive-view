@@ -43,5 +43,5 @@ export function ispromise(a: any): a is Promise<any> {
   );
 }
 export function isSet(a: any): a is Set<any> {
-  return a instanceof Set;
+  return gettagtype(a) === "set" && a instanceof Set;
 }

@@ -2,7 +2,7 @@ export function isReactiveState(a: any): a is ReactiveState {
   return a instanceof ReactiveState;
 }
 // import Reflect from "./reflect";
-import { getsymbol, isobject } from "./util";
+import { getsymbol, isobject, isSet } from "./util";
 export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
 import isprimitive from "./isprimitive";
@@ -61,6 +61,8 @@ export default class ReactiveState /* extends forkarray  */ {
     const value = this.value;
     return isprimitive(value)
       ? String(value)
+      : isSet(value)
+      ? JSON.stringify([...value])
       : isobject(value)
       ? JSON.stringify(value)
       : "";
@@ -68,15 +70,22 @@ export default class ReactiveState /* extends forkarray  */ {
   [dispatchsymbol](eventname?: string) {
     const name = eventname ? String(eventname) : "value";
     if (name !== "value") {
-      this[eventtargetsymbol].dispatchEvent(new Event(name));
+      this[eventtargetsymbol].dispatchEvent(
+        new CustomEvent(name, { detail: name })
+      );
     }
 
-    this[eventtargetsymbol].dispatchEvent(new Event("value"));
+    this[eventtargetsymbol].dispatchEvent(
+      new CustomEvent("value", { detail: name })
+    );
   }
   [subscribesymbol](callback: Function, eventname?: string) {
     // this[eventtargetsymbol].addEventListener("value", callback);
     const name = eventname ? String(eventname) : "value";
-    this[memlisteners].push([name, () => callback(this)]);
+    this[memlisteners].push([
+      name,
+      (event: { detail: any }) => callback(this, event.detail)
+    ]);
   }
   [removeallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
