@@ -8,7 +8,7 @@ import RandomDefineCustomElement from "./CustomElementRegistry";
 import { isfunction } from "./util";
 export function isclassextendsHTMLElement(initclass: {
   prototype: any;
-}): boolean {
+}): initclass is Class {
   return !!(
     isfunction(initclass) &&
     initclass.prototype &&

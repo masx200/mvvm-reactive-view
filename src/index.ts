@@ -1,18 +1,11 @@
+import { useMounted, useUnMounted } from "./context-mounted-unmounted-";
+export { useMounted, useUnMounted };
+import { createComponent } from "./createComponent";
 import "./CustomElementRegistry";
-import { isobject, isfunction } from "./util";
-if (
-  !isfunction(window.HTMLElement) ||
-  //   typeof HTMLElement !== "function" ||
-  !isfunction(window.Proxy) ||
-  //   typeof Proxy !== "function" ||
-  !isobject(window.customElements) ||
-  //   typeof customElements !== "object" ||
-  !isfunction(window.CustomElementRegistry)
-  //||
-  //   typeof CustomElementRegistry !== "function"
-) {
-  throw new TypeError(" browser not supported !");
-}
+export { createComponent };
+// import { isobject, isfunction } from "./util";
+
+import "./assetbrowser";
 
 //请自行使用babel-preset-env和core-js 3
 //import "./Object-fromEntries";

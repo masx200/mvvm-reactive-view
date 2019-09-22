@@ -14,6 +14,9 @@ export default function createApp(
     | ReactiveState,
   container: HTMLElement | Element
 ): HTMLElement | Element {
+  if (isArray(vdom)) {
+    vdom = vdom.flat(Infinity);
+  }
   const el = container;
   if (
     !(

@@ -15,8 +15,8 @@ import ReactiveState, {
   isReactiveState
 } from "./primitivestate";
 export default function createstate(
-  init: string | number | boolean | undefined | ReactiveState | object
-): object {
+  init: string | number | boolean | undefined | ReactiveState | object | any
+): object | ReactiveState {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
       defineProperty() {

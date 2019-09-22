@@ -28,6 +28,9 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+  createComponent,
+  useMounted,
+  useUnMounted,
   condition,
   Fragment,
   directives,
@@ -54,6 +57,54 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 ```
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
+
+# 快速上手,可在浏览器中运行而不需要编译工具
+
+`index.js`
+
+```js
+import {
+  createComponent,
+  useMounted,
+  useUnMounted,
+  condition,
+  directives,
+  watch,
+  html,
+  h,
+  createApp,
+  createRef,
+  createElement,
+  createState
+} from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
+const inputref = createRef();
+const state1 = createState("hello");
+const stylestate = createState({ display: "block", width: "700px" });
+const vdom = html`
+  <div style=${{ display: "block", width: "500px" }}>hello world!</div>
+  <input
+    style="width:800px"
+    @input=${e => (state1.value = e.target.value)}
+    *ref=${inputref}
+    @change=${e => (state1.value = e.target.value)}
+    id="code16"
+    class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
+    value=${state1}
+  />
+  <h1 style=${stylestate}>mvvm-reactive-view</h1>
+`;
+watch(state1, console.log);
+console.log(vdom, inputref);
+createApp(vdom, document.getElementById("root"));
+```
+
+`index.html`
+
+```html
+<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
+<div id="root"></div>
+<script type="module" src="./index.js"></script>
+```
 
 # 支持`jsx`和使用 `hyperscript`
 
@@ -108,51 +159,6 @@ https://tc39.es/proposal-flatMap/
     ]
   ]
 }
-```
-
-# 快速上手,可在浏览器中运行而不需要编译工具
-
-`index.js`
-
-```js
-import {
-  condition,
-  directives,
-  watch,
-  html,
-  h,
-  createApp,
-  createRef,
-  createElement,
-  createState
-} from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
-const inputref = createRef();
-const state1 = createState("hello");
-const stylestate = createState({ display: "block", width: "700px" });
-const vdom = html`
-  <div style=${{ display: "block", width: "500px" }}>hello world!</div>
-  <input
-    style="width:800px"
-    @input=${e => (state1.value = e.target.value)}
-    *ref=${inputref}
-    @change=${e => (state1.value = e.target.value)}
-    id="code16"
-    class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
-    value=${state1}
-  />
-  <h1 style=${stylestate}>mvvm-reactive-view</h1>
-`;
-watch(state1, console.log);
-console.log(vdom, inputref);
-createApp(vdom, document.getElementById("root"));
-```
-
-`index.html`
-
-```html
-<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
-<div id="root"></div>
-<script type="module" src="./index.js"></script>
 ```
 
 # 使用 webcomponents
@@ -286,7 +292,111 @@ const vdomobj = html`
 `;
 ```
 
+# 条件渲染
+
+```ts
+function condition(
+  conditon: ReactiveState,
+  iftrue:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState,
+  iffalse?:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState
+): Virtualdom;
+```
+
+```js
+var mystate = createState(true);
+var vdom = condition(
+  mystate,
+  "testtrue",
+  createElement("div", undefined, "testfalese")
+);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+setTimeout(() => {
+  mystate.value = false;
+}, 3000);
+```
+
+# 组件化
+
+在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`等函数
+
+使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
+可以给组件设置默认属性,设置`defaultProps`即可
+
+组件初始化函数需要返回一个`虚拟DOM`
+
+最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
+
+```js
+var mycom = (props, children) => {
+  useMounted(() => {
+    console.log("mounted1");
+  });
+  useMounted(() => {
+    console.log("mounted2", props);
+  });
+  useUnMounted(() => {
+    console.log("unmounted");
+  });
+  watch(props.cccccc, console.log);
+  return [
+    "wwwwwwwwwwww",
+    createElement("div", null, ["createComponent"]),
+    children,
+    createElement("div", null, [props.cccccc])
+  ];
+};
+mycom.defaultProps = { cccccc: "bbbbbbb" };
+const myclasscomponent = createComponent(mycom);
+const vdom = createElement(
+  myclasscomponent,
+  {
+    aaaaaa: 222222222,
+    tttttt: "dddddddddd"
+  },
+  ["children"]
+);
+console.log(vdom);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+setTimeout(() => {
+  vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
+}, 5000);
+```
+
 # API
+
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数
+
+```ts
+function createComponent(custfun: Custom): Class;
+interface Custom {
+  (props?: object, children?: Array<any>):
+    | Virtualdom
+    | string
+    | ReactiveState
+    | Array<Virtualdom | ReactiveState | string>;
+}
+interface Class {
+  new (propsjson?: object, children?: any[], options?: any): HTMLElement;
+  prototype: HTMLElement;
+}
+```
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
+```ts
+function useMounted(fun: Function): void;
+
+function useUnMounted(fun: Function): void;
+```
 
 ## 使用`directives`函数来扩展指令
 
@@ -372,41 +482,6 @@ function watch(state: ReactiveState, callback: Function): void;
 # 懒加载
 
 尚在开发中
-
-# 组件化
-
-尚在开发中
-
-# 条件渲染
-
-```ts
-function condition(
-  conditon: ReactiveState,
-  iftrue:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState,
-  iffalse?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState
-): Virtualdom;
-```
-
-```js
-var mystate = createState(true);
-var vdom = condition(
-  mystate,
-  "testtrue",
-  createElement("div", undefined, "testfalese")
-);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
-setTimeout(() => {
-  mystate.value = false;
-}, 3000);
-```
 
 # 列表渲染
 

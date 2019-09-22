@@ -75,11 +75,12 @@ export function getdomchildren(ele: Element | Node) {
   return Array.from(ele.childNodes);
 }
 export function getAttribute(ele: Element, name: string) {
-  return HTMLElement.prototype.getAttribute.call(ele, name);
+  return HTMLElementprototype.getAttribute.call(ele, name);
 }
 export function setAttribute(ele: Element, name: string, value: any) {
-  HTMLElement.prototype.setAttribute.call(ele, name, value);
+  HTMLElementprototype.setAttribute.call(ele, name, value);
 }
 export function removeAttribute(ele: Element, name: string) {
-  HTMLElement.prototype.removeAttribute.call(ele, name);
+  HTMLElementprototype.removeAttribute.call(ele, name);
 }
+const HTMLElementprototype = HTMLElement.prototype;

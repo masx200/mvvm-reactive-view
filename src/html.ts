@@ -1,3 +1,5 @@
+import Virtualdom from "./virtualdom";
+import ReactiveState from "./primitivestate";
 import { isReactiveState } from "./primitivestate";
 import { isstring, isArray } from "./util";
 import { isVirtualdom } from "./virtualdom";
@@ -7,7 +9,13 @@ import h from "./createelement";
 const html = htm.bind(h);
 
 /* 如果出现未闭合标签会产生错误的vdom */
-export function isvalidvdom(v: any) {
+export function isvalidvdom(
+  v: any
+): v is
+  | string
+  | Virtualdom
+  | ReactiveState
+  | (string | Virtualdom | ReactiveState)[] {
   let flag = false;
   if (isArray(v)) {
     flag = v
