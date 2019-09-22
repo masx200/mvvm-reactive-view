@@ -1187,14 +1187,18 @@ function createComponent(custfun) {
                     closectx();
                     throw error;
                 }
+                if (isarray(possiblyvirtualdom)) {
+                    possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
+                }
                 if (isvalidvdom(possiblyvirtualdom)) {
                     this[vdomsymbol] = isarray(possiblyvirtualdom) ? possiblyvirtualdom : [ possiblyvirtualdom ];
-                    this[vdomsymbol] = this[vdomsymbol].flat(Infinity);
+                    this[vdomsymbol] = this[vdomsymbol].flat(Infinity).filter(Boolean);
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
                     closectx();
                 } else {
                     closectx();
+                    console.error(possiblyvirtualdom);
                     throw Error("invalid Virtualdom");
                 }
             }
@@ -1275,7 +1279,7 @@ const handletrue = getsymbol("handletrue");
 const handlefalse = getsymbol("handlefalse");
 
 class Condition extends AttrChange {
-    constructor(propsjson, children, options) {
+    constructor(propsjson, children, options = {}) {
         super();
         this[truevdomsymbol] = isarray(options.true) ? options.true.filter(Boolean) : [ options.true ].filter(Boolean);
         this[falsevdomsymbol] = isarray(options.false) ? options.false.filter(Boolean) : [ options.false ].filter(Boolean);

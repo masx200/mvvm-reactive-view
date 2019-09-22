@@ -75,16 +75,22 @@ export function createComponent(custfun: Custom): Class {
           throw error;
         }
 
+        if (isArray(possiblyvirtualdom)) {
+          possiblyvirtualdom = possiblyvirtualdom
+            .flat(Infinity)
+            .filter(Boolean);
+        }
         if (isvalidvdom(possiblyvirtualdom)) {
           this[vdomsymbol] = isArray(possiblyvirtualdom)
             ? possiblyvirtualdom
             : [possiblyvirtualdom];
-          this[vdomsymbol] = this[vdomsymbol].flat(Infinity);
+          this[vdomsymbol] = this[vdomsymbol].flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
           closectx();
         } else {
           closectx();
+          console.error(possiblyvirtualdom);
           throw Error("invalid Virtualdom");
         }
 
