@@ -5,6 +5,7 @@ import { isstring, isArray } from "./util";
 import { isVirtualdom } from "./virtualdom";
 import htm from "htm/dist/htm.module.js";
 import h from "./createelement";
+import { invalid_Virtualdom } from "./createApp";
 
 const html = htm.bind(h);
 
@@ -52,7 +53,7 @@ function assertvalidvirtualdom(...args: any[]) {
     return vdom;
   } else {
     console.error(vdom);
-    throw new TypeError("invalid Virtualdom!");
+    throw new TypeError(invalid_Virtualdom);
   }
 }
 export default assertvalidvirtualdom;

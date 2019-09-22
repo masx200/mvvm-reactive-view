@@ -1,3 +1,4 @@
+export const invalid_custom_element_class = "invalid custom element class !";
 import { isobject } from "./util";
 if (
   //   typeof Proxy !== "function" ||
@@ -39,7 +40,7 @@ function RandomDefineCustomElement(
   length = 1
 ): string {
   if (!isclassextendsHTMLElement(initclass)) {
-    throw TypeError("invalid custom element class !");
+    throw TypeError(invalid_custom_element_class);
   }
 
   //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
@@ -81,7 +82,7 @@ customElements.define = function(
 ): void {
   if (!isclassextendsHTMLElement(constructor)) {
     console.error(constructor);
-    throw TypeError("invalid custom element class !");
+    throw TypeError(invalid_custom_element_class);
   }
   if (!customElements[elementset].has(constructor)) {
     if (has(customElements[elementmap], name)) {

@@ -1,3 +1,4 @@
+export const invalid_Virtualdom = "invalid Virtualdom ";
 import ReactiveState from "./primitivestate";
 import document from "./dom";
 import { isvalidvdom } from "./html";
@@ -26,7 +27,7 @@ export default function createApp(
     )
   ) {
     console.error(vdom);
-    throw TypeError("invalid Virtualdom ");
+    throw TypeError(invalid_Virtualdom);
   }
   if (!(el instanceof HTMLElement)) {
     throw TypeError("invalid container HTMLElement!");

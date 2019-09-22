@@ -4,6 +4,8 @@ import ReactiveState, {
 } from "./primitivestate";
 import directives from "./extend-directive";
 import Virtualdom from "./virtualdom";
+import { invalid_ReactiveState } from "./conditon";
+import { invalid_Virtualdom } from "./createApp";
 directives({
   value(element: any, value: ReactiveState, vdom: Virtualdom) {
     if (
@@ -32,7 +34,9 @@ directives({
         );
       });
     } else {
-      throw TypeError("invalid ReactiveState or element");
+      console.error(value);
+      console.error(vdom);
+      throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
     }
   }
 });

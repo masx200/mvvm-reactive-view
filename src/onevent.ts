@@ -1,6 +1,7 @@
+import { invalid_Function } from "./context-mounted-unmounted-";
 import { domaddlisten, domremovelisten } from "./dom";
 export const eventlistenerssymbol = Symbol("eventlisteners");
-import { isArray } from "./util";
+import { isArray, isfunction } from "./util";
 export default function(
   element: Element,
   eventname: string,
@@ -9,12 +10,13 @@ export default function(
   if (!element[eventlistenerssymbol]) {
     element[eventlistenerssymbol] = [];
   }
-  if (typeof callback === "function") {
+  if (isfunction(callback)) {
     firstaddlisteners(element, eventname, [callback]);
   } else if (isArray(callback)) {
     firstaddlisteners(element, eventname, callback);
   } else {
-    throw TypeError("invalid EventListener");
+    console.error(callback);
+    throw TypeError(invalid_Function);
   }
 }
 export function firstaddlisteners(

@@ -6,6 +6,8 @@ import ReactiveState, {
   removeallistenerssymbol,
   addallistenerssymbol
 } from "./primitivestate";
+import { invalid_ReactiveState } from "./conditon";
+import { invalid_Function } from "./context-mounted-unmounted-";
 export function watch(
   state: ReactiveState,
   callback: Function,
@@ -18,7 +20,9 @@ export function watch(
       isFunction(callback)
     )
   ) {
-    throw TypeError("invalid state or callback");
+    console.error(state);
+    console.error(callback);
+    throw TypeError(invalid_ReactiveState + invalid_Function);
   }
 
   if (statekey) {

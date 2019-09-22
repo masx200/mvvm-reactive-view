@@ -1,3 +1,4 @@
+import { invalid_Function } from "./context-mounted-unmounted-";
 import Virtualdom from "./virtualdom";
 interface Extendfun {
   (element: Element, value: any, vdom: Virtualdom): void;
@@ -8,7 +9,7 @@ export default function extenddirectives(options: {
 }): void {
   Object.entries(options).forEach(([key, value]) => {
     if (typeof value !== "function") {
-      throw TypeError("invalid directive");
+      throw TypeError(invalid_Function);
     } else {
       directives[key] = value;
     }

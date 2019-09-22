@@ -1,3 +1,5 @@
+export const invalid_ReactiveState = "invalid ReactiveState";
+import { get } from "./reflect";
 import render from "./rendervdomtoreal";
 import createeleattr from "dom-element-attribute-agent-proxy";
 import { AttrChange } from "./attrchange";
@@ -14,20 +16,22 @@ const handlefalse = getsymbol("handlefalse");
 import { onmounted, onunmounted } from "./elementonmountandunmount";
 // import mount from "./mount";
 import { isarray, getsymbol, isundefined } from "./util";
-import createApp from "./createApp";
+import createApp, { invalid_Virtualdom } from "./createApp";
 import { setelehtml } from "./dom";
 import { isvalidvdom } from "./html";
 class Condition extends AttrChange {
   constructor(propsjson?: object, children?: any[], options: object = {}) {
     super();
     // if(){}
-    this[truevdomsymbol] = isarray(options.true)
-      ? options.true.filter(Boolean)
-      : [options.true].filter(Boolean);
-    this[falsevdomsymbol] = isarray(options.false)
-      ? options.false.filter(Boolean)
-      : [options.false].filter(Boolean);
-    // options.false;
+    const optionstrue = get(options, "true");
+    const optionsfalse = get(options, "false");
+    this[truevdomsymbol] = isarray(optionstrue)
+      ? optionstrue.filter(Boolean)
+      : [optionstrue].filter(Boolean);
+    this[falsevdomsymbol] = isarray(optionsfalse)
+      ? optionsfalse.filter(Boolean)
+      : [optionsfalse].filter(Boolean);
+    // optionsfalse;
   }
   [falseelesymbol]: any[];
   [trueelesymbol]: any[];
@@ -117,11 +121,11 @@ export default function(
     | ReactiveState
 ): Virtualdom {
   if (!isReactiveState(conditon)) {
-    throw TypeError("invalid ReactiveState");
+    throw TypeError(invalid_ReactiveState);
   }
   [iftrue, iffalse].forEach(a => {
     if (!(isundefined(a) || isvalidvdom(a))) {
-      throw new TypeError("invalid Virtualdom");
+      throw new TypeError(invalid_Virtualdom);
     }
   });
   const vdom = new Virtualdom(Condition, { value: conditon });

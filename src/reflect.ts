@@ -2,20 +2,20 @@ const Reflect = window.Reflect;
 export default Reflect;
 
 export const {
-  apply,
+  //   apply,
   construct,
-  defineProperty,
+  //   defineProperty,
   deleteProperty,
   get,
   getOwnPropertyDescriptor,
   getPrototypeOf,
   has,
 
-  isExtensible,
+  //   isExtensible,
   ownKeys,
-  preventExtensions,
-  set,
-  setPrototypeOf
+  //   preventExtensions,
+  set
+  //   setPrototypeOf
 } = Reflect;
 export {};
 /*

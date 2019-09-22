@@ -1,3 +1,5 @@
+import { invalid_custom_element_class } from "./CustomElementRegistry";
+
 //import setlikearray from "./setlikearay";
 
 // const customElementsarray = new Set;
@@ -40,6 +42,6 @@ export function createcostumelemet(
   } else {
     console.error(initclass);
 
-    throw TypeError("invalid custom element class !");
+    throw TypeError(invalid_custom_element_class);
   }
 }

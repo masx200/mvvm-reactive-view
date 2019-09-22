@@ -13,7 +13,8 @@ import {
   openctx,
   closectx,
   getMounted,
-  getUnMounted
+  getUnMounted,
+  invalid_Function
 } from "./context-mounted-unmounted-";
 export interface Custom {
   (props?: object, children?: Array<any>):
@@ -28,19 +29,25 @@ import createeleattragentreadwrite from "dom-element-attribute-agent-proxy";
 import { isobject, isArray, isfunction } from "./util";
 import { onunmounted, onmounted } from "./elementonmountandunmount";
 import { isvalidvdom } from "./html";
-import createApp from "./createApp";
+import createApp, { invalid_Virtualdom } from "./createApp";
 // import { inflate } from "zlib";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
+    const defaultProps = custfun["defaultProps"];
     return class extends AttrChange {
       [readysymbol] = false;
       [mountedsymbol]: Array<Function>;
       [unmountedsymbol]: Array<Function>;
-      static defaultProps = custfun["defaultProps"];
+      static defaultProps = isobject(defaultProps)
+        ? JSON.parse(JSON.stringify(defaultProps))
+        : undefined;
       [attributessymbol]: { [s: string]: ReactiveState } | object = {};
       [elementsymbol]: Array<Node>;
       [vdomsymbol]: Array<Virtualdom | ReactiveState | string>;
-      constructor(propsjson?: object={}, children?: any[]=[] /* , options?: any */) {
+      constructor(
+        propsjson: object = {},
+        children: any[] = [] /* , options?: any */
+      ) {
         super();
         const attrs = createeleattragentreadwrite(this);
         //   const props = {};
@@ -91,7 +98,7 @@ export function createComponent(custfun: Custom): Class {
         } else {
           closectx();
           console.error(possiblyvirtualdom);
-          throw Error("invalid Virtualdom");
+          throw Error(invalid_Virtualdom);
         }
 
         //   this[mountedsymbol] = getMounted();
@@ -127,6 +134,7 @@ export function createComponent(custfun: Custom): Class {
       }
     };
   } else {
-    throw TypeError("invalid component");
+    console.error(custfun);
+    throw TypeError(invalid_Function);
   }
 }

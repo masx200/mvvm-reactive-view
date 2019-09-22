@@ -1,5 +1,5 @@
 import { isFunction } from "./util";
-
+export const invalid_Function = "invalid Function";
 const message = "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
 let Mounted = [];
@@ -18,7 +18,7 @@ export function useMounted(fun: Function) {
       throw Error(message);
     }
   } else {
-    throw TypeError("invalid Function");
+    throw TypeError(invalid_Function);
   }
 }
 
@@ -30,7 +30,7 @@ export function useUnMounted(fun: Function) {
       throw Error(message);
     }
   } else {
-    throw TypeError("invalid Function");
+    throw TypeError(invalid_Function);
   }
 }
 export function clearMounted() {
