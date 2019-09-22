@@ -42,6 +42,100 @@ function isSet(a) {
     return gettagtype(a) === "set" && a instanceof Set;
 }
 
+function isclassextendsHTMLElement(initclass) {
+    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
+}
+
+function createcostumelemet(initclass, propsjson, children, options) {
+    if (isclassextendsHTMLElement(initclass)) {
+        RandomDefineCustomElement(initclass);
+        return construct(initclass, [ propsjson, children, options ]);
+    } else {
+        console.error(initclass);
+        throw TypeError("invalid custom element class !");
+    }
+}
+
+function 使用value从表中查询key(表, 组件状态名) {
+    return Object.entries(表).find(v => {
+        return v[1] === 组件状态名;
+    })[0];
+}
+
+window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
+
+const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
+
+const elementset = Symbol.for("elementset");
+
+const elementmap = Symbol.for("elementmap");
+
+var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
+
+function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
+    if (!isclassextendsHTMLElement(initclass)) {
+        throw TypeError("invalid custom element class !");
+    }
+    if (!customElements$1[elementset].has(initclass)) {
+        const elementname = getrandomstringandnumber(length);
+        if (customElements$1.get(elementname)) {
+            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
+        } else {
+            if (extendsname) {
+                customElements$1.define(elementname, initclass, {
+                    extends: extendsname
+                });
+            } else {
+                customElements$1.define(elementname, initclass);
+            }
+        }
+        return elementname;
+    } else {
+        return 使用value从表中查询key(customElements$1[elementmap], initclass);
+    }
+}
+
+if (!customElements$1[elementset]) {
+    customElements$1[elementset] = new Set;
+}
+
+if (!customElements$1[elementmap]) {
+    customElements$1[elementmap] = {};
+}
+
+customElements$1.define = function(name, constructor, options) {
+    if (!isclassextendsHTMLElement(constructor)) {
+        console.error(constructor);
+        throw TypeError("invalid custom element class !");
+    }
+    if (!customElements$1[elementset].has(constructor)) {
+        if (has(customElements$1[elementmap], name)) {
+            RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
+        } else {
+            CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
+            customElements$1[elementset].add(constructor);
+            customElements$1[elementmap][name] = constructor;
+        }
+    }
+};
+
+customElements$1[Symbol.iterator] = () => {
+    const entries = Object.entries(customElements$1[elementmap]);
+    return entries[Symbol.iterator].call(entries);
+};
+
+function getrandomcharactor() {
+    return get(Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n)), Math.floor(Math.random() * 26));
+}
+
+function getrandomhexnumber() {
+    return get(Array(16).fill(undefined).map((v, i) => i), Math.floor(Math.random() * 16)).toString(16);
+}
+
+function getrandomstringandnumber(length = 4) {
+    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumber()).join("");
+}
+
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
@@ -278,100 +372,6 @@ extenddirectives({
         }
     }
 });
-
-function isclassextendsHTMLElement(initclass) {
-    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-}
-
-function createcostumelemet(initclass, propsjson, children, options) {
-    if (isclassextendsHTMLElement(initclass)) {
-        RandomDefineCustomElement(initclass);
-        return construct(initclass, [ propsjson, children, options ]);
-    } else {
-        console.error(initclass);
-        throw TypeError("invalid custom element class !");
-    }
-}
-
-function 使用value从表中查询key(表, 组件状态名) {
-    return Object.entries(表).find(v => {
-        return v[1] === 组件状态名;
-    })[0];
-}
-
-window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
-
-const {customElements: customElements$1, CustomElementRegistry: CustomElementRegistry$1} = window;
-
-const elementset = Symbol.for("elementset");
-
-const elementmap = Symbol.for("elementmap");
-
-var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
-
-function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
-    if (!isclassextendsHTMLElement(initclass)) {
-        throw TypeError("invalid custom element class !");
-    }
-    if (!customElements$1[elementset].has(initclass)) {
-        const elementname = getrandomstringandnumber(length);
-        if (customElements$1.get(elementname)) {
-            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
-        } else {
-            if (extendsname) {
-                customElements$1.define(elementname, initclass, {
-                    extends: extendsname
-                });
-            } else {
-                customElements$1.define(elementname, initclass);
-            }
-        }
-        return elementname;
-    } else {
-        return 使用value从表中查询key(customElements$1[elementmap], initclass);
-    }
-}
-
-if (!customElements$1[elementset]) {
-    customElements$1[elementset] = new Set;
-}
-
-if (!customElements$1[elementmap]) {
-    customElements$1[elementmap] = {};
-}
-
-customElements$1.define = function(name, constructor, options) {
-    if (!isclassextendsHTMLElement(constructor)) {
-        console.error(constructor);
-        throw TypeError("invalid custom element class !");
-    }
-    if (!customElements$1[elementset].has(constructor)) {
-        if (has(customElements$1[elementmap], name)) {
-            RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
-        } else {
-            CustomElementRegistry$1.prototype.define.call(customElements$1, name, constructor, options);
-            customElements$1[elementset].add(constructor);
-            customElements$1[elementmap][name] = constructor;
-        }
-    }
-};
-
-customElements$1[Symbol.iterator] = () => {
-    const entries = Object.entries(customElements$1[elementmap]);
-    return entries[Symbol.iterator].call(entries);
-};
-
-function getrandomcharactor() {
-    return get(Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n)), Math.floor(Math.random() * 26));
-}
-
-function getrandomhexnumber() {
-    return get(Array(16).fill(undefined).map((v, i) => i), Math.floor(Math.random() * 16)).toString(16);
-}
-
-function getrandomstringandnumber(length = 4) {
-    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumber()).join("");
-}
 
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
@@ -1189,7 +1189,7 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
-if (typeof HTMLElement !== "function" || typeof Proxy !== "function" || typeof customElements !== "object" || typeof CustomElementRegistry !== "function") {
+if (!isfunction(HTMLElement) || !isfunction(Proxy) || !isobject(customElements) || !isfunction(CustomElementRegistry)) {
     throw new TypeError(" browser not supported !");
 }
 

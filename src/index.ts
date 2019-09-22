@@ -1,8 +1,15 @@
+import "./CustomElementRegistry";
+import { isobject, isfunction } from "./util";
 if (
-  typeof HTMLElement !== "function" ||
-  typeof Proxy !== "function" ||
-  typeof customElements !== "object" ||
-  typeof CustomElementRegistry !== "function"
+  !isfunction(HTMLElement) ||
+  //   typeof HTMLElement !== "function" ||
+  !isfunction(Proxy) ||
+  //   typeof Proxy !== "function" ||
+  !isobject(customElements) ||
+  //   typeof customElements !== "object" ||
+  !isfunction(CustomElementRegistry)
+  //||
+  //   typeof CustomElementRegistry !== "function"
 ) {
   throw new TypeError(" browser not supported !");
 }
@@ -13,7 +20,6 @@ if (
 //import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
 
-import "./CustomElementRegistry";
 import html from "./html";
 import createElement from "./createelement";
 export { html };
