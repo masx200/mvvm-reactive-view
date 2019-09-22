@@ -161,6 +161,85 @@ https://tc39.es/proposal-flatMap/
 }
 ```
 
+# 条件渲染
+
+```ts
+function condition(
+  conditon: ReactiveState,
+  iftrue:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState,
+  iffalse?:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState
+): Virtualdom;
+```
+
+```js
+var mystate = createState(true);
+var vdom = condition(
+  mystate,
+  "testtrue",
+  createElement("div", undefined, "testfalese")
+);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+setTimeout(() => {
+  mystate.value = false;
+}, 3000);
+```
+
+# 组件化
+
+在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`等函数
+
+使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
+可以给组件设置默认属性,设置`defaultProps`即可
+
+组件初始化函数需要返回一个`虚拟DOM`
+
+最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
+
+```js
+var mycom = (props, children) => {
+  useMounted(() => {
+    console.log("mounted1");
+  });
+  useMounted(() => {
+    console.log("mounted2", props);
+  });
+  useUnMounted(() => {
+    console.log("unmounted");
+  });
+  watch(props.cccccc, console.log);
+  return [
+    "wwwwwwwwwwww",
+    createElement("div", null, ["createComponent"]),
+    children,
+    createElement("div", null, [props.cccccc])
+  ];
+};
+mycom.defaultProps = { cccccc: "bbbbbbb" };
+const myclasscomponent = createComponent(mycom);
+const vdom = createElement(
+  myclasscomponent,
+  {
+    aaaaaa: 222222222,
+    tttttt: "dddddddddd"
+  },
+  ["children"]
+);
+console.log(vdom);
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+setTimeout(() => {
+  vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
+}, 5000);
+```
+
 # 使用 webcomponents
 
 可以通过静态属性 static `defaultProps` 来设置默认值
@@ -290,85 +369,6 @@ const vdomobj = html`
   <div>${objstate2}</div>
   ${objstate2}
 `;
-```
-
-# 条件渲染
-
-```ts
-function condition(
-  conditon: ReactiveState,
-  iftrue:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState,
-  iffalse?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState
-): Virtualdom;
-```
-
-```js
-var mystate = createState(true);
-var vdom = condition(
-  mystate,
-  "testtrue",
-  createElement("div", undefined, "testfalese")
-);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
-setTimeout(() => {
-  mystate.value = false;
-}, 3000);
-```
-
-# 组件化
-
-在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`等函数
-
-使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
-
-可以给组件设置默认属性,设置`defaultProps`即可
-
-组件初始化函数需要返回一个`虚拟DOM`
-
-最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
-
-```js
-var mycom = (props, children) => {
-  useMounted(() => {
-    console.log("mounted1");
-  });
-  useMounted(() => {
-    console.log("mounted2", props);
-  });
-  useUnMounted(() => {
-    console.log("unmounted");
-  });
-  watch(props.cccccc, console.log);
-  return [
-    "wwwwwwwwwwww",
-    createElement("div", null, ["createComponent"]),
-    children,
-    createElement("div", null, [props.cccccc])
-  ];
-};
-mycom.defaultProps = { cccccc: "bbbbbbb" };
-const myclasscomponent = createComponent(mycom);
-const vdom = createElement(
-  myclasscomponent,
-  {
-    aaaaaa: 222222222,
-    tttttt: "dddddddddd"
-  },
-  ["children"]
-);
-console.log(vdom);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
-setTimeout(() => {
-  vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
-}, 5000);
 ```
 
 # API
