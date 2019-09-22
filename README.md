@@ -359,7 +359,7 @@ const vdomobj = html`
 
 # API
 
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
 function createComponent(custfun: Custom): Class;
