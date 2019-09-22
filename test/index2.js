@@ -83,3 +83,16 @@ setTimeout(() => {
     document.body.appendChild(createApp(myele1, document.createElement("div")));
   })();
 }, 0);
+(async () => {
+  const { default: importcjsamdumd } = await import(
+    "https://cdn.jsdelivr.net/gh/masx200/importcjsamdumd@latest/dist/index.esm.min.js"
+  );
+
+  await importcjsamdumd({
+    omi: "https://cdn.jsdelivr.net/npm/omi@6.11.3/dist/omi.esm.js"
+  });
+
+  return await importcjsamdumd(
+    "https://cdn.jsdelivr.net/npm/omim@0.1.17/button/index.js"
+  );
+})().then(console.log);
