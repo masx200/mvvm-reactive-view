@@ -21,10 +21,10 @@ class Condition extends AttrChange {
   constructor(propsjson?: object, children?: any[], options?: any) {
     super();
     this[truevdomsymbol] = isarray(options.true)
-      ? options.true
+      ? options.true.filter(Boolean)
       : [options.true].filter(Boolean);
     this[falsevdomsymbol] = isarray(options.false)
-      ? options.false
+      ? options.false.filter(Boolean)
       : [options.false].filter(Boolean);
     // options.false;
   }
@@ -80,9 +80,9 @@ class Condition extends AttrChange {
 
     //
   }
-  /* disconnectedCallback() {
-    //
-  } */
+  disconnectedCallback() {
+    onunmounted(this);
+  }
 
   attributeChangedCallback(name: string /* , oldValue: any, newValue: any */) {
     // console.log(name, oldValue, newValue);

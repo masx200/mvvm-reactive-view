@@ -1114,8 +1114,8 @@ const handlefalse = getsymbol("handlefalse");
 class Condition extends AttrChange {
     constructor(propsjson, children, options) {
         super();
-        this[truevdomsymbol] = isarray(options.true) ? options.true : [ options.true ].filter(Boolean);
-        this[falsevdomsymbol] = isarray(options.false) ? options.false : [ options.false ].filter(Boolean);
+        this[truevdomsymbol] = isarray(options.true) ? options.true.filter(Boolean) : [ options.true ].filter(Boolean);
+        this[falsevdomsymbol] = isarray(options.false) ? options.false.filter(Boolean) : [ options.false ].filter(Boolean);
     }
     [handlefalse]() {
         setelehtml(this, "");
@@ -1153,6 +1153,9 @@ class Condition extends AttrChange {
         if (false === attrs["value"]) {
             this[handlefalse]();
         }
+    }
+    disconnectedCallback() {
+        onunmounted(this);
     }
     attributeChangedCallback(name) {
         if (name === "value") {
