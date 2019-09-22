@@ -163,21 +163,7 @@ https://tc39.es/proposal-flatMap/
 
 # 条件渲染
 
-```ts
-function condition(
-  conditon: ReactiveState,
-  iftrue:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState,
-  iffalse?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState
-): Virtualdom;
-```
+使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 
 ```js
 var mystate = createState(true);
@@ -396,6 +382,24 @@ interface Class {
 function useMounted(fun: Function): void;
 
 function useUnMounted(fun: Function): void;
+```
+
+## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
+
+```ts
+function condition(
+  conditon: ReactiveState,
+  iftrue:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState,
+  iffalse?:
+    | Virtualdom
+    | string
+    | Array<Virtualdom | string | ReactiveState>
+    | ReactiveState
+): Virtualdom;
 ```
 
 ## 使用`directives`函数来扩展指令
