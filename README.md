@@ -44,7 +44,7 @@ import {
 } from "mvvm-reactive-view";
 ```
 
-# 从cdn获取
+# 从 cdn 获取
 
 https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
 
