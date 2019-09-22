@@ -40,7 +40,7 @@ export function createComponent(custfun: Custom): Class {
       [attributessymbol]: { [s: string]: ReactiveState } | object = {};
       [elementsymbol]: Array<Node>;
       [vdomsymbol]: Array<Virtualdom | ReactiveState | string>;
-      constructor(propsjson?: object, children?: any[] /* , options?: any */) {
+      constructor(propsjson?: object={}, children?: any[]=[] /* , options?: any */) {
         super();
         const attrs = createeleattragentreadwrite(this);
         //   const props = {};
