@@ -17,7 +17,7 @@ const handlefalse = getsymbol("handlefalse");
 // const readysymbol = Symbol("ready");
 import { onmounted, onunmounted } from "./elementonmountandunmount";
 // import mount from "./mount";
-import { isarray, getsymbol, isundefined,isboolean } from "./util";
+import { isarray, getsymbol, isundefined, isboolean } from "./util";
 import createApp, { invalid_Virtualdom } from "./createApp";
 import { setelehtml } from "./dom";
 import { isvalidvdom } from "./html";
@@ -118,7 +118,7 @@ class Condition extends AttrChange {
   }
 }
 export default function(
-  conditon: ReactiveState|boolean,
+  conditon: ReactiveState | boolean,
   iftrue?:
     | Virtualdom
     | string
@@ -130,7 +130,7 @@ export default function(
     | Array<Virtualdom | string | ReactiveState>
     | ReactiveState
 ): Virtualdom {
-  if (!(isReactiveState(conditon)||isboolean(conditon))) {
+  if (!(isReactiveState(conditon) || isboolean(conditon))) {
     throw TypeError(invalid_ReactiveState);
   }
   [iftrue, iffalse].forEach(a => {

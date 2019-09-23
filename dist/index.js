@@ -489,7 +489,7 @@ class Virtualdom {
             bindattr: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0])).filter(e => isReactiveState(e[1]))),
             props: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0])).filter(e => !isReactiveState(e[1]))),
             children: children,
-            onevent: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1), value ])),
+            onevent: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1), [ value ].flat() ])),
             directives: Object.fromEntries(propsentries.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1), value ]))
         });
         Object.defineProperty(this, Symbol.toStringTag, {
@@ -785,7 +785,7 @@ class Condition extends AttrChange {
 }
 
 function conditon(conditon, iftrue, iffalse) {
-    if (!isReactiveState(conditon)) {
+    if (!(isReactiveState(conditon) || isboolean(conditon))) {
         throw TypeError(invalid_ReactiveState);
     }
     [ iftrue, iffalse ].forEach(a => {
@@ -1304,8 +1304,8 @@ function createComponent(custfun) {
                     possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
                 }
                 if (isvalidvdom(possiblyvirtualdom)) {
-                    this[vdomsymbol] = isarray(possiblyvirtualdom) ? possiblyvirtualdom : [ possiblyvirtualdom ];
-                    this[vdomsymbol] = this[vdomsymbol].flat(Infinity).filter(Boolean);
+                    const thisvdomsymbol = isarray(possiblyvirtualdom) ? possiblyvirtualdom : [ possiblyvirtualdom ];
+                    this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
                     closectx();

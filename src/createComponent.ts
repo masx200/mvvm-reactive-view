@@ -89,11 +89,11 @@ export function createComponent(custfun: Custom): Class {
             .filter(Boolean);
         }
         if (isvalidvdom(possiblyvirtualdom)) {
-         const thisvdomsymbol = isArray(possiblyvirtualdom)
+          const thisvdomsymbol = isArray(possiblyvirtualdom)
             ? possiblyvirtualdom
             : [possiblyvirtualdom];
-//         
- this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+          //
+          this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
           closectx();
