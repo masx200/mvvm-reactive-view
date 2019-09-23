@@ -2,11 +2,11 @@
 
 ## 面向未来的,轻量级,响应式,mvvm,构建视图,声明式,组件化,基于 webcomponent ,
 
-## 基于 Proxy,基于虚拟 dom,支持 jsx 和 hyperscript,前端 javascript 库
+## 基于 Proxy,基于`虚拟 dom`,支持 jsx 和 hyperscript,前端 javascript 库
 
 ## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟 dom
 
-## 由于使用了 `Proxy`，所以不支持 IE 浏览器，而且 `Proxy` 不可 `polyfill`
+## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
 关于 `Proxy`
 
