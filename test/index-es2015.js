@@ -1510,7 +1510,7 @@ var Virtualdom = function Virtualdom() {
         })).filter((function(e) {
             return !isReactiveState(e[1]);
         }))),
-        children: children,
+        children: children.flat(),
         onevent: Object.fromEntries(propsentries.filter((function(_ref12) {
             var _ref13 = _slicedToArray(_ref12, 1), key = _ref13[0];
             return /\@/.test(key[0]);
