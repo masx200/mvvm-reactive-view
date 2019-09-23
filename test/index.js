@@ -446,7 +446,21 @@ console.log([
       value=${state1}
     />
     <h1 style=${stylestate}>mvvm-reactive-view</h1>
+    <button
+      @click=${() => {
+        stylestate.color = "red";
+      }}
+    >
+      red</button
+    ><button
+    @click=${() => {
+        stylestate.color = "green";
+      }}
+    >
+      green
+    </button>
   `;
+  watch(stylestate, console.log);
   watch(state1, console.log);
   console.log(vdom);
   createApp(vdom, document.getElementById("app"));
