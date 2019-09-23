@@ -460,7 +460,7 @@ class Virtualdom {
   constructor(
     type: Function | string = "",
     props: object = {},
-    children: Array<Virtualdom | string> = []
+    children: Array<Virtualdom | string|ReactiveState> = []
   );
 }
 ```
