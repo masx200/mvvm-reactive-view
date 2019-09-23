@@ -453,10 +453,10 @@ function createRef(
 class Virtualdom {
   type: string | Function  ;
   props: object = {};
-  children: Array<Virtualdom | string> = [];
+  children: Array<Virtualdom | string|ReactiveState> = [];
   directives: object = {};
   onevent: object = {};
-  bindattr: object = {};
+  bindattr:  { [key: string]: ReactiveState } = {};= {};
   constructor(
     type: Function | string = "",
     props: object = {},
