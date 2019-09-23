@@ -451,7 +451,7 @@ function createRef(
 
 ```ts
 class Virtualdom {
-  type: string | Function | undefined | Class;
+  type: string | Function  ;
   props: object = {};
   children: Array<Virtualdom | string> = [];
   directives: object = {};
