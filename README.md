@@ -96,8 +96,22 @@ const vdom = html`
     value=${state1}
   />
   <h1 style=${stylestate}>mvvm-reactive-view</h1>
+  <button
+    @click=${() => {
+      stylestate.color = "red";
+    }}
+  >
+    red</button
+  ><button
+    @click=${() => {
+      stylestate.color = "green";
+    }}
+  >
+    green
+  </button>
 `;
 watch(state1, console.log);
+watch(stylestate, console.log);
 console.log(vdom, inputref);
 createApp(vdom, document.getElementById("root"));
 ```
