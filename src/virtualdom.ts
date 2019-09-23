@@ -42,7 +42,11 @@ export default class Virtualdom {
       onevent: Object.fromEntries(
         propsentries
           .filter(([key]) => /\@/.test(key[0]))
-          .map(([key, value]) => [key.slice(1), value])
+          .map(([key, value]) => [key.slice(1), 
+//把事件绑定变成事件数组
+[value].flat()
+
+])
       ),
       directives: Object.fromEntries(
         propsentries
