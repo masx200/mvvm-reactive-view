@@ -92,7 +92,8 @@ export function createComponent(custfun: Custom): Class {
          const thisvdomsymbol = isArray(possiblyvirtualdom)
             ? possiblyvirtualdom
             : [possiblyvirtualdom];
-          this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+//         
+ this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
           closectx();
