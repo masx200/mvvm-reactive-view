@@ -192,7 +192,7 @@ https://tc39.es/proposal-flatMap/
 var mystate = createState(true);
 var vdom = condition(
   mystate,
-  "testtrue",
+  ["testtrue"],
   createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(createApp(vdom, document.createElement("div")));
@@ -225,12 +225,12 @@ var mycom = (props, children) => {
     console.log("unmounted");
   });
   watch(props.cccccc, console.log);
-  return [
+  return createElement("div",null,[
     "wwwwwwwwwwww",
     createElement("div", null, ["createComponent"]),
     children,
     createElement("div", null, [props.cccccc])
-  ];
+  ]);
 };
 mycom.defaultProps = { cccccc: "bbbbbbb" };
 const myclasscomponent = createComponent(mycom);
