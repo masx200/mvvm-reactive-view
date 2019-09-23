@@ -36,6 +36,7 @@ export default [
       commonjs(),
       typescript(),
       terser({
+        sourcemap: true,
         compress: false,
         mangle: false,
         output: {

@@ -690,7 +690,7 @@ function createApp(vdom, container) {
     }
     if (isvalidvdom(vdom)) {
         mount(elesarray.map(e => render(e)), container);
-    } else if (vdom instanceof Node || isarray(vdom)) {
+    } else if (vdom instanceof Node || isNodeArray(vdom)) {
         mount(elesarray, container);
     }
     return container;

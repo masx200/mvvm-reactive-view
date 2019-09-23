@@ -48,7 +48,7 @@ export default function createApp(
   }
   if (isvalidvdom(vdom)) {
     mount(elesarray.map(e => render(e)), container);
-  } else if (vdom instanceof Node || isArray(vdom)) {
+  } else if (vdom instanceof Node || isNodeArray(vdom)) {
     mount(elesarray, container);
   }
 
