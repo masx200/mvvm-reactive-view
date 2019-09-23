@@ -2,7 +2,7 @@ import {
   condition,
   Fragment,
   createRef,
-  html,
+    html,
   createApp,
   h,
   createElement,
@@ -13,7 +13,7 @@ import {
   useMounted,
   useUnMounted
 } from "../dist/index.js";
-console.log([
+/* console.log([
   condition,
   Fragment,
   createRef,
@@ -27,7 +27,7 @@ console.log([
   createComponent,
   useMounted,
   useUnMounted
-]);
+]); */
 setTimeout(() => {
   (() => {
     var myvdom1111111 = createElement(
@@ -83,7 +83,7 @@ setTimeout(() => {
     document.body.appendChild(createApp(myele1, document.createElement("div")));
   })();
 }, 0);
-(async () => {
+/* (async () => {
   const { default: importcjsamdumd } = await import(
     "https://cdn.jsdelivr.net/gh/masx200/importcjsamdumd@latest/dist/index.esm.min.js"
   );
@@ -95,4 +95,4 @@ setTimeout(() => {
   return await importcjsamdumd(
     "https://cdn.jsdelivr.net/npm/omim@0.1.17/button/index.js"
   );
-})().then(console.log);
+})().then(console.log); */

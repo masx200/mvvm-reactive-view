@@ -6,11 +6,11 @@
     "types": "src/index.ts",
     "module": "dist/index.js",
     "name": "mvvm-reactive-view",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "scripts": {
-        "build": " rollup -c rollup.config.js",
-        "test": "live-server"
+        "build": "rollup -c rollup.config.js",
+        "test": "rollup -c ./test/rollup.config.js && live-server"
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
@@ -25,6 +25,7 @@
         "dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git"
     },
     "devDependencies": {
+        "babel-plugin-htm": "^2.2.0",
         "@babel/core": "^7.6.0",
         "@babel/plugin-proposal-class-properties": "^7.5.5",
         "@babel/preset-env": "^7.6.0",

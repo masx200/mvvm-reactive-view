@@ -38,7 +38,7 @@ export default class Virtualdom {
             //    e[1] instanceof ReactiveState
           )
       ),
-      children,
+      children: children.flat(),
       onevent: Object.fromEntries(
         propsentries
           .filter(([key]) => /\@/.test(key[0]))
