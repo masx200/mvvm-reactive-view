@@ -130,7 +130,7 @@ export default function(
     | Array<Virtualdom | string | ReactiveState>
     | ReactiveState
 ): Virtualdom {
-  if (!isReactiveState(conditon)||isboolean(conditon)) {
+  if (!(isReactiveState(conditon)||isboolean(conditon))) {
     throw TypeError(invalid_ReactiveState);
   }
   [iftrue, iffalse].forEach(a => {
