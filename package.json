@@ -26,6 +26,7 @@
         "dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git"
     },
     "devDependencies": {
+"@babel/plugin-transform-react-jsx":"^7.3.0",
         "babel-plugin-htm": "^2.2.0",
         "@babel/core": "^7.6.0",
         "@babel/plugin-proposal-class-properties": "^7.5.5",
