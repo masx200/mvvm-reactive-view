@@ -2489,6 +2489,8 @@ function createRef(init) {
     };
 }
 
+var Fragment = "";
+
 (function() {
     var mystate = createstate(true);
     console.log("mystatetest", mystate);
@@ -2849,10 +2851,10 @@ function createRef(init) {
     });
     var objstate2 = createstate('{ a: "w", 6: "xxxxxxx", tttttttt: "true" }');
     console.log(objstate);
-    requestAnimationFrame((function() {
+    setTimeout((function() {
         objstate.length = 10;
         objstate2.value = 2222222222222;
-    }));
+    }), 2e3);
     var objstatearray = createstate([ {
         a: "w",
         6: "xxxxxxx",
@@ -3010,4 +3012,430 @@ setTimeout((function() {
         document.body.appendChild(createApp(myele1, document.createElement("div")));
     })();
 }), 0);
+
+var vdom = createElement(Fragment, null, createElement("header", {
+    class: "common-header fixed noborder floating",
+    id: "git-header-nav"
+}, createElement("div", {
+    class: "ui container"
+}, createElement("div", {
+    class: "ui menu header-menu"
+}, createElement("div", {
+    class: "git-nav-expand-bar"
+}, createElement("i", {
+    class: "iconfont icon-mode-table"
+})), createElement("div", {
+    class: "gitee-nav__sidebar"
+}, createElement("div", {
+    class: "gitee-nav__sidebar-container"
+}, createElement("div", {
+    class: "gitee-nav__sidebar-top"
+}, createElement("div", {
+    class: "gitee-nav__avatar-box"
+}, createElement("a", {
+    href: "/masx200"
+}, createElement("img", {
+    alt: "1081296_masx200",
+    class: "ui avatar image masx200-avatar",
+    src: "https://avatar.gitee.com/uploads/96/1081296_masx200.png?1566294318"
+}))), createElement("div", {
+    class: "gitee-nav__info-box"
+}, createElement("a", {
+    href: "/masx200"
+}, "masx200"))), createElement("div", {
+    class: "gitee-nav__sidebar-middle"
+}, createElement("div", {
+    class: "gitee-nav__sidebar-list"
+}, createElement("ul", null, createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/masx200"
+}, createElement("i", {
+    class: "iconfont icon-ic-dashboard"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "个人主页"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/explore"
+}, createElement("i", {
+    class: "iconfont icon-ic-discover"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "开源软件"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/gists"
+}, createElement("i", {
+    class: "iconfont icon-ic-gists1"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "代码片段"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/enterprises"
+}, createElement("i", {
+    class: "iconfont icon-ic-enterprise"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "企业版"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/education"
+}, createElement("i", {
+    class: "iconfont icon-ic-education"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "高校版"))), createElement("li", {
+    class: "gitee-nav__sidebar-item split-line"
+}), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/search"
+}, createElement("i", {
+    class: "iconfont icon-ic-search"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "搜索"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/help"
+}, createElement("i", {
+    class: "iconfont icon-help-circle"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "帮助中心"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/terms"
+}, createElement("i", {
+    class: "iconfont icon-file"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "使用条款"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/about_us"
+}, createElement("i", {
+    class: "iconfont icon-issuepx"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "关于我们"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/profile"
+}, createElement("i", {
+    class: "iconfont icon-edit"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "设置"))), createElement("li", {
+    class: "gitee-nav__sidebar-item"
+}, createElement("a", {
+    href: "/logout",
+    "data-method": "delete",
+    rel: "nofollow"
+}, createElement("i", {
+    class: "iconfont icon-ic-logout"
+}), createElement("span", {
+    class: "gitee-nav__sidebar-name"
+}, "退出")))))), createElement("div", {
+    class: "gitee-nav__sidebar-bottom"
+}, createElement("div", {
+    class: "gitee-nav__sidebar-close-button"
+}, createElement("i", {
+    class: "fa fa-angle-double-left"
+}))))), createElement("div", {
+    class: "item gitosc-logo"
+}, createElement("a", {
+    href: "/"
+}, createElement("img", {
+    class: "ui inline image",
+    height: "28",
+    src: "https://gitee.com//logo.svg?20171024",
+    width: "95"
+}), createElement("img", {
+    class: "ui inline black image",
+    height: "28",
+    src: "https://gitee.com//logo-black.svg?20171024",
+    width: "95"
+}))), createElement("a", {
+    href: "/explore",
+    class: "item ",
+    title: "开源软件"
+}, "开源软件"), createElement("a", {
+    href: "/enterprises",
+    class: "item ",
+    title: "企业版"
+}, "企业版", createElement("sup", {
+    class: "ui red label"
+}, "特惠")), createElement("a", {
+    href: "/education",
+    class: "item ",
+    title: "高校版"
+}, "高校版"), createElement("a", {
+    href: "https://blog.gitee.com/",
+    class: "item",
+    id: "gitee-blog",
+    target: "_blank",
+    title: "博客"
+}, "博客"), createElement("div", {
+    class: "dropdown item ui",
+    id: "my-gitee-dropdown",
+    tabindex: "0"
+}, createElement("a", {
+    href: "/masx200/dashboard"
+}, "我的码云"), createElement("i", {
+    class: "dropdown icon"
+}), createElement("div", {
+    class: "menu transition hidden",
+    tabindex: "-1"
+}, createElement("div", {
+    class: "header user-projects"
+}, createElement("a", {
+    href: "/masx200/projects",
+    class: "pull-right",
+    target: "_blank"
+}, "全部"), "仓库", createElement("span", {
+    class: "count"
+}, "(11)")), createElement("a", {
+    target: "_blank",
+    href: "/masx200/mvvm-reactive-view",
+    title: "masx200/mvvm-reactive-view",
+    class: "item"
+}, "masx200/mvvm-reactive-view"), createElement("a", {
+    target: "_blank",
+    href: "/masx200/webpack-react-vue-spa-awesome-config",
+    title: "masx200/webpack-react-vue-spa-awesome-config",
+    class: "item"
+}, "masx200/webpack-react-vue-spa-awesome-config"), createElement("a", {
+    target: "_blank",
+    href: "/masx200/custom-elements-random-define",
+    title: "masx200/custom-elements-random-define",
+    class: "item"
+}, "masx200/custom-elements-random-define"), createElement("a", {
+    target: "_blank",
+    href: "/masx200/importcjsamdumd",
+    title: "masx200/importcjsamdumd",
+    class: "item"
+}, "masx200/importcjsamdumd"), createElement("a", {
+    target: "_blank",
+    href: "/masx200/dom-element-attribute-agent-proxy",
+    title: "masx200/dom-element-attribute-agent-proxy",
+    class: "item"
+}, "masx200/dom-element-attribute-agent-proxy"))), createElement("div", {
+    class: "center responsive-logo"
+}, createElement("a", {
+    href: "/"
+}, createElement("img", {
+    class: "ui inline image",
+    height: "24",
+    src: "https://gitee.com//logo.svg?20171024",
+    width: "85"
+}), createElement("img", {
+    class: "ui inline black image",
+    height: "24",
+    src: "https://gitee.com//logo-black.svg?20171024",
+    width: "85"
+}))), createElement("div", {
+    class: "right menu userbar",
+    id: "git-nav-user-bar"
+}, createElement("div", {
+    class: "item git-nav-search-item"
+}, createElement("form", {
+    "accept-charset": "UTF-8",
+    action: "/search",
+    autocomplete: "on",
+    "data-text-filter": "搜索格式不正确",
+    "data-text-require": "搜索关键字不能少于1个",
+    id: "navbar-search-form",
+    method: "get"
+}, createElement("div", {
+    style: "margin:0;padding:0;display:inline"
+}, createElement("input", {
+    name: "utf8",
+    type: "hidden",
+    value: "✓"
+})), createElement("div", {
+    class: "ui mini fluid input"
+}, createElement("input", {
+    id: "navbar-search-input",
+    name: "q",
+    placeholder: "搜索项目、代码片段...",
+    type: "text",
+    value: ""
+}), createElement("input", {
+    id: "navbar-search-type",
+    name: "type",
+    type: "hidden"
+})))), createElement("div", {
+    class: "item ui dropdown empty",
+    "data-count-path": "/notifications/unread_count",
+    "data-enable": "",
+    "data-mark-notice-path": "/notifications/mark",
+    id: "notice-dropdown",
+    tabindex: "0"
+}, createElement("a", {
+    href: "/notifications",
+    class: "remind-button"
+}, createElement("i", {
+    class: "iconfont icon-remind"
+}), createElement("div", {
+    class: "notice-count total"
+}, "1")), createElement("div", {
+    class: "notice-dropdown-panel menu transition hidden",
+    tabindex: "-1",
+    style: "left: -165px;"
+}, createElement("div", {
+    class: "notice-dropdown-panel-header"
+}, createElement("div", {
+    class: "tab",
+    "data-data-path": "/notifications/notices?scope=referer",
+    "data-html-path": "/notifications/referer",
+    "data-scope": "referer"
+}, createElement("div", {
+    class: "content"
+}, "@ 我", createElement("div", {
+    class: "notice-count referer"
+}))), createElement("div", {
+    class: "tab active",
+    "data-data-path": "/notifications/notices?scope=infos",
+    "data-html-path": "/notifications/infos",
+    "data-scope": "infos"
+}, createElement("div", {
+    class: "content"
+}, "通知", createElement("div", {
+    class: "notice-count infos"
+}, "1"))), createElement("div", {
+    class: "tab",
+    "data-data-path": "/notifications/notices?scope=messages",
+    "data-html-path": "/notifications/messages",
+    "data-scope": "messages"
+}, createElement("div", {
+    class: "content"
+}, "私信", createElement("div", {
+    class: "notice-count messages"
+})))), createElement("div", {
+    class: "item notice-dropdown-panel-container"
+}, createElement("div", {
+    class: "ui dimmer over active"
+}, createElement("div", {
+    class: "ui loader"
+})), createElement("div", {
+    class: "notice-list",
+    style: "min-height: auto;"
+}, createElement("a", {
+    class: "noti",
+    href: "/masx200/mvvm-reactive-view",
+    target: "_blank",
+    "data-type": "project",
+    "data-id": "50555275"
+}, createElement("div", {
+    class: "title"
+}, "你的仓库 masx200/mvvm-reactive-view 已经从 https://github.com/masx200/mvvm-reactive-view.git 同步成功"), createElement("div", {
+    class: "meta"
+}, createElement("time", {
+    class: "timeago"
+}, "2小时前"), " · ", createElement("span", {
+    class: "namespace"
+}, "masx200/mvvm-reactive-view")))), createElement("div", {
+    class: "notice-dropdown-panel-blank"
+}, "暂没有新消息")), createElement("div", {
+    class: "notice-dropdown-panel-footer"
+}, createElement("div", {
+    class: "action"
+}, createElement("div", {
+    class: "side left"
+}, createElement("a", {
+    href: "javascript: void(0);",
+    class: "mark-notices"
+}, "当前标记为已读")), createElement("div", {
+    class: "side right"
+}, createElement("a", {
+    href: "/notifications/infos",
+    class: "load-all",
+    target: "_blank"
+}, "查看全部")))))), createElement("div", {
+    class: "ui dropdown link item",
+    id: "git-nav-create",
+    tabindex: "0"
+}, createElement("i", {
+    class: "iconfont icon-add-thin"
+}), createElement("div", {
+    class: "right menu",
+    tabindex: "-1"
+}, createElement("a", {
+    href: "/projects/new",
+    class: "item"
+}, createElement("i", {
+    class: "add square icon"
+}), "新建仓库"), createElement("a", {
+    href: "/masx200/codes/new",
+    class: "item"
+}, createElement("i", {
+    class: "code icon"
+}), "发布代码片段"), createElement("a", {
+    href: "/organizations/new",
+    class: "item"
+}, createElement("i", {
+    class: "group icon"
+}), "创建组织"), createElement("a", {
+    href: "/enterprises/new",
+    class: "item"
+}, createElement("i", {
+    class: "icon iconfont icon-enterprise"
+}), "开通企业版"), createElement("a", {
+    href: "/projects/oauth_github",
+    class: "item"
+}, createElement("i", {
+    class: "github icon"
+}), "从 GitHub 导入仓库"))), createElement("div", {
+    class: "ui dropdown item",
+    id: "git-nav-user",
+    tabindex: "0"
+}, createElement("img", {
+    alt: "1081296_masx200",
+    class: "ui avatar image",
+    src: "https://avatar.gitee.com/uploads/96/1081296_masx200.png!avatar30?1566294318"
+}), createElement("i", {
+    class: "dropdown icon"
+}), createElement("div", {
+    class: "right menu",
+    tabindex: "-1"
+}, createElement("a", {
+    href: "/masx200",
+    class: "item"
+}, createElement("i", {
+    class: "iconfont icon-ic-home"
+}), "个人主页"), createElement("a", {
+    href: "/profile",
+    class: "item"
+}, createElement("div", {
+    class: "mayun-icon my-ic-edit my-ic-edit-dims"
+}), "设置"), createElement("div", {
+    class: "divider"
+}), createElement("a", {
+    href: "/gists",
+    class: "item"
+}, createElement("div", {
+    class: "iconfont icon-ic-gist"
+}), "代码片段"), createElement("a", {
+    href: "https://gitee.com/help",
+    class: "item",
+    target: "_blank"
+}, createElement("div", {
+    class: "mayun-icon my-ic-help my-ic-help-dims"
+}), "帮助"), createElement("div", {
+    class: "divider"
+}), createElement("a", {
+    href: "/logout",
+    class: "item destroy-user-session",
+    "data-method": "delete",
+    rel: "nofollow"
+}, createElement("div", {
+    class: "mayun-icon my-ic-exit my-ic-exit-dims"
+}), "退出"))), createElement("script", null))))));
+
+console.log(vdom);
+
+document.body.appendChild(createApp(vdom, document.createElement("div")));
 //# sourceMappingURL=index-es2015.js.map
