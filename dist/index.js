@@ -620,7 +620,9 @@ function createElement(type = "", props = {}, ...children) {
     return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
 }
 
-const html = htm.bind(createElement);
+function html(...inargs) {
+    return htm.call(createElement, ...inargs);
+}
 
 function isvalidvdom(v) {
     let flag = false;

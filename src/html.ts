@@ -7,7 +7,10 @@ import htm from "htm/dist/htm.module.js";
 import h from "./createelement";
 import { invalid_Virtualdom } from "./createApp";
 
-const html = htm.bind(h);
+// const html = htm.bind(h);
+function html(...inargs) {
+  return htm.call(h, ...inargs);
+}
 
 /* 如果出现未闭合标签会产生错误的vdom */
 export function isvalidvdom(
