@@ -16,6 +16,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
+https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
 
 # 安装 npm 模块
 
