@@ -176,7 +176,7 @@ https://tc39.es/proposal-flatMap/
     [
       "@babel/plugin-transform-react-jsx",
       {
-        "pragma": "h",
+        "pragma": "createElement",
         "pragmaFrag": "Fragment"
       }
     ]
