@@ -5,8 +5,8 @@ import ReactiveState, { isReactiveState } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {
-  options: any = undefined;
-  element: undefined | Element = undefined;
+  options: any 
+  element: undefined | Element 
   type: string | Function | Class;
   props: { [key: string]: string | object } = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
