@@ -36,7 +36,7 @@ export default [
 [
       "@babel/plugin-transform-react-jsx",
       {
-        "pragma": "h",
+        "pragma": "createElement",
         "pragmaFrag": "Fragment"
       }
     ],
