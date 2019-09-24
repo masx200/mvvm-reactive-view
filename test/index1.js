@@ -536,13 +536,13 @@ import {
   // watch(objstate, console.log);
   // watch(objstate2, console.log);
   console.log(objstate);
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     //
     objstate.length = 10;
     objstate2.value = 2222222222222;
     //   objstate.push(Math.random());
     //   objstate.push(Math.random());
-  });
+  },2000);
 
   const objstatearray = createState([
     { a: "w", 6: "xxxxxxx", tttttttt: "true" },
