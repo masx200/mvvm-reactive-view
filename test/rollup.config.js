@@ -33,13 +33,13 @@ export default [
     plugins: [
       babel({
         plugins: [
-[
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "createElement",
-        "pragmaFrag": "Fragment"
-      }
-    ],
+          [
+            "@babel/plugin-transform-react-jsx",
+            {
+              pragma: "createElement",
+              pragmaFrag: "Fragment"
+            }
+          ],
           "babel-plugin-htm",
           "@babel/plugin-proposal-class-properties"
         ],
