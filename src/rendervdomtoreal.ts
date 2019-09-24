@@ -77,7 +77,8 @@ export default function render(
       } else if (type === "math") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createmathelement();
-      } else if ("" === type) {
+      } else if ("" === type||type==="html") {
+//不要创建html元素
         return render(vdom.children);
       } else {
         element = namespace
