@@ -18,13 +18,15 @@ export default class Virtualdom {
     props: object = {},
     children: Array<Virtualdom | string | ReactiveState> = []
   ) {
+
+const 字母大小写=/[A-Za-z]/
     // console.log(type, props, children);
     const propsentries = Object.entries(props);
     Object.assign(this, {
       type,
       bindattr: Object.fromEntries(
         propsentries
-          .filter(([key]) => /[A-Za-z]/.test(key[0]))
+          .filter(([key]) => 字母大小写.test(key[0]))
           .filter(
             e => isReactiveState(e[1])
             // e[1] instanceof ReactiveState
@@ -32,7 +34,7 @@ export default class Virtualdom {
       ),
       props: Object.fromEntries(
         propsentries
-          .filter(([key]) => /[A-Za-z]/.test(key[0]))
+          .filter(([key]) => 字母大小写.test(key[0]))
           .filter(
             e => !isReactiveState(e[1])
             //    e[1] instanceof ReactiveState
