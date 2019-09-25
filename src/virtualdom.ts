@@ -30,10 +30,16 @@ value
 
 ]);
 */
+const propsentriesNOTevents =propsentries.filter(([key]) => 
+!(
+key.startsWith("@")||key.startsWith("on")
+
+)
+)
     Object.assign(this, {
       type,
       bindattr: Object.fromEntries(
-        propsentries
+        propsentriesNOTevents
           .filter(([key]) => 字母大小写.test(key[0]))
           .filter(
             e => isReactiveState(e[1])
@@ -41,7 +47,7 @@ value
           )
       ),
       props: Object.fromEntries(
-        propsentries
+        propsentriesNOTevents
           .filter(([key]) => 字母大小写.test(key[0]))
           .filter(
             e => !isReactiveState(e[1])
@@ -50,7 +56,7 @@ value
       ),
       children: children.flat(),
       onevent: Object.fromEntries(
-        propsentries
+        [...propsentries
           .filter(([key]) => /\@/.test(key[0]))
           .map(([key, value]) => [
 //事件名称变成小写
@@ -58,9 +64,9 @@ value
             //把事件绑定变成事件数组
             [value].flat()
           ])
-      ),
+     ] ),
       directives: Object.fromEntries(
-        propsentries
+        propsentriesNOTevents
           .filter(([key]) => /\*/.test(key[0]))
           .map(([key, value]) => [
 
