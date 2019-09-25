@@ -10,6 +10,10 @@ export default function(
   if (!element[eventlistenerssymbol]) {
     element[eventlistenerssymbol] = [];
   }
+
+
+firstaddlisteners(element, eventname, toArray(callback))
+/*
   if (isfunction(callback)) {
     firstaddlisteners(element, eventname, [callback]);
   } else if (isArray(callback)) {
@@ -17,7 +21,8 @@ export default function(
   } else {
     console.error(callback);
     throw TypeError(invalid_Function);
-  }
+  }*/
+
 }
 export function firstaddlisteners(
   ele: Element | Node,
