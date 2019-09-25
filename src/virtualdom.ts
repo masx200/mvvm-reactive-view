@@ -20,7 +20,14 @@ export default class Virtualdom {
   ) {
     const 字母大小写 = /[A-Za-z]/;
     // console.log(type, props, children);
-    const propsentries = Object.entries(props);
+//添加支持on开头事件绑定写法
+    const propsentries = Object.entries(props).map(([key, value]) => [
+key.startsWith("on")?key.replace("on","@")：key
+,
+value
+
+]);
+
     Object.assign(this, {
       type,
       bindattr: Object.fromEntries(
