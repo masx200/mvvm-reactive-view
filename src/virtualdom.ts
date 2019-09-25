@@ -45,7 +45,7 @@ export default class Virtualdom {
           .filter(([key]) => /\@/.test(key[0]))
           .map(([key, value]) => [
 //事件名称变成小写
-            key.slice(1).toLowerCase(),
+            key.slice(1).toLowerCase().trim(),
             //把事件绑定变成事件数组
             [value].flat()
           ])
@@ -56,7 +56,7 @@ export default class Virtualdom {
           .map(([key, value]) => [
 
 //指令也变成小写
-key.slice(1).toLowerCase()
+key.slice(1).toLowerCase().trim()
 
 , value])
       )
