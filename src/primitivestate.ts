@@ -1,3 +1,4 @@
+export const invalid_primitive_or_object_state="invalid primitive or object state"
 export function isReactiveState(a: any): a is ReactiveState {
   return a instanceof ReactiveState;
 }
@@ -44,7 +45,8 @@ export default class ReactiveState /* extends forkarray  */ {
 
       // this.value = init;
     } else {
-      throw TypeError("invalid State");
+console.error(init)
+      throw TypeError(invalid_primitive_or_object_state);
     }
     // this[eventtargetsymbol] = new EventTarget();
 
