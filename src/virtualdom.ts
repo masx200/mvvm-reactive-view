@@ -44,7 +44,8 @@ export default class Virtualdom {
         propsentries
           .filter(([key]) => /\@/.test(key[0]))
           .map(([key, value]) => [
-            key.slice(1),
+//事件名称变成小写
+            key.slice(1).toLowerCase(),
             //把事件绑定变成事件数组
             [value].flat()
           ])
@@ -52,7 +53,12 @@ export default class Virtualdom {
       directives: Object.fromEntries(
         propsentries
           .filter(([key]) => /\*/.test(key[0]))
-          .map(([key, value]) => [key.slice(1), value])
+          .map(([key, value]) => [
+
+//指令也变成小写
+key.slice(1).toLowerCase()
+
+, value])
       )
     });
     Object.defineProperty(this, Symbol.toStringTag, {
