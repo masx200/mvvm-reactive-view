@@ -2082,7 +2082,7 @@ function handleprops(element, vdom) {
     if (!element[bindstatesymbol]) {
         element[bindstatesymbol] = new Set;
     }
-    [ Object.values(vdom.bindattr), Object.values(vdom.directives) ].flat().filter((function(e) {
+    [].concat(_toConsumableArray(Object.values(vdom.bindattr)), _toConsumableArray(Object.values(vdom.directives))).flat().filter((function(e) {
         return isReactiveState(e);
     })).forEach((function(e) {
         return element[bindstatesymbol].add(e);
@@ -2101,6 +2101,10 @@ function readonlyproxy(target) {
             return false;
         }
     });
+}
+
+function isArray$1(a) {
+    return Array.isArray(a);
 }
 
 var Reflect$3 = window.Reflect;
@@ -2123,10 +2127,12 @@ function deepobserveaddpath(target, callback) {
     }
     if (isfunction$1(target) || isobject$2(target)) {
         var fakeobj;
-        if (isobject$2(target)) {
-            fakeobj = {};
-        } else {
+        if (isArray$1(target)) {
+            fakeobj = [];
+        } else if (isfunction$1(target)) {
             fakeobj = function fakeobj() {};
+        } else {
+            fakeobj = {};
         }
         _setPrototypeOf$1(fakeobj, null);
         return function(fakeobj) {
@@ -2162,11 +2168,15 @@ function deepobserveaddpath(target, callback) {
                 },
                 getOwnPropertyDescriptor: function getOwnPropertyDescriptor(t, k) {
                     var descripter = getOwnPropertyDescriptor$1(target, k);
-                    if (descripter) {
-                        descripter.configurable = true;
+                    if (isArray$1(target) && k === "length") {
                         return descripter;
                     } else {
-                        return;
+                        if (descripter) {
+                            descripter.configurable = true;
+                            return descripter;
+                        } else {
+                            return;
+                        }
                     }
                 },
                 set: function set(t, k, v) {
@@ -2257,7 +2267,11 @@ function createstate(init) {
             },
             get: function get(target, key) {
                 var value = _get(target, "value");
-                if (_has(target, key)) {
+                if (key === "value" && (gettagtype(value) === "array" || gettagtype(value) === "object")) {
+                    return observedeepagent(_get(target, key), (function(_target, patharray) {
+                        target[dispatchsymbol](patharray[0]);
+                    }));
+                } else if (_has(target, key)) {
                     return _get(target, key);
                 } else if (_has(value, key)) {
                     if (isSet(value) && (key === "add" || key === "delete")) {

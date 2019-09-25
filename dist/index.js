@@ -1064,6 +1064,10 @@ function readonlyproxy(target) {
     });
 }
 
+function isArray$1(a) {
+    return Array.isArray(a);
+}
+
 const Reflect$3 = window.Reflect;
 
 const {ownKeys: ownKeys$1, deleteProperty: deleteProperty$1, apply: apply, construct: construct$1, defineProperty: defineProperty, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$3;
@@ -1082,10 +1086,12 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
     }
     if (isfunction$1(target) || isobject$2(target)) {
         let fakeobj;
-        if (isobject$2(target)) {
-            fakeobj = {};
-        } else {
+        if (isArray$1(target)) {
+            fakeobj = [];
+        } else if (isfunction$1(target)) {
             fakeobj = () => {};
+        } else {
+            fakeobj = {};
         }
         setPrototypeOf(fakeobj, null);
         return (fakeobj => {
@@ -1121,11 +1127,15 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
                 },
                 getOwnPropertyDescriptor(t, k) {
                     var descripter = getOwnPropertyDescriptor$1(target, k);
-                    if (descripter) {
-                        descripter.configurable = true;
+                    if (isArray$1(target) && k === "length") {
                         return descripter;
                     } else {
-                        return;
+                        if (descripter) {
+                            descripter.configurable = true;
+                            return descripter;
+                        } else {
+                            return;
+                        }
                     }
                 },
                 set(t, k, v) {
@@ -1216,7 +1226,11 @@ function createstate(init) {
             },
             get(target, key) {
                 const value = get(target, "value");
-                if (has(target, key)) {
+                if (key === "value" && (gettagtype(value) === "array" || gettagtype(value) === "object")) {
+                    return observedeepagent(get(target, key), (_target, patharray) => {
+                        target[dispatchsymbol](patharray[0]);
+                    });
+                } else if (has(target, key)) {
                     return get(target, key);
                 } else if (has(value, key)) {
                     if (isSet(value) && (key === "add" || key === "delete")) {
