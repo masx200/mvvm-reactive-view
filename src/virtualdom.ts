@@ -56,11 +56,21 @@ key.startsWith("@")||key.startsWith("on")
       ),
       children: children.flat(),
       onevent: Object.fromEntries(
-        [...propsentries
+        [
+
+...propsentries
           .filter(([key]) => /\@/.test(key[0]))
           .map(([key, value]) => [
 //事件名称变成小写
             key.slice(1).toLowerCase().trim(),
+            //把事件绑定变成事件数组
+            [value].flat()
+          ])
+,...propsentries
+          .filter(([key]) => key.startsWith("on"))
+          .map(([key, value]) => [
+//事件名称变成小写
+            key.slice(2).toLowerCase().trim(),
             //把事件绑定变成事件数组
             [value].flat()
           ])
