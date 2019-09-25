@@ -25,6 +25,11 @@ export function firstaddlisteners(
   callarray: Array<EventListener>
 ) {
   callarray.forEach((call: EventListener) => {
+
+if(!isfunction(call)){
+console.error(call);
+    throw TypeError(invalid_Function);
+}
     ele[eventlistenerssymbol].push([event, call]);
     domaddlisten(ele, event, call);
   });
