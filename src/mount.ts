@@ -1,4 +1,5 @@
-import { appendchild, setelehtml } from "./dom";
+import { appendchild, setelehtml, seteletext } from "./dom";
+import { toArray } from "./toArray";
 export default function(
   ele:
     | Node
@@ -10,7 +11,6 @@ export default function(
         | SVGElement
         | Element
         | Node
-        | any
       >
     | SVGElement
     | DocumentFragment
@@ -18,17 +18,18 @@ export default function(
     | Text
     | SVGSVGElement
     | Element,
-  container: HTMLElement | SVGSVGElement | SVGElement | Element
+  container: HTMLElement | SVGSVGElement | SVGElement | Element | Node
 ) {
-  setelehtml(container, "");
+  seteletext(container, "");
   //   container.innerHTML = "";
-  let eles: Array<any>;
+  /*  let eles: Array<any>;
   if (Array.isArray(ele)) {
     eles = ele;
   } else {
     // appendchild(container, ele);
     eles = [ele];
-  }
+  } */
+  const eles = toArray(ele).flat(Infinity);
   eles.forEach(e => appendchild(container, e));
   return container;
 }

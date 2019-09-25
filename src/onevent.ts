@@ -3,7 +3,7 @@ import { domaddlisten, domremovelisten } from "./dom";
 export const eventlistenerssymbol = Symbol("eventlisteners");
 import { isArray, isfunction } from "./util";
 export default function(
-  element: Element,
+  element: Element | Node,
   eventname: string,
   callback: EventListener | Array<EventListener>
 ) {
@@ -20,7 +20,7 @@ export default function(
   }
 }
 export function firstaddlisteners(
-  ele: Element,
+  ele: Element | Node,
   event: string,
   callarray: Array<EventListener>
 ) {

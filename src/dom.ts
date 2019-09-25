@@ -2,15 +2,15 @@ const document = window.document;
 //import { seteletext, setelehtml } from "./directives";
 //export { seteletext, setelehtml };
 
-export function seteletext(e: Element, v: string) {
+export function seteletext(e: Element | Node, v: string) {
   e.textContent = v;
 }
 export function setelehtml(e: Element, v: string) {
   e.innerHTML = v;
 }
 export function appendchild(
-  container: HTMLElement | SVGSVGElement | SVGElement | Element,
-  ele: HTMLElement | SVGElement | Element
+  container: HTMLElement | SVGSVGElement | SVGElement | Element | Node,
+  ele: HTMLElement | SVGElement | Element | Node
 ) {
   container.appendChild(ele);
 }
@@ -18,6 +18,9 @@ export function createsvgelement() {
   return createElementNS(svgnamespace, "svg");
 }
 export function createnonescript() {
+  return createDocumentFragment();
+}
+export function createDocumentFragment() {
   return document.createDocumentFragment();
 }
 export function createnativeelement(type: string) {

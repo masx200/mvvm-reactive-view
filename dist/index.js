@@ -106,7 +106,7 @@ function closectx() {
 
 const readysymbol = Symbol("ready");
 
-const document = window.document;
+const document$1 = window.document;
 
 function seteletext(e, v) {
     e.textContent = v;
@@ -124,20 +124,20 @@ function createsvgelement() {
     return createElementNS(svgnamespace, "svg");
 }
 
-function createnonescript() {
-    return document.createDocumentFragment();
+function createDocumentFragment() {
+    return document$1.createDocumentFragment();
 }
 
 function createnativeelement(type) {
-    return document.createElement(type);
+    return document$1.createElement(type);
 }
 
 function createElementNS(namespace, name) {
-    return document.createElementNS(namespace, name);
+    return document$1.createElementNS(namespace, name);
 }
 
 function createtextnode(data) {
-    return document.createTextNode(data);
+    return document$1.createTextNode(data);
 }
 
 const svgnamespace = "http://www.w3.org/2000/svg";
@@ -182,7 +182,7 @@ function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
 
-var _a, _b, _c;
+var _a, _b;
 
 function isReactiveState(a) {
     return a instanceof ReactiveState;
@@ -204,9 +204,8 @@ const addallistenerssymbol = getsymbol("addallisteners");
 
 class ReactiveState {
     constructor(init) {
-        this[_a] = undefined;
-        this[_b] = new EventTarget;
-        this[_c] = [];
+        this[_a] = new EventTarget;
+        this[_b] = [];
         if (isprimitive(init) || isobject(init)) {
             Object.defineProperty(this, "value", {
                 value: init,
@@ -233,7 +232,7 @@ class ReactiveState {
         const value = this.value;
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_a = textnodesymbol, _b = eventtargetsymbol, _c = memlisteners, dispatchsymbol)](eventname) {
+    [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
         const name = eventname ? String(eventname) : "value";
         if (name !== "value") {
             this[eventtargetsymbol].dispatchEvent(new CustomEvent(name, {
@@ -259,6 +258,17 @@ class ReactiveState {
     }
 }
 
+function isconnected(element) {
+    return document.documentElement === getancestornode(element);
+}
+
+function getancestornode(node) {
+    while (node.parentNode && node.parentNode !== document) {
+        node = node.parentNode;
+    }
+    return node;
+}
+
 const requestAnimationFrame = window.requestAnimationFrame;
 
 var directives = {
@@ -279,13 +289,16 @@ var directives = {
 
 function createhtmlandtextdirective(seteletext, errorname) {
     return function(ele, text) {
+        const element = ele;
         if (typeof text == "string") {
             requestAnimationFrame(() => {
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
             watch(text, state => {
-                seteletext(ele, String(state));
+                if (isconnected(element)) {
+                    seteletext(ele, String(state));
+                }
             });
             requestAnimationFrame(() => {
                 seteletext(ele, String(text));
@@ -476,18 +489,18 @@ function isVirtualdom(a) {
 
 class Virtualdom {
     constructor(type = "", props = {}, children = []) {
-        this.options = undefined;
-        this.element = undefined;
+        this.type = "";
         this.props = {};
         this.children = [];
         this.directives = {};
         this.onevent = {};
         this.bindattr = {};
+        const 字母大小写 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
         Object.assign(this, {
             type: type,
-            bindattr: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0])).filter(e => isReactiveState(e[1]))),
-            props: Object.fromEntries(propsentries.filter(([key]) => /[A-Za-z]/.test(key[0])).filter(e => !isReactiveState(e[1]))),
+            bindattr: Object.fromEntries(propsentries.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),
+            props: Object.fromEntries(propsentries.filter(([key]) => 字母大小写.test(key[0])).filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
             onevent: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1), [ value ].flat() ])),
             directives: Object.fromEntries(propsentries.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1), value ]))
@@ -655,14 +668,13 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat();
+}
+
 function mount(ele, container) {
-    setelehtml(container, "");
-    let eles;
-    if (Array.isArray(ele)) {
-        eles = ele;
-    } else {
-        eles = [ ele ];
-    }
+    seteletext(container, "");
+    const eles = toArray(ele).flat(Infinity);
     eles.forEach(e => appendchild(container, e));
     return container;
 }
@@ -674,26 +686,21 @@ function createApp(vdom, container) {
         vdom = vdom.flat(Infinity);
     }
     const el = container;
-    if (!(isvalidvdom(vdom) || vdom instanceof Node || isarray(vdom) && isNodeArray(vdom))) {
-        console.error(vdom);
-        throw TypeError(invalid_Virtualdom);
-    }
     if (!(el instanceof HTMLElement)) {
+        console.error(el);
         throw TypeError("invalid container HTMLElement!");
     }
-    if (el === document.body || el === document.documentElement || el === document.head) {
+    if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
         throw Error("Do not mount  to <html> or <body> <head>.");
     }
-    let elesarray;
-    if (Array.isArray(vdom)) {
-        elesarray = vdom;
-    } else {
-        elesarray = [ vdom ];
-    }
+    const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
-        mount(elesarray.map(e => render(e)), container);
+        mount(render(elesarray), container);
     } else if (vdom instanceof Node || isNodeArray(vdom)) {
         mount(elesarray, container);
+    } else {
+        console.error(vdom);
+        throw TypeError(invalid_Virtualdom);
     }
     return container;
 }
@@ -701,8 +708,6 @@ function createApp(vdom, container) {
 function isNodeArray(array) {
     return isarray(array) && !array.map(e => e instanceof Node).includes(false);
 }
-
-var _a$1;
 
 const invalid_ReactiveState = "invalid ReactiveState";
 
@@ -718,75 +723,8 @@ const handletrue = getsymbol("handletrue");
 
 const handlefalse = getsymbol("handlefalse");
 
-class Condition extends AttrChange {
-    constructor(propsjson, children, options = {}) {
-        super();
-        this[_a$1] = false;
-        const optionstrue = get(options, "true");
-        const optionsfalse = get(options, "false");
-        this[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
-        this[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
-    }
-    [(_a$1 = readysymbol, handlefalse)]() {
-        setelehtml(this, "");
-        if (this[falsevdomsymbol]) {
-            if (!this[falseelesymbol]) {
-                this[falseelesymbol] = render(this[falsevdomsymbol]);
-            }
-            const elementtomount = this[falseelesymbol];
-            createApp(elementtomount, this);
-            elementtomount.forEach(e => onmounted(e));
-            if (this[trueelesymbol]) {
-                this[trueelesymbol].forEach(e => onunmounted(e));
-            }
-        }
-    }
-    [handletrue]() {
-        setelehtml(this, "");
-        if (this[truevdomsymbol]) {
-            if (!this[trueelesymbol]) {
-                this[trueelesymbol] = render(this[truevdomsymbol]);
-            }
-            const elementtomount = this[trueelesymbol];
-            createApp(elementtomount, this);
-            elementtomount.forEach(e => onmounted(e));
-            if (this[falseelesymbol]) {
-                this[falseelesymbol].forEach(e => onunmounted(e));
-            }
-        }
-    }
-    connectedCallback() {
-        if (!this[readysymbol]) {
-            this[readysymbol] = true;
-            const attrs = createeleattragentreadwrite(this);
-            if (true === attrs["value"]) {
-                this[handletrue]();
-            }
-            if (false === attrs["value"]) {
-                this[handlefalse]();
-            }
-        }
-        onmounted(this);
-    }
-    disconnectedCallback() {
-        onunmounted(this);
-    }
-    attributeChangedCallback(name) {
-        if (this[readysymbol]) {
-            if (name === "value") {
-                const attrs = createeleattragentreadwrite(this);
-                if (true === attrs["value"]) {
-                    this[handletrue]();
-                }
-                if (false === attrs["value"]) {
-                    this[handlefalse]();
-                }
-            }
-        }
-    }
-}
-
 function conditon(conditon, iftrue, iffalse) {
+    var _a;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
         throw TypeError(invalid_ReactiveState);
     }
@@ -795,13 +733,80 @@ function conditon(conditon, iftrue, iffalse) {
             throw new TypeError(invalid_Virtualdom);
         }
     });
-    const vdom = new Virtualdom(Condition, {
-        value: conditon
-    });
-    vdom.options = {
+    const options = {
         true: iftrue,
         false: iffalse
     };
+    class Condition extends AttrChange {
+        constructor() {
+            super();
+            this[_a] = false;
+            const optionstrue = get(options, "true");
+            const optionsfalse = get(options, "false");
+            this[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
+            this[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
+        }
+        [(_a = readysymbol, handlefalse)]() {
+            setelehtml(this, "");
+            if (this[falsevdomsymbol]) {
+                if (!this[falseelesymbol]) {
+                    this[falseelesymbol] = render(this[falsevdomsymbol]);
+                }
+                const elementtomount = this[falseelesymbol];
+                createApp(elementtomount, this);
+                elementtomount.forEach(e => onmounted(e));
+                if (this[trueelesymbol]) {
+                    this[trueelesymbol].forEach(e => onunmounted(e));
+                }
+            }
+        }
+        [handletrue]() {
+            setelehtml(this, "");
+            if (this[truevdomsymbol]) {
+                if (!this[trueelesymbol]) {
+                    this[trueelesymbol] = render(this[truevdomsymbol]);
+                }
+                const elementtomount = this[trueelesymbol];
+                createApp(elementtomount, this);
+                elementtomount.forEach(e => onmounted(e));
+                if (this[falseelesymbol]) {
+                    this[falseelesymbol].forEach(e => onunmounted(e));
+                }
+            }
+        }
+        connectedCallback() {
+            if (!this[readysymbol]) {
+                this[readysymbol] = true;
+                const attrs = createeleattragentreadwrite(this);
+                if (true === attrs["value"]) {
+                    this[handletrue]();
+                }
+                if (false === attrs["value"]) {
+                    this[handlefalse]();
+                }
+            }
+            onmounted(this);
+        }
+        disconnectedCallback() {
+            onunmounted(this);
+        }
+        attributeChangedCallback(name) {
+            if (this[readysymbol]) {
+                if (name === "value") {
+                    const attrs = createeleattragentreadwrite(this);
+                    if (true === attrs["value"]) {
+                        this[handletrue]();
+                    }
+                    if (false === attrs["value"]) {
+                        this[handlefalse]();
+                    }
+                }
+            }
+        }
+    }
+    const vdom = new Virtualdom(Condition, {
+        value: conditon
+    });
     return vdom;
 }
 
@@ -949,7 +954,9 @@ function render(vdom, namespace) {
         textnode[reactivestatesymbol] = reactive;
         reactive[textnodesymbol] = textnode;
         watch(reactive, state => {
-            changetext(textnode, String(state));
+            if (isconnected(element)) {
+                changetext(textnode, String(state));
+            }
         });
         const element = textnode;
         element[bindstatesymbol] = new Set;
@@ -960,12 +967,12 @@ function render(vdom, namespace) {
         let element;
         if (typeof type === "string") {
             if (type === "script") {
-                return createnonescript();
+                return createDocumentFragment();
             } else if (type === "svg") {
                 element = createsvgelement();
             } else if (type === "math") {
                 element = createmathelement();
-            } else if ("" === type) {
+            } else if ("" === type || type === "html") {
                 return render(vdom.children);
             } else {
                 element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
@@ -983,7 +990,7 @@ function render(vdom, namespace) {
                     return [ key, value.value ];
                 }))
             }));
-            element = createcostumelemet(type, propsjson, vdom.children, vdom.options);
+            element = createcostumelemet(type, propsjson, vdom.children);
         } else {
             throwinvalideletype(vdom);
         }
@@ -1025,7 +1032,9 @@ function handleprops(element, vdom) {
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.value;
             watch(primitivestate, state => {
-                attribute1[key] = state.value;
+                if (isconnected(element)) {
+                    attribute1[key] = state.value;
+                }
             });
         });
         if (!element[eventlistenerssymbol]) {
@@ -1038,7 +1047,7 @@ function handleprops(element, vdom) {
     if (!element[bindstatesymbol]) {
         element[bindstatesymbol] = new Set;
     }
-    [ Object.values(vdom.bindattr), Object.values(vdom.directives) ].flat().filter(e => isReactiveState(e)).forEach(e => element[bindstatesymbol].add(e));
+    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat().filter(e => isReactiveState(e)).forEach(e => element[bindstatesymbol].add(e));
 }
 
 function readonlyproxy(target) {

@@ -5,21 +5,20 @@ import ReactiveState, { isReactiveState } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
 
 export default class Virtualdom {
-  options: any |undefined
-  element: undefined | Element 
-  type: string | Function | Class="";
+  //   options: any |undefined
+  element: undefined | Element | Node;
+  type: string | Function | Class = "";
   props: { [key: string]: string | object } = {};
   children: Array<Virtualdom | string | ReactiveState> = [];
   directives: object = {};
-  onevent: object = {};
+  onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",
     props: object = {},
     children: Array<Virtualdom | string | ReactiveState> = []
   ) {
-
-const 字母大小写=/[A-Za-z]/
+    const 字母大小写 = /[A-Za-z]/;
     // console.log(type, props, children);
     const propsentries = Object.entries(props);
     Object.assign(this, {

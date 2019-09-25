@@ -16,7 +16,8 @@ import {
   createnativeelement,
   createElementNS,
   createtextnode,
-  changetext
+  changetext,
+  createDocumentFragment
 } from "./dom";
 function throwinvalideletype(type) {
   console.error(type);
@@ -29,7 +30,7 @@ import Virtualdom from "./virtualdom";
 export default function render(
   vdom: Array<Virtualdom | string | ReactiveState>,
   namespace?: string
-): Array<Node | any>;
+): Array<Node>;
 export default function render(
   vdom: Virtualdom | string | ReactiveState,
   namespace?: string
@@ -41,14 +42,7 @@ export default function render(
     | ReactiveState
     | Array<Virtualdom | string | ReactiveState>,
   namespace?: string
-):
-  | HTMLElement
-  | Text
-  | SVGSVGElement
-  | DocumentFragment
-  | SVGElement
-  | Element
-  | Array<Node | any> {
+) {
   if (typeof vdom === "string") {
     return createtextnode(vdom);
   } else if (vdom instanceof ReactiveState) {
@@ -57,7 +51,9 @@ export default function render(
     textnode[reactivestatesymbol] = reactive;
     reactive[textnodesymbol] = textnode;
     watch(reactive, (state: { value: string }) => {
-      changetext(textnode, String(state));
+      if (isconnected(element)) {
+        changetext(textnode, String(state));
+      }
     });
     const element = textnode;
     element[bindstatesymbol] = new Set();
@@ -65,21 +61,22 @@ export default function render(
     return textnode;
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
     const { type } = vdom;
-    let element: HTMLElement | SVGSVGElement | SVGElement | Element;
+    let element: HTMLElement | SVGSVGElement | SVGElement | Element | Node;
     if (typeof type === "string") {
       if (type === "script") {
         /* 禁止加载脚本 */
 
-        return createnonescript();
+        return createDocumentFragment();
       } else if (type === "svg") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createsvgelement();
       } else if (type === "math") {
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createmathelement();
-      } else if ("" === type||type==="html") {
-//不要创建html元素
+      } else if ("" === type || type === "html") {
+        //不要创建html元素
         return render(vdom.children);
+        // element = createDocumentFragment();
       } else {
         element = namespace
           ? createElementNS(namespace, type)
@@ -111,8 +108,8 @@ export default function render(
       element = createcostumelemet(
         type,
         propsjson,
-        vdom.children,
-        vdom.options
+        vdom.children
+        // vdom.options
       );
     } else {
       throwinvalideletype(vdom);
@@ -161,12 +158,13 @@ export default function render(
 }
 
 export interface Class {
-  new (propsjson?: object, children?: any[], options?: any): HTMLElement;
+  new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
   prototype: HTMLElement;
 }
 import { isReactiveState } from "./primitivestate";
+import { isconnected } from "./isconnected";
 function handleprops(
-  element: HTMLElement | Element | SVGSVGElement | SVGElement,
+  element: HTMLElement | Element | SVGSVGElement | SVGElement | Node,
   vdom: Virtualdom
 ) {
   ((element, vdom) => {
@@ -188,7 +186,9 @@ function handleprops(
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
       attribute1[key] = primitivestate.value;
       watch(primitivestate, (state: { value: any }) => {
-        attribute1[key] = state.value;
+        if (isconnected(element)) {
+          attribute1[key] = state.value;
+        }
       });
       /*     primitivestate[subscribesymbol]();
       requestAnimationFrame(() => {
@@ -210,7 +210,7 @@ function handleprops(
     element[bindstatesymbol] = new Set();
   }
 
-  [Object.values(vdom.bindattr), Object.values(vdom.directives)]
+  [...Object.values(vdom.bindattr), ...Object.values(vdom.directives)]
     .flat()
     .filter(
       e => isReactiveState(e)

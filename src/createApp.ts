@@ -6,6 +6,7 @@ import Virtualdom from "./virtualdom";
 import render from "./rendervdomtoreal";
 import mount from "./mount";
 import { isArray } from "./util";
+import { toArray } from "./toArray";
 export default function createApp(
   vdom:
     | Node
@@ -19,17 +20,8 @@ export default function createApp(
     vdom = vdom.flat(Infinity);
   }
   const el = container;
-  if (
-    !(
-      isvalidvdom(vdom) ||
-      vdom instanceof Node ||
-      (isArray(vdom) && isNodeArray(vdom))
-    )
-  ) {
-    console.error(vdom);
-    throw TypeError(invalid_Virtualdom);
-  }
   if (!(el instanceof HTMLElement)) {
+    console.error(el);
     throw TypeError("invalid container HTMLElement!");
   }
 
@@ -40,16 +32,32 @@ export default function createApp(
   ) {
     throw Error("Do not mount  to <html> or <body> <head>.");
   }
-  let elesarray: Array<any>;
+  /*   if (
+    !(
+      isvalidvdom(vdom) ||
+      vdom instanceof Node ||
+      (isArray(vdom) && isNodeArray(vdom))
+    )
+  ) {
+    console.error(vdom);
+    throw TypeError(invalid_Virtualdom);
+  } */
+
+  /*   let elesarray: Array<any>;
   if (Array.isArray(vdom)) {
     elesarray = vdom;
   } else {
     elesarray = [vdom];
-  }
+  } */
+  const elesarray = toArray(vdom);
   if (isvalidvdom(vdom)) {
-    mount(elesarray.map(e => render(e)), container);
+    // mount(elesarray.map(e => render(e)), container);
+    mount(render(elesarray), container);
   } else if (vdom instanceof Node || isNodeArray(vdom)) {
     mount(elesarray, container);
+  } else {
+    console.error(vdom);
+    throw TypeError(invalid_Virtualdom);
   }
 
   //

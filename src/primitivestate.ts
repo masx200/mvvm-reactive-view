@@ -29,7 +29,7 @@ export default class ReactiveState /* extends forkarray  */ {
   /*  [changetextnodesymbol](textnode: Text) {
     this[textnodesymbol] = textnode;
   } */
-  [textnodesymbol]: Text | undefined = undefined;
+  [textnodesymbol]: Text | undefined;
   value: string | number | boolean | undefined | object;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = [];

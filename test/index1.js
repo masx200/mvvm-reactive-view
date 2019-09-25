@@ -1,6 +1,3 @@
-import "../polyfill/custom-elements.min.js";
-import "../polyfill/Array-prototype-flat.js";
-import "../polyfill/Object-fromEntries.js";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   condition,
@@ -60,7 +57,7 @@ import {
     // setInterval(() => {
     //   mystate.value = true;
     // }, 1500);
-  }, 2500);
+  }, 1000);
   setTimeout(() => {
     clearInterval(timer);
   }, 10000);
@@ -453,7 +450,7 @@ import {
     >
       red</button
     ><button
-    @click=${() => {
+      @click=${() => {
         stylestate.color = "green";
       }}
     >
@@ -542,7 +539,7 @@ import {
     objstate2.value = 2222222222222;
     //   objstate.push(Math.random());
     //   objstate.push(Math.random());
-  },2000);
+  }, 2000);
 
   const objstatearray = createState([
     { a: "w", 6: "xxxxxxx", tttttttt: "true" },

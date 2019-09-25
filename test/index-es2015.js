@@ -1,241 +1,3 @@
-function _typeof(obj) {
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-        _typeof = function(obj) {
-            return typeof obj;
-        };
-    } else {
-        _typeof = function(obj) {
-            return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-        };
-    }
-    return _typeof(obj);
-}
-
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
-
-function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-    }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) symbols = symbols.filter((function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        }));
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-
-function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-            ownKeys(source, true).forEach((function(key) {
-                _defineProperty(target, key, source[key]);
-            }));
-        } else if (Object.getOwnPropertyDescriptors) {
-            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-            ownKeys(source).forEach((function(key) {
-                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-            }));
-        }
-    }
-    return target;
-}
-
-function _inherits(subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-        throw new TypeError("Super expression must either be null or a function");
-    }
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-        constructor: {
-            value: subClass,
-            writable: true,
-            configurable: true
-        }
-    });
-    if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-        return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-}
-
-function _setPrototypeOf(o, p) {
-    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-        o.__proto__ = p;
-        return o;
-    };
-    return _setPrototypeOf(o, p);
-}
-
-function isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-    try {
-        Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-function _construct(Parent, args, Class) {
-    if (isNativeReflectConstruct()) {
-        _construct = Reflect.construct;
-    } else {
-        _construct = function _construct(Parent, args, Class) {
-            var a = [ null ];
-            a.push.apply(a, args);
-            var Constructor = Function.bind.apply(Parent, a);
-            var instance = new Constructor;
-            if (Class) _setPrototypeOf(instance, Class.prototype);
-            return instance;
-        };
-    }
-    return _construct.apply(null, arguments);
-}
-
-function _isNativeFunction(fn) {
-    return Function.toString.call(fn).indexOf("[native code]") !== -1;
-}
-
-function _wrapNativeSuper(Class) {
-    var _cache = typeof Map === "function" ? new Map : undefined;
-    _wrapNativeSuper = function _wrapNativeSuper(Class) {
-        if (Class === null || !_isNativeFunction(Class)) return Class;
-        if (typeof Class !== "function") {
-            throw new TypeError("Super expression must either be null or a function");
-        }
-        if (typeof _cache !== "undefined") {
-            if (_cache.has(Class)) return _cache.get(Class);
-            _cache.set(Class, Wrapper);
-        }
-        function Wrapper() {
-            return _construct(Class, arguments, _getPrototypeOf(this).constructor);
-        }
-        Wrapper.prototype = Object.create(Class.prototype, {
-            constructor: {
-                value: Wrapper,
-                enumerable: false,
-                writable: true,
-                configurable: true
-            }
-        });
-        return _setPrototypeOf(Wrapper, Class);
-    };
-    return _wrapNativeSuper(Class);
-}
-
-function _assertThisInitialized(self) {
-    if (self === void 0) {
-        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-    return self;
-}
-
-function _possibleConstructorReturn(self, call) {
-    if (call && (typeof call === "object" || typeof call === "function")) {
-        return call;
-    }
-    return _assertThisInitialized(self);
-}
-
-function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
-}
-
-function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-        for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-        return arr2;
-    }
-}
-
-function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _iterableToArrayLimit(arr, i) {
-    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-        return;
-    }
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-    try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-            _arr.push(_s.value);
-            if (i && _arr.length === i) break;
-        }
-    } catch (err) {
-        _d = true;
-        _e = err;
-    } finally {
-        try {
-            if (!_n && _i["return"] != null) _i["return"]();
-        } finally {
-            if (_d) throw _e;
-        }
-    }
-    return _arr;
-}
-
-function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
-
-function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
-}
-
 (function() {
     var aa = new Set("annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" "));
     function g(a) {
@@ -970,6 +732,244 @@ if ("function" !== typeof Object.fromEntries) {
     Object.fromEntries = fromPairs_1;
 }
 
+function _typeof(obj) {
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+        _typeof = function(obj) {
+            return typeof obj;
+        };
+    } else {
+        _typeof = function(obj) {
+            return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        };
+    }
+    return _typeof(obj);
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+    }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly) symbols = symbols.filter((function(sym) {
+            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        }));
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+
+function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i] != null ? arguments[i] : {};
+        if (i % 2) {
+            ownKeys(source, true).forEach((function(key) {
+                _defineProperty(target, key, source[key]);
+            }));
+        } else if (Object.getOwnPropertyDescriptors) {
+            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+            ownKeys(source).forEach((function(key) {
+                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+            }));
+        }
+    }
+    return target;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function");
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+        constructor: {
+            value: subClass,
+            writable: true,
+            configurable: true
+        }
+    });
+    if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+        return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+        o.__proto__ = p;
+        return o;
+    };
+    return _setPrototypeOf(o, p);
+}
+
+function isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+    try {
+        Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function _construct(Parent, args, Class) {
+    if (isNativeReflectConstruct()) {
+        _construct = Reflect.construct;
+    } else {
+        _construct = function _construct(Parent, args, Class) {
+            var a = [ null ];
+            a.push.apply(a, args);
+            var Constructor = Function.bind.apply(Parent, a);
+            var instance = new Constructor;
+            if (Class) _setPrototypeOf(instance, Class.prototype);
+            return instance;
+        };
+    }
+    return _construct.apply(null, arguments);
+}
+
+function _isNativeFunction(fn) {
+    return Function.toString.call(fn).indexOf("[native code]") !== -1;
+}
+
+function _wrapNativeSuper(Class) {
+    var _cache = typeof Map === "function" ? new Map : undefined;
+    _wrapNativeSuper = function _wrapNativeSuper(Class) {
+        if (Class === null || !_isNativeFunction(Class)) return Class;
+        if (typeof Class !== "function") {
+            throw new TypeError("Super expression must either be null or a function");
+        }
+        if (typeof _cache !== "undefined") {
+            if (_cache.has(Class)) return _cache.get(Class);
+            _cache.set(Class, Wrapper);
+        }
+        function Wrapper() {
+            return _construct(Class, arguments, _getPrototypeOf(this).constructor);
+        }
+        Wrapper.prototype = Object.create(Class.prototype, {
+            constructor: {
+                value: Wrapper,
+                enumerable: false,
+                writable: true,
+                configurable: true
+            }
+        });
+        return _setPrototypeOf(Wrapper, Class);
+    };
+    return _wrapNativeSuper(Class);
+}
+
+function _assertThisInitialized(self) {
+    if (self === void 0) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+    return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (call && (typeof call === "object" || typeof call === "function")) {
+        return call;
+    }
+    return _assertThisInitialized(self);
+}
+
+function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+}
+
+function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+        for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+        return arr2;
+    }
+}
+
+function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+function _iterableToArrayLimit(arr, i) {
+    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+        return;
+    }
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+    try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally {
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally {
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+
+function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
+function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+
 var Reflect$1 = window.Reflect;
 
 var construct = Reflect$1.construct, _deleteProperty = Reflect$1.deleteProperty, _get = Reflect$1.get, _getOwnPropertyDescriptor = Reflect$1.getOwnPropertyDescriptor, getPrototypeOf = Reflect$1.getPrototypeOf, _has = Reflect$1.has, _ownKeys = Reflect$1.ownKeys, _set = Reflect$1.set;
@@ -1096,7 +1096,7 @@ function createsvgelement() {
     return createElementNS(svgnamespace, "svg");
 }
 
-function createnonescript() {
+function createDocumentFragment() {
     return document$1.createDocumentFragment();
 }
 
@@ -1154,7 +1154,7 @@ function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
 
-var _a, _b, _c;
+var _a, _b;
 
 function isReactiveState(a) {
     return a instanceof ReactiveState;
@@ -1177,9 +1177,8 @@ var addallistenerssymbol = getsymbol("addallisteners");
 var ReactiveState = function() {
     function ReactiveState(init) {
         _classCallCheck(this, ReactiveState);
-        this[_a] = undefined;
-        this[_b] = new EventTarget;
-        this[_c] = [];
+        this[_a] = new EventTarget;
+        this[_b] = [];
         if (isprimitive(init) || isobject(init)) {
             Object.defineProperty(this, "value", {
                 value: init,
@@ -1215,7 +1214,7 @@ var ReactiveState = function() {
             return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify(_toConsumableArray(value)) : isobject(value) ? JSON.stringify(value) : "";
         }
     }, {
-        key: (_a = textnodesymbol, _b = eventtargetsymbol, _c = memlisteners, dispatchsymbol),
+        key: (_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol),
         value: function value(eventname) {
             var name = eventname ? String(eventname) : "value";
             if (name !== "value") {
@@ -1255,6 +1254,17 @@ var ReactiveState = function() {
     return ReactiveState;
 }();
 
+function isconnected(element) {
+    return document.documentElement === getancestornode(element);
+}
+
+function getancestornode(node) {
+    while (node.parentNode && node.parentNode !== document) {
+        node = node.parentNode;
+    }
+    return node;
+}
+
 var requestAnimationFrame$1 = window.requestAnimationFrame;
 
 var directives = {
@@ -1275,13 +1285,16 @@ var directives = {
 
 function createhtmlandtextdirective(seteletext, errorname) {
     return function(ele, text) {
+        var element = ele;
         if (typeof text == "string") {
             requestAnimationFrame$1((function() {
                 seteletext(ele, text);
             }));
         } else if (isReactiveState(text)) {
             watch(text, (function(state) {
-                seteletext(ele, String(state));
+                if (isconnected(element)) {
+                    seteletext(ele, String(state));
+                }
             }));
             requestAnimationFrame$1((function() {
                 seteletext(ele, String(text));
@@ -1488,25 +1501,25 @@ var Virtualdom = function Virtualdom() {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
     _classCallCheck(this, Virtualdom);
-    this.options = undefined;
-    this.element = undefined;
+    this.type = "";
     this.props = {};
     this.children = [];
     this.directives = {};
     this.onevent = {};
     this.bindattr = {};
+    var 字母大小写 = /[A-Za-z]/;
     var propsentries = Object.entries(props);
     Object.assign(this, {
         type: type,
         bindattr: Object.fromEntries(propsentries.filter((function(_ref8) {
             var _ref9 = _slicedToArray(_ref8, 1), key = _ref9[0];
-            return /[A-Za-z]/.test(key[0]);
+            return 字母大小写.test(key[0]);
         })).filter((function(e) {
             return isReactiveState(e[1]);
         }))),
         props: Object.fromEntries(propsentries.filter((function(_ref10) {
             var _ref11 = _slicedToArray(_ref10, 1), key = _ref11[0];
-            return /[A-Za-z]/.test(key[0]);
+            return 字母大小写.test(key[0]);
         })).filter((function(e) {
             return !isReactiveState(e[1]);
         }))),
@@ -1648,14 +1661,13 @@ function isvalidvdom(v) {
     return flag;
 }
 
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat();
+}
+
 function mount(ele, container) {
-    setelehtml(container, "");
-    var eles;
-    if (Array.isArray(ele)) {
-        eles = ele;
-    } else {
-        eles = [ ele ];
-    }
+    seteletext(container, "");
+    var eles = toArray(ele).flat(Infinity);
     eles.forEach((function(e) {
         return appendchild(container, e);
     }));
@@ -1669,28 +1681,21 @@ function createApp(vdom, container) {
         vdom = vdom.flat(Infinity);
     }
     var el = container;
-    if (!(isvalidvdom(vdom) || vdom instanceof Node || isarray(vdom) && isNodeArray(vdom))) {
-        console.error(vdom);
-        throw TypeError(invalid_Virtualdom);
-    }
     if (!(el instanceof HTMLElement)) {
+        console.error(el);
         throw TypeError("invalid container HTMLElement!");
     }
     if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
         throw Error("Do not mount  to <html> or <body> <head>.");
     }
-    var elesarray;
-    if (Array.isArray(vdom)) {
-        elesarray = vdom;
-    } else {
-        elesarray = [ vdom ];
-    }
+    var elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
-        mount(elesarray.map((function(e) {
-            return render(e);
-        })), container);
+        mount(render(elesarray), container);
     } else if (vdom instanceof Node || isNodeArray(vdom)) {
         mount(elesarray, container);
+    } else {
+        console.error(vdom);
+        throw TypeError(invalid_Virtualdom);
     }
     return container;
 }
@@ -1700,8 +1705,6 @@ function isNodeArray(array) {
         return e instanceof Node;
     })).includes(false);
 }
-
-var _a$1;
 
 var invalid_ReactiveState = "invalid ReactiveState";
 
@@ -1717,100 +1720,8 @@ var handletrue = getsymbol("handletrue");
 
 var handlefalse = getsymbol("handlefalse");
 
-var Condition = function(_AttrChange) {
-    _inherits(Condition, _AttrChange);
-    function Condition(propsjson, children) {
-        var _this4;
-        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-        _classCallCheck(this, Condition);
-        _this4 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
-        _this4[_a$1] = false;
-        var optionstrue = _get(options, "true");
-        var optionsfalse = _get(options, "false");
-        _this4[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
-        _this4[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
-        return _this4;
-    }
-    _createClass(Condition, [ {
-        key: (_a$1 = readysymbol, handlefalse),
-        value: function value() {
-            setelehtml(this, "");
-            if (this[falsevdomsymbol]) {
-                if (!this[falseelesymbol]) {
-                    this[falseelesymbol] = render(this[falsevdomsymbol]);
-                }
-                var elementtomount = this[falseelesymbol];
-                createApp(elementtomount, this);
-                elementtomount.forEach((function(e) {
-                    return onmounted(e);
-                }));
-                if (this[trueelesymbol]) {
-                    this[trueelesymbol].forEach((function(e) {
-                        return onunmounted(e);
-                    }));
-                }
-            }
-        }
-    }, {
-        key: handletrue,
-        value: function value() {
-            setelehtml(this, "");
-            if (this[truevdomsymbol]) {
-                if (!this[trueelesymbol]) {
-                    this[trueelesymbol] = render(this[truevdomsymbol]);
-                }
-                var elementtomount = this[trueelesymbol];
-                createApp(elementtomount, this);
-                elementtomount.forEach((function(e) {
-                    return onmounted(e);
-                }));
-                if (this[falseelesymbol]) {
-                    this[falseelesymbol].forEach((function(e) {
-                        return onunmounted(e);
-                    }));
-                }
-            }
-        }
-    }, {
-        key: "connectedCallback",
-        value: function connectedCallback() {
-            if (!this[readysymbol]) {
-                this[readysymbol] = true;
-                var attrs = createeleattragentreadwrite(this);
-                if (true === attrs["value"]) {
-                    this[handletrue]();
-                }
-                if (false === attrs["value"]) {
-                    this[handlefalse]();
-                }
-            }
-            onmounted(this);
-        }
-    }, {
-        key: "disconnectedCallback",
-        value: function disconnectedCallback() {
-            onunmounted(this);
-        }
-    }, {
-        key: "attributeChangedCallback",
-        value: function attributeChangedCallback(name) {
-            if (this[readysymbol]) {
-                if (name === "value") {
-                    var attrs = createeleattragentreadwrite(this);
-                    if (true === attrs["value"]) {
-                        this[handletrue]();
-                    }
-                    if (false === attrs["value"]) {
-                        this[handlefalse]();
-                    }
-                }
-            }
-        }
-    } ]);
-    return Condition;
-}(AttrChange);
-
 function conditon(conditon, iftrue, iffalse) {
+    var _a;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
         throw TypeError(invalid_ReactiveState);
     }
@@ -1819,13 +1730,104 @@ function conditon(conditon, iftrue, iffalse) {
             throw new TypeError(invalid_Virtualdom);
         }
     }));
-    var vdom = new Virtualdom(Condition, {
-        value: conditon
-    });
-    vdom.options = {
+    var options = {
         true: iftrue,
         false: iffalse
     };
+    var Condition = function(_AttrChange) {
+        _inherits(Condition, _AttrChange);
+        function Condition() {
+            var _this4;
+            _classCallCheck(this, Condition);
+            _this4 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
+            _this4[_a] = false;
+            var optionstrue = _get(options, "true");
+            var optionsfalse = _get(options, "false");
+            _this4[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
+            _this4[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
+            return _this4;
+        }
+        _createClass(Condition, [ {
+            key: (_a = readysymbol, handlefalse),
+            value: function value() {
+                setelehtml(this, "");
+                if (this[falsevdomsymbol]) {
+                    if (!this[falseelesymbol]) {
+                        this[falseelesymbol] = render(this[falsevdomsymbol]);
+                    }
+                    var elementtomount = this[falseelesymbol];
+                    createApp(elementtomount, this);
+                    elementtomount.forEach((function(e) {
+                        return onmounted(e);
+                    }));
+                    if (this[trueelesymbol]) {
+                        this[trueelesymbol].forEach((function(e) {
+                            return onunmounted(e);
+                        }));
+                    }
+                }
+            }
+        }, {
+            key: handletrue,
+            value: function value() {
+                setelehtml(this, "");
+                if (this[truevdomsymbol]) {
+                    if (!this[trueelesymbol]) {
+                        this[trueelesymbol] = render(this[truevdomsymbol]);
+                    }
+                    var elementtomount = this[trueelesymbol];
+                    createApp(elementtomount, this);
+                    elementtomount.forEach((function(e) {
+                        return onmounted(e);
+                    }));
+                    if (this[falseelesymbol]) {
+                        this[falseelesymbol].forEach((function(e) {
+                            return onunmounted(e);
+                        }));
+                    }
+                }
+            }
+        }, {
+            key: "connectedCallback",
+            value: function connectedCallback() {
+                if (!this[readysymbol]) {
+                    this[readysymbol] = true;
+                    var attrs = createeleattragentreadwrite(this);
+                    if (true === attrs["value"]) {
+                        this[handletrue]();
+                    }
+                    if (false === attrs["value"]) {
+                        this[handlefalse]();
+                    }
+                }
+                onmounted(this);
+            }
+        }, {
+            key: "disconnectedCallback",
+            value: function disconnectedCallback() {
+                onunmounted(this);
+            }
+        }, {
+            key: "attributeChangedCallback",
+            value: function attributeChangedCallback(name) {
+                if (this[readysymbol]) {
+                    if (name === "value") {
+                        var attrs = createeleattragentreadwrite(this);
+                        if (true === attrs["value"]) {
+                            this[handletrue]();
+                        }
+                        if (false === attrs["value"]) {
+                            this[handlefalse]();
+                        }
+                    }
+                }
+            }
+        } ]);
+        return Condition;
+    }(AttrChange);
+    var vdom = new Virtualdom(Condition, {
+        value: conditon
+    });
     return vdom;
 }
 
@@ -1987,7 +1989,9 @@ function render(vdom, namespace) {
         textnode[reactivestatesymbol] = reactive;
         reactive[textnodesymbol] = textnode;
         watch(reactive, (function(state) {
-            changetext(textnode, String(state));
+            if (isconnected(element)) {
+                changetext(textnode, String(state));
+            }
         }));
         var element = textnode;
         element[bindstatesymbol] = new Set;
@@ -1998,12 +2002,12 @@ function render(vdom, namespace) {
         var _element;
         if (typeof type === "string") {
             if (type === "script") {
-                return createnonescript();
+                return createDocumentFragment();
             } else if (type === "svg") {
                 _element = createsvgelement();
             } else if (type === "math") {
                 _element = createmathelement();
-            } else if ("" === type) {
+            } else if ("" === type || type === "html") {
                 return render(vdom.children);
             } else {
                 _element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
@@ -2016,7 +2020,7 @@ function render(vdom, namespace) {
                 var _ref25 = _slicedToArray(_ref24, 2), key = _ref25[0], value = _ref25[1];
                 return [ key, value.value ];
             }))))));
-            _element = createcostumelemet(type, propsjson, vdom.children, vdom.options);
+            _element = createcostumelemet(type, propsjson, vdom.children);
         } else {
             throwinvalideletype(vdom);
         }
@@ -2062,7 +2066,9 @@ function handleprops(element, vdom) {
             var _ref29 = _slicedToArray(_ref28, 2), key = _ref29[0], primitivestate = _ref29[1];
             attribute1[key] = primitivestate.value;
             watch(primitivestate, (function(state) {
-                attribute1[key] = state.value;
+                if (isconnected(element)) {
+                    attribute1[key] = state.value;
+                }
             }));
         }));
         if (!element[eventlistenerssymbol]) {
@@ -2462,7 +2468,7 @@ var Fragment = "";
     document.body.appendChild(createApp([ vdom, vdom2, vdom3 ], document.createElement("div")));
     var timer = setInterval((function() {
         mystate.value = !mystate.value;
-    }), 2500);
+    }), 1e3);
     setTimeout((function() {
         clearInterval(timer);
     }), 1e4);
@@ -2919,7 +2925,7 @@ customElements.define("qqqqqqqqqq-----a", function(_HTMLElement2) {
     }), 5e3);
 })();
 
-setTimeout((function() {
+(function() {
     (function() {
         var _class2, _temp;
         var myvdom1111111 = createElement(function(_HTMLElement) {
@@ -2972,9 +2978,15 @@ setTimeout((function() {
         document.body.appendChild(createApp(myele1, document.createElement("div")));
         document.body.appendChild(createApp(myele1, document.createElement("div")));
     })();
-}), 0);
+})();
 
-var vdom = createElement(Fragment, null, createElement("header", {
+var vdom = createElement("html", null, "testhtml");
+
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+
+console.log(vdom);
+
+var vdom$1 = createElement(Fragment, null, createElement("header", {
     class: "common-header fixed noborder floating",
     id: "git-header-nav"
 }, createElement("div", {
@@ -3396,7 +3408,7 @@ var vdom = createElement(Fragment, null, createElement("header", {
     class: "mayun-icon my-ic-exit my-ic-exit-dims"
 }), "退出"))), createElement("script", null))))));
 
-console.log(vdom);
+console.log(vdom$1);
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(createApp(vdom$1, document.createElement("div")));
 //# sourceMappingURL=index-es2015.js.map

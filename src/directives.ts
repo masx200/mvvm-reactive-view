@@ -3,6 +3,7 @@ import { seteletext, setelehtml } from "./dom";
 
 import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from "./primitivestate";
+import { isconnected } from "./isconnected";
 export default {
   ref(ele: Element, ref: { value: any }) {
     if (typeof ref == "object") {
@@ -83,6 +84,7 @@ export default {
 };
 function createhtmlandtextdirective(seteletext: Function, errorname: string) {
   return function(ele: Element, text: string | ReactiveState) {
+    const element = ele;
     if (typeof text == "string") {
       requestAnimationFrame(() => {
         seteletext(ele, text);
@@ -95,8 +97,9 @@ function createhtmlandtextdirective(seteletext: Function, errorname: string) {
     ) {
       //   const ReactiveState = text;
       watch(text, (state: { value: any }) => {
-        seteletext(ele, String(state));
-
+        if (isconnected(element)) {
+          seteletext(ele, String(state));
+        }
         /* ele.textContent = String(state);*/
       });
       //   ReactiveState[subscribesymbol]((state: { value: any }) => {
