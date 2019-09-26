@@ -1,4 +1,4 @@
-import {invalid_primitive_or_object_state}from "primitivestate"
+import { invalid_primitive_or_object_state } from "./primitivestate";
 
 import {
   deleteProperty,
@@ -152,8 +152,8 @@ export default function createstate(
       }
     });
   } else {
-console.error(init)
-      throw TypeError(invalid_primitive_or_object_state);
+    console.error(init);
+    throw TypeError(invalid_primitive_or_object_state);
 
     //throw TypeError("invalid State");
   }

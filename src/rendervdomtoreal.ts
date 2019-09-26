@@ -49,7 +49,12 @@ export default function render(
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
     textnode[reactivestatesymbol] = reactive;
-    reactive[textnodesymbol] = textnode;
+    try {
+      reactive[textnodesymbol] = textnode;
+    } catch (error) {
+      console.warn(error);
+    }
+
     watch(reactive, (state: { value: string }) => {
       if (isconnected(element)) {
         changetext(textnode, String(state));

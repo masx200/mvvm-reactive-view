@@ -184,6 +184,8 @@ function isprimitive(a) {
 
 var _a, _b;
 
+const invalid_primitive_or_object_state = "invalid primitive or object state";
+
 function isReactiveState(a) {
     return a instanceof ReactiveState;
 }
@@ -213,7 +215,8 @@ class ReactiveState {
                 writable: true
             });
         } else {
-            throw TypeError("invalid State");
+            console.error(init);
+            throw TypeError(invalid_primitive_or_object_state);
         }
         Object.defineProperty(this, Symbol.toStringTag, {
             value: "ReactiveState",
@@ -497,13 +500,14 @@ class Virtualdom {
         this.bindattr = {};
         const 字母大小写 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
+        const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
         Object.assign(this, {
             type: type,
-            bindattr: Object.fromEntries(propsentries.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),
-            props: Object.fromEntries(propsentries.filter(([key]) => 字母大小写.test(key[0])).filter(e => !isReactiveState(e[1]))),
+            bindattr: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),
+            props: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
-            onevent: Object.fromEntries(propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1), [ value ].flat() ])),
-            directives: Object.fromEntries(propsentries.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1), value ]))
+            onevent: Object.fromEntries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ]),
+            directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
         });
         Object.defineProperty(this, Symbol.toStringTag, {
             value: "virtualdom",
@@ -512,24 +516,25 @@ class Virtualdom {
     }
 }
 
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat();
+}
+
 const eventlistenerssymbol = Symbol("eventlisteners");
 
 function onevent(element, eventname, callback) {
     if (!element[eventlistenerssymbol]) {
         element[eventlistenerssymbol] = [];
     }
-    if (isfunction(callback)) {
-        firstaddlisteners(element, eventname, [ callback ]);
-    } else if (isarray(callback)) {
-        firstaddlisteners(element, eventname, callback);
-    } else {
-        console.error(callback);
-        throw TypeError(invalid_Function);
-    }
+    firstaddlisteners(element, eventname, toArray(callback));
 }
 
 function firstaddlisteners(ele, event, callarray) {
     callarray.forEach(call => {
+        if (!isfunction(call)) {
+            console.error(call);
+            throw TypeError(invalid_Function);
+        }
         ele[eventlistenerssymbol].push([ event, call ]);
         domaddlisten(ele, event, call);
     });
@@ -666,10 +671,6 @@ function assertvalidvirtualdom(...args) {
         console.error(vdom);
         throw new TypeError(invalid_Virtualdom);
     }
-}
-
-function toArray(a) {
-    return (isarray(a) ? a : [ a ]).flat();
 }
 
 function mount(ele, container) {
@@ -952,7 +953,11 @@ function render(vdom, namespace) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
         textnode[reactivestatesymbol] = reactive;
-        reactive[textnodesymbol] = textnode;
+        try {
+            reactive[textnodesymbol] = textnode;
+        } catch (error) {
+            console.warn(error);
+        }
         watch(reactive, state => {
             if (isconnected(element)) {
                 changetext(textnode, String(state));
@@ -1284,7 +1289,8 @@ function createstate(init) {
             }
         });
     } else {
-        throw TypeError("invalid State");
+        console.error(init);
+        throw TypeError(invalid_primitive_or_object_state);
     }
 }
 
@@ -1320,7 +1326,7 @@ function createComponent(custfun) {
                 openctx();
                 let possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun(readonlyproxy(thisattributess), children);
+                    possiblyvirtualdom = custfun(readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ]))), children);
                 } catch (error) {
                     closectx();
                     throw error;
