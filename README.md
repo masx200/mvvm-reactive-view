@@ -226,7 +226,7 @@ var mycom = (props, children) => {
     console.log("unmounted");
   });
   watch(props.cccccc, console.log);
-  return createElement("div",null,[
+  return createElement("div", null, [
     "wwwwwwwwwwww",
     createElement("div", null, ["createComponent"]),
     children,
@@ -300,12 +300,12 @@ setTimeout(() => {
 }, 5000);
 ```
 
-# 元素的style属性可是字符串或者对象
+# 元素的 style 属性可是字符串或者对象
 
 `style="width:800px"`
 
 `style=${{ display: "block", width: "500px" }}`
-  
+
 # 属性单向绑定
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
@@ -314,11 +314,15 @@ setTimeout(() => {
 
 # 事件绑定
 
-属性名为'@'+事件名称,属性值绑定为回调函数或者回调函数组成的数组
+1.属性名为'@'+事件名称,属性值绑定为回调函数或者回调函数组成的数组
 
 `@change=${e => (state1.value = e.target.value)}`
 
 `@input=${[e => (state1.value = e.target.value),console.log]}`
+
+2.使用"on"+事件名称
+
+`onclick={e=>console.log(e)}`
 
 # 使用指令
 
