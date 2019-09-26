@@ -3,6 +3,7 @@ export function isVirtualdom(a: any): a is Virtualdom {
 }
 import ReactiveState, { isReactiveState } from "./primitivestate";
 import { Class } from "./rendervdomtoreal";
+import { merge_entries } from "./merge-entries";
 
 export default class Virtualdom {
   //   options: any |undefined
@@ -74,7 +75,7 @@ value
         [["value",["f","f","f","f"]]]
         
         */
-        [
+        merge_entries([
           ...propsentries
             .filter(([key]) => /\@/.test(key[0]))
             .map(([key, value]) => [
@@ -97,7 +98,7 @@ value
               //把事件绑定变成事件数组
               [value].flat()
             ])
-        ]
+        ])
       ),
       directives: Object.fromEntries(
         propsentriesNOTevents

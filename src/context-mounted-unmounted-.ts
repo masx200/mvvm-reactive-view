@@ -2,8 +2,8 @@ import { isFunction } from "./util";
 export const invalid_Function = "invalid Function";
 const message = "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
-let Mounted = [];
-let UnMounted = [];
+let Mounted: Set<Function> = new Set();
+let UnMounted: Set<Function> = new Set();
 export function getMounted() {
   return [...Mounted];
 }
@@ -13,7 +13,7 @@ export function getUnMounted() {
 export function useMounted(fun: Function) {
   if (isFunction(fun)) {
     if (ctxopen) {
-      Mounted.push(fun);
+      Mounted.add(fun);
     } else {
       throw Error(message);
     }
@@ -25,7 +25,7 @@ export function useMounted(fun: Function) {
 export function useUnMounted(fun: Function) {
   if (isFunction(fun)) {
     if (ctxopen) {
-      UnMounted.push(fun);
+      UnMounted.add(fun);
     } else {
       throw Error(message);
     }
@@ -34,10 +34,10 @@ export function useUnMounted(fun: Function) {
   }
 }
 export function clearMounted() {
-  Mounted = [];
+  Mounted = new Set();
 }
 export function clearUnMounted() {
-  UnMounted = [];
+  UnMounted = new Set();
 }
 export function openctx() {
   ctxopen = true;

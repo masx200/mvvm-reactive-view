@@ -75,14 +75,17 @@ export function createComponent(custfun: Custom): Class {
           | any;
         try {
           possiblyvirtualdom = custfun(
+            //让组件里面无法修改props的reactivestate的value
+            // readonlyproxy(thisattributess),
 
-//让组件里面无法修改props的reactivestate的value
-           // readonlyproxy(thisattributess),
-
-readonlyproxy(
-Object.fromEntries(
-          Object.entries(thisattributess).map(([key, value]) => [key, readonlyproxy(value)])
-        )),
+            readonlyproxy(
+              Object.fromEntries(
+                Object.entries(thisattributess).map(([key, value]) => [
+                  key,
+                  readonlyproxy(value)
+                ])
+              )
+            ),
             children
           );
         } catch (error) {

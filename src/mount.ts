@@ -30,6 +30,8 @@ export default function(
     eles = [ele];
   } */
   const eles = toArray(ele).flat(Infinity);
-  eles.forEach(e => appendchild(container, e));
+  eles.forEach((e: Node | HTMLElement | Element | SVGElement) =>
+    appendchild(container, e)
+  );
   return container;
 }

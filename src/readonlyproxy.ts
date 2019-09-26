@@ -8,6 +8,9 @@ export default function(target: object) {
     },
     deleteProperty() {
       return false;
+    },
+    setPrototypeOf() {
+      return false;
     }
   });
 }

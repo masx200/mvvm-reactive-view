@@ -1020,9 +1020,9 @@ var message = "invalid useMounted or useUnMounted out of createComponent";
 
 var ctxopen = false;
 
-var Mounted = [];
+var Mounted = new Set;
 
-var UnMounted = [];
+var UnMounted = new Set;
 
 function getMounted() {
     return _toConsumableArray(Mounted);
@@ -1035,7 +1035,7 @@ function getUnMounted() {
 function useMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            Mounted.push(fun);
+            Mounted.add(fun);
         } else {
             throw Error(message);
         }
@@ -1047,7 +1047,7 @@ function useMounted(fun) {
 function useUnMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            UnMounted.push(fun);
+            UnMounted.add(fun);
         } else {
             throw Error(message);
         }
@@ -1057,11 +1057,11 @@ function useUnMounted(fun) {
 }
 
 function clearMounted() {
-    Mounted = [];
+    Mounted = new Set;
 }
 
 function clearUnMounted() {
-    UnMounted = [];
+    UnMounted = new Set;
 }
 
 function openctx() {
@@ -1493,6 +1493,23 @@ var AttrChange = function(_HTMLElement) {
     return AttrChange;
 }(_wrapNativeSuper(HTMLElement));
 
+function merge_entries(a) {
+    var m = {};
+    a.forEach((function(_ref8) {
+        var _ref9 = _slicedToArray(_ref8, 2), key = _ref9[0], value = _ref9[1];
+        if (!m[key]) {
+            m[key] = new Set;
+        }
+        value.forEach((function(v) {
+            m[key].add(v);
+        }));
+    }));
+    return Object.entries(m).map((function(_ref10) {
+        var _ref11 = _slicedToArray(_ref10, 2), k = _ref11[0], v = _ref11[1];
+        return [ k, Array.from(v) ];
+    }));
+}
+
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
 }
@@ -1510,44 +1527,43 @@ var Virtualdom = function Virtualdom() {
     this.bindattr = {};
     var 字母大小写 = /[A-Za-z]/;
     var propsentries = Object.entries(props);
-    var propsentriesNOTevents = propsentries.filter((function(_ref8) {
-        var _ref9 = _slicedToArray(_ref8, 1), key = _ref9[0];
+    var propsentriesNOTevents = propsentries.filter((function(_ref12) {
+        var _ref13 = _slicedToArray(_ref12, 1), key = _ref13[0];
         return !(key.startsWith("@") || key.startsWith("on"));
     }));
-    console.log([ type, props, children ], [ propsentries, propsentriesNOTevents ]);
     Object.assign(this, {
         type: type,
-        bindattr: Object.fromEntries(propsentriesNOTevents.filter((function(_ref10) {
-            var _ref11 = _slicedToArray(_ref10, 1), key = _ref11[0];
+        bindattr: Object.fromEntries(propsentriesNOTevents.filter((function(_ref14) {
+            var _ref15 = _slicedToArray(_ref14, 1), key = _ref15[0];
             return 字母大小写.test(key[0]);
         })).filter((function(e) {
             return isReactiveState(e[1]);
         }))),
-        props: Object.fromEntries(propsentriesNOTevents.filter((function(_ref12) {
-            var _ref13 = _slicedToArray(_ref12, 1), key = _ref13[0];
+        props: Object.fromEntries(propsentriesNOTevents.filter((function(_ref16) {
+            var _ref17 = _slicedToArray(_ref16, 1), key = _ref17[0];
             return 字母大小写.test(key[0]);
         })).filter((function(e) {
             return !isReactiveState(e[1]);
         }))),
         children: children.flat(),
-        onevent: Object.fromEntries([].concat(_toConsumableArray(propsentries.filter((function(_ref14) {
-            var _ref15 = _slicedToArray(_ref14, 1), key = _ref15[0];
-            return /\@/.test(key[0]);
-        })).map((function(_ref16) {
-            var _ref17 = _slicedToArray(_ref16, 2), key = _ref17[0], value = _ref17[1];
-            return [ key.slice(1).toLowerCase().trim(), [ value ].flat() ];
-        }))), _toConsumableArray(propsentries.filter((function(_ref18) {
+        onevent: Object.fromEntries(merge_entries([].concat(_toConsumableArray(propsentries.filter((function(_ref18) {
             var _ref19 = _slicedToArray(_ref18, 1), key = _ref19[0];
-            return key.startsWith("on");
+            return /\@/.test(key[0]);
         })).map((function(_ref20) {
             var _ref21 = _slicedToArray(_ref20, 2), key = _ref21[0], value = _ref21[1];
-            return [ key.slice(2).toLowerCase().trim(), [ value ].flat() ];
-        }))))),
-        directives: Object.fromEntries(propsentriesNOTevents.filter((function(_ref22) {
+            return [ key.slice(1).toLowerCase().trim(), [ value ].flat() ];
+        }))), _toConsumableArray(propsentries.filter((function(_ref22) {
             var _ref23 = _slicedToArray(_ref22, 1), key = _ref23[0];
-            return /\*/.test(key[0]);
+            return key.startsWith("on");
         })).map((function(_ref24) {
             var _ref25 = _slicedToArray(_ref24, 2), key = _ref25[0], value = _ref25[1];
+            return [ key.slice(2).toLowerCase().trim(), [ value ].flat() ];
+        })))))),
+        directives: Object.fromEntries(propsentriesNOTevents.filter((function(_ref26) {
+            var _ref27 = _slicedToArray(_ref26, 1), key = _ref27[0];
+            return /\*/.test(key[0]);
+        })).map((function(_ref28) {
+            var _ref29 = _slicedToArray(_ref28, 2), key = _ref29[0], value = _ref29[1];
             return [ key.slice(1).toLowerCase().trim(), value ];
         })))
     });
@@ -1583,8 +1599,8 @@ function firstaddlisteners(ele, event, callarray) {
 
 function removelisteners(ele) {
     if (ele[eventlistenerssymbol]) {
-        ele[eventlistenerssymbol].forEach((function(_ref26) {
-            var _ref27 = _slicedToArray(_ref26, 2), event = _ref27[0], call = _ref27[1];
+        ele[eventlistenerssymbol].forEach((function(_ref30) {
+            var _ref31 = _slicedToArray(_ref30, 2), event = _ref31[0], call = _ref31[1];
             domremovelisten(ele, event, call);
         }));
     }
@@ -1592,8 +1608,8 @@ function removelisteners(ele) {
 
 function readdlisteners(ele) {
     if (ele[eventlistenerssymbol]) {
-        ele[eventlistenerssymbol].forEach((function(_ref28) {
-            var _ref29 = _slicedToArray(_ref28, 2), event = _ref29[0], call = _ref29[1];
+        ele[eventlistenerssymbol].forEach((function(_ref32) {
+            var _ref33 = _slicedToArray(_ref32, 2), event = _ref33[0], call = _ref33[1];
             domaddlisten(ele, event, call);
         }));
     }
@@ -2024,8 +2040,8 @@ function render(vdom, namespace) {
             if (isobject(type["defaultProps"])) {
                 vdom.props = JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props)));
             }
-            var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object.fromEntries(Object.entries(vdom.bindattr).map((function(_ref30) {
-                var _ref31 = _slicedToArray(_ref30, 2), key = _ref31[0], value = _ref31[1];
+            var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object.fromEntries(Object.entries(vdom.bindattr).map((function(_ref34) {
+                var _ref35 = _slicedToArray(_ref34, 2), key = _ref35[0], value = _ref35[1];
                 return [ key, value.value ];
             }))))));
             _element = createcostumelemet(type, propsjson, vdom.children);
@@ -2058,8 +2074,8 @@ function render(vdom, namespace) {
 
 function handleprops(element, vdom) {
     (function(element, vdom) {
-        Object.entries(vdom.directives).forEach((function(_ref32) {
-            var _ref33 = _slicedToArray(_ref32, 2), name = _ref33[0], value = _ref33[1];
+        Object.entries(vdom.directives).forEach((function(_ref36) {
+            var _ref37 = _slicedToArray(_ref36, 2), name = _ref37[0], value = _ref37[1];
             if (name in directives && typeof directives[name] === "function") {
                 directives[name](element, value, vdom);
             } else {
@@ -2070,8 +2086,8 @@ function handleprops(element, vdom) {
         Object.assign(attribute1, vdom.props);
         element[virtualdomsymbol] = vdom;
         vdom.element = element;
-        Object.entries(vdom.bindattr).forEach((function(_ref34) {
-            var _ref35 = _slicedToArray(_ref34, 2), key = _ref35[0], primitivestate = _ref35[1];
+        Object.entries(vdom.bindattr).forEach((function(_ref38) {
+            var _ref39 = _slicedToArray(_ref38, 2), key = _ref39[0], primitivestate = _ref39[1];
             attribute1[key] = primitivestate.value;
             watch(primitivestate, (function(state) {
                 if (isconnected(element)) {
@@ -2082,8 +2098,8 @@ function handleprops(element, vdom) {
         if (!element[eventlistenerssymbol]) {
             element[eventlistenerssymbol] = [];
         }
-        Object.entries(vdom.onevent).forEach((function(_ref36) {
-            var _ref37 = _slicedToArray(_ref36, 2), event = _ref37[0], callbacks = _ref37[1];
+        Object.entries(vdom.onevent).forEach((function(_ref40) {
+            var _ref41 = _slicedToArray(_ref40, 2), event = _ref41[0], callbacks = _ref41[1];
             onevent(element, event, callbacks);
         }));
     })(element, vdom);
@@ -2106,6 +2122,9 @@ function readonlyproxy(target) {
             return false;
         },
         deleteProperty: function deleteProperty() {
+            return false;
+        },
+        setPrototypeOf: function setPrototypeOf() {
             return false;
         }
     });
@@ -2364,16 +2383,16 @@ function createComponent(custfun) {
                     Object.assign(attrs, propsjson);
                 }
                 var props = createeleattragentreadwrite(_assertThisInitialized(_this5));
-                var thisattributess = Object.fromEntries(Object.entries(props).map((function(_ref38) {
-                    var _ref39 = _slicedToArray(_ref38, 2), key = _ref39[0], value = _ref39[1];
+                var thisattributess = Object.fromEntries(Object.entries(props).map((function(_ref42) {
+                    var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
                     return [ key, createstate(value) ];
                 })));
                 _this5[attributessymbol] = readonlyproxy(thisattributess);
                 openctx();
                 var possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun(readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref40) {
-                        var _ref41 = _slicedToArray(_ref40, 2), key = _ref41[0], value = _ref41[1];
+                    possiblyvirtualdom = custfun(readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref44) {
+                        var _ref45 = _slicedToArray(_ref44, 2), key = _ref45[0], value = _ref45[1];
                         return [ key, readonlyproxy(value) ];
                     })))), children);
                 } catch (error) {
@@ -2441,8 +2460,8 @@ if (!isfunction(window.HTMLElement) || !isfunction(window.Proxy) || !isobject(wi
 }
 
 function extenddirectives(options) {
-    Object.entries(options).forEach((function(_ref42) {
-        var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
+    Object.entries(options).forEach((function(_ref46) {
+        var _ref47 = _slicedToArray(_ref46, 2), key = _ref47[0], value = _ref47[1];
         if (typeof value !== "function") {
             throw TypeError(invalid_Function);
         } else {

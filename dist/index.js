@@ -48,9 +48,9 @@ const message = "invalid useMounted or useUnMounted out of createComponent";
 
 let ctxopen = false;
 
-let Mounted = [];
+let Mounted = new Set;
 
-let UnMounted = [];
+let UnMounted = new Set;
 
 function getMounted() {
     return [ ...Mounted ];
@@ -63,7 +63,7 @@ function getUnMounted() {
 function useMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            Mounted.push(fun);
+            Mounted.add(fun);
         } else {
             throw Error(message);
         }
@@ -75,7 +75,7 @@ function useMounted(fun) {
 function useUnMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            UnMounted.push(fun);
+            UnMounted.add(fun);
         } else {
             throw Error(message);
         }
@@ -85,11 +85,11 @@ function useUnMounted(fun) {
 }
 
 function clearMounted() {
-    Mounted = [];
+    Mounted = new Set;
 }
 
 function clearUnMounted() {
-    UnMounted = [];
+    UnMounted = new Set;
 }
 
 function openctx() {
@@ -484,6 +484,19 @@ class AttrChange extends HTMLElement {
     }
 }
 
+function merge_entries(a) {
+    const m = {};
+    a.forEach(([key, value]) => {
+        if (!m[key]) {
+            m[key] = new Set;
+        }
+        value.forEach(v => {
+            m[key].add(v);
+        });
+    });
+    return Object.entries(m).map(([k, v]) => [ k, Array.from(v) ]);
+}
+
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
 }
@@ -499,13 +512,12 @@ class Virtualdom {
         const 字母大小写 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
         const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
-        console.log([type,props,children],[propsentries,propsentriesNOTevents])
         Object.assign(this, {
             type: type,
             bindattr: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),
             props: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
-            onevent: Object.fromEntries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ]),
+            onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ])),
             directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
         });
         Object.defineProperty(this, Symbol.toStringTag, {
@@ -1058,6 +1070,9 @@ function readonlyproxy(target) {
             return false;
         },
         deleteProperty() {
+            return false;
+        },
+        setPrototypeOf() {
             return false;
         }
     });
