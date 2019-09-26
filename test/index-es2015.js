@@ -3011,7 +3011,7 @@ var vdom = [ createElement("html", null, "testhtml"), createElement("button", {
 
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 
-console.log(vdom);
+console.log("onclick", " @click", vdom);
 
 var vdom$1 = createElement(Fragment, null, createElement("header", {
     class: "common-header fixed noborder floating",
