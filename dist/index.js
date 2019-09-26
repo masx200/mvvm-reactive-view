@@ -499,6 +499,7 @@ class Virtualdom {
         const 字母大小写 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
         const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
+        console.log([type,props,children],[propsentries,propsentriesNOTevents])
         Object.assign(this, {
             type: type,
             bindattr: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),

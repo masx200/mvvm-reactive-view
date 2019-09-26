@@ -1514,6 +1514,7 @@ var Virtualdom = function Virtualdom() {
         var _ref9 = _slicedToArray(_ref8, 1), key = _ref9[0];
         return !(key.startsWith("@") || key.startsWith("on"));
     }));
+    console.log([ type, props, children ], [ propsentries, propsentriesNOTevents ]);
     Object.assign(this, {
         type: type,
         bindattr: Object.fromEntries(propsentriesNOTevents.filter((function(_ref10) {
@@ -2944,76 +2945,7 @@ customElements.define("qqqqqqqqqq-----a", function(_HTMLElement2) {
     }), 5e3);
 })();
 
-(function() {
-    (function() {
-        var _class2, _temp;
-        var myvdom1111111 = createElement(function(_HTMLElement) {
-            _inherits(_class, _HTMLElement);
-            function _class() {
-                var _this;
-                _classCallCheck(this, _class);
-                _this = _possibleConstructorReturn(this, _getPrototypeOf(_class).call(this));
-                for (var _len = arguments.length, argwwwuments = new Array(_len), _key = 0; _key < _len; _key++) {
-                    argwwwuments[_key] = arguments[_key];
-                }
-                console.log(argwwwuments);
-                return _this;
-            }
-            return _class;
-        }(_wrapNativeSuper(HTMLElement)), {
-            style: {
-                display: "block"
-            }
-        }, "hhhhhhhhhhhhtests");
-        console.log(myvdom1111111);
-        document.body.appendChild(createApp(myvdom1111111, document.createElement("div")));
-        document.body.appendChild(createApp(createElement(function() {
-            var Aaaaaaaaaa = function(_HTMLElement2) {
-                _inherits(Aaaaaaaaaa, _HTMLElement2);
-                function Aaaaaaaaaa() {
-                    _classCallCheck(this, Aaaaaaaaaa);
-                    return _possibleConstructorReturn(this, _getPrototypeOf(Aaaaaaaaaa).apply(this, arguments));
-                }
-                return Aaaaaaaaaa;
-            }(_wrapNativeSuper(HTMLElement));
-            Aaaaaaaaaa.defaultProps = {
-                name: "HelloKitty",
-                myAge: 18
-            };
-            return Aaaaaaaaaa;
-        }()), document.createElement("div")));
-        var myele1 = createElement((_temp = _class2 = function(_HTMLElement3) {
-            _inherits(_class2, _HTMLElement3);
-            function _class2() {
-                _classCallCheck(this, _class2);
-                return _possibleConstructorReturn(this, _getPrototypeOf(_class2).apply(this, arguments));
-            }
-            return _class2;
-        }(_wrapNativeSuper(HTMLElement)), _defineProperty(_class2, "defaultProps", {
-            name: "aaaaaaaaaaHelloKitty",
-            myAge: 0x71afd498cfffe
-        }), _temp));
-        console.log(myele1);
-        document.body.appendChild(createApp(myele1, document.createElement("div")));
-        document.body.appendChild(createApp(myele1, document.createElement("div")));
-    })();
-})();
-
-var vdom = [ createElement("html", null, "testhtml"), createElement("button", {
-    onclick: [ console.log, function() {
-        alert("onclick");
-    } ],
-    "*text": "clicktest",
-    "@click": [ console.log, function() {
-        alert("@click");
-    } ]
-}) ];
-
-document.body.appendChild(createApp(vdom, document.createElement("div")));
-
-console.log("onclick", " @click", vdom);
-
-var vdom$1 = createElement(Fragment, null, createElement("header", {
+var vdom = createElement(Fragment, null, createElement("header", {
     class: "common-header fixed noborder floating",
     id: "git-header-nav"
 }, createElement("div", {
@@ -3435,7 +3367,76 @@ var vdom$1 = createElement(Fragment, null, createElement("header", {
     class: "mayun-icon my-ic-exit my-ic-exit-dims"
 }), "退出"))), createElement("script", null))))));
 
-console.log(vdom$1);
+console.log(vdom);
+
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+
+(function() {
+    (function() {
+        var _class2, _temp;
+        var myvdom1111111 = createElement(function(_HTMLElement) {
+            _inherits(_class, _HTMLElement);
+            function _class() {
+                var _this;
+                _classCallCheck(this, _class);
+                _this = _possibleConstructorReturn(this, _getPrototypeOf(_class).call(this));
+                for (var _len = arguments.length, argwwwuments = new Array(_len), _key = 0; _key < _len; _key++) {
+                    argwwwuments[_key] = arguments[_key];
+                }
+                console.log(argwwwuments);
+                return _this;
+            }
+            return _class;
+        }(_wrapNativeSuper(HTMLElement)), {
+            style: {
+                display: "block"
+            }
+        }, "hhhhhhhhhhhhtests");
+        console.log(myvdom1111111);
+        document.body.appendChild(createApp(myvdom1111111, document.createElement("div")));
+        document.body.appendChild(createApp(createElement(function() {
+            var Aaaaaaaaaa = function(_HTMLElement2) {
+                _inherits(Aaaaaaaaaa, _HTMLElement2);
+                function Aaaaaaaaaa() {
+                    _classCallCheck(this, Aaaaaaaaaa);
+                    return _possibleConstructorReturn(this, _getPrototypeOf(Aaaaaaaaaa).apply(this, arguments));
+                }
+                return Aaaaaaaaaa;
+            }(_wrapNativeSuper(HTMLElement));
+            Aaaaaaaaaa.defaultProps = {
+                name: "HelloKitty",
+                myAge: 18
+            };
+            return Aaaaaaaaaa;
+        }()), document.createElement("div")));
+        var myele1 = createElement((_temp = _class2 = function(_HTMLElement3) {
+            _inherits(_class2, _HTMLElement3);
+            function _class2() {
+                _classCallCheck(this, _class2);
+                return _possibleConstructorReturn(this, _getPrototypeOf(_class2).apply(this, arguments));
+            }
+            return _class2;
+        }(_wrapNativeSuper(HTMLElement)), _defineProperty(_class2, "defaultProps", {
+            name: "aaaaaaaaaaHelloKitty",
+            myAge: 0x71afd498cfffe
+        }), _temp));
+        console.log(myele1);
+        document.body.appendChild(createApp(myele1, document.createElement("div")));
+        document.body.appendChild(createApp(myele1, document.createElement("div")));
+    })();
+})();
+
+var vdom$1 = [ createElement("html", null, "testhtml"), createElement("button", {
+    onclick: [ console.log, function() {
+        alert("onclick");
+    } ],
+    "*text": "clicktest",
+    "@click": [ console.log, function() {
+        alert("@click");
+    } ]
+}) ];
 
 document.body.appendChild(createApp(vdom$1, document.createElement("div")));
+
+console.log("onclick", " @click", vdom$1);
 //# sourceMappingURL=index-es2015.js.map
