@@ -1162,8 +1162,6 @@ function isReactiveState(a) {
     return a instanceof ReactiveState;
 }
 
-var textnodesymbol = Symbol("textnode");
-
 var eventtargetsymbol = Symbol("eventtatget");
 
 var memlisteners = Symbol("memlisteners");
@@ -1997,11 +1995,6 @@ function render(vdom, namespace) {
         var reactive = vdom;
         var textnode = createtextnode(String(reactive));
         textnode[reactivestatesymbol] = reactive;
-        try {
-            reactive[textnodesymbol] = textnode;
-        } catch (error) {
-            console.warn(error);
-        }
         watch(reactive, (function(state) {
             if (isconnected(element)) {
                 changetext(textnode, String(state));
@@ -2238,9 +2231,6 @@ function createstate(init) {
                 return false;
             },
             set: function set(target, key, value) {
-                if (key === textnodesymbol) {
-                    return _set(target, key, value);
-                }
                 if (key === "value" && isprimitive(value)) {
                     _set(target, key, value);
                     target[dispatchsymbol]();
@@ -2318,9 +2308,6 @@ function createstate(init) {
                 return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(_get(target, "value"))))));
             },
             set: function set(target, key, value) {
-                if (key === textnodesymbol) {
-                    return _set(target, key, value);
-                }
                 var myvalue = _get(target, "value");
                 if (key === "value" && isobject(value)) {
                     _set(target, key, value);
@@ -3012,7 +2999,15 @@ customElements.define("qqqqqqqqqq-----a", function(_HTMLElement2) {
     })();
 })();
 
-var vdom = createElement("html", null, "testhtml");
+var vdom = [ createElement("html", null, "testhtml"), createElement("button", {
+    onclick: [ console.log, function() {
+        alert("onclick");
+    } ],
+    "*text": "clicktest",
+    "@click": [ console.log, function() {
+        alert("@click");
+    } ]
+}) ];
 
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 

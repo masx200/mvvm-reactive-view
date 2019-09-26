@@ -190,8 +190,6 @@ function isReactiveState(a) {
     return a instanceof ReactiveState;
 }
 
-const textnodesymbol = Symbol("textnode");
-
 const eventtargetsymbol = Symbol("eventtatget");
 
 const memlisteners = Symbol("memlisteners");
@@ -953,11 +951,6 @@ function render(vdom, namespace) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
         textnode[reactivestatesymbol] = reactive;
-        try {
-            reactive[textnodesymbol] = textnode;
-        } catch (error) {
-            console.warn(error);
-        }
         watch(reactive, state => {
             if (isconnected(element)) {
                 changetext(textnode, String(state));
@@ -1188,9 +1181,6 @@ function createstate(init) {
                 return false;
             },
             set(target, key, value) {
-                if (key === textnodesymbol) {
-                    return set(target, key, value);
-                }
                 if (key === "value" && isprimitive(value)) {
                     set(target, key, value);
                     target[dispatchsymbol]();
@@ -1268,9 +1258,6 @@ function createstate(init) {
                 return Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
             },
             set(target, key, value) {
-                if (key === textnodesymbol) {
-                    return set(target, key, value);
-                }
                 const myvalue = get(target, "value");
                 if (key === "value" && isobject(value)) {
                     set(target, key, value);

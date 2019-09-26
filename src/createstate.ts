@@ -13,7 +13,7 @@ import { isobject, isSet, gettagtype } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, {
   dispatchsymbol,
-  textnodesymbol,
+  // textnodesymbol,
   isReactiveState
 } from "./primitivestate";
 export default function createstate(
@@ -28,9 +28,9 @@ export default function createstate(
         return false;
       },
       set(target, key, value) {
-        if (key === textnodesymbol) {
+        /*  if (key === textnodesymbol) {
           return set(target, key, value);
-        }
+        } */
         if (key === "value" && isprimitive(value)) {
           // if (target[key] !== value) {
           set(target, key, value);
@@ -126,9 +126,9 @@ export default function createstate(
         );
       },
       set(target, key, value) {
-        if (key === textnodesymbol) {
+        /*   if (key === textnodesymbol) {
           return set(target, key, value);
-        }
+        } */
         const myvalue = get(target, "value");
         if (key === "value" && isobject(value)) {
           // if (target[key] !== value) {

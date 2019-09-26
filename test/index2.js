@@ -102,6 +102,21 @@ const vdom = html`
   <html>
     testhtml
   </html>
+  <button
+    onclick=${[
+      console.log,
+      () => {
+        alert("onclick");
+      }
+    ]}
+    *text="clicktest"
+    @click=${[
+      console.log,
+      () => {
+        alert("@click");
+      }
+    ]}
+  />
 `;
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 console.log(vdom);

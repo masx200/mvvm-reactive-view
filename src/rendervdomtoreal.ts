@@ -2,7 +2,7 @@ export const bindstatesymbol = Symbol("bindstate");
 
 export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
-import ReactiveState, { textnodesymbol } from "./primitivestate";
+import ReactiveState /* textnodesymbol */ from "./primitivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
 import onevent, { eventlistenerssymbol } from "./onevent";
@@ -49,11 +49,11 @@ export default function render(
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
     textnode[reactivestatesymbol] = reactive;
-    try {
+    /*  try {
       reactive[textnodesymbol] = textnode;
     } catch (error) {
       console.warn(error);
-    }
+    } */
 
     watch(reactive, (state: { value: string }) => {
       if (isconnected(element)) {
@@ -66,7 +66,7 @@ export default function render(
     return textnode;
   } else if (vdom instanceof Virtualdom && "type" in vdom) {
     const { type } = vdom;
-    let element: HTMLElement | SVGSVGElement | SVGElement | Element | Node;
+    let element: Element | HTMLElement | SVGSVGElement | SVGElement;
     if (typeof type === "string") {
       if (type === "script") {
         /* 禁止加载脚本 */
@@ -169,7 +169,7 @@ export interface Class {
 import { isReactiveState } from "./primitivestate";
 import { isconnected } from "./isconnected";
 function handleprops(
-  element: HTMLElement | Element | SVGSVGElement | SVGElement | Node,
+  element: HTMLElement | Element | SVGSVGElement | SVGElement,
   vdom: Virtualdom
 ) {
   ((element, vdom) => {
