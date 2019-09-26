@@ -52,30 +52,53 @@ value
           )
       ),
       children: children.flat(),
-      onevent: Object.fromEntries([
-        ...propsentries
-          .filter(([key]) => /\@/.test(key[0]))
-          .map(([key, value]) => [
-            //事件名称变成小写
-            key
-              .slice(1)
-              .toLowerCase()
-              .trim(),
-            //把事件绑定变成事件数组
-            [value].flat()
-          ]),
-        ...propsentries
-          .filter(([key]) => key.startsWith("on"))
-          .map(([key, value]) => [
-            //事件名称变成小写
-            key
-              .slice(2)
-              .toLowerCase()
-              .trim(),
-            //把事件绑定变成事件数组
-            [value].flat()
-          ])
-      ]),
+      onevent: Object.fromEntries(
+        /* 需要合并entries
+        [
+        ['value',[f,f]]
+        ,
+        ['value',[f,f]]
+      ]
+        合并成
+
+         [
+        ['value',[f,f,f,f]]
+         ]
+        */
+
+        /* 
+        
+        [["value",["f","f"]],["value",["f","f"]]]
+
+
+        [["value",["f","f","f","f"]]]
+        
+        */
+        [
+          ...propsentries
+            .filter(([key]) => /\@/.test(key[0]))
+            .map(([key, value]) => [
+              //事件名称变成小写
+              key
+                .slice(1)
+                .toLowerCase()
+                .trim(),
+              //把事件绑定变成事件数组
+              [value].flat()
+            ]),
+          ...propsentries
+            .filter(([key]) => key.startsWith("on"))
+            .map(([key, value]) => [
+              //事件名称变成小写
+              key
+                .slice(2)
+                .toLowerCase()
+                .trim(),
+              //把事件绑定变成事件数组
+              [value].flat()
+            ])
+        ]
+      ),
       directives: Object.fromEntries(
         propsentriesNOTevents
           .filter(([key]) => /\*/.test(key[0]))
