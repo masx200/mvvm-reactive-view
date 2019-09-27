@@ -3,7 +3,7 @@ import createElement from "./createelement";
 import { gettagtype } from "./util";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
-
+import {appendchild}from "./dom"
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "cssmediarule";
 }
@@ -13,8 +13,10 @@ export function parsecsstext(text: string): Array<CSSRule> {
   //   console.dir(styleelement);
   /* 只有添加到document之后才会有sheet */
   const otherdocument = document.implementation.createHTMLDocument("");
-  otherdocument.firstElementChild.appendChild(styleelement);
-  return Array.from(styleelement.sheet.cssRules);
+appendchild(
+  otherdocument.firstElementChild,styleelement);
+ //otherdocument.firstElementChild.appendChild(styleelement); 
+return Array.from(styleelement.sheet.cssRules);
 }
 
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
