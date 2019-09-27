@@ -81,7 +81,8 @@ export function createComponent(custfun: Custom): Class {
           | (string | Virtualdom | ReactiveState)[]
           | any;
         try {
-          possiblyvirtualdom = custfun(
+          possiblyvirtualdom = custfun.call(
+            undefined,
             //让组件里面无法修改props的reactivestate的value
             // readonlyproxy(thisattributess),
 

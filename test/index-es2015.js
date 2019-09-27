@@ -2384,7 +2384,7 @@ function createComponent(custfun) {
                 openctx();
                 var possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun(readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref44) {
+                    possiblyvirtualdom = custfun.call(undefined, readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref44) {
                         var _ref45 = _slicedToArray(_ref44, 2), key = _ref45[0], value = _ref45[1];
                         return [ key, readonlyproxy(value) ];
                     })))), children);
@@ -3447,7 +3447,7 @@ console.log("onclick", " @click", vdom$1);
         aaaaaa: 222222222,
         tttttt: "dddddddddd"
     }, [ "children" ]);
-    console.log(vdom, myclasscomponent);
+    console.log([ vdom, myclasscomponent, mycom ]);
     document.body.appendChild(createApp(vdom, document.createElement("div")));
     setTimeout((function() {
         vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");

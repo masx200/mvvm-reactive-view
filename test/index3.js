@@ -619,7 +619,7 @@ import {
     },
     ["children"]
   );
-  console.log(vdom, myclasscomponent);
+  console.log([vdom, myclasscomponent, mycom]);
   document.body.appendChild(createApp(vdom, document.createElement("div")));
   setTimeout(() => {
     vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");

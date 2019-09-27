@@ -1322,7 +1322,7 @@ function createComponent(custfun) {
                 openctx();
                 let possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun(readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ]))), children);
+                    possiblyvirtualdom = custfun.call(undefined, readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ]))), children);
                 } catch (error) {
                     closectx();
                     throw error;
