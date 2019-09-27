@@ -165,6 +165,7 @@ export default function render(
 export interface Class {
   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
   prototype: HTMLElement;
+  defaultProps?: object;
 }
 import { isReactiveState } from "./primitivestate";
 import { isconnected } from "./isconnected";

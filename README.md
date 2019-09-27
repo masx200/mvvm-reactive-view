@@ -403,10 +403,12 @@ interface Custom {
     | string
     | ReactiveState
     | Array<Virtualdom | ReactiveState | string>;
+  defaultProps?: object;
 }
 interface Class {
-  new (propsjson?: object, children?: any[], options?: any): HTMLElement;
+  new (propsjson?: object, children?: any[]): HTMLElement;
   prototype: HTMLElement;
+  defaultProps?: object;
 }
 ```
 

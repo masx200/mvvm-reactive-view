@@ -23,6 +23,7 @@ export interface Custom {
     | string
     | ReactiveState
     | Array<Virtualdom | ReactiveState | string>;
+  defaultProps?: object;
 }
 import { Class } from "./rendervdomtoreal";
 import Virtualdom from "./virtualdom";
