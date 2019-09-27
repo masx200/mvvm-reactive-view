@@ -39,13 +39,13 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
     if (ele[eventlistenerssymbol]) {
       removelisteners(ele);
     }
-    if (ele[bindstatesymbol]) {
+    /*   if (ele[bindstatesymbol]) {
       ele[bindstatesymbol].forEach((state: ReactiveState) => {
         unwatch(state);
       });
-
-      // readdlisteners(ele);
-    }
+ */
+    // readdlisteners(ele);
+    // }
     //
     onunmounted(getdomchildren(ele));
   }

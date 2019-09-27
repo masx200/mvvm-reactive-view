@@ -24,19 +24,23 @@ export interface Custom {
     | ReactiveState
     | Array<Virtualdom | ReactiveState | string>;
   defaultProps?: object;
+  css?: string;
 }
 import { Class } from "./rendervdomtoreal";
 import Virtualdom from "./virtualdom";
 import createeleattragentreadwrite from "dom-element-attribute-agent-proxy";
-import { isobject, isArray, isfunction } from "./util";
+import { isobject, isArray, isfunction, isstring } from "./util";
 import { onunmounted, onmounted } from "./elementonmountandunmount";
 import { isvalidvdom } from "./html";
 import createApp, { invalid_Virtualdom } from "./createApp";
+import { toArray } from "./toArray";
 // import { inflate } from "zlib";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
     const defaultProps = custfun["defaultProps"];
+    const css = custfun["css"];
     return class Component extends AttrChange {
+      static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
       [mountedsymbol]: Array<Function>;
       [unmountedsymbol]: Array<Function>;
@@ -51,10 +55,11 @@ export function createComponent(custfun: Custom): Class {
         children: any[] = [] /* , options?: any */
       ) {
         super();
+        const defaultProps = this.constructor["defaultProps"];
         const attrs = createeleattragentreadwrite(this);
         //   const props = {};
-        if (isobject(this.constructor["defaultProps"])) {
-          Object.assign(attrs, this.constructor["defaultProps"]);
+        if (isobject(defaultProps)) {
+          Object.assign(attrs, defaultProps);
           // Object.assign(props, this.constructor["defaultProps"]);
         }
         if (isobject(propsjson)) {
@@ -62,7 +67,8 @@ export function createComponent(custfun: Custom): Class {
           // Object.assign(props, propsjson);
         }
         //   this[attributessymbol] = createeleattragentreadwrite(this);
-        const props = createeleattragentreadwrite(this);
+        // const props = createeleattragentreadwrite(this);/
+        const props = attrs;
         const thisattributess = Object.fromEntries(
           Object.entries(props).map(([key, value]) => [key, createstate(value)])
         );
@@ -100,9 +106,11 @@ export function createComponent(custfun: Custom): Class {
             .filter(Boolean);
         }
         if (isvalidvdom(possiblyvirtualdom)) {
-          const thisvdomsymbol = isArray(possiblyvirtualdom)
+          const thisvdomsymbol /* isArray(possiblyvirtualdom)
             ? possiblyvirtualdom
-            : [possiblyvirtualdom];
+            : [possiblyvirtualdom]; */ = toArray(
+            possiblyvirtualdom
+          );
           //
           this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();

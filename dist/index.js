@@ -594,11 +594,6 @@ function onunmounted(ele) {
         if (ele[eventlistenerssymbol]) {
             removelisteners(ele);
         }
-        if (ele[bindstatesymbol]) {
-            ele[bindstatesymbol].forEach(state => {
-                unwatch(state);
-            });
-        }
         onunmounted(getdomchildren(ele));
     }
 }
@@ -836,10 +831,6 @@ function watch(state, callback, statekey) {
     requestAnimationFrame(() => {
         state[addallistenerssymbol]();
     });
-}
-
-function unwatch(state) {
-    state[removeallistenerssymbol]();
 }
 
 function rewatch(state) {
@@ -1311,19 +1302,21 @@ function createComponent(custfun) {
     var _a, _b, _c;
     if (isfunction(custfun)) {
         const defaultProps = custfun["defaultProps"];
+        const css = custfun["css"];
         return _c = class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_a] = false;
                 this[_b] = {};
+                const defaultProps = this.constructor["defaultProps"];
                 const attrs = createeleattragentreadwrite(this);
-                if (isobject(this.constructor["defaultProps"])) {
-                    Object.assign(attrs, this.constructor["defaultProps"]);
+                if (isobject(defaultProps)) {
+                    Object.assign(attrs, defaultProps);
                 }
                 if (isobject(propsjson)) {
                     Object.assign(attrs, propsjson);
                 }
-                const props = createeleattragentreadwrite(this);
+                const props = attrs;
                 const thisattributess = Object.fromEntries(Object.entries(props).map(([key, value]) => [ key, createstate(value) ]));
                 this[attributessymbol] = readonlyproxy(thisattributess);
                 openctx();
@@ -1338,7 +1331,7 @@ function createComponent(custfun) {
                     possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
                 }
                 if (isvalidvdom(possiblyvirtualdom)) {
-                    const thisvdomsymbol = isarray(possiblyvirtualdom) ? possiblyvirtualdom : [ possiblyvirtualdom ];
+                    const thisvdomsymbol = toArray(possiblyvirtualdom);
                     this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
@@ -1369,7 +1362,8 @@ function createComponent(custfun) {
                     this[attributessymbol][name].value = createeleattragentreadwrite(this)[name];
                 }
             }
-        }, _a = readysymbol, _b = attributessymbol, _c.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
+        }, _a = readysymbol, _b = attributessymbol, _c.css = isstring(css) && css ? css : undefined, 
+        _c.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
         _c;
     } else {
         console.error(custfun);
