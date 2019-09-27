@@ -1021,7 +1021,7 @@ function render(vdom, namespace) {
         }
         return element;
     } else if (isarray(vdom)) {
-        return vdom.map(a => render(a));
+        return vdom.map(a => render(a)).flat();
     } else {
         throwinvalideletype(vdom);
     }
