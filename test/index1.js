@@ -654,39 +654,3 @@ customElements.define(
   "qqqqqqqqqq-----a",
   class Aqqqqqqqqq extends HTMLElement {}
 );
-
-(() => {
-  var mycom = (props, children) => {
-    useMounted(() => {
-      console.log("mounted1");
-    });
-    useMounted(() => {
-      console.log("mounted2", props);
-    });
-    useUnMounted(() => {
-      console.log("unmounted");
-    });
-    watch(props.cccccc, console.log);
-    return [
-      "wwwwwwwwwwww",
-      createElement("div", null, ["createComponent"]),
-      children,
-      createElement("div", null, [props.cccccc])
-    ];
-  };
-  mycom.defaultProps = { cccccc: "bbbbbbb" };
-  const myclasscomponent = createComponent(mycom);
-  const vdom = createElement(
-    myclasscomponent,
-    {
-      aaaaaa: 222222222,
-      tttttt: "dddddddddd"
-    },
-    ["children"]
-  );
-  console.log(vdom);
-  document.body.appendChild(createApp(vdom, document.createElement("div")));
-  setTimeout(() => {
-    vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
-  }, 5000);
-})();

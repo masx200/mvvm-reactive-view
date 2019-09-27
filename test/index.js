@@ -5,3 +5,4 @@ import "./index1.js";
 
 import "./index-x.js";
 import "./index2.js";
+import "./index3.js";
