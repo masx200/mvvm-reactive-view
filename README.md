@@ -485,7 +485,7 @@ class Virtualdom {
   props: object = {};
   children: Array<Virtualdom | string|ReactiveState> = [];
   directives: object = {};
-  onevent: object = {};
+  onevent: { [key: string]: Array<EventListener> } = {};
   bindattr:  { [key: string]: ReactiveState } = {};= {};
   constructor(
     type: Function | string = "",
