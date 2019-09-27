@@ -155,7 +155,7 @@ export default function render(
     }
     return element;
   } else if (isArray(vdom)) {
-    return vdom.map(a => render(a));
+    return vdom.map(a => render(a)).flat();
   } else {
     throwinvalideletype(vdom);
     // throw TypeError("invalid element type!");
