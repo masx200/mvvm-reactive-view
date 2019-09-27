@@ -2,7 +2,7 @@ import { toArray } from "./toArray";
 import { invalid_Function } from "./context-mounted-unmounted-";
 import { domaddlisten, domremovelisten } from "./dom";
 export const eventlistenerssymbol = Symbol("eventlisteners");
-import { isArray, isfunction } from "./util";
+import { /* isArray, */ isfunction } from "./util";
 export default function(
   element: Element | Node,
   eventname: string,

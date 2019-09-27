@@ -32,3 +32,7 @@ export { directives };
 export const Fragment = "";
 import condition from "./conditon";
 export { condition };
+/* function css(text: string) {
+  return text;
+}
+export { css }; */

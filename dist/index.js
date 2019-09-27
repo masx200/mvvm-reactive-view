@@ -35,7 +35,7 @@ function getsymbol(a) {
 }
 
 function gettagtype(a) {
-    return {}.toString.call(a).replace("[object ", "").replace("]", "").toLowerCase();
+    return {}.toString.call(a).replace("[object ", "").replace("]", "").toLowerCase().trim();
 }
 
 function isSet(a) {
@@ -177,6 +177,10 @@ function removeAttribute(ele, name) {
 }
 
 const HTMLElementprototype = HTMLElement.prototype;
+
+function insertfirst(container, ele) {
+    container.insertBefore(ele, container.firstChild);
+}
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
@@ -512,10 +516,11 @@ class Virtualdom {
         const 字母大小写 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
         const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
+        const 字母开头的entries = propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0]));
         Object.assign(this, {
             type: type,
-            bindattr: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => isReactiveState(e[1]))),
-            props: Object.fromEntries(propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0])).filter(e => !isReactiveState(e[1]))),
+            bindattr: Object.fromEntries(字母开头的entries.filter(e => isReactiveState(e[1]))),
+            props: Object.fromEntries(字母开头的entries.filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
             onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ])),
             directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
@@ -1288,6 +1293,83 @@ function createstate(init) {
     }
 }
 
+function createcssBlob(source) {
+    return URL.createObjectURL(new Blob([ source ], {
+        type: "text/css"
+    }));
+}
+
+function isCSSMediaRule(a) {
+    return gettagtype(a) === "cssmediarule";
+}
+
+function parsecsstext(text) {
+    const styleelement = render(createElement("style", undefined, text));
+    const otherdocument = document.implementation.createHTMLDocument("");
+    otherdocument.firstElementChild.appendChild(styleelement);
+    return Array.from(styleelement.sheet.cssRules);
+}
+
+function isCSSStyleRule(a) {
+    return gettagtype(a) === "cssstylerule";
+}
+
+function selectoraddprefix(cssstylerule, prefix) {
+    const selectorText = cssstylerule.selectorText;
+    if (selectorText === "*") {
+        cssstylerule.selectorText = prefix;
+    } else {
+        cssstylerule.selectorText = prefix + " " + selectorText;
+    }
+    return cssstylerule;
+}
+
+function prefixcssrules(cssRulesarray, prefix) {
+    return cssRulesarray.map(cssrule => {
+        if (isCSSStyleRule(cssrule)) {
+            return selectoraddprefix(cssrule, prefix);
+        } else if (isCSSMediaRule(cssrule)) {
+            prefixcssrules(Array.from(cssrule.cssRules), prefix);
+            return cssrule;
+        } else {
+            return cssrule;
+        }
+    });
+}
+
+const componentsstylesheet = {};
+
+function savestyleblob(tagname, text) {
+    if (!componentsstylesheet[tagname]) {
+        componentsstylesheet[tagname] = createcssBlob(text);
+    }
+}
+
+function cssrulestocsstext(cssrules) {
+    return cssrules.map(c => c.cssText).join("\n");
+}
+
+function createlinkstylesheet(url) {
+    return render(createElement("link", {
+        href: url,
+        rel: "stylesheet"
+    }));
+}
+
+function transformcsstext(text, prefix) {
+    const css = text;
+    const cssomold = parsecsstext(css);
+    const cssomnew = prefixcssrules(cssomold, prefix);
+    const cssnewtext = cssrulestocsstext(cssomnew);
+    return cssnewtext;
+}
+
+function registercssprefix(text, prefix) {
+    const css = text;
+    const cssnewtext = transformcsstext(css, prefix);
+    savestyleblob(prefix, cssnewtext);
+}
+
 const attributessymbol = Symbol("attributes");
 
 const elementsymbol = Symbol("element");
@@ -1308,6 +1390,13 @@ function createComponent(custfun) {
                 super();
                 this[_a] = false;
                 this[_b] = {};
+                const css = this.constructor["css"];
+                if (css) {
+                    const prefix = this.tagName;
+                    if (!componentsstylesheet[prefix]) {
+                        registercssprefix(css, prefix);
+                    }
+                }
                 const defaultProps = this.constructor["defaultProps"];
                 const attrs = createeleattragentreadwrite(this);
                 if (isobject(defaultProps)) {
@@ -1349,6 +1438,14 @@ function createComponent(custfun) {
                 if (!this[readysymbol]) {
                     createApp(this[elementsymbol], this);
                     this[readysymbol] = true;
+                }
+                const css = this.constructor["css"];
+                if (css) {
+                    const prefix = this.tagName;
+                    if (componentsstylesheet[prefix]) {
+                        const stylelinkelement = createlinkstylesheet(componentsstylesheet[prefix]);
+                        insertfirst(this, stylelinkelement);
+                    }
                 }
                 this[mountedsymbol].forEach(f => f());
                 onmounted(this);

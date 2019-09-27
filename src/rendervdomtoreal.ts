@@ -12,7 +12,7 @@ import {
   createmathelement,
   svgnamespace,
   createsvgelement,
-  createnonescript,
+  //   createnonescript,
   createnativeelement,
   createElementNS,
   createtextnode,
@@ -162,11 +162,6 @@ export default function render(
   }
 }
 
-export interface Class {
-  new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
-  prototype: HTMLElement;
-  defaultProps?: object;
-}
 import { isReactiveState } from "./primitivestate";
 import { isconnected } from "./isconnected";
 function handleprops(

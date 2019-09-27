@@ -87,3 +87,7 @@ export function removeAttribute(ele: Element, name: string) {
   HTMLElementprototype.removeAttribute.call(ele, name);
 }
 const HTMLElementprototype = HTMLElement.prototype;
+
+export function insertfirst(container: HTMLElement, ele: HTMLElement) {
+  container.insertBefore(ele, container.firstChild);
+}

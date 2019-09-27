@@ -35,7 +35,8 @@ export function gettagtype(a: any): string {
     .call(a)
     .replace("[object ", "")
     .replace("]", "")
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 }
 export function ispromise(a: any): a is Promise<any> {
   return (

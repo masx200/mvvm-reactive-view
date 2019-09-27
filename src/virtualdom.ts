@@ -2,8 +2,9 @@ export function isVirtualdom(a: any): a is Virtualdom {
   return a instanceof Virtualdom;
 }
 import ReactiveState, { isReactiveState } from "./primitivestate";
-import { Class } from "./rendervdomtoreal";
+// import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
+import { Class } from "./customclass";
 
 export default class Virtualdom {
   //   options: any |undefined
@@ -34,23 +35,27 @@ value
     const propsentriesNOTevents = propsentries.filter(
       ([key]) => !(key.startsWith("@") || key.startsWith("on"))
     );
+    const 字母开头的entries = propsentriesNOTevents.filter(([key]) =>
+      字母大小写.test(key[0])
+    );
+
     Object.assign(this, {
       type,
       bindattr: Object.fromEntries(
-        propsentriesNOTevents
-          .filter(([key]) => 字母大小写.test(key[0]))
-          .filter(
-            e => isReactiveState(e[1])
-            // e[1] instanceof ReactiveState
-          )
+        /*   propsentriesNOTevents
+          .filter(([key]) => 字母大小写.test(key[0])) */
+        字母开头的entries.filter(
+          e => isReactiveState(e[1])
+          // e[1] instanceof ReactiveState
+        )
       ),
       props: Object.fromEntries(
-        propsentriesNOTevents
-          .filter(([key]) => 字母大小写.test(key[0]))
-          .filter(
-            e => !isReactiveState(e[1])
-            //    e[1] instanceof ReactiveState
-          )
+        /*   propsentriesNOTevents
+          .filter(([key]) => 字母大小写.test(key[0])) */
+        字母开头的entries.filter(
+          e => !isReactiveState(e[1])
+          //    e[1] instanceof ReactiveState
+        )
       ),
       children: children.flat(),
       onevent: Object.fromEntries(

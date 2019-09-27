@@ -1,4 +1,4 @@
-import { appendchild, setelehtml, seteletext } from "./dom";
+import { appendchild, /* setelehtml,  */ seteletext } from "./dom";
 import { toArray } from "./toArray";
 export default function(
   ele:

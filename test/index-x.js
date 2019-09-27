@@ -14,6 +14,7 @@ import {
   useUnMounted
 } from "../dist/index.js";
 // console.log()
+// export{vdom}
 
 var vdom=
 <>

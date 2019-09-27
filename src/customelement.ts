@@ -19,9 +19,10 @@ export function isclassextendsHTMLElement(initclass: {
 }
 
 import { construct } from "./reflect";
+import { Class } from "./customclass";
 // import Reflect from "./reflect";
 
-import { Class } from "./rendervdomtoreal";
+// import { Class } from "./rendervdomtoreal";
 
 export function createcostumelemet(
   initclass: Class | Function,

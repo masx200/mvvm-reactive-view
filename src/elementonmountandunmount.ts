@@ -5,7 +5,7 @@ import {
   readdlisteners
 } from "./onevent";
 import { bindstatesymbol } from "./rendervdomtoreal";
-import { rewatch, unwatch } from "./watch";
+import { rewatch /* , unwatch */ } from "./watch";
 import { isArray } from "./util";
 import { getdomchildren } from "./dom";
 

@@ -3,6 +3,8 @@ import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
+import postcss from "rollup-plugin-postcss";
+// import scss from "rollup-plugin-scss";
 // import typescript from "rollup-plugin-typescript";
 /* const myterserplugin = terser({
   sourcemap: true,
@@ -58,7 +60,16 @@ export default [
           comments: !1,
           beautify: true
         }
+      }),
+      /* 加载css为文本,而且不自动添加到head */
+      postcss({
+        sourceMap: true,
+        extract: false,
+        inject: false
       })
+      //   scss({
+      //     /* output: true */
+      //   })
     ]
   }
   /*  {
