@@ -23,8 +23,8 @@ export function isCSSStyleRule(a: any): a is CSSStyleRule {
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   const selectorText = cssstylerule.selectorText;
-  if (selectorText === "*") {
-    cssstylerule.selectorText = prefix;
+  if (selectorText.startsWith( "*")) {
+    cssstylerule.selectorText =selectorText.replace("*", prefix);
   } else {
     cssstylerule.selectorText = prefix + " " + selectorText;
   }
@@ -51,6 +51,7 @@ export function prefixcssrules(
 const componentsstylesheet = {};
 export { componentsstylesheet };
 export function savestyleblob(tagname: string, text: string) {
+tagname=tagname.toLowerCase()
   if (!componentsstylesheet[tagname]) {
     componentsstylesheet[tagname] = createcssBlob(text);
   }
