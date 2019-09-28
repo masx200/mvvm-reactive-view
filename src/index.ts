@@ -1,6 +1,6 @@
 // import { isobject, isfunction } from "./util";
 import "./assetbrowser";
-import { computed } from "./computed";
+import computed from "./computed";
 import condition from "./conditon";
 import { useMounted, useUnMounted } from "./context-mounted-unmounted-";
 import createApp from "./createApp";

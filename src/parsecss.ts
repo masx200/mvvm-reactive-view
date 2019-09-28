@@ -31,10 +31,24 @@ export function isCSSStyleRule(a: any): a is CSSStyleRule {
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   const selectorText = cssstylerule.selectorText;
+  const prefixselector = prefix + " " + selectorText;
   if (selectorText.startsWith("*")) {
-    cssstylerule.selectorText = selectorText.replace("*", prefix);
+    cssstylerule.selectorText =
+      selectorText.replace("*", prefix) + "," + prefixselector;
+    /* 对于'* '的处理,变成两个selectorrule*/
+
+    /* 
+    *{font-size:80px !important;}
+p{color:blue !important;} 
+*/
+    /* 
+    
+    q-9, q-9 * { font-size: 80px !important; }
+q-9 p { color: blue !important; }
+
+    */
   } else {
-    cssstylerule.selectorText = prefix + " " + selectorText;
+    cssstylerule.selectorText = prefixselector;
   }
 
   return cssstylerule;

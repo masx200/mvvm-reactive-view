@@ -8,9 +8,10 @@ import { getsymbol, isobject, isSet } from "./util";
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
 import isprimitive from "./isprimitive";
+import { get } from "./reflect";
 export const eventtargetsymbol = Symbol("eventtatget");
 export const memlisteners = Symbol("memlisteners");
-export const dispatchsymbol = getsymbol("dispatch");
+export const dispatchsymbol = Symbol("dispatch");
 export const subscribesymbol = getsymbol("subscribe");
 export const removeallistenerssymbol = getsymbol("removeallisteners");
 export const addallistenerssymbol = getsymbol("addallisteners");
@@ -34,8 +35,8 @@ export default class ReactiveState /* extends forkarray  */ {
   // [textnodesymbol]: Text | undefined;
   value: string | number | boolean | undefined | object;
   [eventtargetsymbol] = new EventTarget();
-  [memlisteners] = [];
-  constructor(init: string | number | boolean | object | undefined) {
+  [memlisteners]: Array<[string, EventListener]> = [];
+  constructor(init?: string | number | boolean | object | undefined) {
     //super();
     if (isprimitive(init) || isobject(init)) {
       Object.defineProperty(this, "value", {
@@ -87,7 +88,7 @@ export default class ReactiveState /* extends forkarray  */ {
     const name = eventname ? String(eventname) : "value";
     this[memlisteners].push([
       name,
-      (event: { detail: any }) => callback(this, event.detail)
+      (event: Event) => callback.call(undefined, this, get(event, "detail"))
     ]);
   }
   [removeallistenerssymbol]() {

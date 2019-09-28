@@ -62,7 +62,7 @@ const eventtargetsymbol = Symbol("eventtatget");
 
 const memlisteners = Symbol("memlisteners");
 
-const dispatchsymbol = getsymbol("dispatch");
+const dispatchsymbol = Symbol("dispatch");
 
 const subscribesymbol = getsymbol("subscribe");
 
@@ -114,7 +114,7 @@ class ReactiveState {
     }
     [subscribesymbol](callback, eventname) {
         const name = eventname ? String(eventname) : "value";
-        this[memlisteners].push([ name, event => callback(this, event.detail) ]);
+        this[memlisteners].push([ name, event => callback.call(undefined, this, get(event, "detail")) ]);
     }
     [removeallistenerssymbol]() {
         this[memlisteners].forEach(([value, callback]) => {
@@ -1243,10 +1243,11 @@ function isCSSStyleRule(a) {
 
 function selectoraddprefix(cssstylerule, prefix) {
     const selectorText = cssstylerule.selectorText;
+    const prefixselector = prefix + " " + selectorText;
     if (selectorText.startsWith("*")) {
-        cssstylerule.selectorText = selectorText.replace("*", prefix);
+        cssstylerule.selectorText = selectorText.replace("*", prefix) + "," + prefixselector;
     } else {
-        cssstylerule.selectorText = prefix + " " + selectorText;
+        cssstylerule.selectorText = prefixselector;
     }
     return cssstylerule;
 }
@@ -1559,12 +1560,40 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
-function computed(state, callback) {
-    if (!(isReactiveState(state) && isfunction(callback))) {
+const {defineProperty: defineProperty$1} = Object;
+
+var computed = (state, callback) => {
+    if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
         throw TypeError(invalid_ReactiveState + invalid_Function);
     }
+    let state1array;
+    state1array = toArray(state);
+    const state1 = Arraycomputed(state1array, callback);
+    usestste(state1);
+    return state1;
+};
+
+function Arraycomputed(state, callback) {
+    const reactivestate = new ReactiveState;
+    const getter = () => {
+        return callback.call(undefined, ...state);
+    };
+    defineProperty$1(reactivestate, "value", {
+        get: getter,
+        configurable: true
+    });
+    let memorized = getter();
+    state.forEach(state => {
+        watch(state, () => {
+            let newvalue = getter();
+            if (newvalue !== memorized) {
+                reactivestate[dispatchsymbol]();
+            }
+        });
+    });
+    return readonlyproxy(reactivestate);
 }
 
 function createRef(init) {

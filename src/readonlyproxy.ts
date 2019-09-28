@@ -1,4 +1,4 @@
-export default function(target: object) {
+export default function<T extends object>(target: T): T {
   return new Proxy(target, {
     set() {
       return false;

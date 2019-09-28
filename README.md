@@ -38,6 +38,7 @@ yarn add https://github.com/masx200/mvvm-reactive-view.git
 
 ```js
 import {
+  computed,
   createComponent,
   useMounted,
   useUnMounted,
@@ -78,6 +79,7 @@ https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
 ```js
 import {
+  computed,
   createComponent,
   useMounted,
   useUnMounted,
@@ -491,13 +493,20 @@ function useMousePosition() {
 
 const mycomapp = () => {
   const { x, y } = useMousePosition();
-
+  const plus = computed(x, x => {
+    return x + 100;
+  });
+  const multi = computed([x, y], (x, y) => {
+    return x * y;
+  });
   return (
     <div>
       <h3> 鼠标位置</h3>
       <h2>x:{x}</h2>
 
       <h1>y:{y}</h1>
+      <p>x+100 是{plus}</p>
+      <p>x*y 是{multi}</p>
     </div>
   );
 };
@@ -526,6 +535,15 @@ class ReactiveState {
 
   constructor(init: string | number | boolean | undefined | object);
 }
+```
+
+## 计算属性`computed`,第一个参数是依赖项,或者依赖项数组,第二个参数是回调函数,返回一个响应式状态对象,当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!
+
+```typescript
+function computed(
+  state: ReactiveState | ReactiveState[],
+  callback: Function
+): ReactiveState;
 ```
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
@@ -636,7 +654,7 @@ class Virtualdom {
 }
 ```
 
-## 使用`watch`函数来监听状态的变化,执行回调函数
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
 
 ```ts
 function watch(state: ReactiveState, callback: Function): void;
