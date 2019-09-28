@@ -32,6 +32,7 @@ import { /* createApp, */ invalid_Virtualdom } from "./createApp";
 import { toArray } from "./toArray";
 import { Custom, Class } from "./customclass";
 import {
+waitloadallstyle,
   /* parsecsstext,
   prefixcssrules,
   cssrulestocsstext, */
