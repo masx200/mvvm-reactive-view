@@ -216,13 +216,13 @@ setTimeout(() => {
 
 受到 `Vue Composition API`和`React Hooks`的启发,
 
-集各家所长，
-
-但是跟它们完全不同，
+集各家所长，但是跟它们完全不同，
 
 响应式状态可以独立于组件存在
 
-基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。与`React hooks`不同，该组件初始化函数仅被调用一次
+基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。
+
+与`React hooks`不同，该组件初始化函数仅被调用一次
 
 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
 
@@ -520,12 +520,11 @@ function createState(init: string | number | boolean | object): ReactiveState;
 
 ### 如果初始值是对象类型则不能修改为原始类型，
 
-
 ```ts
 class ReactiveState {
   value: string | number | boolean | undefined | object;
 
-  constructor(init: string | number | boolean |undefined| object);
+  constructor(init: string | number | boolean | undefined | object);
 }
 ```
 
@@ -534,11 +533,12 @@ class ReactiveState {
 ```ts
 function createComponent(custfun: Custom): Class;
 interface Custom {
-  (props?:{[key:string]:ReactiveState} , children?: Array<any>):
+  (props?: { [key: string]: ReactiveState }, children?: Array<any>):
     | Virtualdom
-    | string|number
+    | string
+    | number
     | ReactiveState
-    | Array<Virtualdom | ReactiveState | string|number>;
+    | Array<Virtualdom | ReactiveState | string | number>;
   defaultProps?: object;
   css?: string;
 }
@@ -593,15 +593,20 @@ interface Extendfun {
 function createElement(
   type: Function | string = "",
   props: any = {},
-  ...children: Array<Virtualdom | string|number>
-): Virtualdom | Array<Virtualdom | string|number>;
+  ...children: Array<Virtualdom | string | number>
+): Virtualdom | Array<Virtualdom | string | number>;
 ```
 
 ## 使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function createApp(
-  vdom: string | Virtualdom | number|ReactiveState | (string | number | Virtualdom|ReactiveState)[],
+  vdom:
+    | string
+    | Virtualdom
+    | number
+    | ReactiveState
+    | (string | number | Virtualdom | ReactiveState)[],
   container: HTMLElement | Element
 ): HTMLElement | Element;
 ```
@@ -616,22 +621,20 @@ function createRef(init: any): {};
 
 ```ts
 class Virtualdom {
-element:Element|undefined
-  type: string | Function  ;
+  element: Element | undefined;
+  type: string | Function;
   props: object = {};
-  children: Array<Virtualdom|number | string|ReactiveState> = [];
+  children: Array<Virtualdom | number | string | ReactiveState> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
-  bindattr:  { [key: string]: ReactiveState } = {};
+  bindattr: { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",
     props: object = {},
-    children: Array<Virtualdom | string|ReactiveState> = []
+    children: Array<Virtualdom | string | ReactiveState> = []
   );
 }
 ```
-
-
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数
 
