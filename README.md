@@ -299,7 +299,13 @@ document.body.appendChild(
 );
 ```
 
-# 支持使用给元素的 class 属性赋值 Set 类型,自动转成 classnames
+# 支持使用给元素的 class 属性赋值 Set 类型,自动转成 字符串
+
+`class`属性支持的类型有
+
+```ts
+type classprop=string|Set<string>|Array<string>
+```
 
 ```js
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
