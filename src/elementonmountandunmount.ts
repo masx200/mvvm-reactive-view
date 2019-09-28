@@ -19,17 +19,17 @@ export function onmounted(ele: Element | Node | Array<Node>) {
     if (ele[eventlistenerssymbol]) {
       readdlisteners(ele);
     }
-//全局共享状态
+    //全局共享状态
     if (ele[bindstatesymbol]) {
       ele[bindstatesymbol].forEach((state: ReactiveState) => {
         rewatch(state);
       });
 
-if (ele[innerstatesymbol]) {
-      ele[innerstatesymbol].forEach((state: ReactiveState) => {
-        rewatch(state);
-      });
-    }
+      if (ele[innerstatesymbol]) {
+        ele[innerstatesymbol].forEach((state: ReactiveState) => {
+          rewatch(state);
+        });
+      }
       // readdlisteners(ele);
     }
     onmounted(getdomchildren(ele));

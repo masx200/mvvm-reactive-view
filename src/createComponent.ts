@@ -32,7 +32,7 @@ import { /* createApp, */ invalid_Virtualdom } from "./createApp";
 import { toArray } from "./toArray";
 import { Custom, Class } from "./customclass";
 import {
-waitloadallstyle,
+  waitloadallstyle,
   /* parsecsstext,
   prefixcssrules,
   cssrulestocsstext, */
@@ -40,9 +40,9 @@ waitloadallstyle,
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
-  registercssprefix,
-  loadlinkstyle,
-  createlinkstylesheet
+  registercssprefix
+  /*  loadlinkstyle,
+  createlinkstylesheet */
   //   savestyleblob
 } from "./parsecss";
 // import { insertfirst } from "./dom";
@@ -197,14 +197,13 @@ export function createComponent(custfun: Custom): Class {
             }; */
             // insertfirst(this, stylelinkelement);
             // }
-          /*  Promise.all(
+            /*  Promise.all(
               [...componentsstylesheet[prefix]].map(styleurl =>
                 loadlinkstyle(createlinkstylesheet(styleurl), this)
               )
             )
 */
-waitloadallstyle(prefix,this)
-.then(() => {
+            waitloadallstyle(prefix, this).then(() => {
               //   console.log("style load all");
               //   console.log("mount1");
               mount(this[elementsymbol], this, false);

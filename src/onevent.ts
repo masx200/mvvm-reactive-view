@@ -8,7 +8,7 @@ export default function(
   eventname: string,
   callback: EventListener | Array<EventListener>
 ) {
- /* if (!element[eventlistenerssymbol]) {
+  /* if (!element[eventlistenerssymbol]) {
     element[eventlistenerssymbol] = [];
   }
 */
@@ -28,15 +28,16 @@ export function firstaddlisteners(
   event: string,
   callarray: Array<EventListener>
 ) {
+  const element = ele;
   callarray.forEach((call: EventListener) => {
     if (!isfunction(call)) {
       console.error(call);
       throw TypeError(invalid_Function);
     }
 
-if (!element[eventlistenerssymbol]) {
-    element[eventlistenerssymbol] = [];
-  }
+    if (!element[eventlistenerssymbol]) {
+      element[eventlistenerssymbol] = [];
+    }
 
     ele[eventlistenerssymbol].push([event, call]);
     domaddlisten(ele, event, call);
@@ -47,6 +48,7 @@ export function removelisteners(
   //   event: string,
   //   callarray: Array<EventListener>
 ) {
+  // const element = ele;
   if (ele[eventlistenerssymbol]) {
     ele[eventlistenerssymbol].forEach(([event, call]) => {
       //   ele[eventlistenerssymbol].push([event, call]);

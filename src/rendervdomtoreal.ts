@@ -5,7 +5,7 @@ import { watch } from "./watch";
 import ReactiveState /* textnodesymbol */ from "./primitivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
-import onevent, { eventlistenerssymbol } from "./onevent";
+import onevent /*  eventlistenerssymbol  */ from "./onevent";
 import { createcostumelemet } from "./customelement";
 import {
   mathnamespace,
@@ -206,7 +206,7 @@ function handleprops(
 
     /* 添加事件绑定和指令执行 */
 
-  /*  if (!element[eventlistenerssymbol]) {
+    /*  if (!element[eventlistenerssymbol]) {
       element[eventlistenerssymbol] = [];
     }
 */
@@ -214,7 +214,7 @@ function handleprops(
       onevent(element, event, callbacks);
     });
   })(element, vdom);
-/*  if (!element[bindstatesymbol]) {
+  /*  if (!element[bindstatesymbol]) {
     element[bindstatesymbol] = new Set();
   }
 */
@@ -225,14 +225,10 @@ function handleprops(
       // e instanceof ReactiveState
     )
 
-    .forEach(e =>
-{
-if (!element[bindstatesymbol]) {
-    element[bindstatesymbol] = new Set();
-  }
- element[bindstatesymbol].add(e)
-
-
-}
-);
+    .forEach(e => {
+      if (!element[bindstatesymbol]) {
+        element[bindstatesymbol] = new Set();
+      }
+      element[bindstatesymbol].add(e);
+    });
 }
