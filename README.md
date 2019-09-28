@@ -210,6 +210,10 @@ setTimeout(() => {
 
 # 组件化
 
+组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递
+
+基于函数的API提供与React Hooks相同级别的逻辑组合功能，但有一些重要的区别。与React hooks不同，该组件初始化函数仅被调用一次
+
 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`等函数
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
