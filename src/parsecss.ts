@@ -30,7 +30,16 @@ export function isCSSStyleRule(a: any): a is CSSStyleRule {
 }
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
-  const selectorText = cssstylerule.selectorText;
+ //css 选择器可能有多个
+//h1,p,h3,div
+ const selectorText = cssstylerule.selectorText;
+
+const selectorarray=selectorText.split(",")
+cssstylerule.selectorText=selectorarray.map(selector=>{
+
+
+}).join(",")
+/*
   const prefixselector = prefix + " " + selectorText;
   if (selectorText.startsWith("*")) {
     cssstylerule.selectorText =
@@ -50,7 +59,7 @@ q-9 p { color: blue !important; }
   } else {
     cssstylerule.selectorText = prefixselector;
   }
-
+*/
   return cssstylerule;
 }
 
