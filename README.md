@@ -325,6 +325,11 @@ setTimeout(() => {
 
 # 元素的 style 属性可是字符串或者对象
 
+`style`属性支持的类型有
+
+```ts
+type styleprop=string|object
+```
 `style="width:800px"`
 
 `style=${{ display: "block", width: "500px" }}`
@@ -332,6 +337,7 @@ setTimeout(() => {
 ```js
 html`<div style=${{ display: "block", width: "100%" }}>${objstate2}</div>`
 ```
+
 # 属性单向绑定
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
