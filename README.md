@@ -18,6 +18,9 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
 https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
 
+
+# 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用diff算法，响应式状态直接与元素绑定，高效更新，性能更强
+
 # 安装 npm 模块
 
 ```powershell
