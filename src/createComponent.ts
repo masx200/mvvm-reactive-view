@@ -32,10 +32,10 @@ import {
   /* parsecsstext,
   prefixcssrules,
   cssrulestocsstext, */
-  savestyleblob,
+  //   savestyleblob,
   componentsstylesheet,
   createlinkstylesheet,
-  transformcsstext,
+  //   transformcsstext,
   registercssprefix
   //   savestyleblob
 } from "./parsecss";
@@ -65,7 +65,7 @@ export function createComponent(custfun: Custom): Class {
         const css = this.constructor["css"];
 
         if (css) {
-          const prefix = this.tagName.toLoweCase();
+          const prefix = this.tagName.toLowerCase();
           if (!componentsstylesheet[prefix]) {
             registercssprefix(css, prefix);
             /* 把css文本先解析成cssom ,然后添加前缀,然后转成字符串,生成blob,再生成link-stylesheet,添加*/
@@ -165,7 +165,7 @@ export function createComponent(custfun: Custom): Class {
 
         if (css) {
           /* 挂载样式到组件最前面 */
-          const prefix = this.tagName.toLoweCase();
+          const prefix = this.tagName.toLowerCase();
           //   console.log(componentsstylesheet[prefix]);
           if (componentsstylesheet[prefix]) {
             const stylelinkelement = createlinkstylesheet(

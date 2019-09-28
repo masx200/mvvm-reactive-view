@@ -182,6 +182,10 @@ function insertfirst(container, ele) {
     container.insertBefore(ele, container.firstChild);
 }
 
+function createanotherhtmldocument() {
+    return document$1.implementation.createHTMLDocument("");
+}
+
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
@@ -1305,8 +1309,8 @@ function isCSSMediaRule(a) {
 
 function parsecsstext(text) {
     const styleelement = render(createElement("style", undefined, text));
-    const otherdocument = document.implementation.createHTMLDocument("");
-    otherdocument.firstElementChild.appendChild(styleelement);
+    const otherdocument = createanotherhtmldocument();
+    appendchild(otherdocument.firstElementChild, styleelement);
     return Array.from(styleelement.sheet.cssRules);
 }
 
@@ -1316,8 +1320,8 @@ function isCSSStyleRule(a) {
 
 function selectoraddprefix(cssstylerule, prefix) {
     const selectorText = cssstylerule.selectorText;
-    if (selectorText === "*") {
-        cssstylerule.selectorText = prefix;
+    if (selectorText.startsWith("*")) {
+        cssstylerule.selectorText = selectorText.replace("*", prefix);
     } else {
         cssstylerule.selectorText = prefix + " " + selectorText;
     }
@@ -1340,6 +1344,7 @@ function prefixcssrules(cssRulesarray, prefix) {
 const componentsstylesheet = {};
 
 function savestyleblob(tagname, text) {
+    tagname = tagname.toLowerCase();
     if (!componentsstylesheet[tagname]) {
         componentsstylesheet[tagname] = createcssBlob(text);
     }
@@ -1392,7 +1397,7 @@ function createComponent(custfun) {
                 this[_b] = {};
                 const css = this.constructor["css"];
                 if (css) {
-                    const prefix = this.tagName;
+                    const prefix = this.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
@@ -1441,7 +1446,7 @@ function createComponent(custfun) {
                 }
                 const css = this.constructor["css"];
                 if (css) {
-                    const prefix = this.tagName;
+                    const prefix = this.tagName.toLowerCase();
                     if (componentsstylesheet[prefix]) {
                         const stylelinkelement = createlinkstylesheet(componentsstylesheet[prefix]);
                         insertfirst(this, stylelinkelement);

@@ -8,7 +8,7 @@
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
 
-## 有着面向未来的函数式`api`，方便复用逻辑
+## 有着面向未来的函数式`API`，方便复用逻辑和重用
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -21,8 +21,6 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
 https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
-
-
 
 # 安装 npm 模块
 
@@ -210,11 +208,15 @@ setTimeout(() => {
 
 # 组件化
 
+## 父子组件传数据
+
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递
 
-基于函数的API提供与React Hooks相同级别的逻辑组合功能，但有一些重要的区别。与React hooks不同，该组件初始化函数仅被调用一次
+## 逻辑组合复用
 
-在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`等函数
+基于函数的 API 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。与`React hooks`不同，该组件初始化函数仅被调用一次
+
+在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
 
@@ -314,13 +316,12 @@ document.body.appendChild(
 `class`属性支持的类型有
 
 ```ts
-type classprop=string|Set<string>|Array<string>
+type classprop = string | Set<string> | Array<string>;
 ```
 
 ```js
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
 html`
-  
   <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
     ${objstatearray}
   </div>
@@ -338,14 +339,17 @@ setTimeout(() => {
 `style`属性支持的类型有
 
 ```ts
-type styleprop=string|object
+type styleprop = string | object;
 ```
+
 `style="width:800px"`
 
 `style=${{ display: "block", width: "500px" }}`
 
 ```js
-html`<div style=${{ display: "block", width: "100%" }}>${objstate2}</div>`
+html`
+  <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
+`;
 ```
 
 # 属性单向绑定
@@ -446,7 +450,7 @@ interface Custom {
     | ReactiveState
     | Array<Virtualdom | ReactiveState | string>;
   defaultProps?: object;
-css?:string;
+  css?: string;
 }
 interface Class {
   new (propsjson?: object, children?: any[]): HTMLElement;
@@ -571,16 +575,10 @@ function watch(state: ReactiveState, callback: Function): void;
 1.不变的列表
 
 ```jsx
-
 const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  <li>{number}</li>
-);
+const listItems = numbers.map(number => <li>{number}</li>);
 
-createApp(
-  <ul>{listItems}</ul>,
-  document.getElementById('root')
-);
+createApp(<ul>{listItems}</ul>, document.getElementById("root"));
 ```
 
 2.可变的列表

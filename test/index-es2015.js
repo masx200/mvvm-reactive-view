@@ -1154,6 +1154,10 @@ function insertfirst(container, ele) {
     container.insertBefore(ele, container.firstChild);
 }
 
+function createanotherhtmldocument() {
+    return document$1.implementation.createHTMLDocument("");
+}
+
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
@@ -2356,8 +2360,8 @@ function isCSSMediaRule(a) {
 
 function parsecsstext(text) {
     var styleelement = render(createElement("style", undefined, text));
-    var otherdocument = document.implementation.createHTMLDocument("");
-    otherdocument.firstElementChild.appendChild(styleelement);
+    var otherdocument = createanotherhtmldocument();
+    appendchild(otherdocument.firstElementChild, styleelement);
     return Array.from(styleelement.sheet.cssRules);
 }
 
@@ -2367,8 +2371,8 @@ function isCSSStyleRule(a) {
 
 function selectoraddprefix(cssstylerule, prefix) {
     var selectorText = cssstylerule.selectorText;
-    if (selectorText === "*") {
-        cssstylerule.selectorText = prefix;
+    if (selectorText.startsWith("*")) {
+        cssstylerule.selectorText = selectorText.replace("*", prefix);
     } else {
         cssstylerule.selectorText = prefix + " " + selectorText;
     }
@@ -2391,6 +2395,7 @@ function prefixcssrules(cssRulesarray, prefix) {
 var componentsstylesheet = {};
 
 function savestyleblob(tagname, text) {
+    tagname = tagname.toLowerCase();
     if (!componentsstylesheet[tagname]) {
         componentsstylesheet[tagname] = createcssBlob(text);
     }
@@ -2415,6 +2420,12 @@ function transformcsstext(text, prefix) {
     var cssomnew = prefixcssrules(cssomold, prefix);
     var cssnewtext = cssrulestocsstext(cssomnew);
     return cssnewtext;
+}
+
+function registercssprefix(text, prefix) {
+    var css = text;
+    var cssnewtext = transformcsstext(css, prefix);
+    savestyleblob(prefix, cssnewtext);
 }
 
 var attributessymbol = Symbol("attributes");
@@ -2444,10 +2455,9 @@ function createComponent(custfun) {
                 _this5[_b] = {};
                 var css = _this5.constructor["css"];
                 if (css) {
-                    var prefix = _this5.tagName;
+                    var prefix = _this5.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
-                        var cssnewtext = transformcsstext(css, prefix);
-                        savestyleblob(prefix, cssnewtext);
+                        registercssprefix(css, prefix);
                     }
                 }
                 var defaultProps = _this5.constructor["defaultProps"];
@@ -2503,7 +2513,7 @@ function createComponent(custfun) {
                     }
                     var css = this.constructor["css"];
                     if (css) {
-                        var prefix = this.tagName;
+                        var prefix = this.tagName.toLowerCase();
                         if (componentsstylesheet[prefix]) {
                             var stylelinkelement = createlinkstylesheet(componentsstylesheet[prefix]);
                             insertfirst(this, stylelinkelement);

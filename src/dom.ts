@@ -91,6 +91,6 @@ const HTMLElementprototype = HTMLElement.prototype;
 export function insertfirst(container: HTMLElement, ele: HTMLElement) {
   container.insertBefore(ele, container.firstChild);
 }
-export function createanotherhtmldocument( ){
-return document.implementation.createHTMLDocument("");
+export function createanotherhtmldocument() {
+  return document.implementation.createHTMLDocument("");
 }

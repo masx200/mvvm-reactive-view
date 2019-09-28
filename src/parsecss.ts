@@ -3,7 +3,7 @@ import createElement from "./createelement";
 import { gettagtype } from "./util";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
-import {appendchild,createanotherhtmldocument}from "./dom"
+import { appendchild, createanotherhtmldocument } from "./dom";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "cssmediarule";
 }
@@ -13,11 +13,10 @@ export function parsecsstext(text: string): Array<CSSRule> {
   //   console.dir(styleelement);
   /* 只有添加到document之后才会有sheet */
   //const otherdocument = document.implementation.createHTMLDocument("");
-const otherdocument = createanotherhtmldocument()
-appendchild(
-  otherdocument.firstElementChild,styleelement);
- //otherdocument.firstElementChild.appendChild(styleelement); 
-return Array.from(styleelement.sheet.cssRules);
+  const otherdocument = createanotherhtmldocument();
+  appendchild(otherdocument.firstElementChild, styleelement);
+  //otherdocument.firstElementChild.appendChild(styleelement);
+  return Array.from(styleelement.sheet.cssRules);
 }
 
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
@@ -26,8 +25,8 @@ export function isCSSStyleRule(a: any): a is CSSStyleRule {
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   const selectorText = cssstylerule.selectorText;
-  if (selectorText.startsWith( "*")) {
-    cssstylerule.selectorText =selectorText.replace("*", prefix);
+  if (selectorText.startsWith("*")) {
+    cssstylerule.selectorText = selectorText.replace("*", prefix);
   } else {
     cssstylerule.selectorText = prefix + " " + selectorText;
   }
@@ -54,7 +53,7 @@ export function prefixcssrules(
 const componentsstylesheet = {};
 export { componentsstylesheet };
 export function savestyleblob(tagname: string, text: string) {
-tagname=tagname.toLowerCase()
+  tagname = tagname.toLowerCase();
   if (!componentsstylesheet[tagname]) {
     componentsstylesheet[tagname] = createcssBlob(text);
   }
