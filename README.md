@@ -494,7 +494,7 @@ const mycomapp = () => {
   );
 };
 var vdom = createElement(createComponent(mycomapp));
-// createApp(vdom, document.getElementById("root"));
+
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 ```
 
