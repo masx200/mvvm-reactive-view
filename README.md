@@ -534,11 +534,11 @@ class ReactiveState {
 ```ts
 function createComponent(custfun: Custom): Class;
 interface Custom {
-  (props?: object, children?: Array<any>):
+  (props?:{[key:string]:ReactiveState} , children?: Array<any>):
     | Virtualdom
-    | string
+    | string|number
     | ReactiveState
-    | Array<Virtualdom | ReactiveState | string>;
+    | Array<Virtualdom | ReactiveState | string|number>;
   defaultProps?: object;
   css?: string;
 }
@@ -616,12 +616,13 @@ function createRef(init: any): {};
 
 ```ts
 class Virtualdom {
+element:Element|undefined
   type: string | Function  ;
   props: object = {};
   children: Array<Virtualdom | string|ReactiveState> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
-  bindattr:  { [key: string]: ReactiveState } = {};= {};
+  bindattr:  { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",
     props: object = {},
