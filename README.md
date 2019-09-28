@@ -214,7 +214,13 @@ setTimeout(() => {
 
 ## 逻辑组合复用
 
-受到 `Vue Composition API`的启发
+受到 `Vue Composition API`和`React Hooks`的启发,
+
+集各家所长，
+
+但是跟它们完全不同，
+
+响应式状态可以独立于组件存在
 
 基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。与`React hooks`不同，该组件初始化函数仅被调用一次
 
