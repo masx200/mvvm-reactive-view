@@ -35,9 +35,13 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
  const selectorText = cssstylerule.selectorText;
 
 const selectorarray=selectorText.split(",")
-cssstylerule.selectorText=selectorarray.map(selector=>{
+cssstylerule.selectorText=selectorarray.map(selectorText=>{
+let prefixselector = prefix + " " + selectorText
 
-
+if(selectorText.startsWith("*")){
+prefixselector=prefixselector+","+selectorText.replace("*", prefix)
+}
+return prefixselector
 }).join(",")
 /*
   const prefixselector = prefix + " " + selectorText;
