@@ -214,10 +214,10 @@ function handleprops(
       onevent(element, event, callbacks);
     });
   })(element, vdom);
-  if (!element[bindstatesymbol]) {
+/*  if (!element[bindstatesymbol]) {
     element[bindstatesymbol] = new Set();
   }
-
+*/
   [...Object.values(vdom.bindattr), ...Object.values(vdom.directives)]
     .flat()
     .filter(
@@ -225,5 +225,14 @@ function handleprops(
       // e instanceof ReactiveState
     )
 
-    .forEach(e => element[bindstatesymbol].add(e));
+    .forEach(e =>
+{
+if (!element[bindstatesymbol]) {
+    element[bindstatesymbol] = new Set();
+  }
+ element[bindstatesymbol].add(e)
+
+
+}
+);
 }
