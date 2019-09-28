@@ -143,3 +143,13 @@ export function loadlinkstyle(
     appendchild(container, stylelinkelement);
   });
 }
+
+export function waitloadallstyle(prefix,_this){
+
+return Promise.all(
+              [...componentsstylesheet[prefix]].map(styleurl =>
+                loadlinkstyle(createlinkstylesheet(styleurl), _this)
+              )
+            )
+
+}
