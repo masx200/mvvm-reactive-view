@@ -567,6 +567,10 @@ const listItems = numbers.map((number) =>
   <li>{number}</li>
 );
 
+createApp(
+  <ul>{listItems}</ul>,
+  document.getElementById('root')
+);
 ```
 
 2.可变的列表
