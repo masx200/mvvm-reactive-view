@@ -74,20 +74,22 @@ export function prefixcssrules(
   cssRulesarray: Array<CSSRule>,
   prefix: string
 ): Array<CSSRule> {
-  return cssRulesarray.map((cssrule: CSSRule) => {
-    if (isCSSStyleRule(cssrule)) {
-      return selectoraddprefix(cssrule, prefix);
-    } else if (isCSSMediaRule(cssrule)) {
-      prefixcssrules(Array.from(cssrule.cssRules), prefix);
-      return cssrule;
-    } else if (isCSSImportRule(cssrule)) {
-      //把url放入
-      savestyleblob(prefix, undefined, cssrule.href);
-      return;
-    } else {
-      return cssrule;
-    }
-  });
+  return cssRulesarray
+    .map((cssrule: CSSRule) => {
+      if (isCSSStyleRule(cssrule)) {
+        return selectoraddprefix(cssrule, prefix);
+      } else if (isCSSMediaRule(cssrule)) {
+        prefixcssrules(Array.from(cssrule.cssRules), prefix);
+        return cssrule;
+      } else if (isCSSImportRule(cssrule)) {
+        //把url放入
+        savestyleblob(prefix, undefined, cssrule.href);
+        return;
+      } else {
+        return cssrule;
+      }
+    })
+    .filter(Boolean);
 }
 
 const componentsstylesheet: { [key: string]: Set<string> } = {};
@@ -147,7 +149,10 @@ export function loadlinkstyle(
   });
 }
 
-export function waitloadallstyle(prefix, _this) {
+export function waitloadallstyle(
+  prefix: string,
+  _this: Element | HTMLElement | SVGSVGElement | SVGElement
+) {
   return Promise.all(
     [...componentsstylesheet[prefix]].map(styleurl =>
       loadlinkstyle(createlinkstylesheet(styleurl), _this)
