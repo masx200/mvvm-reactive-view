@@ -619,7 +619,7 @@ class Virtualdom {
 element:Element|undefined
   type: string | Function  ;
   props: object = {};
-  children: Array<Virtualdom | string|ReactiveState> = [];
+  children: Array<Virtualdom|number | string|ReactiveState> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr:  { [key: string]: ReactiveState } = {};
