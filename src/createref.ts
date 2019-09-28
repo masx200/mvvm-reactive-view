@@ -1,3 +1,3 @@
-export default function createRef(init: any): object {
+export default function createRef(init: any) {
   return { value: init };
 }

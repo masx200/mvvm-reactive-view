@@ -25,25 +25,28 @@ function throwinvalideletype(type) {
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
-import { isobject, isArray, isfunction, isstring } from "./util";
+import { isobject, isArray, isfunction, isstring, isnumber } from "./util";
 import Virtualdom from "./virtualdom";
 export default function render(
-  vdom: Array<Virtualdom | string | ReactiveState>,
+  vdom: Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
 ): Array<Node>;
 export default function render(
-  vdom: Virtualdom | string | ReactiveState,
+  vdom: Virtualdom | string | ReactiveState | number,
   namespace?: string
 ): Node | any;
 export default function render(
   vdom:
     | Virtualdom
     | string
+    | number
     | ReactiveState
-    | Array<Virtualdom | string | ReactiveState>,
+    | Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
 ) {
-  if (typeof vdom === "string") {
+  if (isnumber(vdom)) {
+    return createtextnode(vdom);
+  } else if (typeof vdom === "string") {
     return createtextnode(vdom);
   } else if (vdom instanceof ReactiveState) {
     const reactive = vdom;
@@ -128,30 +131,33 @@ export default function render(
     /*  */
     /* https://developer.mozilla.org/zh-CN/docs/Web/API/Element/slot */
     if (
-      (type && isfunction(type)) ||
-      isstring(type)
+      type &&
+      (isfunction(type) || isstring(type))
       // /
       //   /
 
       /* typeof type !== "function" */
     ) {
-      mount(
-        vdom.children.map(e => {
-          if (type === "svg") {
-            /* 没想到svg的创建方式这么特别?否则显示不出svg */
-            //   element.innerHTML = element.innerHTML;
-            return render(e, svgnamespace);
-          } else if (type === "math") {
-            return render(e, mathnamespace);
-          } else if (namespace) {
-            return render(e, namespace);
-          } else {
-            return render(e);
-          }
-        }),
+      /* 如果自己创造的组件就不加children, */
+      if (!type[componentsymbol]) {
+        mount(
+          vdom.children.map(e => {
+            if (type === "svg") {
+              /* 没想到svg的创建方式这么特别?否则显示不出svg */
+              //   element.innerHTML = element.innerHTML;
+              return render(e, svgnamespace);
+            } else if (type === "math") {
+              return render(e, mathnamespace);
+            } else if (namespace) {
+              return render(e, namespace);
+            } else {
+              return render(e);
+            }
+          }),
 
-        element
-      );
+          element
+        );
+      }
     }
     return element;
   } else if (isArray(vdom)) {
@@ -164,6 +170,7 @@ export default function render(
 
 import { isReactiveState } from "./primitivestate";
 import { isconnected } from "./isconnected";
+import { componentsymbol } from "./iscomponent";
 function handleprops(
   element: HTMLElement | Element | SVGSVGElement | SVGElement,
   vdom: Virtualdom

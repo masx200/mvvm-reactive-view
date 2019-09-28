@@ -4,7 +4,7 @@ import readonlyproxy from "./readonlyproxy";
 import ReactiveState /* , { dispatchsymbol } */ from "./primitivestate";
 import createstate from "./createstate";
 const attributessymbol = Symbol("attributes");
-const elementsymbol = Symbol("element");
+const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("componentinnervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
@@ -25,7 +25,7 @@ import createeleattragentreadwrite from "dom-element-attribute-agent-proxy";
 import { isobject, isArray, isfunction, isstring } from "./util";
 import { onunmounted, onmounted } from "./elementonmountandunmount";
 import { isvalidvdom } from "./html";
-import createApp, { invalid_Virtualdom } from "./createApp";
+import { /* createApp, */ invalid_Virtualdom } from "./createApp";
 import { toArray } from "./toArray";
 import { Custom, Class } from "./customclass";
 import {
@@ -34,18 +34,25 @@ import {
   cssrulestocsstext, */
   //   savestyleblob,
   componentsstylesheet,
-  createlinkstylesheet,
+  //   createlinkstylesheet,
   //   transformcsstext,
-  registercssprefix
+  registercssprefix,
+  loadlinkstyle,
+  createlinkstylesheet
   //   savestyleblob
 } from "./parsecss";
-import { insertfirst } from "./dom";
+// import { insertfirst } from "./dom";
+import mount from "./mount";
+import { seteletext } from "./dom";
+// import { Promise } from "q";
 // import { inflate } from "zlib";
+import { componentsymbol } from "./iscomponent";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
     const defaultProps = custfun["defaultProps"];
     const css = custfun["css"];
     return class Component extends AttrChange {
+      static [componentsymbol] = true;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
       [mountedsymbol]: Array<Function>;
@@ -157,21 +164,44 @@ export function createComponent(custfun: Custom): Class {
           this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
         }
         if (!this[readysymbol]) {
-          createApp(this[elementsymbol], this);
           this[readysymbol] = true;
-        }
+          /* 这段代码只在初始化时执行一次 */
+          //   mount(this[elementsymbol], this, false);
 
-        const css = this.constructor["css"];
-
-        if (css) {
-          /* 挂载样式到组件最前面 */
+          const css = this.constructor["css"];
           const prefix = this.tagName.toLowerCase();
-          //   console.log(componentsstylesheet[prefix]);
-          if (componentsstylesheet[prefix]) {
-            const stylelinkelement = createlinkstylesheet(
+          if (css && componentsstylesheet[prefix]) {
+            /* 先清空当前组件 的children */
+
+            seteletext(this, "");
+            /* 应该要等待css加载完成之后再渲染出来,否则会有页面跳动 */
+            /* 是css里面的@import导致的 */
+            /* 挂载样式到组件最前面 */
+            //   console.log(componentsstylesheet[prefix]);
+            // if (componentsstylesheet[prefix]) {
+            /* const stylelinkelement = createlinkstylesheet(
               componentsstylesheet[prefix]
-            );
-            insertfirst(this, stylelinkelement);
+            ); */
+            /*   stylelinkelement.onload = () => {
+              mount(this[elementsymbol], this, false);
+            };
+            stylelinkelement.onerror = () => {
+              mount(this[elementsymbol], this, false);
+            }; */
+            // insertfirst(this, stylelinkelement);
+            // }
+            Promise.all(
+              [...componentsstylesheet[prefix]].map(styleurl =>
+                loadlinkstyle(createlinkstylesheet(styleurl), this)
+              )
+            ).then(() => {
+              //   console.log("style load all");
+              //   console.log("mount1");
+              mount(this[elementsymbol], this, false);
+            });
+          } else {
+            // console.log("mount2");
+            mount(this[elementsymbol], this);
           }
         }
 

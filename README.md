@@ -279,6 +279,23 @@ setTimeout(() => {
 }, 5000);
 ```
 
+## 不建议在组件局部样式 css 中使用`@import`加载外部样式表
+
+如果像如下这样,在组件局部样式 css 中引用外部 css,可能会导致页面闪动
+
+```css
+@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css);
+```
+
+一个好的解决办法是把外部样式写在`html`中
+
+```html
+<link
+  href="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
+  rel="stylesheet"
+/>
+```
+
 # 使用 webcomponents costum elements
 
 可以通过静态属性 static `defaultProps` 来设置默认值
@@ -437,6 +454,48 @@ const vdomobj = html`
 `;
 ```
 
+# 组件中逻辑提取和重用
+
+例子：跟踪鼠标的位置
+
+```javascript
+function useMousePosition() {
+  const x = createState(0);
+  const y = createState(0);
+
+  function update(e) {
+    x.value = e.pageX;
+    y.value = e.pageY;
+  }
+
+  useMounted(() => {
+    window.addEventListener("mousemove", update);
+  });
+
+  useUnMounted(() => {
+    window.removeEventListener("mousemove", update);
+  });
+
+  return { x, y };
+}
+
+const mycomapp = () => {
+  const { x, y } = useMousePosition();
+
+  return (
+    <div>
+      <h3> 鼠标位置</h3>
+      <h2>x:{x}</h2>
+
+      <h1>y:{y}</h1>
+    </div>
+  );
+};
+var vdom = createElement(createComponent(mycomapp));
+// createApp(vdom, document.getElementById("root"));
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+```
+
 # API
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
@@ -511,7 +570,7 @@ function createElement(
 
 ```ts
 function createApp(
-  vdom: string | Virtualdom | (string | Virtualdom)[],
+  vdom: string | Virtualdom | number | (string | number | Virtualdom)[],
   container: HTMLElement | Element
 ): HTMLElement | Element;
 ```
@@ -519,11 +578,7 @@ function createApp(
 ## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
 
 ```ts
-function createRef(
-  init: any
-): {
-  value: any;
-};
+function createRef(init: any): {};
 ```
 
 ## 虚拟 `dom` `Virtualdom`类

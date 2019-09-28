@@ -40,6 +40,9 @@ export default function createstate(
         } else {
           return false;
         }
+      },
+      setPrototypeOf() {
+        return false;
       }
     });
   } else if (
@@ -149,6 +152,9 @@ export default function createstate(
           return false;
         }
         return true;
+      },
+      setPrototypeOf() {
+        return false;
       }
     });
   } else {

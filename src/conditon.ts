@@ -1,3 +1,4 @@
+import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
 // import { readysymbol } from "./createComponent";
 export const invalid_ReactiveState = "invalid ReactiveState";
@@ -45,6 +46,7 @@ export default function(
   });
   const options = { true: iftrue, false: iffalse };
   class Condition extends AttrChange {
+    static [componentsymbol] = true;
     [readysymbol] = false;
     constructor(/* propsjson?: object, children?: any[], options: object = {} */) {
       super();

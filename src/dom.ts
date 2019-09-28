@@ -29,8 +29,8 @@ export function createnativeelement(type: string) {
 export function createElementNS(namespace: string, name: string) {
   return document.createElementNS(namespace, name);
 }
-export function createtextnode(data: string) {
-  return document.createTextNode(data);
+export function createtextnode(data: string | number) {
+  return document.createTextNode(String(data));
 }
 export const svgnamespace = "http://www.w3.org/2000/svg";
 export function changetext(textnode: Text, value: string) {
@@ -88,7 +88,10 @@ export function removeAttribute(ele: Element, name: string) {
 }
 const HTMLElementprototype = HTMLElement.prototype;
 
-export function insertfirst(container: HTMLElement, ele: HTMLElement) {
+export function insertfirst(
+  container: HTMLElement | Element,
+  ele: HTMLElement
+) {
   container.insertBefore(ele, container.firstChild);
 }
 export function createanotherhtmldocument() {

@@ -12,7 +12,8 @@ export default function createApp(
     | Node
     | Virtualdom
     | string
-    | Array<Virtualdom | string | ReactiveState | Node>
+    | number
+    | Array<Virtualdom | string | ReactiveState | Node | number>
     | ReactiveState,
   container: HTMLElement | Element
 ): HTMLElement | Element {

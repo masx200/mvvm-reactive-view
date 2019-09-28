@@ -1,7 +1,7 @@
 import Virtualdom from "./virtualdom";
 import ReactiveState from "./primitivestate";
 import { isReactiveState } from "./primitivestate";
-import { isstring, isArray } from "./util";
+import { isstring, isArray, isnumber } from "./util";
 import { isVirtualdom } from "./virtualdom";
 import htm from "htm/dist/htm.module.js";
 import h from "./createelement";
@@ -19,7 +19,11 @@ export function isvalidvdom(
   | string
   | Virtualdom
   | ReactiveState
-  | (string | Virtualdom | ReactiveState)[] {
+  | number
+  | (string | Virtualdom | ReactiveState | number)[] {
+  if (isnumber(v)) {
+    return true;
+  }
   let flag = false;
   if (isArray(v)) {
     flag = v

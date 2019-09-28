@@ -5,7 +5,7 @@ export function isundefined(a: any) {
   return typeof a === "undefined";
 }
 
-export function isnumber(a: any) {
+export function isnumber(a: any): a is number {
   return typeof a === "number";
 }
 export function isboolean(a: any) {

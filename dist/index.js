@@ -137,7 +137,7 @@ function createElementNS(namespace, name) {
 }
 
 function createtextnode(data) {
-    return document$1.createTextNode(data);
+    return document$1.createTextNode(String(data));
 }
 
 const svgnamespace = "http://www.w3.org/2000/svg";
@@ -177,10 +177,6 @@ function removeAttribute(ele, name) {
 }
 
 const HTMLElementprototype = HTMLElement.prototype;
-
-function insertfirst(container, ele) {
-    container.insertBefore(ele, container.firstChild);
-}
 
 function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
@@ -317,6 +313,8 @@ function createhtmlandtextdirective(seteletext, errorname) {
         }
     };
 }
+
+const componentsymbol = Symbol("iscomponent");
 
 const Reflect$2 = window.Reflect;
 
@@ -658,6 +656,9 @@ function html(...inargs) {
 }
 
 function isvalidvdom(v) {
+    if (isnumber(v)) {
+        return true;
+    }
     let flag = false;
     if (isarray(v)) {
         flag = v.map(ele => {
@@ -688,8 +689,10 @@ function assertvalidvirtualdom(...args) {
     }
 }
 
-function mount(ele, container) {
-    seteletext(container, "");
+function mount(ele, container, clear = true) {
+    if (clear) {
+        seteletext(container, "");
+    }
     const eles = toArray(ele).flat(Infinity);
     eles.forEach(e => appendchild(container, e));
     return container;
@@ -740,7 +743,7 @@ const handletrue = getsymbol("handletrue");
 const handlefalse = getsymbol("handlefalse");
 
 function conditon(conditon, iftrue, iffalse) {
-    var _a;
+    var _a, _b;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
         throw TypeError(invalid_ReactiveState);
     }
@@ -756,13 +759,13 @@ function conditon(conditon, iftrue, iffalse) {
     class Condition extends AttrChange {
         constructor() {
             super();
-            this[_a] = false;
+            this[_b] = false;
             const optionstrue = get(options, "true");
             const optionsfalse = get(options, "false");
             this[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
             this[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
         }
-        [(_a = readysymbol, handlefalse)]() {
+        [(_a = componentsymbol, _b = readysymbol, handlefalse)]() {
             setelehtml(this, "");
             if (this[falsevdomsymbol]) {
                 if (!this[falseelesymbol]) {
@@ -820,6 +823,7 @@ function conditon(conditon, iftrue, iffalse) {
             }
         }
     }
+    Condition[_a] = true;
     const vdom = new Virtualdom(Condition, {
         value: conditon
     });
@@ -958,7 +962,9 @@ function throwinvalideletype(type) {
 }
 
 function render(vdom, namespace) {
-    if (typeof vdom === "string") {
+    if (isnumber(vdom)) {
+        return createtextnode(vdom);
+    } else if (typeof vdom === "string") {
         return createtextnode(vdom);
     } else if (vdom instanceof ReactiveState) {
         const reactive = vdom;
@@ -1006,18 +1012,20 @@ function render(vdom, namespace) {
             throwinvalideletype(vdom);
         }
         handleprops(element, vdom);
-        if (type && isfunction(type) || isstring(type)) {
-            mount(vdom.children.map(e => {
-                if (type === "svg") {
-                    return render(e, svgnamespace);
-                } else if (type === "math") {
-                    return render(e, mathnamespace);
-                } else if (namespace) {
-                    return render(e, namespace);
-                } else {
-                    return render(e);
-                }
-            }), element);
+        if (type && (isfunction(type) || isstring(type))) {
+            if (!type[componentsymbol]) {
+                mount(vdom.children.map(e => {
+                    if (type === "svg") {
+                        return render(e, svgnamespace);
+                    } else if (type === "math") {
+                        return render(e, mathnamespace);
+                    } else if (namespace) {
+                        return render(e, namespace);
+                    } else {
+                        return render(e);
+                    }
+                }), element);
+            }
         }
         return element;
     } else if (isarray(vdom)) {
@@ -1204,6 +1212,9 @@ function createstate(init) {
                 } else {
                     return false;
                 }
+            },
+            setPrototypeOf() {
+                return false;
             }
         });
     } else if (isReactiveState(init)) {
@@ -1289,6 +1300,9 @@ function createstate(init) {
                     return false;
                 }
                 return true;
+            },
+            setPrototypeOf() {
+                return false;
             }
         });
     } else {
@@ -1305,6 +1319,10 @@ function createcssBlob(source) {
 
 function isCSSMediaRule(a) {
     return gettagtype(a) === "cssmediarule";
+}
+
+function isCSSImportRule(a) {
+    return gettagtype(a) === "cssimportrule";
 }
 
 function parsecsstext(text) {
@@ -1335,6 +1353,9 @@ function prefixcssrules(cssRulesarray, prefix) {
         } else if (isCSSMediaRule(cssrule)) {
             prefixcssrules(Array.from(cssrule.cssRules), prefix);
             return cssrule;
+        } else if (isCSSImportRule(cssrule)) {
+            savestyleblob(prefix, undefined, cssrule.href);
+            return;
         } else {
             return cssrule;
         }
@@ -1343,10 +1364,15 @@ function prefixcssrules(cssRulesarray, prefix) {
 
 const componentsstylesheet = {};
 
-function savestyleblob(tagname, text) {
+function savestyleblob(tagname, csstext, urltext) {
     tagname = tagname.toLowerCase();
     if (!componentsstylesheet[tagname]) {
-        componentsstylesheet[tagname] = createcssBlob(text);
+        componentsstylesheet[tagname] = new Set;
+    }
+    if (csstext) {
+        componentsstylesheet[tagname].add(createcssBlob(csstext));
+    } else if (urltext) {
+        componentsstylesheet[tagname].add(urltext);
     }
 }
 
@@ -1364,7 +1390,7 @@ function createlinkstylesheet(url) {
 function transformcsstext(text, prefix) {
     const css = text;
     const cssomold = parsecsstext(css);
-    const cssomnew = prefixcssrules(cssomold, prefix);
+    const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
     const cssnewtext = cssrulestocsstext(cssomnew);
     return cssnewtext;
 }
@@ -1375,9 +1401,21 @@ function registercssprefix(text, prefix) {
     savestyleblob(prefix, cssnewtext);
 }
 
+function loadlinkstyle(stylelinkelement, container) {
+    return new Promise(rs => {
+        const loaderrorfun = () => {
+            stylelinkelement.onload = stylelinkelement.onerror = undefined;
+            rs();
+        };
+        stylelinkelement.onload = loaderrorfun;
+        stylelinkelement.onerror = loaderrorfun;
+        appendchild(container, stylelinkelement);
+    });
+}
+
 const attributessymbol = Symbol("attributes");
 
-const elementsymbol = Symbol("element");
+const elementsymbol = Symbol("innerelement");
 
 const vdomsymbol = Symbol("componentinnervdom");
 
@@ -1386,15 +1424,15 @@ const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
 function createComponent(custfun) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (isfunction(custfun)) {
         const defaultProps = custfun["defaultProps"];
         const css = custfun["css"];
-        return _c = class Component extends AttrChange {
+        return _d = class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
-                this[_a] = false;
-                this[_b] = {};
+                this[_b] = false;
+                this[_c] = {};
                 const css = this.constructor["css"];
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
@@ -1441,15 +1479,16 @@ function createComponent(custfun) {
                     this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
                 }
                 if (!this[readysymbol]) {
-                    createApp(this[elementsymbol], this);
                     this[readysymbol] = true;
-                }
-                const css = this.constructor["css"];
-                if (css) {
+                    const css = this.constructor["css"];
                     const prefix = this.tagName.toLowerCase();
-                    if (componentsstylesheet[prefix]) {
-                        const stylelinkelement = createlinkstylesheet(componentsstylesheet[prefix]);
-                        insertfirst(this, stylelinkelement);
+                    if (css && componentsstylesheet[prefix]) {
+                        seteletext(this, "");
+                        Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), this))).then(() => {
+                            mount(this[elementsymbol], this, false);
+                        });
+                    } else {
+                        mount(this[elementsymbol], this);
                     }
                 }
                 this[mountedsymbol].forEach(f => f());
@@ -1464,9 +1503,9 @@ function createComponent(custfun) {
                     this[attributessymbol][name].value = createeleattragentreadwrite(this)[name];
                 }
             }
-        }, _a = readysymbol, _b = attributessymbol, _c.css = isstring(css) && css ? css : undefined, 
-        _c.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
-        _c;
+        }, _a = componentsymbol, _b = readysymbol, _c = attributessymbol, _d[_a] = true, 
+        _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
+        _d;
     } else {
         console.error(custfun);
         throw TypeError(invalid_Function);

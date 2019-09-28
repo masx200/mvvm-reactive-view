@@ -18,9 +18,12 @@ export default function(
     | Text
     | SVGSVGElement
     | Element,
-  container: HTMLElement | SVGSVGElement | SVGElement | Element | Node
+  container: HTMLElement | SVGSVGElement | SVGElement | Element | Node,
+  clear: boolean = true
 ) {
-  seteletext(container, "");
+  if (clear) {
+    seteletext(container, "");
+  }
   //   container.innerHTML = "";
   /*  let eles: Array<any>;
   if (Array.isArray(ele)) {

@@ -63,7 +63,8 @@ export default [
       }),
       /* 加载css为文本,而且不自动添加到head */
       postcss({
-        sourceMap: true,
+        minimize: true,
+        // sourceMap: true,
         extract: false,
         inject: false
       })

@@ -3,9 +3,15 @@ import createElement from "./createelement";
 import { gettagtype } from "./util";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
-import { appendchild, createanotherhtmldocument } from "./dom";
+import {
+  appendchild,
+  createanotherhtmldocument /* , insertfirst */
+} from "./dom";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "cssmediarule";
+}
+export function isCSSImportRule(a: any): a is CSSImportRule {
+  return gettagtype(a) === "cssimportrule";
 }
 
 export function parsecsstext(text: string): Array<CSSRule> {
@@ -44,31 +50,44 @@ export function prefixcssrules(
     } else if (isCSSMediaRule(cssrule)) {
       prefixcssrules(Array.from(cssrule.cssRules), prefix);
       return cssrule;
+    } else if (isCSSImportRule(cssrule)) {
+      //把url放入
+      savestyleblob(prefix, undefined, cssrule.href);
+      return;
     } else {
       return cssrule;
     }
   });
 }
 
-const componentsstylesheet = {};
+const componentsstylesheet: { [key: string]: Set<string> } = {};
 export { componentsstylesheet };
-export function savestyleblob(tagname: string, text: string) {
+export function savestyleblob(
+  tagname: string,
+  csstext?: string,
+  urltext?: string
+) {
   tagname = tagname.toLowerCase();
   if (!componentsstylesheet[tagname]) {
-    componentsstylesheet[tagname] = createcssBlob(text);
+    componentsstylesheet[tagname] = new Set();
+  }
+  if (csstext) {
+    componentsstylesheet[tagname].add(createcssBlob(csstext));
+  } else if (urltext) {
+    componentsstylesheet[tagname].add(urltext);
   }
 }
 export function cssrulestocsstext(cssrules: Array<CSSRule>): string {
   return cssrules.map(c => c.cssText).join("\n");
   // .replace(/\n/g, "");
 }
-export function createlinkstylesheet(url: string) {
+export function createlinkstylesheet(url: string): HTMLElement {
   return render(createElement("link", { href: url, rel: "stylesheet" }));
 }
-export function transformcsstext(text: string, prefix: string) {
+export function transformcsstext(text: string, prefix: string): string {
   const css = text;
   const cssomold = parsecsstext(css);
-  const cssomnew = prefixcssrules(cssomold, prefix);
+  const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
   //   console.log([css, prefix, cssomold, cssomnew]);
   const cssnewtext = cssrulestocsstext(cssomnew);
   //   console.log([text, cssomold, cssomnew, cssnewtext]);
@@ -77,5 +96,23 @@ export function transformcsstext(text: string, prefix: string) {
 export function registercssprefix(text: string, prefix: string) {
   const css = text;
   const cssnewtext = transformcsstext(css, prefix);
+  //   cssnewtext.forEach(url => {
+  /* 把css文字转成url放入 */
   savestyleblob(prefix, cssnewtext);
+  //   });
+}
+export function loadlinkstyle(
+  stylelinkelement: HTMLElement,
+  container: HTMLElement | Element | SVGSVGElement | SVGElement
+) {
+  return new Promise(rs => {
+    const loaderrorfun = () => {
+      stylelinkelement.onload = stylelinkelement.onerror = undefined;
+      rs();
+      //   console.log(stylelinkelement.href);
+    };
+    stylelinkelement.onload = loaderrorfun;
+    stylelinkelement.onerror = loaderrorfun;
+    appendchild(container, stylelinkelement);
+  });
 }
