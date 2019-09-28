@@ -201,7 +201,7 @@ https://tc39.es/proposal-flatMap/
 
 ## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 redux,vuex,mobx
 
-```js
+```jsx
 const number = createState(10);
 function increment() {
   number.value++;
@@ -424,6 +424,7 @@ html`
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
 
+`const state1=createState()`
 `value=${state1}`
 
 # 事件绑定
@@ -436,11 +437,19 @@ html`
 
 2.使用"on"+事件名称
 
-`onclick={e=>console.log(e)}`
+```jsx
+<button onclick={e=>console.log(e)}/>
+```
 
 # 使用指令
 
-属性名为'\*'+指令名称,属性值为值
+1.属性名为'\*'+指令名称,属性值为值
+
+2.使用"_"+指令名称
+
+```jsx
+<button _text="click me"/>
+```
 
 现已支持的指令有 `'ref','html','text'，"value"`
 
