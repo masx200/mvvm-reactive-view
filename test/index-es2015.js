@@ -1020,22 +1020,34 @@ var message = "invalid useMounted or useUnMounted out of createComponent";
 
 var ctxopen = false;
 
-var Mounted = new Set;
+var MountedSet = new Set;
 
-var UnMounted = new Set;
+var UnMountedSet = new Set;
+
+var StateSet = new Set;
+
+function getstates() {
+    return _toConsumableArray(StateSet);
+}
+
+function usestste(state) {
+    if (ctxopen) {
+        StateSet.add(state);
+    }
+}
 
 function getMounted() {
-    return _toConsumableArray(Mounted);
+    return _toConsumableArray(MountedSet);
 }
 
 function getUnMounted() {
-    return _toConsumableArray(UnMounted);
+    return _toConsumableArray(UnMountedSet);
 }
 
 function useMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            Mounted.add(fun);
+            MountedSet.add(fun);
         } else {
             throw Error(message);
         }
@@ -1047,7 +1059,7 @@ function useMounted(fun) {
 function useUnMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            UnMounted.add(fun);
+            UnMountedSet.add(fun);
         } else {
             throw Error(message);
         }
@@ -1057,23 +1069,31 @@ function useUnMounted(fun) {
 }
 
 function clearMounted() {
-    Mounted = new Set;
+    MountedSet = new Set;
+}
+
+function clearstate() {
+    StateSet = new Set;
 }
 
 function clearUnMounted() {
-    UnMounted = new Set;
+    UnMountedSet = new Set;
 }
 
 function openctx() {
     ctxopen = true;
-    clearMounted();
-    clearUnMounted();
+    clearall();
 }
 
 function closectx() {
     ctxopen = false;
+    clearall();
+}
+
+function clearall() {
     clearMounted();
     clearUnMounted();
+    clearstate();
 }
 
 var readysymbol = Symbol("ready");
@@ -1646,6 +1666,11 @@ function onunmounted(ele) {
         if (ele[eventlistenerssymbol]) {
             removelisteners(ele);
         }
+        if (ele[innerstatesymbol]) {
+            ele[innerstatesymbol].forEach((function(state) {
+                unwatch(state);
+            }));
+        }
         onunmounted(getdomchildren(ele));
     }
 }
@@ -1876,6 +1901,10 @@ function watch(state, callback, statekey) {
     requestAnimationFrame$1((function() {
         state[addallistenerssymbol]();
     }));
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
 }
 
 function rewatch(state) {
@@ -2247,7 +2276,13 @@ function observedeepagent(target, callback) {
     }
 }
 
-function createstate(init) {
+var createstate = function createstate(init) {
+    var state = createstate$1(init);
+    usestste(state);
+    return state;
+};
+
+function createstate$1(init) {
     if (isprimitive(init)) {
         return new Proxy(new ReactiveState(init), {
             defineProperty: function defineProperty() {
@@ -2270,7 +2305,7 @@ function createstate(init) {
             }
         });
     } else if (isReactiveState(init)) {
-        return createstate(init.value);
+        return createstate$1(init.value);
     } else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
             defineProperty: function defineProperty() {
@@ -2467,11 +2502,13 @@ function loadlinkstyle(stylelinkelement, container) {
     }));
 }
 
+var innerstatesymbol = Symbol("innerstate");
+
 var attributessymbol = Symbol("attributes");
 
 var elementsymbol = Symbol("innerelement");
 
-var vdomsymbol = Symbol("componentinnervdom");
+var vdomsymbol = Symbol("innervdom");
 
 var mountedsymbol = Symbol("mounted");
 
@@ -2532,6 +2569,7 @@ function createComponent(custfun) {
                     _this5[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
                     _this5[mountedsymbol] = getMounted();
                     _this5[unmountedsymbol] = getUnMounted();
+                    _this5[innerstatesymbol] = getstates();
                     closectx();
                 } else {
                     closectx();
@@ -3324,6 +3362,7 @@ var css = '@import url(https://cdn.staticfile.org/typo.css/1.1/typo.css);@import
 
 (function() {
     var mycom = function mycom(props, children) {
+        var number = createstate(1);
         useMounted((function() {
             console.log("mounted1");
         }));
@@ -3334,7 +3373,11 @@ var css = '@import url(https://cdn.staticfile.org/typo.css/1.1/typo.css);@import
             console.log("unmounted");
         }));
         watch(props.cccccc, console.log);
-        return [ "wwwwwwwwwwww", createElement("div", null, [ "createComponent" ]), children, createElement("div", null, [ props.cccccc ]) ];
+        return createElement("div", {
+            onclick: function onclick() {
+                number.value++;
+            }
+        }, [ number, createElement("br", null), "wwwwwwwwwwww", createElement("div", null, [ "createComponent" ]), children, createElement("div", null, [ props.cccccc ]) ]);
     };
     mycom.defaultProps = {
         cccccc: "bbbbbbb"

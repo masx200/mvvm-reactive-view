@@ -1,19 +1,30 @@
 import { isFunction } from "./util";
+import ReactiveState from "./primitivestate";
 export const invalid_Function = "invalid Function";
 const message = "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
-let Mounted: Set<Function> = new Set();
-let UnMounted: Set<Function> = new Set();
+let MountedSet: Set<Function> = new Set();
+let UnMountedSet: Set<Function> = new Set();
+let StateSet: Set<ReactiveState> = new Set();
+/* 收集组件内部创建的 ReactiveState*/
+export function getstates() {
+  return [...StateSet];
+}
+export function usestste(state: ReactiveState) {
+  if (ctxopen) {
+    StateSet.add(state);
+  }
+}
 export function getMounted() {
-  return [...Mounted];
+  return [...MountedSet];
 }
 export function getUnMounted() {
-  return [...UnMounted];
+  return [...UnMountedSet];
 }
 export function useMounted(fun: Function) {
   if (isFunction(fun)) {
     if (ctxopen) {
-      Mounted.add(fun);
+      MountedSet.add(fun);
     } else {
       throw Error(message);
     }
@@ -25,7 +36,7 @@ export function useMounted(fun: Function) {
 export function useUnMounted(fun: Function) {
   if (isFunction(fun)) {
     if (ctxopen) {
-      UnMounted.add(fun);
+      UnMountedSet.add(fun);
     } else {
       throw Error(message);
     }
@@ -34,18 +45,25 @@ export function useUnMounted(fun: Function) {
   }
 }
 export function clearMounted() {
-  Mounted = new Set();
+  MountedSet = new Set();
+}
+
+function clearstate() {
+  StateSet = new Set();
 }
 export function clearUnMounted() {
-  UnMounted = new Set();
+  UnMountedSet = new Set();
 }
 export function openctx() {
   ctxopen = true;
-  clearMounted();
-  clearUnMounted();
+  clearall();
 }
 export function closectx() {
   ctxopen = false;
+  clearall();
+}
+function clearall() {
   clearMounted();
   clearUnMounted();
+  clearstate();
 }

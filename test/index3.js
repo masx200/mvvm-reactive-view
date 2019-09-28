@@ -19,6 +19,7 @@ import {
 } from "../dist/index.js";
 (() => {
   var mycom = (props, children) => {
+    const number = createState(1);
     useMounted(() => {
       console.log("mounted1");
     });
@@ -29,12 +30,22 @@ import {
       console.log("unmounted");
     });
     watch(props.cccccc, console.log);
-    return [
-      "wwwwwwwwwwww",
-      createElement("div", null, ["createComponent"]),
-      children,
-      createElement("div", null, [props.cccccc])
-    ];
+    return (
+      <div
+        onclick={() => {
+          number.value++;
+        }}
+      >
+        {[
+          number,
+          <br />,
+          "wwwwwwwwwwww",
+          createElement("div", null, ["createComponent"]),
+          children,
+          createElement("div", null, [props.cccccc])
+        ]}
+      </div>
+    );
   };
   mycom.defaultProps = { cccccc: "bbbbbbb" };
   mycom.css = mycss; /* css``; */

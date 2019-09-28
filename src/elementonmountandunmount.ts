@@ -5,9 +5,10 @@ import {
   readdlisteners
 } from "./onevent";
 import { bindstatesymbol } from "./rendervdomtoreal";
-import { rewatch /* , unwatch */ } from "./watch";
+import { rewatch /* , unwatch */, unwatch } from "./watch";
 import { isArray } from "./util";
 import { getdomchildren } from "./dom";
+import { innerstatesymbol } from "./createComponent";
 
 export function onmounted(ele: Element | Node | Array<Node>) {
   if (isArray(ele)) {
@@ -47,6 +48,12 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
     // readdlisteners(ele);
     // }
     //
+    /* 组件卸载时unwatch组件内部的 ReactiveState*/
+    if (ele[innerstatesymbol]) {
+      ele[innerstatesymbol].forEach((state: ReactiveState) => {
+        unwatch(state);
+      });
+    }
     onunmounted(getdomchildren(ele));
   }
 }

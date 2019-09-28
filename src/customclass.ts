@@ -12,7 +12,8 @@ export interface Custom {
     | Virtualdom
     | string
     | ReactiveState
-    | Array<Virtualdom | ReactiveState | string>;
+    | number
+    | Array<Virtualdom | ReactiveState | string | number>;
   defaultProps?: object;
   css?: string;
 }

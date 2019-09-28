@@ -1,3 +1,5 @@
+export const innerstatesymbol = Symbol("innerstate");
+
 import { readysymbol } from "./readysymbol";
 import render from "./rendervdomtoreal";
 import readonlyproxy from "./readonlyproxy";
@@ -5,7 +7,7 @@ import ReactiveState /* , { dispatchsymbol } */ from "./primitivestate";
 import createstate from "./createstate";
 const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
-const vdomsymbol = Symbol("componentinnervdom");
+const vdomsymbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
@@ -15,7 +17,8 @@ import {
   closectx,
   getMounted,
   getUnMounted,
-  invalid_Function
+  invalid_Function,
+  getstates
 } from "./context-mounted-unmounted-";
 
 // import { Class } from "./rendervdomtoreal";
@@ -52,6 +55,7 @@ export function createComponent(custfun: Custom): Class {
     const defaultProps = custfun["defaultProps"];
     const css = custfun["css"];
     return class Component extends AttrChange {
+      [innerstatesymbol]: Array<ReactiveState>;
       static [componentsymbol] = true;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
@@ -148,6 +152,7 @@ export function createComponent(custfun: Custom): Class {
           this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
+          this[innerstatesymbol] = getstates();
           closectx();
         } else {
           closectx();

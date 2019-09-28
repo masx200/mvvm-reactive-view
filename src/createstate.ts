@@ -16,9 +16,17 @@ import ReactiveState, {
   // textnodesymbol,
   isReactiveState
 } from "./primitivestate";
-export default function createstate(
-  init: string | number | boolean | undefined | ReactiveState | object | any
-): object | ReactiveState {
+import { usestste } from "./context-mounted-unmounted-";
+export default (init: any) => {
+  /* 收集组件内部创建的 ReactiveState*/
+  const state = createstate(init);
+  usestste(state);
+  return state;
+};
+
+function createstate(
+  init: string | number | boolean | undefined | ReactiveState | object
+): ReactiveState {
   if (isprimitive(init)) {
     return new Proxy(new ReactiveState(init), {
       defineProperty() {

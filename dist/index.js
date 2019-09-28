@@ -48,22 +48,34 @@ const message = "invalid useMounted or useUnMounted out of createComponent";
 
 let ctxopen = false;
 
-let Mounted = new Set;
+let MountedSet = new Set;
 
-let UnMounted = new Set;
+let UnMountedSet = new Set;
+
+let StateSet = new Set;
+
+function getstates() {
+    return [ ...StateSet ];
+}
+
+function usestste(state) {
+    if (ctxopen) {
+        StateSet.add(state);
+    }
+}
 
 function getMounted() {
-    return [ ...Mounted ];
+    return [ ...MountedSet ];
 }
 
 function getUnMounted() {
-    return [ ...UnMounted ];
+    return [ ...UnMountedSet ];
 }
 
 function useMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            Mounted.add(fun);
+            MountedSet.add(fun);
         } else {
             throw Error(message);
         }
@@ -75,7 +87,7 @@ function useMounted(fun) {
 function useUnMounted(fun) {
     if (isfunction(fun)) {
         if (ctxopen) {
-            UnMounted.add(fun);
+            UnMountedSet.add(fun);
         } else {
             throw Error(message);
         }
@@ -85,23 +97,31 @@ function useUnMounted(fun) {
 }
 
 function clearMounted() {
-    Mounted = new Set;
+    MountedSet = new Set;
+}
+
+function clearstate() {
+    StateSet = new Set;
 }
 
 function clearUnMounted() {
-    UnMounted = new Set;
+    UnMountedSet = new Set;
 }
 
 function openctx() {
     ctxopen = true;
-    clearMounted();
-    clearUnMounted();
+    clearall();
 }
 
 function closectx() {
     ctxopen = false;
+    clearall();
+}
+
+function clearall() {
     clearMounted();
     clearUnMounted();
+    clearstate();
 }
 
 const readysymbol = Symbol("ready");
@@ -601,6 +621,11 @@ function onunmounted(ele) {
         if (ele[eventlistenerssymbol]) {
             removelisteners(ele);
         }
+        if (ele[innerstatesymbol]) {
+            ele[innerstatesymbol].forEach(state => {
+                unwatch(state);
+            });
+        }
         onunmounted(getdomchildren(ele));
     }
 }
@@ -844,6 +869,10 @@ function watch(state, callback, statekey) {
     requestAnimationFrame(() => {
         state[addallistenerssymbol]();
     });
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
 }
 
 function rewatch(state) {
@@ -1195,7 +1224,13 @@ function observedeepagent(target, callback) {
     }
 }
 
-function createstate(init) {
+var createstate = init => {
+    const state = createstate$1(init);
+    usestste(state);
+    return state;
+};
+
+function createstate$1(init) {
     if (isprimitive(init)) {
         return new Proxy(new ReactiveState(init), {
             defineProperty() {
@@ -1218,7 +1253,7 @@ function createstate(init) {
             }
         });
     } else if (isReactiveState(init)) {
-        return createstate(init.value);
+        return createstate$1(init.value);
     } else if (isobject(init)) {
         return new Proxy(new ReactiveState(init), {
             defineProperty() {
@@ -1413,11 +1448,13 @@ function loadlinkstyle(stylelinkelement, container) {
     });
 }
 
+const innerstatesymbol = Symbol("innerstate");
+
 const attributessymbol = Symbol("attributes");
 
 const elementsymbol = Symbol("innerelement");
 
-const vdomsymbol = Symbol("componentinnervdom");
+const vdomsymbol = Symbol("innervdom");
 
 const mountedsymbol = Symbol("mounted");
 
@@ -1467,6 +1504,7 @@ function createComponent(custfun) {
                     this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
+                    this[innerstatesymbol] = getstates();
                     closectx();
                 } else {
                     closectx();
