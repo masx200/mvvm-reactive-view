@@ -1,10 +1,13 @@
 # mvvm-reactive-view
 
-## 面向未来的,轻量级,响应式,mvvm,构建视图,声明式,组件化,基于 webcomponent ,
+## 面向未来的,轻量级,响应式,mvvm,构建视图,声明式,组件化,基于 `webcomponent` ,
 
-## 基于 Proxy,基于`虚拟 dom`,支持 jsx 和 hyperscript,前端 javascript 库
+## 基于 `Proxy`,基于`虚拟 dom`,支持 `jsx` 和 `hyperscript`,前端 `javascript` 库
 
-## 不使用 diff 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成虚拟 dom
+## 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用`diff`算法，响应式状态直接与元素绑定，高效更新，性能更强
+
+## 不使用 `diff` 算法,使用 proxy 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
+
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -19,7 +22,6 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
 
 
-# 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用diff算法，响应式状态直接与元素绑定，高效更新，性能更强
 
 # 安装 npm 模块
 
