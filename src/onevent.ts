@@ -8,10 +8,10 @@ export default function(
   eventname: string,
   callback: EventListener | Array<EventListener>
 ) {
-  if (!element[eventlistenerssymbol]) {
+ /* if (!element[eventlistenerssymbol]) {
     element[eventlistenerssymbol] = [];
   }
-
+*/
   firstaddlisteners(element, eventname, toArray(callback));
   /*
   if (isfunction(callback)) {
@@ -33,6 +33,11 @@ export function firstaddlisteners(
       console.error(call);
       throw TypeError(invalid_Function);
     }
+
+if (!element[eventlistenerssymbol]) {
+    element[eventlistenerssymbol] = [];
+  }
+
     ele[eventlistenerssymbol].push([event, call]);
     domaddlisten(ele, event, call);
   });
