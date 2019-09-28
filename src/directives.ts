@@ -4,9 +4,10 @@ import { seteletext, setelehtml } from "./dom";
 import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from "./primitivestate";
 import { isconnected } from "./isconnected";
+import { isobject } from "./util";
 export default {
   ref(ele: Element, ref: { value: any }) {
-    if (typeof ref == "object") {
+    if (isobject(ref)) {
       ref.value = ele;
     } else {
       throw TypeError("invalid ref");

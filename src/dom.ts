@@ -97,3 +97,6 @@ export function insertfirst(
 export function createanotherhtmldocument() {
   return document.implementation.createHTMLDocument("");
 }
+export function getparentNode(ele: Node) {
+  return ele.parentNode;
+}

@@ -102,13 +102,14 @@ export function createComponent(custfun: Custom): Class {
         }
         //   this[attributessymbol] = createeleattragentreadwrite(this);
         // const props = createeleattragentreadwrite(this);/
+        openctx();
         const props = attrs;
         const thisattributess = Object.fromEntries(
           Object.entries(props).map(([key, value]) => [key, createstate(value)])
         );
         this[attributessymbol] = readonlyproxy(thisattributess);
 
-        /*  */
+        /* 把attributes的reactivestates也放进innerstates中 */
         const readonlyprop = readonlyproxy(
           Object.fromEntries(
             Object.entries(thisattributess).map(([key, value]) => [
@@ -117,7 +118,7 @@ export function createComponent(custfun: Custom): Class {
             ])
           )
         );
-        openctx();
+
         let possiblyvirtualdom:
           | string
           | Virtualdom

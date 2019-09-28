@@ -2544,19 +2544,20 @@ function createComponent(custfun) {
                 if (isobject(propsjson)) {
                     Object.assign(attrs, propsjson);
                 }
+                openctx();
                 var props = attrs;
                 var thisattributess = Object.fromEntries(Object.entries(props).map((function(_ref40) {
                     var _ref41 = _slicedToArray(_ref40, 2), key = _ref41[0], value = _ref41[1];
                     return [ key, createstate(value) ];
                 })));
                 _this5[attributessymbol] = readonlyproxy(thisattributess);
-                openctx();
+                var readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref42) {
+                    var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
+                    return [ key, readonlyproxy(value) ];
+                }))));
                 var possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun.call(undefined, readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref42) {
-                        var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
-                        return [ key, readonlyproxy(value) ];
-                    })))), children);
+                    possiblyvirtualdom = custfun.call(undefined, readonlyprop, children);
                 } catch (error) {
                     closectx();
                     throw error;

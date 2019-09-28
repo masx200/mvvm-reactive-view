@@ -1,37 +1,36 @@
-import { useMounted, useUnMounted } from "./context-mounted-unmounted-";
-export { useMounted, useUnMounted };
-import { createComponent } from "./createComponent";
-import "./CustomElementRegistry";
-export { createComponent };
 // import { isobject, isfunction } from "./util";
-
 import "./assetbrowser";
-
+import { computed } from "./computed";
+import condition from "./conditon";
+import { useMounted, useUnMounted } from "./context-mounted-unmounted-";
+import createApp from "./createApp";
+import { createComponent } from "./createComponent";
+import createElement from "./createelement";
+import createRef from "./createref";
+import createState from "./createstate";
+import "./CustomElementRegistry";
+import directives from "./extend-directive";
+import html from "./html";
 //请自行使用babel-preset-env和core-js 3
 //import "./Object-fromEntries";
 // import "./setImmediate";
 //import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
-
-import html from "./html";
-import createElement from "./createelement";
+import { watch } from "./watch";
+export { computed };
+export { useMounted, useUnMounted };
+export { createComponent };
 export { html };
 export { createElement, createElement as h };
-import createApp from "./createApp";
 export { createApp };
-import createRef from "./createref";
 export { createRef };
-import createState from "./createstate";
 export { createState };
-import { watch } from "./watch";
 export { watch };
-import directives from "./extend-directive";
-
 export { directives };
+export { condition };
+
 //export { RandomDefine };
 export const Fragment = "";
-import condition from "./conditon";
-export { condition };
 /* function css(text: string) {
   return text;
 }

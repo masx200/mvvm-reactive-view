@@ -1,8 +1,10 @@
+import { getparentNode } from "./dom";
+
 export function isconnected(element: Node) {
   return document.documentElement === getancestornode(element);
 }
 function getancestornode(node: Node) {
-  while (node.parentNode && node.parentNode !== document) {
+  while (getparentNode(node) && getparentNode(node) !== document) {
     node = node.parentNode;
   }
   return node;
