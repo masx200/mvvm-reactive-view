@@ -196,11 +196,14 @@ export function createComponent(custfun: Custom): Class {
             }; */
             // insertfirst(this, stylelinkelement);
             // }
-            Promise.all(
+          /*  Promise.all(
               [...componentsstylesheet[prefix]].map(styleurl =>
                 loadlinkstyle(createlinkstylesheet(styleurl), this)
               )
-            ).then(() => {
+            )
+*/
+waitloadallstyle(prefix,this)
+.then(() => {
               //   console.log("style load all");
               //   console.log("mount1");
               mount(this[elementsymbol], this, false);
