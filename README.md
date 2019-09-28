@@ -460,7 +460,7 @@ const vdomobj = html`
 
 例子：跟踪鼠标的位置
 
-```javascript
+```jsx
 function useMousePosition() {
   const x = createState(0);
   const y = createState(0);
