@@ -566,15 +566,15 @@ interface Extendfun {
 function createElement(
   type: Function | string = "",
   props: any = {},
-  ...children: Array<Virtualdom | string>
-): Virtualdom | Array<Virtualdom | string>;
+  ...children: Array<Virtualdom | string|number>
+): Virtualdom | Array<Virtualdom | string|number>;
 ```
 
 ## 使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function createApp(
-  vdom: string | Virtualdom | number | (string | number | Virtualdom)[],
+  vdom: string | Virtualdom | number|ReactiveState | (string | number | Virtualdom|ReactiveState)[],
   container: HTMLElement | Element
 ): HTMLElement | Element;
 ```
