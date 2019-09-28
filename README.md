@@ -508,6 +508,27 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 
 # API
 
+## 使用`createState`来生成一个引用形式响应式的状态，可以独立于组件存在
+
+```ts
+function createState(init: string | number | boolean | object): ReactiveState;
+```
+
+## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
+
+### 如果初始值是原始类型则不能修改为对象类型，
+
+### 如果初始值是对象类型则不能修改为原始类型，
+
+
+```ts
+class ReactiveState {
+  value: string | number | boolean | undefined | object;
+
+  constructor(init: string | number | boolean |undefined| object);
+}
+```
+
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
@@ -609,26 +630,7 @@ class Virtualdom {
 }
 ```
 
-## 使用`createState`来生成一个引用形式响应式的状态，可以独立于组件存在
 
-```ts
-function createState(init: string | number | boolean | object): ReactiveState;
-```
-
-## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
-
-### 如果初始值是原始类型则不能修改为对象类型，
-
-### 如果初始值是对象类型则不能修改为原始类型，
-
-
-```ts
-class ReactiveState {
-  value: string | number | boolean | undefined | object;
-
-  constructor(init: string | number | boolean | object);
-}
-```
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数
 
