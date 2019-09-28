@@ -425,6 +425,7 @@ html`
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
 
 `const state1=createState()`
+
 `value=${state1}`
 
 # 事件绑定
