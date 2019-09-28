@@ -8,7 +8,7 @@ import {
   createElement,
   createState,
   watch,
-  //RandomDefine
+ 
   createComponent,
   useMounted,
   useUnMounted
@@ -23,7 +23,7 @@ import {
   createElement,
   createState,
   watch,
-  //RandomDefine
+  
   createComponent,
   useMounted,
   useUnMounted

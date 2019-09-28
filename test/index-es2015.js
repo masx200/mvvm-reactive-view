@@ -2650,13 +2650,7 @@ var computed = function computed(state, callback) {
         throw TypeError(invalid_ReactiveState + invalid_Function);
     }
     var state1array;
-    if (isReactiveState(state)) {
-        state1array = toArray(state);
-    } else if (isarray(state)) {
-        state1array = state;
-    } else {
-        state1array = Array.from(state);
-    }
+    state1array = toArray(state);
     var state1 = Arraycomputed(state1array, callback);
     usestste(state1);
     return state1;
@@ -3812,4 +3806,35 @@ var vdom$3 = [ createElement("html", null, "testhtml"), createElement("button", 
 document.body.appendChild(createApp(vdom$3, document.createElement("div")));
 
 console.log("onclick", " @click", vdom$3);
+
+var number = createstate(10);
+
+function increment() {
+    number.value++;
+}
+
+function decrement() {
+    number.value--;
+}
+
+var store = {
+    number: number,
+    increment: increment,
+    decrement: decrement
+};
+
+var mycomapp$2 = function mycomapp() {
+    var vdom = createElement("div", null, createElement("h3", null, " 点击数字"), createElement("h2", null, "number:", store.number), createElement("button", {
+        onclick: store.increment
+    }, "increment"), createElement("button", {
+        onclick: store.decrement
+    }, "decrement"));
+    return vdom;
+};
+
+var mycomappclass = createComponent(mycomapp$2);
+
+var vdom$4 = [ createElement(mycomappclass), createElement(mycomappclass), createElement(mycomappclass) ];
+
+document.body.appendChild(createApp(vdom$4, document.createElement("div")));
 //# sourceMappingURL=index-es2015.js.map

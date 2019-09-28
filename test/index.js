@@ -8,3 +8,4 @@ import "./index3.js";
 import "./myrootapp";
 import "./index-x.js";
 import "./index2.js";
+import "./teststore";

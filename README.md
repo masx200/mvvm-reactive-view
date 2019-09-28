@@ -191,6 +191,47 @@ https://tc39.es/proposal-flatMap/
 }
 ```
 
+# 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
+
+## 可修改其`value`属性来改变状态的值，
+
+### 如果初始值是原始类型则不能修改为对象类型，
+
+### 如果初始值是对象类型则不能修改为原始类型，
+
+## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 redux,vuex,mobx
+
+```js
+const number = createState(10);
+function increment() {
+  number.value++;
+}
+function decrement() {
+  number.value--;
+}
+const store = { number, increment, decrement };
+
+const mycomappclass = createComponent(() => {
+  const vdom = (
+    <div>
+      <h3> 点击数字</h3>
+      <h2>number:{store.number}</h2>
+
+      <button onclick={store.increment}>increment</button>
+      <button onclick={store.decrement}>decrement</button>
+    </div>
+  );
+  return vdom;
+});
+const vdom = [
+  createElement(mycomappclass),
+  createElement(mycomappclass),
+  createElement(mycomappclass)
+];
+
+document.body.appendChild(createApp(vdom, document.createElement("div")));
+```
+
 # 条件渲染
 
 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
@@ -468,11 +509,11 @@ const vdomobj = html`
 
 ## 您可以通过简单地将其导出为函数来重用组件逻辑的任何部分
 
-例子：跟踪鼠标的位置
-
 ## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
 
 ### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!
+
+例子：跟踪鼠标的位置
 
 ```jsx
 function useMousePosition() {
@@ -521,7 +562,7 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 
 # API
 
-## 使用`createState`来生成一个引用形式响应式的状态，可以独立于组件存在
+## 使用`createState`来生成一个引用形式响应式的状态，
 
 ```ts
 function createState(init: string | number | boolean | object): ReactiveState;
