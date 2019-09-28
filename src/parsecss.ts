@@ -56,7 +56,7 @@ p{color:blue !important;}
 q-9 p { color: blue !important; }
 
     */
-  } else {
+ /* } else {
     cssstylerule.selectorText = prefixselector;
   }
 */
