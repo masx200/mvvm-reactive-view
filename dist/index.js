@@ -1488,10 +1488,11 @@ function createComponent(custfun) {
                 const props = attrs;
                 const thisattributess = Object.fromEntries(Object.entries(props).map(([key, value]) => [ key, createstate(value) ]));
                 this[attributessymbol] = readonlyproxy(thisattributess);
+                const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 openctx();
                 let possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun.call(undefined, readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ]))), children);
+                    possiblyvirtualdom = custfun.call(undefined, readonlyprop, children);
                 } catch (error) {
                     closectx();
                     throw error;

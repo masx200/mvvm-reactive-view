@@ -109,6 +109,14 @@ export function createComponent(custfun: Custom): Class {
         this[attributessymbol] = readonlyproxy(thisattributess);
 
         /*  */
+        const readonlyprop = readonlyproxy(
+          Object.fromEntries(
+            Object.entries(thisattributess).map(([key, value]) => [
+              key,
+              readonlyproxy(value)
+            ])
+          )
+        );
         openctx();
         let possiblyvirtualdom:
           | string
@@ -121,15 +129,7 @@ export function createComponent(custfun: Custom): Class {
             undefined,
             //让组件里面无法修改props的reactivestate的value
             // readonlyproxy(thisattributess),
-
-            readonlyproxy(
-              Object.fromEntries(
-                Object.entries(thisattributess).map(([key, value]) => [
-                  key,
-                  readonlyproxy(value)
-                ])
-              )
-            ),
+            readonlyprop,
             children
           );
         } catch (error) {
