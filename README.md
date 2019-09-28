@@ -214,7 +214,9 @@ setTimeout(() => {
 
 ## 逻辑组合复用
 
-基于函数的 API 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。与`React hooks`不同，该组件初始化函数仅被调用一次
+受到 `Vue Composition API`的启发
+
+基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。与`React hooks`不同，该组件初始化函数仅被调用一次
 
 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
 
