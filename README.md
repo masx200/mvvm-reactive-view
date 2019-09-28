@@ -609,13 +609,18 @@ class Virtualdom {
 }
 ```
 
-## 使用`createState`来生成一个引用形式的状态
+## 使用`createState`来生成一个引用形式响应式的状态，可以独立于组件存在
 
 ```ts
 function createState(init: string | number | boolean | object): ReactiveState;
 ```
 
-## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值
+## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
+
+### 如果初始值是原始类型则不能修改为对象类型，
+
+### 如果初始值是对象类型则不能修改为原始类型，
+
 
 ```ts
 class ReactiveState {
