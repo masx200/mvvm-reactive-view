@@ -206,10 +206,10 @@ function handleprops(
 
     /* 添加事件绑定和指令执行 */
 
-    if (!element[eventlistenerssymbol]) {
+  /*  if (!element[eventlistenerssymbol]) {
       element[eventlistenerssymbol] = [];
     }
-
+*/
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
       onevent(element, event, callbacks);
     });
