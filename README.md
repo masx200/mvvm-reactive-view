@@ -267,7 +267,7 @@ setTimeout(() => {
 }, 5000);
 ```
 
-# 使用 webcomponents
+# 使用 webcomponents costum elements
 
 可以通过静态属性 static `defaultProps` 来设置默认值
 
@@ -310,7 +310,7 @@ type classprop=string|Set<string>|Array<string>
 ```js
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
 html`
-  <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
+  
   <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
     ${objstatearray}
   </div>
@@ -329,6 +329,9 @@ setTimeout(() => {
 
 `style=${{ display: "block", width: "500px" }}`
 
+```js
+html`<div style=${{ display: "block", width: "100%" }}>${objstate2}</div>`
+```
 # 属性单向绑定
 
 使用`createState`创建状态,直接绑定到元素的属性上即可,当状态变化时,元素属性跟着一起变化
