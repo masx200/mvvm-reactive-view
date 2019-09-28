@@ -421,6 +421,7 @@ interface Custom {
     | ReactiveState
     | Array<Virtualdom | ReactiveState | string>;
   defaultProps?: object;
+css?:string;
 }
 interface Class {
   new (propsjson?: object, children?: any[]): HTMLElement;
