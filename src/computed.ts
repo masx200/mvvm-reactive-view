@@ -88,3 +88,24 @@ function Arraycomputed(
 
   return readonlyproxy(reactivestate);
 }
+
+functiom getproperyreadproxy(a){
+
+
+return new Proxy(a,{
+
+get(target, key){
+
+const myvalue = get(target, "value");
+
+ if(has(target, key)) {
+          return get(target, key);
+}else(has(myvalue, key)){
+return get(myvalue, key);
+}
+
+}
+)
+
+
+}
