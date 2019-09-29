@@ -251,6 +251,30 @@ setTimeout(() => {
 
 # 组件化
 
+```jsx
+const defaultProps = { cccccc: "bbbbbbb" };
+const css = `
+* {
+  color: purple !important;
+
+  font-size: 50px;
+}`
+const Hellowordclass=createComponent(
+Object.assign(
+()=>{
+
+return <div> hello world</div>
+
+},{css,defaultProps}
+
+))
+document.body.appendChild(createApp(
+
+<Hellowordclass/>
+
+, document.createElement("div")));
+
+```
 ## 父子组件传数据
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递
