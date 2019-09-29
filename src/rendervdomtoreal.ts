@@ -2,7 +2,7 @@ export const bindstatesymbol = Symbol("bindstate");
 
 export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
-import ReactiveState /* textnodesymbol */ from "./primitivestate";
+import ReactiveState /* textnodesymbol */ from './reactivestate';
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
 import onevent /*  eventlistenerssymbol  */ from "./onevent";
@@ -168,7 +168,7 @@ export default function render(
   }
 }
 
-import { isReactiveState } from "./primitivestate";
+import { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
 import { componentsymbol } from "./iscomponent";
 function handleprops(

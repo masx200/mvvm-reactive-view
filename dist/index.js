@@ -264,7 +264,7 @@ function createhtmlandtextdirective(seteletext, errorname) {
 
 const invalid_Function = "invalid Function";
 
-const message = "invalid useMounted or useUnMounted out of createComponent";
+const errormessage = "invalid useMounted or useUnMounted out of createComponent";
 
 let ctxopen = false;
 
@@ -297,7 +297,7 @@ function useMounted(fun) {
         if (ctxopen) {
             MountedSet.add(fun);
         } else {
-            throw Error(message);
+            throw Error(errormessage);
         }
     } else {
         throw TypeError(invalid_Function);
@@ -309,7 +309,7 @@ function useUnMounted(fun) {
         if (ctxopen) {
             UnMountedSet.add(fun);
         } else {
-            throw Error(message);
+            throw Error(errormessage);
         }
     } else {
         throw TypeError(invalid_Function);
@@ -415,9 +415,9 @@ if (!isobject(window.customElements)) {
     throw new TypeError(" customElements  not supported !");
 }
 
-function 使用value从表中查询key(表, 组件状态名) {
-    return Object.entries(表).find(v => {
-        return v[1] === 组件状态名;
+function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
+    return Object.entries(\u8868).find(v => {
+        return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
     })[0];
 }
 
@@ -450,7 +450,7 @@ function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
         }
         return elementname;
     } else {
-        return 使用value从表中查询key(customElements[elementmap], initclass);
+        return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(customElements[elementmap], initclass);
     }
 }
 
@@ -584,7 +584,7 @@ function createeleattragentreadwrite(ele) {
         set(t, key, v) {
             if ("function" === typeof v) {
                 console.error(v);
-                throw TypeError("不允许设置属性为函数");
+                throw TypeError("\u4e0d\u5141\u8bb8\u8bbe\u7f6e\u5c5e\u6027\u4e3a\u51fd\u6570");
             }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
@@ -703,14 +703,14 @@ class Virtualdom {
         this.directives = {};
         this.onevent = {};
         this.bindattr = {};
-        const 字母大小写 = /[A-Za-z]/;
+        const \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z]/;
         const propsentries = Object.entries(props);
         const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
-        const 字母开头的entries = propsentriesNOTevents.filter(([key]) => 字母大小写.test(key[0]));
+        const \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(([key]) => \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]));
         Object.assign(this, {
             type: type,
-            bindattr: Object.fromEntries(字母开头的entries.filter(e => isReactiveState(e[1]))),
-            props: Object.fromEntries(字母开头的entries.filter(e => !isReactiveState(e[1]))),
+            bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
+            props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
             onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ])),
             directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_")).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
@@ -1349,21 +1349,21 @@ const unmountedsymbol = Symbol("unmounted");
 function createComponent(custfun) {
     var _a, _b, _c, _d;
     if (isfunction(custfun)) {
-        const defaultProps = custfun["defaultProps"];
-        const css = custfun["css"];
+        const defaultProps = get(custfun, "defaultProps");
+        const css = get(custfun, "css");
         return _d = class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_b] = false;
                 this[_c] = {};
-                const css = this.constructor["css"];
+                const css = get(this.constructor, "css");
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
                 }
-                const defaultProps = this.constructor["defaultProps"];
+                const defaultProps = get(this.constructor, "defaultProps");
                 const attrs = createeleattragentreadwrite(this);
                 if (isobject(defaultProps)) {
                     Object.assign(attrs, defaultProps);
@@ -1405,7 +1405,7 @@ function createComponent(custfun) {
                 }
                 if (!this[readysymbol]) {
                     this[readysymbol] = true;
-                    const css = this.constructor["css"];
+                    const css = get(this.constructor, "css");
                     const prefix = this.tagName.toLowerCase();
                     if (css && componentsstylesheet[prefix]) {
                         seteletext(this, "");
@@ -1617,21 +1617,28 @@ function Arraycomputed(state, callback) {
     return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
+const __proto__ = "__proto__";
+
 function getproperyreadproxy(a) {
-    return new Proxy(a, {
+    const target = a;
+    return new Proxy(target, {
         ownKeys(target) {
-            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
+            let myvalue = get(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
         },
         has(target, key) {
             const myvalue = get(target, "value");
-            return has(target, key) || has(myvalue, key);
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return has(target, key) || has(myvalueobj, key);
         },
         get(target, key) {
             const myvalue = get(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
             if (has(target, key)) {
                 return get(target, key);
-            } else if (has(myvalue, key)) {
-                return get(myvalue, key);
+            } else if (has(myvalueobj, key)) {
+                return get(myvalueobj, key);
             }
         }
     });

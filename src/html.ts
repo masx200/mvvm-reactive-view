@@ -1,6 +1,6 @@
 import Virtualdom from "./virtualdom";
-import ReactiveState from "./primitivestate";
-import { isReactiveState } from "./primitivestate";
+import ReactiveState from './reactivestate';
+import { isReactiveState } from './reactivestate';
 import { isstring, isArray, isnumber } from "./util";
 import { isVirtualdom } from "./virtualdom";
 import htm from "htm/dist/htm.module.js";

@@ -1,5 +1,5 @@
 export const invalid_Virtualdom = "invalid Virtualdom ";
-import ReactiveState from "./primitivestate";
+import ReactiveState from './reactivestate';
 import document from "./dom";
 import { isvalidvdom } from "./html";
 import Virtualdom from "./virtualdom";

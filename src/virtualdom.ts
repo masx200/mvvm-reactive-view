@@ -1,7 +1,7 @@
 export function isVirtualdom(a: any): a is Virtualdom {
   return a instanceof Virtualdom;
 }
-import ReactiveState, { isReactiveState } from "./primitivestate";
+import ReactiveState, { isReactiveState } from './reactivestate';
 // import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";

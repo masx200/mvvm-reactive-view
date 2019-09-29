@@ -1,7 +1,7 @@
 import ReactiveState, {
   // ReactiveState,
   isReactiveState
-} from "./primitivestate";
+} from './reactivestate';
 import directives from "./extend-directive";
 import Virtualdom from "./virtualdom";
 import { invalid_ReactiveState } from "./conditon";

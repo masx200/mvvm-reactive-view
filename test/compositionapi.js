@@ -9,7 +9,6 @@ import {
   createElement,
   createState,
   watch,
-  
   createComponent,
   useMounted,
   useUnMounted
@@ -44,6 +43,7 @@ const mycomapp = () => {
   const multi = computed([x, y], (x, y) => {
     return x * y;
   });
+  console.log(plus, multi);
   return (
     <div>
       <h3> 鼠标位置</h3>

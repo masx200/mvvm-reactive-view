@@ -4,14 +4,15 @@ import {
   //   getOwnPropertyDescriptor,
   has,
   ownKeys
+  //   getPrototypeOf
   //   set
 } from "./reflect";
 
 import ReactiveState, {
   isReactiveState,
   dispatchsymbol
-} from "./primitivestate";
-import { isFunction, isArray } from "./util";
+} from "./reactivestate";
+import { isFunction, isArray, isobject } from "./util";
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function, usestste } from "./context-mounted-unmounted-";
 import readonlyproxy from "./readonlyproxy";
@@ -99,26 +100,45 @@ function Arraycomputed(
 
   return getproperyreadproxy(readonlyproxy(reactivestate));
 }
-
-export function getproperyreadproxy(a: any) {
-  return new Proxy(a, {
+const __proto__ = "__proto__";
+export function getproperyreadproxy<T extends object>(a: T): T;
+export function getproperyreadproxy(a: object) {
+  /* 把基本类型原型的属性 也加上*/
+  //   const target = isobject(a) ? a : getPrototypeOf(a);
+  const target = a;
+  return new Proxy(target, {
     ownKeys(target) {
-      return Array.from(
+      let myvalue = get(target, "value");
+      const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+      //   return ownKeys(target);
+      return Array.from(new Set([...ownKeys(target), ...ownKeys(myvalueobj)]));
+
+      /* Array.from(
         new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
-      );
+      ); */
     },
     has(target, key) {
       const myvalue = get(target, "value");
-      return has(target, key) || has(myvalue, key);
+      const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+      return has(target, key) || has(myvalueobj, key);
     },
     get(target, key) {
       const myvalue = get(target, "value");
+      const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+
+      if (has(target, key)) {
+        return get(target, key);
+      } else if (has(myvalueobj, key)) {
+        return get(myvalueobj, key);
+      }
+      //   return get(target, key);
+      /*  const myvalue = get(target, "value");
 
       if (has(target, key)) {
         return get(target, key);
       } else if (has(myvalue, key)) {
         return get(myvalue, key);
-      }
+      } */
     }
   });
 }

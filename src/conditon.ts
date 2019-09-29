@@ -8,7 +8,7 @@ import createeleattr from "dom-element-attribute-agent-proxy";
 import { AttrChange } from "./attrchange";
 // import createElement from "./createelement";
 import Virtualdom from "./virtualdom";
-import ReactiveState, { isReactiveState } from "./primitivestate";
+import ReactiveState, { isReactiveState } from './reactivestate';
 const truevdomsymbol = Symbol("truevdom");
 const falsevdomsymbol = Symbol("falsevdom");
 const trueelesymbol = Symbol("trueele");

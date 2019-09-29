@@ -1,7 +1,8 @@
 import { isFunction } from "./util";
-import ReactiveState from "./primitivestate";
+import ReactiveState from './reactivestate';
 export const invalid_Function = "invalid Function";
-const message = "invalid useMounted or useUnMounted out of createComponent";
+const errormessage =
+  "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
 let MountedSet: Set<Function> = new Set();
 let UnMountedSet: Set<Function> = new Set();
@@ -26,7 +27,7 @@ export function useMounted(fun: Function) {
     if (ctxopen) {
       MountedSet.add(fun);
     } else {
-      throw Error(message);
+      throw Error(errormessage);
     }
   } else {
     throw TypeError(invalid_Function);
@@ -38,7 +39,7 @@ export function useUnMounted(fun: Function) {
     if (ctxopen) {
       UnMountedSet.add(fun);
     } else {
-      throw Error(message);
+      throw Error(errormessage);
     }
   } else {
     throw TypeError(invalid_Function);

@@ -8,14 +8,14 @@ import {
   createElement,
   createState,
   watch,
- 
   createComponent,
   useMounted,
   useUnMounted
 } from "../dist/index.js";
 // console.log()
 // export{vdom}
-var list = Array(20)
+const temp_ref = createRef();
+var list = Array(10)
   .fill()
   .map((v, i) => i);
 var vdom = (
@@ -25,7 +25,11 @@ var vdom = (
         <li>item{a}</li>
       ))}
     </ul>
-    <header class="common-header fixed noborder floating" id="git-header-nav">
+    <header
+      class="common-header fixed noborder floating"
+      id="git-header-nav"
+      _ref={temp_ref}
+    >
       <div class="ui container">
         <div class="ui menu header-menu">
           <div class="git-nav-expand-bar">
@@ -429,5 +433,5 @@ var vdom = (
     </header>
   </>
 );
-console.log(vdom);
+console.log(vdom, temp_ref);
 document.body.appendChild(createApp(vdom, document.createElement("div")));

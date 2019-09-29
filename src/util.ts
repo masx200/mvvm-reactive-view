@@ -1,4 +1,4 @@
-import { has, get } from "./reflect";
+import { /* has,  */ get } from "./reflect";
 import { isFunction } from "./util";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function isundefined(a: any) {
@@ -39,9 +39,7 @@ export function gettagtype(a: any): string {
     .trim();
 }
 export function ispromise(a: any): a is Promise<any> {
-  return (
-    gettagtype(a) === "promise" && isFunction(get(a, "then")) && has(a, "catch")
-  );
+  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
 }
 export function isSet(a: any): a is Set<any> {
   return gettagtype(a) === "set" && a instanceof Set;

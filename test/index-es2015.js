@@ -562,7 +562,7 @@ function createhtmlandtextdirective(seteletext, errorname) {
 
 var invalid_Function = "invalid Function";
 
-var message = "invalid useMounted or useUnMounted out of createComponent";
+var errormessage = "invalid useMounted or useUnMounted out of createComponent";
 
 var ctxopen = false;
 
@@ -595,7 +595,7 @@ function useMounted(fun) {
         if (ctxopen) {
             MountedSet.add(fun);
         } else {
-            throw Error(message);
+            throw Error(errormessage);
         }
     } else {
         throw TypeError(invalid_Function);
@@ -607,7 +607,7 @@ function useUnMounted(fun) {
         if (ctxopen) {
             UnMountedSet.add(fun);
         } else {
-            throw Error(message);
+            throw Error(errormessage);
         }
     } else {
         throw TypeError(invalid_Function);
@@ -715,9 +715,9 @@ if (!isobject(window.customElements)) {
     throw new TypeError(" customElements  not supported !");
 }
 
-function 使用value从表中查询key(表, 组件状态名) {
-    return Object.entries(表).find((function(v) {
-        return v[1] === 组件状态名;
+function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
+    return Object.entries(\u8868).find((function(v) {
+        return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
     }))[0];
 }
 
@@ -753,7 +753,7 @@ function RandomDefineCustomElement$1(initclass, extendsname) {
         }
         return elementname;
     } else {
-        return 使用value从表中查询key(customElements$1[elementmap], initclass);
+        return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(customElements$1[elementmap], initclass);
     }
 }
 
@@ -904,7 +904,7 @@ function createeleattragentreadwrite(ele) {
         set: function set(t, key, v) {
             if ("function" === typeof v) {
                 console.error(v);
-                throw TypeError("不允许设置属性为函数");
+                throw TypeError("\u4e0d\u5141\u8bb8\u8bbe\u7f6e\u5c5e\u6027\u4e3a\u51fd\u6570");
             }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
@@ -1029,22 +1029,22 @@ var Virtualdom = function Virtualdom() {
     this.directives = {};
     this.onevent = {};
     this.bindattr = {};
-    var 字母大小写 = /[A-Za-z]/;
+    var \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z]/;
     var propsentries = Object.entries(props);
     var propsentriesNOTevents = propsentries.filter((function(_ref16) {
         var _ref17 = _slicedToArray(_ref16, 1), key = _ref17[0];
         return !(key.startsWith("@") || key.startsWith("on"));
     }));
-    var 字母开头的entries = propsentriesNOTevents.filter((function(_ref18) {
+    var \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter((function(_ref18) {
         var _ref19 = _slicedToArray(_ref18, 1), key = _ref19[0];
-        return 字母大小写.test(key[0]);
+        return \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]);
     }));
     Object.assign(this, {
         type: type,
-        bindattr: Object.fromEntries(字母开头的entries.filter((function(e) {
+        bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
             return isReactiveState(e[1]);
         }))),
-        props: Object.fromEntries(字母开头的entries.filter((function(e) {
+        props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
             return !isReactiveState(e[1]);
         }))),
         children: children.flat(),
@@ -1681,8 +1681,8 @@ var unmountedsymbol = Symbol("unmounted");
 function createComponent(custfun) {
     var _a, _b, _c, _d;
     if (isfunction(custfun)) {
-        var defaultProps = custfun["defaultProps"];
-        var css = custfun["css"];
+        var defaultProps = _get(custfun, "defaultProps");
+        var css = _get(custfun, "css");
         return _d = function(_AttrChange) {
             _inherits(Component, _AttrChange);
             function Component() {
@@ -1693,14 +1693,14 @@ function createComponent(custfun) {
                 _this5 = _possibleConstructorReturn(this, _getPrototypeOf(Component).call(this));
                 _this5[_b] = false;
                 _this5[_c] = {};
-                var css = _this5.constructor["css"];
+                var css = _get(_this5.constructor, "css");
                 if (css) {
                     var prefix = _this5.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
                 }
-                var defaultProps = _this5.constructor["defaultProps"];
+                var defaultProps = _get(_this5.constructor, "defaultProps");
                 var attrs = createeleattragentreadwrite(_assertThisInitialized(_this5));
                 if (isobject(defaultProps)) {
                     Object.assign(attrs, defaultProps);
@@ -1752,7 +1752,7 @@ function createComponent(custfun) {
                     }
                     if (!this[readysymbol]) {
                         this[readysymbol] = true;
-                        var _css = this.constructor["css"];
+                        var _css = _get(this.constructor, "css");
                         var prefix = this.tagName.toLowerCase();
                         if (_css && componentsstylesheet[prefix]) {
                             seteletext(this, "");
@@ -1998,21 +1998,28 @@ function Arraycomputed(state, callback) {
     return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
+var __proto__ = "__proto__";
+
 function getproperyreadproxy(a) {
-    return new Proxy(a, {
+    var target = a;
+    return new Proxy(target, {
         ownKeys: function ownKeys(target) {
-            return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(_get(target, "value"))))));
+            var myvalue = _get(target, "value");
+            var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(myvalueobj)))));
         },
         has: function has(target, key) {
             var myvalue = _get(target, "value");
-            return _has(target, key) || _has(myvalue, key);
+            var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return _has(target, key) || _has(myvalueobj, key);
         },
         get: function get(target, key) {
             var myvalue = _get(target, "value");
+            var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
             if (_has(target, key)) {
                 return _get(target, key);
-            } else if (_has(myvalue, key)) {
-                return _get(myvalue, key);
+            } else if (_has(myvalueobj, key)) {
+                return _get(myvalueobj, key);
             }
         }
     });
@@ -2115,14 +2122,14 @@ var Fragment = "";
 
 (function() {
     var vdom2 = [ createElement("div", {
-        "*text": "<a>绑定textcontent</a>"
+        "*text": "<a>\u7ed1\u5b9atextcontent</a>"
     }), createElement("div", {
-        "*html": "<a>绑定innerhtml</a>"
+        "*html": "<a>\u7ed1\u5b9ainnerhtml</a>"
     }) ];
     console.log(vdom2);
     document.body.appendChild(createApp(vdom2, document.createElement("div")));
-    var state1 = createstate("<a>绑定textcontent</a>");
-    var state2 = createstate("<a>绑定innerhtml</a>");
+    var state1 = createstate("<a>\u7ed1\u5b9atextcontent</a>");
+    var state2 = createstate("<a>\u7ed1\u5b9ainnerhtml</a>");
     var vdom3 = [ createElement("textarea", {
         value: state1,
         "@input": [ function(e) {
@@ -2140,7 +2147,7 @@ var Fragment = "";
     }) ];
     console.log(vdom3);
     document.body.appendChild(createApp(vdom3, document.createElement("div")));
-    var state3 = createstate("<a>绑定innerhtml</a>");
+    var state3 = createstate("<a>\u7ed1\u5b9ainnerhtml</a>");
     var vdom4 = [ createElement("div", {
         "*text": state3
     }), createElement("div", {
@@ -2267,7 +2274,8 @@ var mycomapp = function mycomapp() {
     var multi = computed([ x, y ], (function(x, y) {
         return x * y;
     }));
-    return createElement("div", null, createElement("h3", null, " 鼠标位置"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 是", plus), createElement("p", null, "x*y 是", multi));
+    console.log(plus, multi);
+    return createElement("div", null, createElement("h3", null, " \u9f20\u6807\u4f4d\u7f6e"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 \u662f", plus), createElement("p", null, "x*y \u662f", multi));
 };
 
 mycomapp.css = "\n*{font-size:80px !important;}\np{color:blue !important;}\n";
@@ -2321,11 +2329,11 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
         class: "newsletter-head"
     }, createElement("h2", {
         class: "newsletter-teaser"
-    }, "学习 Web 开发的最佳实践"), createElement("p", {
+    }, "\u5b66\u4e60 Web \u5f00\u53d1\u7684\u6700\u4f73\u5b9e\u8df5"), createElement("p", {
         class: "newsletter-description"
-    }, "让 MDN 将最新、最棒的内容直接投递到您的邮箱。"), createElement("p", {
+    }, "\u8ba9 MDN \u5c06\u6700\u65b0\u3001\u6700\u68d2\u7684\u5185\u5bb9\u76f4\u63a5\u6295\u9012\u5230\u60a8\u7684\u90ae\u7bb1\u3002"), createElement("p", {
         class: "newsletter-lang"
-    }, "目前仅提供英文版新闻报。")), createElement("div", {
+    }, "\u76ee\u524d\u4ec5\u63d0\u4f9b\u82f1\u6587\u7248\u65b0\u95fb\u62a5\u3002")), createElement("div", {
         class: "newsletter-fields"
     }, createElement("input", {
         type: "hidden",
@@ -2346,7 +2354,7 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
     }, createElement("label", {
         for: "newsletterEmailInput",
         class: "form-label offscreen"
-    }, "电子邮件地址"), createElement("input", {
+    }, "\u7535\u5b50\u90ae\u4ef6\u5730\u5740"), createElement("input", {
         type: "email",
         id: "newsletterEmailInput",
         name: "email",
@@ -2364,16 +2372,16 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
         required: ""
     }), createElement("label", {
         for: "newsletterPrivacyInput"
-    }, "我接受 Mozilla 按照", createElement("a", {
+    }, "\u6211\u63a5\u53d7 Mozilla \u6309\u7167", createElement("a", {
         href: "https://www.mozilla.org/privacy/"
-    }, "隐私政策"), "所述的方式处理我的信息。")), createElement("div", {
+    }, "\u9690\u79c1\u653f\u7b56"), "\u6240\u8ff0\u7684\u65b9\u5f0f\u5904\u7406\u6211\u7684\u4fe1\u606f\u3002")), createElement("div", {
         id: "newsletterSubmit",
         class: "newsletter-group-submit"
     }, createElement("button", {
         id: "newsletter-submit",
         type: "submit",
         class: "button neutral newsletter-submit"
-    }, "立即注册", createElement("svg", {
+    }, "\u7acb\u5373\u6ce8\u518c", createElement("svg", {
         class: "icon icon-arrow",
         xmlns: "http://www.w3.org/2000/svg",
         width: "23",
@@ -2385,7 +2393,7 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
     }))))))), document.createElement("div")));
 })();
 
-var css$1 = '@charset "UTF-8";@import url(https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-frameworks-a2fba223d5af91496cac70d4ec3624df.min.css);@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);pre{text-align:left!important}button,div,h1,h2,h3,h4,h5,h6,input{text-align:center}p{color:#000!important}@-webkit-keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}.flowerpassword a{color:#42b983}.App-header{background-color:#fff}nav{width:100%}#图片列表200 img{min-height:150px;min-width:150px;height:auto;width:auto;max-width:100%;max-height:200px}#my导航栏 .navbar-nav li a{margin-left:2px;margin-right:2px}h1,h2{font-weight:400}ul{list-style-type:none;padding:0}li{display:inline-block;margin:0 10px}*{-webkit-user-select:text;-ms-user-select:text;user-select:text}.example{color:red}body{padding:0}*{font-family:"Microsoft Yahei,PingFangSC-Regular,arial, verdana, sans-serif"}#my导航栏{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.App{text-align:center}.App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}.App-header{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:calc(10px + 2vmin)}.App-link{color:#61dafb}.flowerpassword body,.flowerpassword html{background-color:#fff}.flowerpassword body{font:14px/1.5 Tahoma,Helvetica,Arial,\\5b8b\\4f53;color:#000}.flowerpassword a,.flowerpassword a:hover{color:#09c;text-decoration:none}.flowerpassword .left{float:left}.flowerpassword .right{float:right}.flowerpassword .clear{clear:both}.flowerpassword header{text-align:left;padding:0;margin:15px auto}.flowerpassword #logo{height:39px}.flowerpassword #shortcuts{margin:15px 0 0 15px}.flowerpassword #nav{float:center;margin-top:10px}.flowerpassword #nav li{margin:0 7px}.flowerpassword #nav li a{font-size:22px;color:#09c}.flowerpassword #nav li.active a,.flowerpassword #nav li.active a:hover{background-color:#09c;color:#fff}.flowerpassword #nav li a:hover{background-color:#79c6df;color:#fff}.flowerpassword #index-box{background-color:#fff;width:940px;clear:both;box-shadow:0 0 4px 2px #ddd;border:1px solid #ddd}.flowerpassword #index-box .float-box{margin:20px 0 20px 20px;display:inline}.flowerpassword #index-box #content-nav{margin:0;width:200px}.flowerpassword #index-box #content-nav li a{background-color:#e5ecdc}.flowerpassword #index-slider{width:940px;height:200px;overflow:hidden;position:relative}.flowerpassword #index-slider ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-slider li{width:940px;height:200px;float:left}.flowerpassword #index-slider #pagination{top:160px;left:800px}.flowerpassword #index-slider ul#pagination li{width:16px;height:16px;border-radius:1em;background-color:#fff;box-shadow:0 0 1px 2px #ccc;margin-right:18px;margin-top:4px}.flowerpassword #index-slider ul#pagination li.active{width:24px;height:24px;margin-top:0}.flowerpassword #index-slider ul#pagination li:hover{background-color:#ddd;cursor:pointer}.flowerpassword #index-report{width:680px;height:70px;margin-top:20px;overflow:hidden;position:relative;background-color:#e5ecdc}.flowerpassword #index-report ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-report li{width:680px;height:70px;text-align:center;float:left;font-size:32px;color:#666;font-family:å¾®è½¯é›…é»‘,é»‘ä½“;line-height:70px}.flowerpassword #index-report-pagination{list-style:none;margin-left:35px;text-align:center}.flowerpassword #index-report-pagination li{height:65px;float:left;margin-right:45px;cursor:pointer}.flowerpassword #index-report-pagination li img{margin-top:30px}.flowerpassword #index-button{margin:40px 0 30px;text-align:center}.flowerpassword #index-button a{margin:0 50px}.flowerpassword #tab{margin-top:30px}.flowerpassword #tab li a{margin-right:10px;border-bottom-color:#ddd;color:#666}.flowerpassword #tab li a:hover{background-color:#f2f2f2;color:#333;border-color:#ddd #ddd transparent}.flowerpassword #tab li.active a{background-color:#f2f2f2;color:#666;border-bottom-color:transparent}.flowerpassword #content-nav{list-style:none;margin:20px 0 0}.flowerpassword #content-nav li a{color:#666;padding:11px 0 11px 60px;display:block;margin-bottom:1px;font-size:22px}.flowerpassword #content-nav li a.active,.flowerpassword #content-nav li a:hover{background-color:#09c!important;color:#fff!important}.flowerpassword h1,.flowerpassword h2{color:#09c;margin:30px 0 12px}.flowerpassword h2{font-size:22px}.flowerpassword h2 span{font-size:22px;color:#fff;margin-right:7px;background-color:#09c;width:33px;height:33px;display:inline-block;text-align:center}.flowerpassword h3{font-size:16px;color:#09c;margin:20px 0}.flowerpassword h3 span{font-size:16px;color:#fff;margin-right:6px;background-color:#09c;width:26px;display:inline-block;text-align:center}.flowerpassword #input span{color:#09c;font-weight:700;font-size:22px;margin:0 20px}.flowerpassword #input input{font-size:14px;padding:5px;margin-left:5px}.flowerpassword #input label{float:none;display:inline;padding-right:5px}.flowerpassword #input p{margin-top:16px}.flowerpassword #input p,.flowerpassword .other{font-size:12px;color:#999}.flowerpassword #code16{display:inline-block;text-align:center}.flowerpassword .code16d{border:2px solid #09c}.flowerpassword .code16d:hover{border:2px solid #ff881c}.flowerpassword #copycode16{color:#000;display:inline-block;padding:0 3px;cursor:pointer}.flowerpassword .copycode16d{background-color:#09c;border:2px solid #09c}.flowerpassword .copycode16d:hover{background-color:#ff881c;border:2px solid #ff881c}.flowerpassword p{font-size:12px;color:#666;margin:20px 0}.flowerpassword #copyOK{color:#f2f2f2;border:2px solid #f2f2f2;display:inline-block;margin-left:16px;padding:0 3px}.flowerpassword .down-button{margin:10px 20px 10px 0}.flowerpassword #get{margin-bottom:100px}.flowerpassword footer{margin:50px 0 30px}.flowerpassword footer p{margin:0 0 5px;color:#999}.flowerpassword footer p span{margin:0 10px}.flowerpassword footer p a{color:#999}.flowerpassword footer p a:hover{color:#333}.jdahd button{border-color:#000}.jdahd *{text-align:center;margin:0;box-sizing:border-box;background-color:transparent}.jdahd body{position:relative;height:100vh;text-align:center}.jdahd h1{text-align:center;margin:20px 0}.jdahd textarea{width:100%;clear:both;margin-bottom:10px;border-radius:7px;padding:15px 10px;font-size:14px;outline:none;-webkit-transition:all .2s ease-in;transition:all .2s ease-in}.jdahd input[type=button]{margin:0 auto;position:relative;vertical-align:top;width:150px;height:60px;padding:0;font-size:22px;font-weight:300;color:#fff;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.25);background:#2980b9;border:0;border-bottom:2px solid #2475ab;cursor:pointer;box-shadow:inset 0 -2px #2475ab}.jdahd input:active{top:1px;outline:none;box-shadow:none}.jdahd input:-ms-input-placeholder,.jdahd textarea:-ms-input-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-moz-placeholder,.jdahd textarea::-moz-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-webkit-input-placeholder,.jdahd textarea::-webkit-input-placeholder{color:#fff;font-size:20px;font-weight:300;box-shadow:none;-webkit-appearance:none}.jdahd footer{width:calc(100% - 40px);position:absolute;bottom:20px}.jdahd footer>p a{color:#2980b9;text-decoration:none}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.jdahd #my导航栏{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.jdahd *,.jdahd body{text-align:center}.jdahd h1{font-weight:300;font-size:40px}.jdahd h3{font-weight:700}.jdahd .actions,.jdahd li,.jdahd p,.jdahd textarea{width:100%}.jdahd textarea{border-color:#000;display:block;min-height:250px;margin:1em 0}.jdahd ul.pre li{white-space:pre}.jdahd .checkbox{display:inline-block}.jdahd .actions a{float:right}.jdahd .actions{clear:both}*{font-family:Microsoft Yahei}#nav{float:center}#app{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-align:center;margin-top:0}#App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}*{-webkit-user-select:text!important;-moz-user-select:text;-o-user-select:text;-ms-user-select:text!important;user-select:text!important}body,html{scroll-behavior:smooth}*{font-family:Microsoft Yahei,Helvetica,Tahoma,Arial,PingFang SC,Hiragino Sans GB,Heiti SC,MicrosoftYaHei,WenQuanYi Micro Hei,sans-serif!important}.hljs{display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none}.diff .hljs-header,.hljs-comment{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-doctag,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}#padding0{padding:0!important}@media (max-width:500px){hr#hidewidthless500{display:none}}.article-content{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden}.article-content h1{margin:1.3rem 0;line-height:1.2}.article-content p{line-height:2.27rem}.article-content hr{border:none;border-top:1px solid #ddd;margin-top:2.7rem;margin-bottom:2.7rem}.article-content embed,.article-content iframe,.article-content img:not(.equation),.article-content video{max-width:100%!important;margin:0}.article-content img.lazyload{visibility:hidden}.article-content img.inited{background-color:#f8f9fa;background-position:50%;background-repeat:no-repeat;visibility:visible}.article-content img.loaded{background-image:none;background-color:transparent}.article-content img.equation{margin:0 .1em;max-width:100%!important;vertical-align:text-bottom}.article-content img:not(.equation){cursor:-webkit-zoom-in;cursor:zoom-in}.article-content figure{margin:2.7rem auto;text-align:center}.article-content figure figcaption{text-align:center;font-size:1rem;line-height:2.7rem;color:#909090}.article-content pre{line-height:1.93rem;overflow:auto}.article-content code,.article-content pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.article-content code{font-size:1rem;padding:.26rem .53em;word-break:break-word;color:#4e5980;background-color:#f8f8f8;border-radius:2px;overflow-x:auto}.article-content pre>code{font-size:1rem;padding:.67rem 1.3rem;margin:0;word-break:normal;display:block}.article-content a{color:#259}.article-content a:active,.article-content a:hover{color:#275b8c}.article-content table{display:inline-block!important;font-size:1rem;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.article-content thead{background:#f6f6f6;color:#000;text-align:left}.article-content tr:nth-child(2n){background-color:#fcfcfc}.article-content td,.article-content th{padding:1rem .6rem;line-height:2rem}.article-content td{min-width:10rem}.article-content blockquote{margin:1em 0;border-left:4px solid #ddd;padding:0 1.3rem}.article-content blockquote>p{margin:.6rem 0}.article-content ol,.article-content ul{padding-left:2.7rem}.article-content ol li,.article-content ul li{margin-bottom:.6rem}.article-content ol ol,.article-content ol ul,.article-content ul ol,.article-content ul ul{margin-top:.27rem}.article-content pre>code{overflow-x:auto;-webkit-overflow-scrolling:touch;color:#333;background:#f8f8f8}.article-content .hljs-comment,.article-content .hljs-quote{color:#998}.article-content .hljs-keyword,.article-content .hljs-selector-tag,.article-content .hljs-subst{color:#333;font-weight:700}.article-content .hljs-literal,.article-content .hljs-number,.article-content .hljs-tag .hljs-attr,.article-content .hljs-template-variable,.article-content .hljs-variable{color:teal}.article-content .hljs-doctag,.article-content .hljs-string{color:#d14}.article-content .hljs-section,.article-content .hljs-selector-id,.article-content .hljs-title{color:#900;font-weight:700}.article-content .hljs-subst{font-weight:400}.article-content .hljs-class .hljs-title,.article-content .hljs-type{color:#458;font-weight:700}.article-content .hljs-attribute,.article-content .hljs-name,.article-content .hljs-tag{color:navy;font-weight:400}.article-content .hljs-link,.article-content .hljs-regexp{color:#009926}.article-content .hljs-bullet,.article-content .hljs-symbol{color:#990073}.article-content .hljs-built_in,.article-content .hljs-builtin-name{color:#0086b3}.article-content .hljs-meta{color:#999;font-weight:700}.article-content .hljs-deletion{background:#fdd}.article-content .hljs-addition{background:#dfd}.article-content .hljs-emphasis{font-style:italic}.article-content .hljs-strong{font-weight:700}.article-content p{line-height:inherit;margin-top:22px;margin-bottom:22px}.article-content img{max-height:none}.article-content a{color:#0269c8;border-bottom:1px solid #d1e9ff}.article-content code{background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.article-content figure{margin:22px auto}.article-content figure figcaption{margin-top:2px;line-height:1.6}.article-content blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.article-content blockquote:after{display:block;content:""}.article-content blockquote>p{margin:10px 0}.article-content blockquote.warning{position:relative;border-left-color:#f75151;margin-left:8px}.article-content blockquote.warning:before{position:absolute;top:14px;left:-12px;background:#f75151;border-radius:50%;content:"!";width:20px;height:20px;color:#fff;display:flex;align-items:center;justify-content:center}.article-content ol,.article-content ul{padding-left:28px}.article-content ol li,.article-content ul li{margin-bottom:0;list-style:inherit}.article-content ol li.task-list-item,.article-content ul li.task-list-item{list-style:none}.article-content ol li.task-list-item ol,.article-content ol li.task-list-item ul,.article-content ul li.task-list-item ol,.article-content ul li.task-list-item ul{margin-top:0}.article-content ol li{padding-left:6px}.article-content pre{position:relative;line-height:1.75}.article-content pre>code{padding:15px 12px}.article-content pre>code.hljs[lang]{padding:18px 15px 12px}.article-content pre>code.hljs[lang]:before{content:attr(lang);position:absolute;right:15px;top:2px;color:hsla(0,0%,54.9%,.8)}.article-content pre>code.hljs[lang][lang=bash]:before{content:""}.article-content pre>code.copyable .copy-code-btn{position:absolute;top:6px;right:15px;font-size:12px;line-height:1;cursor:pointer;color:hsla(0,0%,54.9%,.8);-webkit-transition:color .1s;transition:color .1s}.article-content pre>code.copyable .copy-code-btn:hover{color:#8c8c8c}.article-content pre>code.copyable.hljs[lang]:before{right:70px}.article-content h1,.article-content h2,.article-content h3,.article-content h4,.article-content h5,.article-content h6{color:#333;line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.article-content h1{font-size:30px;margin-bottom:5px}.article-content h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.article-content h3{font-size:18px;padding-bottom:0}.article-content h4{font-size:16px}.article-content h5{font-size:15px}.article-content h6{margin-top:5px}.article-content h1.heading+h2.heading{margin-top:20px}.article-content h1.heading+h3.heading{margin-top:15px}.article-content .heading+.heading{margin-top:0}.article-content h1+:not(.heading){margin-top:25px}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}';
+var css$1 = '@charset "UTF-8";@import url(https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-frameworks-a2fba223d5af91496cac70d4ec3624df.min.css);@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);pre{text-align:left!important}button,div,h1,h2,h3,h4,h5,h6,input{text-align:center}p{color:#000!important}@-webkit-keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}.flowerpassword a{color:#42b983}.App-header{background-color:#fff}nav{width:100%}#\u56fe\u7247\u5217\u8868200 img{min-height:150px;min-width:150px;height:auto;width:auto;max-width:100%;max-height:200px}#my\u5bfc\u822a\u680f .navbar-nav li a{margin-left:2px;margin-right:2px}h1,h2{font-weight:400}ul{list-style-type:none;padding:0}li{display:inline-block;margin:0 10px}*{-webkit-user-select:text;-ms-user-select:text;user-select:text}.example{color:red}body{padding:0}*{font-family:"Microsoft Yahei,PingFangSC-Regular,arial, verdana, sans-serif"}#my\u5bfc\u822a\u680f{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.App{text-align:center}.App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}.App-header{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:calc(10px + 2vmin)}.App-link{color:#61dafb}.flowerpassword body,.flowerpassword html{background-color:#fff}.flowerpassword body{font:14px/1.5 Tahoma,Helvetica,Arial,\\5b8b\\4f53;color:#000}.flowerpassword a,.flowerpassword a:hover{color:#09c;text-decoration:none}.flowerpassword .left{float:left}.flowerpassword .right{float:right}.flowerpassword .clear{clear:both}.flowerpassword header{text-align:left;padding:0;margin:15px auto}.flowerpassword #logo{height:39px}.flowerpassword #shortcuts{margin:15px 0 0 15px}.flowerpassword #nav{float:center;margin-top:10px}.flowerpassword #nav li{margin:0 7px}.flowerpassword #nav li a{font-size:22px;color:#09c}.flowerpassword #nav li.active a,.flowerpassword #nav li.active a:hover{background-color:#09c;color:#fff}.flowerpassword #nav li a:hover{background-color:#79c6df;color:#fff}.flowerpassword #index-box{background-color:#fff;width:940px;clear:both;box-shadow:0 0 4px 2px #ddd;border:1px solid #ddd}.flowerpassword #index-box .float-box{margin:20px 0 20px 20px;display:inline}.flowerpassword #index-box #content-nav{margin:0;width:200px}.flowerpassword #index-box #content-nav li a{background-color:#e5ecdc}.flowerpassword #index-slider{width:940px;height:200px;overflow:hidden;position:relative}.flowerpassword #index-slider ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-slider li{width:940px;height:200px;float:left}.flowerpassword #index-slider #pagination{top:160px;left:800px}.flowerpassword #index-slider ul#pagination li{width:16px;height:16px;border-radius:1em;background-color:#fff;box-shadow:0 0 1px 2px #ccc;margin-right:18px;margin-top:4px}.flowerpassword #index-slider ul#pagination li.active{width:24px;height:24px;margin-top:0}.flowerpassword #index-slider ul#pagination li:hover{background-color:#ddd;cursor:pointer}.flowerpassword #index-report{width:680px;height:70px;margin-top:20px;overflow:hidden;position:relative;background-color:#e5ecdc}.flowerpassword #index-report ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-report li{width:680px;height:70px;text-align:center;float:left;font-size:32px;color:#666;font-family:\xe5\xbe\xae\xe8\xbd\xaf\xe9\u203a\u2026\xe9\xbb\u2018,\xe9\xbb\u2018\xe4\xbd\u201c;line-height:70px}.flowerpassword #index-report-pagination{list-style:none;margin-left:35px;text-align:center}.flowerpassword #index-report-pagination li{height:65px;float:left;margin-right:45px;cursor:pointer}.flowerpassword #index-report-pagination li img{margin-top:30px}.flowerpassword #index-button{margin:40px 0 30px;text-align:center}.flowerpassword #index-button a{margin:0 50px}.flowerpassword #tab{margin-top:30px}.flowerpassword #tab li a{margin-right:10px;border-bottom-color:#ddd;color:#666}.flowerpassword #tab li a:hover{background-color:#f2f2f2;color:#333;border-color:#ddd #ddd transparent}.flowerpassword #tab li.active a{background-color:#f2f2f2;color:#666;border-bottom-color:transparent}.flowerpassword #content-nav{list-style:none;margin:20px 0 0}.flowerpassword #content-nav li a{color:#666;padding:11px 0 11px 60px;display:block;margin-bottom:1px;font-size:22px}.flowerpassword #content-nav li a.active,.flowerpassword #content-nav li a:hover{background-color:#09c!important;color:#fff!important}.flowerpassword h1,.flowerpassword h2{color:#09c;margin:30px 0 12px}.flowerpassword h2{font-size:22px}.flowerpassword h2 span{font-size:22px;color:#fff;margin-right:7px;background-color:#09c;width:33px;height:33px;display:inline-block;text-align:center}.flowerpassword h3{font-size:16px;color:#09c;margin:20px 0}.flowerpassword h3 span{font-size:16px;color:#fff;margin-right:6px;background-color:#09c;width:26px;display:inline-block;text-align:center}.flowerpassword #input span{color:#09c;font-weight:700;font-size:22px;margin:0 20px}.flowerpassword #input input{font-size:14px;padding:5px;margin-left:5px}.flowerpassword #input label{float:none;display:inline;padding-right:5px}.flowerpassword #input p{margin-top:16px}.flowerpassword #input p,.flowerpassword .other{font-size:12px;color:#999}.flowerpassword #code16{display:inline-block;text-align:center}.flowerpassword .code16d{border:2px solid #09c}.flowerpassword .code16d:hover{border:2px solid #ff881c}.flowerpassword #copycode16{color:#000;display:inline-block;padding:0 3px;cursor:pointer}.flowerpassword .copycode16d{background-color:#09c;border:2px solid #09c}.flowerpassword .copycode16d:hover{background-color:#ff881c;border:2px solid #ff881c}.flowerpassword p{font-size:12px;color:#666;margin:20px 0}.flowerpassword #copyOK{color:#f2f2f2;border:2px solid #f2f2f2;display:inline-block;margin-left:16px;padding:0 3px}.flowerpassword .down-button{margin:10px 20px 10px 0}.flowerpassword #get{margin-bottom:100px}.flowerpassword footer{margin:50px 0 30px}.flowerpassword footer p{margin:0 0 5px;color:#999}.flowerpassword footer p span{margin:0 10px}.flowerpassword footer p a{color:#999}.flowerpassword footer p a:hover{color:#333}.jdahd button{border-color:#000}.jdahd *{text-align:center;margin:0;box-sizing:border-box;background-color:transparent}.jdahd body{position:relative;height:100vh;text-align:center}.jdahd h1{text-align:center;margin:20px 0}.jdahd textarea{width:100%;clear:both;margin-bottom:10px;border-radius:7px;padding:15px 10px;font-size:14px;outline:none;-webkit-transition:all .2s ease-in;transition:all .2s ease-in}.jdahd input[type=button]{margin:0 auto;position:relative;vertical-align:top;width:150px;height:60px;padding:0;font-size:22px;font-weight:300;color:#fff;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.25);background:#2980b9;border:0;border-bottom:2px solid #2475ab;cursor:pointer;box-shadow:inset 0 -2px #2475ab}.jdahd input:active{top:1px;outline:none;box-shadow:none}.jdahd input:-ms-input-placeholder,.jdahd textarea:-ms-input-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-moz-placeholder,.jdahd textarea::-moz-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-webkit-input-placeholder,.jdahd textarea::-webkit-input-placeholder{color:#fff;font-size:20px;font-weight:300;box-shadow:none;-webkit-appearance:none}.jdahd footer{width:calc(100% - 40px);position:absolute;bottom:20px}.jdahd footer>p a{color:#2980b9;text-decoration:none}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.jdahd #my\u5bfc\u822a\u680f{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.jdahd *,.jdahd body{text-align:center}.jdahd h1{font-weight:300;font-size:40px}.jdahd h3{font-weight:700}.jdahd .actions,.jdahd li,.jdahd p,.jdahd textarea{width:100%}.jdahd textarea{border-color:#000;display:block;min-height:250px;margin:1em 0}.jdahd ul.pre li{white-space:pre}.jdahd .checkbox{display:inline-block}.jdahd .actions a{float:right}.jdahd .actions{clear:both}*{font-family:Microsoft Yahei}#nav{float:center}#app{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-align:center;margin-top:0}#App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}*{-webkit-user-select:text!important;-moz-user-select:text;-o-user-select:text;-ms-user-select:text!important;user-select:text!important}body,html{scroll-behavior:smooth}*{font-family:Microsoft Yahei,Helvetica,Tahoma,Arial,PingFang SC,Hiragino Sans GB,Heiti SC,MicrosoftYaHei,WenQuanYi Micro Hei,sans-serif!important}.hljs{display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none}.diff .hljs-header,.hljs-comment{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-doctag,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}#padding0{padding:0!important}@media (max-width:500px){hr#hidewidthless500{display:none}}.article-content{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden}.article-content h1{margin:1.3rem 0;line-height:1.2}.article-content p{line-height:2.27rem}.article-content hr{border:none;border-top:1px solid #ddd;margin-top:2.7rem;margin-bottom:2.7rem}.article-content embed,.article-content iframe,.article-content img:not(.equation),.article-content video{max-width:100%!important;margin:0}.article-content img.lazyload{visibility:hidden}.article-content img.inited{background-color:#f8f9fa;background-position:50%;background-repeat:no-repeat;visibility:visible}.article-content img.loaded{background-image:none;background-color:transparent}.article-content img.equation{margin:0 .1em;max-width:100%!important;vertical-align:text-bottom}.article-content img:not(.equation){cursor:-webkit-zoom-in;cursor:zoom-in}.article-content figure{margin:2.7rem auto;text-align:center}.article-content figure figcaption{text-align:center;font-size:1rem;line-height:2.7rem;color:#909090}.article-content pre{line-height:1.93rem;overflow:auto}.article-content code,.article-content pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.article-content code{font-size:1rem;padding:.26rem .53em;word-break:break-word;color:#4e5980;background-color:#f8f8f8;border-radius:2px;overflow-x:auto}.article-content pre>code{font-size:1rem;padding:.67rem 1.3rem;margin:0;word-break:normal;display:block}.article-content a{color:#259}.article-content a:active,.article-content a:hover{color:#275b8c}.article-content table{display:inline-block!important;font-size:1rem;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.article-content thead{background:#f6f6f6;color:#000;text-align:left}.article-content tr:nth-child(2n){background-color:#fcfcfc}.article-content td,.article-content th{padding:1rem .6rem;line-height:2rem}.article-content td{min-width:10rem}.article-content blockquote{margin:1em 0;border-left:4px solid #ddd;padding:0 1.3rem}.article-content blockquote>p{margin:.6rem 0}.article-content ol,.article-content ul{padding-left:2.7rem}.article-content ol li,.article-content ul li{margin-bottom:.6rem}.article-content ol ol,.article-content ol ul,.article-content ul ol,.article-content ul ul{margin-top:.27rem}.article-content pre>code{overflow-x:auto;-webkit-overflow-scrolling:touch;color:#333;background:#f8f8f8}.article-content .hljs-comment,.article-content .hljs-quote{color:#998}.article-content .hljs-keyword,.article-content .hljs-selector-tag,.article-content .hljs-subst{color:#333;font-weight:700}.article-content .hljs-literal,.article-content .hljs-number,.article-content .hljs-tag .hljs-attr,.article-content .hljs-template-variable,.article-content .hljs-variable{color:teal}.article-content .hljs-doctag,.article-content .hljs-string{color:#d14}.article-content .hljs-section,.article-content .hljs-selector-id,.article-content .hljs-title{color:#900;font-weight:700}.article-content .hljs-subst{font-weight:400}.article-content .hljs-class .hljs-title,.article-content .hljs-type{color:#458;font-weight:700}.article-content .hljs-attribute,.article-content .hljs-name,.article-content .hljs-tag{color:navy;font-weight:400}.article-content .hljs-link,.article-content .hljs-regexp{color:#009926}.article-content .hljs-bullet,.article-content .hljs-symbol{color:#990073}.article-content .hljs-built_in,.article-content .hljs-builtin-name{color:#0086b3}.article-content .hljs-meta{color:#999;font-weight:700}.article-content .hljs-deletion{background:#fdd}.article-content .hljs-addition{background:#dfd}.article-content .hljs-emphasis{font-style:italic}.article-content .hljs-strong{font-weight:700}.article-content p{line-height:inherit;margin-top:22px;margin-bottom:22px}.article-content img{max-height:none}.article-content a{color:#0269c8;border-bottom:1px solid #d1e9ff}.article-content code{background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.article-content figure{margin:22px auto}.article-content figure figcaption{margin-top:2px;line-height:1.6}.article-content blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.article-content blockquote:after{display:block;content:""}.article-content blockquote>p{margin:10px 0}.article-content blockquote.warning{position:relative;border-left-color:#f75151;margin-left:8px}.article-content blockquote.warning:before{position:absolute;top:14px;left:-12px;background:#f75151;border-radius:50%;content:"!";width:20px;height:20px;color:#fff;display:flex;align-items:center;justify-content:center}.article-content ol,.article-content ul{padding-left:28px}.article-content ol li,.article-content ul li{margin-bottom:0;list-style:inherit}.article-content ol li.task-list-item,.article-content ul li.task-list-item{list-style:none}.article-content ol li.task-list-item ol,.article-content ol li.task-list-item ul,.article-content ul li.task-list-item ol,.article-content ul li.task-list-item ul{margin-top:0}.article-content ol li{padding-left:6px}.article-content pre{position:relative;line-height:1.75}.article-content pre>code{padding:15px 12px}.article-content pre>code.hljs[lang]{padding:18px 15px 12px}.article-content pre>code.hljs[lang]:before{content:attr(lang);position:absolute;right:15px;top:2px;color:hsla(0,0%,54.9%,.8)}.article-content pre>code.hljs[lang][lang=bash]:before{content:""}.article-content pre>code.copyable .copy-code-btn{position:absolute;top:6px;right:15px;font-size:12px;line-height:1;cursor:pointer;color:hsla(0,0%,54.9%,.8);-webkit-transition:color .1s;transition:color .1s}.article-content pre>code.copyable .copy-code-btn:hover{color:#8c8c8c}.article-content pre>code.copyable.hljs[lang]:before{right:70px}.article-content h1,.article-content h2,.article-content h3,.article-content h4,.article-content h5,.article-content h6{color:#333;line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.article-content h1{font-size:30px;margin-bottom:5px}.article-content h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.article-content h3{font-size:18px;padding-bottom:0}.article-content h4{font-size:16px}.article-content h5{font-size:15px}.article-content h6{margin-top:5px}.article-content h1.heading+h2.heading{margin-top:20px}.article-content h1.heading+h3.heading{margin-top:15px}.article-content .heading+.heading{margin-top:0}.article-content h1+:not(.heading){margin-top:25px}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}';
 
 var mycomapp$1 = function mycomapp() {
     var inputpassword = createstate("");
@@ -2433,16 +2441,16 @@ var mycomapp$1 = function mycomapp() {
         id: "root"
     }, createElement("div", null, createElement("div", {
         class: "container-fluid fixed-top",
-        id: "my导航栏"
+        id: "my\u5bfc\u822a\u680f"
     }, createElement("nav", {
         class: "navbar navbar-default navbar navbar-expand-sm bg-light navbar-light",
         role: "navigation"
     }, createElement("div", null, createElement("a", {
         class: "navbar-brand mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/"
-    }, "masx200的", createElement("hr", {
+    }, "masx200\u7684", createElement("hr", {
         id: "hidewidthless500"
-    }), "github主页"), createElement("button", {
+    }), "github\u4e3b\u9875"), createElement("button", {
         class: "navbar-toggler",
         type: "button",
         "data-toggle": "collapse"
@@ -2460,23 +2468,23 @@ var mycomapp$1 = function mycomapp() {
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/react-home"
-    }, "基于REACT的主页")), createElement("li", null, createElement("a", {
+    }, "\u57fa\u4e8eREACT\u7684\u4e3b\u9875")), createElement("li", null, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/react-rssreader"
-    }, "rss阅读")), createElement("li", {
+    }, "rss\u9605\u8bfb")), createElement("li", {
         id: "mynav2"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/react-about"
-    }, "关于REACT")), createElement("li", {
+    }, "\u5173\u4e8eREACT")), createElement("li", {
         class: "nav-item"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/picalc"
-    }, "圆周率计算多线程")), createElement("li", null, createElement("a", {
+    }, "\u5706\u5468\u7387\u8ba1\u7b97\u591a\u7ebf\u7a0b")), createElement("li", null, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/react-huami"
-    }, "花密网页版")), createElement("li", null, createElement("a", {
+    }, "\u82b1\u5bc6\u7f51\u9875\u7248")), createElement("li", null, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/decoder"
     }, "JSfuck-and-hieroglyphy-Decoder")), createElement("li", null, createElement("a", {
@@ -2488,47 +2496,47 @@ var mycomapp$1 = function mycomapp() {
     }, "hieroglyphy-ENCODER")), createElement("li", null, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/webpack-react-vue-spa-awesome-config"
-    }, "webpack-react-vue- 极速零配置的单页面 web\n                        应用打包工具")), createElement("li", {
+    }, "webpack-react-vue- \u6781\u901f\u96f6\u914d\u7f6e\u7684\u5355\u9875\u9762 web\n                        \u5e94\u7528\u6253\u5305\u5de5\u5177")), createElement("li", {
         class: "nav-item"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
-        href: "#/IMPORTCJSAMDUMD动态异步加载"
-    }, "动态异步加载-commonjs和umd和amd模块库")), createElement("li", {
+        href: "#/IMPORTCJSAMDUMD\u52a8\u6001\u5f02\u6b65\u52a0\u8f7d"
+    }, "\u52a8\u6001\u5f02\u6b65\u52a0\u8f7d-commonjs\u548cumd\u548camd\u6a21\u5757\u5e93")), createElement("li", {
         class: "nav-item"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/react-simple-global-state-store-hook"
-    }, "适用于React的极简全局状态管理库")), createElement("li", {
+    }, "\u9002\u7528\u4e8eReact\u7684\u6781\u7b80\u5168\u5c40\u72b6\u6001\u7ba1\u7406\u5e93")), createElement("li", {
         class: "nav-item"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/excellent-vscode-extensions-for-javascript"
-    }, "VScode的优秀扩展推荐")), createElement("li", {
+    }, "VScode\u7684\u4f18\u79c0\u6269\u5c55\u63a8\u8350")), createElement("li", {
         class: "nav-item"
     }, createElement("a", {
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined",
         href: "#/vue-simple-global-state-store-manager"
-    }, "适用于Vue的极简全局状态管理库")), createElement("li", null, createElement("a", {
+    }, "\u9002\u7528\u4e8eVue\u7684\u6781\u7b80\u5168\u5c40\u72b6\u6001\u7ba1\u7406\u5e93")), createElement("li", null, createElement("a", {
         href: "./my-vue-router-project/index.html",
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined"
-    }, "基于vue的主页")), createElement("li", null, createElement("a", {
+    }, "\u57fa\u4e8evue\u7684\u4e3b\u9875")), createElement("li", null, createElement("a", {
         href: "./my-vue-router-project/index.html#/about",
         class: "nav-link mui-btn mui-btn-primary mui-btn-outlined"
-    }, "关于Vue")))))), createElement("div", {
+    }, "\u5173\u4e8eVue")))))), createElement("div", {
         class: "container",
-        id: "my主体",
+        id: "my\u4e3b\u4f53",
         style: "padding-top: 127.6px;"
     }, createElement("div", {
         class: "hello flowerpassword"
-    }, createElement("h1", null, "花密 不一样的密码管理工具"), createElement("div", {
+    }, createElement("h1", null, "\u82b1\u5bc6 \u4e0d\u4e00\u6837\u7684\u5bc6\u7801\u7ba1\u7406\u5de5\u5177"), createElement("div", {
         id: "rong1",
         class: "container",
         style: "text-align: center;"
     }, createElement("div", {
         id: "rong2"
-    }, createElement("h2", null, createElement("span", null, "1"), "输入"), createElement("div", {
+    }, createElement("h2", null, createElement("span", null, "1"), "\u8f93\u5165"), createElement("div", {
         id: "input"
-    }, createElement("p", null), createElement("h3", null, "记忆密码"), createElement("p", null), createElement("p", null, createElement("input", {
+    }, createElement("p", null), createElement("h3", null, "\u8bb0\u5fc6\u5bc6\u7801"), createElement("p", null), createElement("p", null, createElement("input", {
         "*ref": inputref,
         "@change": function change(e) {
             return console.log(e, inputref);
@@ -2537,30 +2545,30 @@ var mycomapp$1 = function mycomapp() {
             return console.log(e);
         },
         id: "password",
-        placeholder: "输入密码",
+        placeholder: "\u8f93\u5165\u5bc6\u7801",
         name: "password",
         type: "password",
         tabindex: "1",
         class: "col-lg-12 col-md-12 col-sm-12 col-xs-12 form-control",
         value: ""
-    })), createElement("p", null), createElement("span", null, "+"), createElement("h3", null, "区分代号"), createElement("p", null), createElement("p", null, createElement("input", {
+    })), createElement("p", null), createElement("span", null, "+"), createElement("h3", null, "\u533a\u5206\u4ee3\u53f7"), createElement("p", null), createElement("p", null, createElement("input", {
         "*ref": inputref2,
         "*value": inputpassword,
         "@input": function input(e) {
             return console.log(e);
         },
         id: "key",
-        placeholder: "输入代号",
+        placeholder: "\u8f93\u5165\u4ee3\u53f7",
         name: "key",
         type: "text",
         tabindex: "2",
         class: "col-lg-12 col-md-12 col-sm-12 col-xs-12 form-control",
         value: ""
-    }))), createElement("br", null), createElement("p", null), createElement("h2", null, createElement("span", null, "2"), "获取"), createElement("p", null), createElement("div", {
+    }))), createElement("br", null), createElement("p", null), createElement("h2", null, createElement("span", null, "2"), "\u83b7\u53d6"), createElement("p", null), createElement("div", {
         id: "get"
     }, createElement("p", {
         id: "tuijian"
-    }), createElement("p", null), createElement("h3", null, "最终密码"), createElement("p", null), createElement("span", {
+    }), createElement("p", null), createElement("h3", null, "\u6700\u7ec8\u5bc6\u7801"), createElement("p", null), createElement("span", {
         id: "myhezi"
     }, createElement("p", null, createElement("input", {
         id: "cod222222222222e16",
@@ -2572,10 +2580,10 @@ var mycomapp$1 = function mycomapp() {
         "data-clipboard-target": "#code16",
         class: "btn btn-lg btn copycode16d btn-info",
         style: "width: 100%;"
-    }, "点击复制"))), createElement("p", null, createElement("span", {
+    }, "\u70b9\u51fb\u590d\u5236"))), createElement("p", null, createElement("span", {
         id: "copyOK",
         style: "display: none;"
-    }, "√复制成功")), createElement("p", null)))))))), createElement("script", {
+    }, "\u221a\u590d\u5236\u6210\u529f")), createElement("p", null)))))))), createElement("script", {
         type: "text/javascript",
         src: "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/bundle.runtime~main.3a15bebb435b0d3fead6.js"
     }), createElement("script", {
@@ -2647,7 +2655,9 @@ var vdom$1 = createElement(createComponent(mycomapp$1));
 
 createApp(vdom$1, document.getElementById("root"));
 
-var list = Array(20).fill().map((function(v, i) {
+var temp_ref = createRef();
+
+var list = Array(10).fill().map((function(v, i) {
     return i;
 }));
 
@@ -2655,7 +2665,8 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     return createElement("li", null, "item", a);
 }))), createElement("header", {
     class: "common-header fixed noborder floating",
-    id: "git-header-nav"
+    id: "git-header-nav",
+    _ref: temp_ref
 }, createElement("div", {
     class: "ui container"
 }, createElement("div", {
@@ -2694,7 +2705,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-dashboard"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "个人主页"))), createElement("li", {
+}, "\u4e2a\u4eba\u4e3b\u9875"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/explore"
@@ -2702,7 +2713,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-discover"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "开源软件"))), createElement("li", {
+}, "\u5f00\u6e90\u8f6f\u4ef6"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/gists"
@@ -2710,7 +2721,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-gists1"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "代码片段"))), createElement("li", {
+}, "\u4ee3\u7801\u7247\u6bb5"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/enterprises"
@@ -2718,7 +2729,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-enterprise"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "企业版"))), createElement("li", {
+}, "\u4f01\u4e1a\u7248"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/education"
@@ -2726,7 +2737,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-education"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "高校版"))), createElement("li", {
+}, "\u9ad8\u6821\u7248"))), createElement("li", {
     class: "gitee-nav__sidebar-item split-line"
 }), createElement("li", {
     class: "gitee-nav__sidebar-item"
@@ -2736,7 +2747,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-search"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "搜索"))), createElement("li", {
+}, "\u641c\u7d22"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/help"
@@ -2744,7 +2755,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-help-circle"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "帮助中心"))), createElement("li", {
+}, "\u5e2e\u52a9\u4e2d\u5fc3"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/terms"
@@ -2752,7 +2763,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-file"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "使用条款"))), createElement("li", {
+}, "\u4f7f\u7528\u6761\u6b3e"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/about_us"
@@ -2760,7 +2771,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-issuepx"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "关于我们"))), createElement("li", {
+}, "\u5173\u4e8e\u6211\u4eec"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/profile"
@@ -2768,7 +2779,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-edit"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "设置"))), createElement("li", {
+}, "\u8bbe\u7f6e"))), createElement("li", {
     class: "gitee-nav__sidebar-item"
 }, createElement("a", {
     href: "/logout",
@@ -2778,7 +2789,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "iconfont icon-ic-logout"
 }), createElement("span", {
     class: "gitee-nav__sidebar-name"
-}, "退出")))))), createElement("div", {
+}, "\u9000\u51fa")))))), createElement("div", {
     class: "gitee-nav__sidebar-bottom"
 }, createElement("div", {
     class: "gitee-nav__sidebar-close-button"
@@ -2801,30 +2812,30 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
 }))), createElement("a", {
     href: "/explore",
     class: "item ",
-    title: "开源软件"
-}, "开源软件"), createElement("a", {
+    title: "\u5f00\u6e90\u8f6f\u4ef6"
+}, "\u5f00\u6e90\u8f6f\u4ef6"), createElement("a", {
     href: "/enterprises",
     class: "item ",
-    title: "企业版"
-}, "企业版", createElement("sup", {
+    title: "\u4f01\u4e1a\u7248"
+}, "\u4f01\u4e1a\u7248", createElement("sup", {
     class: "ui red label"
-}, "特惠")), createElement("a", {
+}, "\u7279\u60e0")), createElement("a", {
     href: "/education",
     class: "item ",
-    title: "高校版"
-}, "高校版"), createElement("a", {
+    title: "\u9ad8\u6821\u7248"
+}, "\u9ad8\u6821\u7248"), createElement("a", {
     href: "https://blog.gitee.com/",
     class: "item",
     id: "gitee-blog",
     target: "_blank",
-    title: "博客"
-}, "博客"), createElement("div", {
+    title: "\u535a\u5ba2"
+}, "\u535a\u5ba2"), createElement("div", {
     class: "dropdown item ui",
     id: "my-gitee-dropdown",
     tabindex: "0"
 }, createElement("a", {
     href: "/masx200/dashboard"
-}, "我的码云"), createElement("i", {
+}, "\u6211\u7684\u7801\u4e91"), createElement("i", {
     class: "dropdown icon"
 }), createElement("div", {
     class: "menu transition hidden",
@@ -2835,7 +2846,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     href: "/masx200/projects",
     class: "pull-right",
     target: "_blank"
-}, "全部"), "仓库", createElement("span", {
+}, "\u5168\u90e8"), "\u4ed3\u5e93", createElement("span", {
     class: "count"
 }, "(11)")), createElement("a", {
     target: "_blank",
@@ -2885,8 +2896,8 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     "accept-charset": "UTF-8",
     action: "/search",
     autocomplete: "on",
-    "data-text-filter": "搜索格式不正确",
-    "data-text-require": "搜索关键字不能少于1个",
+    "data-text-filter": "\u641c\u7d22\u683c\u5f0f\u4e0d\u6b63\u786e",
+    "data-text-require": "\u641c\u7d22\u5173\u952e\u5b57\u4e0d\u80fd\u5c11\u4e8e1\u4e2a",
     id: "navbar-search-form",
     method: "get"
 }, createElement("div", {
@@ -2894,13 +2905,13 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
 }, createElement("input", {
     name: "utf8",
     type: "hidden",
-    value: "✓"
+    value: "\u2713"
 })), createElement("div", {
     class: "ui mini fluid input"
 }, createElement("input", {
     id: "navbar-search-input",
     name: "q",
-    placeholder: "搜索项目、代码片段...",
+    placeholder: "\u641c\u7d22\u9879\u76ee\u3001\u4ee3\u7801\u7247\u6bb5...",
     type: "text",
     value: ""
 }), createElement("input", {
@@ -2934,7 +2945,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     "data-scope": "referer"
 }, createElement("div", {
     class: "content"
-}, "@ 我", createElement("div", {
+}, "@ \u6211", createElement("div", {
     class: "notice-count referer"
 }))), createElement("div", {
     class: "tab active",
@@ -2943,7 +2954,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     "data-scope": "infos"
 }, createElement("div", {
     class: "content"
-}, "通知", createElement("div", {
+}, "\u901a\u77e5", createElement("div", {
     class: "notice-count infos"
 }, "1"))), createElement("div", {
     class: "tab",
@@ -2952,7 +2963,7 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     "data-scope": "messages"
 }, createElement("div", {
     class: "content"
-}, "私信", createElement("div", {
+}, "\u79c1\u4fe1", createElement("div", {
     class: "notice-count messages"
 })))), createElement("div", {
     class: "item notice-dropdown-panel-container"
@@ -2971,15 +2982,15 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     "data-id": "50555275"
 }, createElement("div", {
     class: "title"
-}, "你的仓库 masx200/mvvm-reactive-view 已经从 https://github.com/masx200/mvvm-reactive-view.git 同步成功"), createElement("div", {
+}, "\u4f60\u7684\u4ed3\u5e93 masx200/mvvm-reactive-view \u5df2\u7ecf\u4ece https://github.com/masx200/mvvm-reactive-view.git \u540c\u6b65\u6210\u529f"), createElement("div", {
     class: "meta"
 }, createElement("time", {
     class: "timeago"
-}, "2小时前"), " ·", " ", createElement("span", {
+}, "2\u5c0f\u65f6\u524d"), " \xb7", " ", createElement("span", {
     class: "namespace"
 }, "masx200/mvvm-reactive-view")))), createElement("div", {
     class: "notice-dropdown-panel-blank"
-}, "暂没有新消息")), createElement("div", {
+}, "\u6682\u6ca1\u6709\u65b0\u6d88\u606f")), createElement("div", {
     class: "notice-dropdown-panel-footer"
 }, createElement("div", {
     class: "action"
@@ -2988,13 +2999,13 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
 }, createElement("a", {
     href: "javascript: void(0);",
     class: "mark-notices"
-}, "当前标记为已读")), createElement("div", {
+}, "\u5f53\u524d\u6807\u8bb0\u4e3a\u5df2\u8bfb")), createElement("div", {
     class: "side right"
 }, createElement("a", {
     href: "/notifications/infos",
     class: "load-all",
     target: "_blank"
-}, "查看全部")))))), createElement("div", {
+}, "\u67e5\u770b\u5168\u90e8")))))), createElement("div", {
     class: "ui dropdown link item",
     id: "git-nav-create",
     tabindex: "0"
@@ -3008,27 +3019,27 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "item"
 }, createElement("i", {
     class: "add square icon"
-}), "新建仓库"), createElement("a", {
+}), "\u65b0\u5efa\u4ed3\u5e93"), createElement("a", {
     href: "/masx200/codes/new",
     class: "item"
 }, createElement("i", {
     class: "code icon"
-}), "发布代码片段"), createElement("a", {
+}), "\u53d1\u5e03\u4ee3\u7801\u7247\u6bb5"), createElement("a", {
     href: "/organizations/new",
     class: "item"
 }, createElement("i", {
     class: "group icon"
-}), "创建组织"), createElement("a", {
+}), "\u521b\u5efa\u7ec4\u7ec7"), createElement("a", {
     href: "/enterprises/new",
     class: "item"
 }, createElement("i", {
     class: "icon iconfont icon-enterprise"
-}), "开通企业版"), createElement("a", {
+}), "\u5f00\u901a\u4f01\u4e1a\u7248"), createElement("a", {
     href: "/projects/oauth_github",
     class: "item"
 }, createElement("i", {
     class: "github icon"
-}), "从 GitHub 导入仓库"))), createElement("div", {
+}), "\u4ece GitHub \u5bfc\u5165\u4ed3\u5e93"))), createElement("div", {
     class: "ui dropdown item",
     id: "git-nav-user",
     tabindex: "0"
@@ -3046,25 +3057,25 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     class: "item"
 }, createElement("i", {
     class: "iconfont icon-ic-home"
-}), "个人主页"), createElement("a", {
+}), "\u4e2a\u4eba\u4e3b\u9875"), createElement("a", {
     href: "/profile",
     class: "item"
 }, createElement("div", {
     class: "mayun-icon my-ic-edit my-ic-edit-dims"
-}), "设置"), createElement("div", {
+}), "\u8bbe\u7f6e"), createElement("div", {
     class: "divider"
 }), createElement("a", {
     href: "/gists",
     class: "item"
 }, createElement("div", {
     class: "iconfont icon-ic-gist"
-}), "代码片段"), createElement("a", {
+}), "\u4ee3\u7801\u7247\u6bb5"), createElement("a", {
     href: "https://gitee.com/help",
     class: "item",
     target: "_blank"
 }, createElement("div", {
     class: "mayun-icon my-ic-help my-ic-help-dims"
-}), "帮助"), createElement("div", {
+}), "\u5e2e\u52a9"), createElement("div", {
     class: "divider"
 }), createElement("a", {
     href: "/logout",
@@ -3073,9 +3084,9 @@ var vdom$2 = createElement(Fragment, null, createElement("ul", null, list.map((f
     rel: "nofollow"
 }, createElement("div", {
     class: "mayun-icon my-ic-exit my-ic-exit-dims"
-}), "退出"))), createElement("script", null))))));
+}), "\u9000\u51fa"))), createElement("script", null))))));
 
-console.log(vdom$2);
+console.log(vdom$2, temp_ref);
 
 document.body.appendChild(createApp(vdom$2, document.createElement("div")));
 
@@ -3165,7 +3176,7 @@ var store = {
 };
 
 var mycomappclass = createComponent((function() {
-    var vdom = createElement("div", null, createElement("h3", null, " 点击数字"), createElement("h2", null, "number:", store.number), createElement("button", {
+    var vdom = createElement("div", null, createElement("h3", null, " \u70b9\u51fb\u6570\u5b57"), createElement("h2", null, "number:", store.number), createElement("button", {
         onclick: store.increment
     }, "increment"), createElement("button", {
         onclick: store.decrement

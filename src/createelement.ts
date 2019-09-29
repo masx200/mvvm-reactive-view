@@ -1,4 +1,4 @@
-import ReactiveState from "./primitivestate";
+import ReactiveState from './reactivestate';
 import { isstring, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 export default function createElement(

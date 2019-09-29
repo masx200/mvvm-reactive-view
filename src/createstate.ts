@@ -1,6 +1,6 @@
 import { getproperyreadproxy } from "./computed";
 
-import { invalid_primitive_or_object_state } from "./primitivestate";
+import { invalid_primitive_or_object_state } from './reactivestate';
 
 import {
   deleteProperty,
@@ -17,7 +17,7 @@ import ReactiveState, {
   dispatchsymbol,
   // textnodesymbol,
   isReactiveState
-} from "./primitivestate";
+} from './reactivestate';
 import { usestste } from "./context-mounted-unmounted-";
 export default (init: any) => {
   /* 收集组件内部创建的 ReactiveState*/

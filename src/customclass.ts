@@ -1,5 +1,5 @@
 import Virtualdom from "./virtualdom";
-import ReactiveState from "./primitivestate";
+import ReactiveState from './reactivestate';
 
 export interface Class {
   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;

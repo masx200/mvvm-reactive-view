@@ -56,6 +56,7 @@ export default [
         compress: false,
         mangle: false,
         output: {
+          ascii_only: !0,
           ecma: 5,
           comments: !1,
           beautify: true

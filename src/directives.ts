@@ -2,7 +2,7 @@ export const requestAnimationFrame = window.requestAnimationFrame;
 import { seteletext, setelehtml } from "./dom";
 
 import { watch } from "./watch";
-import ReactiveState, { isReactiveState } from "./primitivestate";
+import ReactiveState, { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
 import { isobject } from "./util";
 export default {

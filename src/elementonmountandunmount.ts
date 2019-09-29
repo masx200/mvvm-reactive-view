@@ -1,4 +1,4 @@
-import ReactiveState from "./primitivestate";
+import ReactiveState from './reactivestate';
 import {
   eventlistenerssymbol,
   removelisteners,

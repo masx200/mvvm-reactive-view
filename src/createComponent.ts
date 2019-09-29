@@ -3,7 +3,7 @@ export const innerstatesymbol = Symbol("innerstate");
 import { readysymbol } from "./readysymbol";
 import render from "./rendervdomtoreal";
 import readonlyproxy from "./readonlyproxy";
-import ReactiveState /* , { dispatchsymbol } */ from "./primitivestate";
+import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
 import createstate from "./createstate";
 const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
@@ -51,10 +51,11 @@ import { seteletext } from "./dom";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
 import { componentsymbol } from "./iscomponent";
+import { get } from "./reflect";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
-    const defaultProps = custfun["defaultProps"];
-    const css = custfun["css"];
+    const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
+    const css = get(custfun, "css");
     return class Component extends AttrChange {
       [innerstatesymbol]: Array<ReactiveState>;
       static [componentsymbol] = true;
@@ -74,7 +75,7 @@ export function createComponent(custfun: Custom): Class {
       ) {
         super();
 
-        const css = this.constructor["css"];
+        const css = get(this.constructor, "css");
 
         if (css) {
           const prefix = this.tagName.toLowerCase();
@@ -90,7 +91,8 @@ export function createComponent(custfun: Custom): Class {
             // console.log(cssnewtext, componentsstylesheet);
           }
         }
-        const defaultProps = this.constructor["defaultProps"];
+        const defaultProps = get(this.constructor, "defaultProps");
+        // this.constructor["defaultProps"];
         const attrs = createeleattragentreadwrite(this);
         //   const props = {};
         if (isobject(defaultProps)) {
@@ -175,7 +177,7 @@ export function createComponent(custfun: Custom): Class {
           /* 这段代码只在初始化时执行一次 */
           //   mount(this[elementsymbol], this, false);
 
-          const css = this.constructor["css"];
+          const css = get(this.constructor, "css");
           const prefix = this.tagName.toLowerCase();
           if (css && componentsstylesheet[prefix]) {
             /* 先清空当前组件 的children */

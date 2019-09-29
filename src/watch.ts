@@ -5,7 +5,7 @@ import ReactiveState, {
   subscribesymbol,
   removeallistenerssymbol,
   addallistenerssymbol
-} from "./primitivestate";
+} from './reactivestate';
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
 export function watch(
