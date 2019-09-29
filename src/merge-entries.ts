@@ -15,7 +15,7 @@ export function merge_entries(a: any[] /* Array<[any, Array<any>]> */): any[] {
     }
     // m[key] && (m[key] = new Set());
 
-    value.forEach(v => {
+    value.forEach((v: any) => {
       m[key].add(v);
     });
   });

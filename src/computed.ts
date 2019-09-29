@@ -100,7 +100,7 @@ function Arraycomputed(
   return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
-export function getproperyreadproxy(a) {
+export function getproperyreadproxy(a: any) {
   return new Proxy(a, {
     ownKeys(target) {
       return Array.from(
