@@ -367,13 +367,38 @@ setTimeout(() => {
 @import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css);
 ```
 
-一个好的解决办法是把外部样式写在`html`中
+一个解决办法是把外部样式写在`html`中
 
 ```html
 <link
   href="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
   rel="stylesheet"
 />
+```
+
+另一个解决办法是异步`fetch`加载`css`文本
+
+```js
+(
+async()=>{
+const defaultProps = { cccccc: "bbbbbbb" };
+const css = await(await fetch("https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css")).text()
+const Hellowordclass = createComponent(
+  Object.assign(
+    () => {
+      return createElement("div" ,undefined,"hello world");
+    },
+    { css, defaultProps }
+  )
+);
+document.body.appendChild(
+  createApp(
+    createElement(Hellowordclass),
+
+    document.createElement("div")
+  )
+);
+})()
 ```
 
 # 使用 webcomponents costum elements
