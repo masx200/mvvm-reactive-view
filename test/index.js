@@ -1,4 +1,4 @@
-import "../polyfill/custom-elements.min.js";
+//import "../polyfill/custom-elements.min.js";
 import "../polyfill/Array-prototype-flat.js";
 import "../polyfill/Object-fromEntries.js";
 import "./index1.js";
