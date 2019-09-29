@@ -306,9 +306,9 @@ document.body.appendChild(
 
 最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
 
-## 组件局部 css 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
+## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
 
-在运行时,解析 `css` 文本,然后添加前缀,再转换成 `css` 文本
+在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
 
 ```js
 var mycom = (props, children) => {
