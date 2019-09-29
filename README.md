@@ -405,7 +405,9 @@ document.body.appendChild(
 
 可以通过静态属性 static `defaultProps` 来设置默认值
 
-通过 props 来传递参数给元素，以 json 格式传递
+传递参数给元素，以 `json` 格式传递,
+
+可以不显式使用`CustomElements.define()`，因为在渲染组件时会自动使用随机命名定义
 
 ```js
 var mycom = class extends HTMLElement {};
