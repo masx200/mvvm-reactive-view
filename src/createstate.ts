@@ -84,7 +84,7 @@ function createstate(
         const myvalue = get(target, "value");
         if (has(myvalue, key)) {
           deleteProperty(myvalue, key);
-          target[dispatchsymbol](key);
+          target[dispatchsymbol](String(key));
           return true;
         } else {
           return true;
@@ -128,7 +128,7 @@ function createstate(
             }
           } else {
             return deepobserve(get(value, key), () => {
-              target[dispatchsymbol](key);
+              target[dispatchsymbol](String(key));
             });
           }
 
@@ -154,7 +154,7 @@ function createstate(
           return true;
         } else if (!has(target, key)) {
           set(myvalue, key, value);
-          target[dispatchsymbol](key);
+          target[dispatchsymbol](String(key));
 
           //
         } else if (key === "length") {

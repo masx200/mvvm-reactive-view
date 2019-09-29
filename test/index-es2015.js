@@ -1,701 +1,3 @@
-(function() {
-    var aa = new Set("annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" "));
-    function g(a) {
-        var b = aa.has(a);
-        a = /^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/.test(a);
-        return !b && a;
-    }
-    function l(a) {
-        var b = a.isConnected;
-        if (void 0 !== b) return b;
-        for (;a && !(a.__CE_isImportDocument || a instanceof Document); ) {
-            a = a.parentNode || (window.ShadowRoot && a instanceof ShadowRoot ? a.host : void 0);
-        }
-        return !(!a || !(a.__CE_isImportDocument || a instanceof Document));
-    }
-    function n(a, b) {
-        for (;b && b !== a && !b.nextSibling; ) {
-            b = b.parentNode;
-        }
-        return b && b !== a ? b.nextSibling : null;
-    }
-    function p(a, b, d) {
-        d = void 0 === d ? new Set : d;
-        for (var c = a; c; ) {
-            if (c.nodeType === Node.ELEMENT_NODE) {
-                var e = c;
-                b(e);
-                var f = e.localName;
-                if ("link" === f && "import" === e.getAttribute("rel")) {
-                    c = e["import"];
-                    if (c instanceof Node && !d.has(c)) for (d.add(c), c = c.firstChild; c; c = c.nextSibling) {
-                        p(c, b, d);
-                    }
-                    c = n(a, e);
-                    continue;
-                } else if ("template" === f) {
-                    c = n(a, e);
-                    continue;
-                }
-                if (e = e.__CE_shadowRoot) for (e = e.firstChild; e; e = e.nextSibling) {
-                    p(e, b, d);
-                }
-            }
-            c = c.firstChild ? c.firstChild : n(a, c);
-        }
-    }
-    function r(a, b, d) {
-        a[b] = d;
-    }
-    function u() {
-        this.a = new Map;
-        this.g = new Map;
-        this.c = [];
-        this.f = [];
-        this.b = !1;
-    }
-    function ba(a, b, d) {
-        a.a.set(b, d);
-        a.g.set(d.constructorFunction, d);
-    }
-    function ca(a, b) {
-        a.b = !0;
-        a.c.push(b);
-    }
-    function da(a, b) {
-        a.b = !0;
-        a.f.push(b);
-    }
-    function v(a, b) {
-        a.b && p(b, (function(b) {
-            return w(a, b);
-        }));
-    }
-    function w(a, b) {
-        if (a.b && !b.__CE_patched) {
-            b.__CE_patched = !0;
-            for (var d = 0; d < a.c.length; d++) {
-                a.c[d](b);
-            }
-            for (d = 0; d < a.f.length; d++) {
-                a.f[d](b);
-            }
-        }
-    }
-    function x(a, b) {
-        var d = [];
-        p(b, (function(b) {
-            return d.push(b);
-        }));
-        for (b = 0; b < d.length; b++) {
-            var c = d[b];
-            1 === c.__CE_state ? a.connectedCallback(c) : y(a, c);
-        }
-    }
-    function z(a, b) {
-        var d = [];
-        p(b, (function(b) {
-            return d.push(b);
-        }));
-        for (b = 0; b < d.length; b++) {
-            var c = d[b];
-            1 === c.__CE_state && a.disconnectedCallback(c);
-        }
-    }
-    function A(a, b, d) {
-        d = void 0 === d ? {} : d;
-        var c = d.u || new Set, e = d.i || function(b) {
-            return y(a, b);
-        }, f = [];
-        p(b, (function(b) {
-            if ("link" === b.localName && "import" === b.getAttribute("rel")) {
-                var d = b["import"];
-                d instanceof Node && (d.__CE_isImportDocument = !0, d.__CE_hasRegistry = !0);
-                d && "complete" === d.readyState ? d.__CE_documentLoadHandled = !0 : b.addEventListener("load", (function() {
-                    var d = b["import"];
-                    if (!d.__CE_documentLoadHandled) {
-                        d.__CE_documentLoadHandled = !0;
-                        var f = new Set(c);
-                        f["delete"](d);
-                        A(a, d, {
-                            u: f,
-                            i: e
-                        });
-                    }
-                }));
-            } else f.push(b);
-        }), c);
-        if (a.b) for (b = 0; b < f.length; b++) {
-            w(a, f[b]);
-        }
-        for (b = 0; b < f.length; b++) {
-            e(f[b]);
-        }
-    }
-    function y(a, b) {
-        if (void 0 === b.__CE_state) {
-            var d = b.ownerDocument;
-            if (d.defaultView || d.__CE_isImportDocument && d.__CE_hasRegistry) if (d = a.a.get(b.localName)) {
-                d.constructionStack.push(b);
-                var c = d.constructorFunction;
-                try {
-                    try {
-                        if (new c !== b) throw Error("The custom element constructor did not produce the element being upgraded.");
-                    } finally {
-                        d.constructionStack.pop();
-                    }
-                } catch (t) {
-                    throw b.__CE_state = 2, t;
-                }
-                b.__CE_state = 1;
-                b.__CE_definition = d;
-                if (d.attributeChangedCallback) for (d = d.observedAttributes, c = 0; c < d.length; c++) {
-                    var e = d[c], f = b.getAttribute(e);
-                    null !== f && a.attributeChangedCallback(b, e, null, f, null);
-                }
-                l(b) && a.connectedCallback(b);
-            }
-        }
-    }
-    u.prototype.connectedCallback = function(a) {
-        var b = a.__CE_definition;
-        b.connectedCallback && b.connectedCallback.call(a);
-    };
-    u.prototype.disconnectedCallback = function(a) {
-        var b = a.__CE_definition;
-        b.disconnectedCallback && b.disconnectedCallback.call(a);
-    };
-    u.prototype.attributeChangedCallback = function(a, b, d, c, e) {
-        var f = a.__CE_definition;
-        f.attributeChangedCallback && -1 < f.observedAttributes.indexOf(b) && f.attributeChangedCallback.call(a, b, d, c, e);
-    };
-    function B(a) {
-        var b = document;
-        this.c = a;
-        this.a = b;
-        this.b = void 0;
-        A(this.c, this.a);
-        "loading" === this.a.readyState && (this.b = new MutationObserver(this.f.bind(this)), 
-        this.b.observe(this.a, {
-            childList: !0,
-            subtree: !0
-        }));
-    }
-    function C(a) {
-        a.b && a.b.disconnect();
-    }
-    B.prototype.f = function(a) {
-        var b = this.a.readyState;
-        "interactive" !== b && "complete" !== b || C(this);
-        for (b = 0; b < a.length; b++) {
-            for (var d = a[b].addedNodes, c = 0; c < d.length; c++) {
-                A(this.c, d[c]);
-            }
-        }
-    };
-    function ea() {
-        var a = this;
-        this.b = this.a = void 0;
-        this.c = new Promise((function(b) {
-            a.b = b;
-            a.a && b(a.a);
-        }));
-    }
-    function D(a) {
-        if (a.a) throw Error("Already resolved.");
-        a.a = void 0;
-        a.b && a.b(void 0);
-    }
-    function E(a) {
-        this.c = !1;
-        this.a = a;
-        this.j = new Map;
-        this.f = function(b) {
-            return b();
-        };
-        this.b = !1;
-        this.g = [];
-        this.o = new B(a);
-    }
-    E.prototype.l = function(a, b) {
-        var d = this;
-        if (!(b instanceof Function)) throw new TypeError("Custom element constructors must be functions.");
-        if (!g(a)) throw new SyntaxError("The element name '" + a + "' is not valid.");
-        if (this.a.a.get(a)) throw Error("A custom element with name '" + a + "' has already been defined.");
-        if (this.c) throw Error("A custom element is already being defined.");
-        this.c = !0;
-        try {
-            var c = function c(b) {
-                var a = e[b];
-                if (void 0 !== a && !(a instanceof Function)) throw Error("The '" + b + "' callback must be a function.");
-                return a;
-            }, e = b.prototype;
-            if (!(e instanceof Object)) throw new TypeError("The custom element constructor's prototype is not an object.");
-            var f = c("connectedCallback");
-            var t = c("disconnectedCallback");
-            var k = c("adoptedCallback");
-            var h = c("attributeChangedCallback");
-            var m = b.observedAttributes || [];
-        } catch (q) {
-            return;
-        } finally {
-            this.c = !1;
-        }
-        b = {
-            localName: a,
-            constructorFunction: b,
-            connectedCallback: f,
-            disconnectedCallback: t,
-            adoptedCallback: k,
-            attributeChangedCallback: h,
-            observedAttributes: m,
-            constructionStack: []
-        };
-        ba(this.a, a, b);
-        this.g.push(b);
-        this.b || (this.b = !0, this.f((function() {
-            return fa(d);
-        })));
-    };
-    E.prototype.i = function(a) {
-        A(this.a, a);
-    };
-    function fa(a) {
-        if (!1 !== a.b) {
-            a.b = !1;
-            for (var b = a.g, d = [], c = new Map, e = 0; e < b.length; e++) {
-                c.set(b[e].localName, []);
-            }
-            A(a.a, document, {
-                i: function i(b) {
-                    if (void 0 === b.__CE_state) {
-                        var e = b.localName, f = c.get(e);
-                        f ? f.push(b) : a.a.a.get(e) && d.push(b);
-                    }
-                }
-            });
-            for (e = 0; e < d.length; e++) {
-                y(a.a, d[e]);
-            }
-            for (;0 < b.length; ) {
-                var f = b.shift();
-                e = f.localName;
-                f = c.get(f.localName);
-                for (var t = 0; t < f.length; t++) {
-                    y(a.a, f[t]);
-                }
-                (e = a.j.get(e)) && D(e);
-            }
-        }
-    }
-    E.prototype.get = function(a) {
-        if (a = this.a.a.get(a)) return a.constructorFunction;
-    };
-    E.prototype.m = function(a) {
-        if (!g(a)) return Promise.reject(new SyntaxError("'" + a + "' is not a valid custom element name."));
-        var b = this.j.get(a);
-        if (b) return b.c;
-        b = new ea;
-        this.j.set(a, b);
-        this.a.a.get(a) && !this.g.some((function(b) {
-            return b.localName === a;
-        })) && D(b);
-        return b.c;
-    };
-    E.prototype.s = function(a) {
-        C(this.o);
-        var b = this.f;
-        this.f = function(d) {
-            return a((function() {
-                return b(d);
-            }));
-        };
-    };
-    window.CustomElementRegistry = E;
-    E.prototype.define = E.prototype.l;
-    E.prototype.upgrade = E.prototype.i;
-    E.prototype.get = E.prototype.get;
-    E.prototype.whenDefined = E.prototype.m;
-    E.prototype.polyfillWrapFlushCallback = E.prototype.s;
-    var F = window.Document.prototype.createElement, G = window.Document.prototype.createElementNS, ha = window.Document.prototype.importNode, ia = window.Document.prototype.prepend, ja = window.Document.prototype.append, ka = window.DocumentFragment.prototype.prepend, la = window.DocumentFragment.prototype.append, H = window.Node.prototype.cloneNode, I = window.Node.prototype.appendChild, J = window.Node.prototype.insertBefore, K = window.Node.prototype.removeChild, L = window.Node.prototype.replaceChild, M = Object.getOwnPropertyDescriptor(window.Node.prototype, "textContent"), N = window.Element.prototype.attachShadow, O = Object.getOwnPropertyDescriptor(window.Element.prototype, "innerHTML"), P = window.Element.prototype.getAttribute, Q = window.Element.prototype.setAttribute, R = window.Element.prototype.removeAttribute, S = window.Element.prototype.getAttributeNS, T = window.Element.prototype.setAttributeNS, U = window.Element.prototype.removeAttributeNS, ma = window.Element.prototype.insertAdjacentElement, na = window.Element.prototype.insertAdjacentHTML, oa = window.Element.prototype.prepend, pa = window.Element.prototype.append, V = window.Element.prototype.before, qa = window.Element.prototype.after, ra = window.Element.prototype.replaceWith, sa = window.Element.prototype.remove, ta = window.HTMLElement, W = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, "innerHTML"), ua = window.HTMLElement.prototype.insertAdjacentElement, va = window.HTMLElement.prototype.insertAdjacentHTML;
-    var wa = new function() {};
-    function xa() {
-        var a = X;
-        window.HTMLElement = function() {
-            function b() {
-                var b = this.constructor, c = a.g.get(b);
-                if (!c) throw Error("The custom element being constructed was not registered with `customElements`.");
-                var e = c.constructionStack;
-                if (0 === e.length) return e = F.call(document, c.localName), Object.setPrototypeOf(e, b.prototype), 
-                e.__CE_state = 1, e.__CE_definition = c, w(a, e), e;
-                c = e.length - 1;
-                var f = e[c];
-                if (f === wa) throw Error("The HTMLElement constructor was either called reentrantly for this constructor or called multiple times.");
-                e[c] = wa;
-                Object.setPrototypeOf(f, b.prototype);
-                w(a, f);
-                return f;
-            }
-            b.prototype = ta.prototype;
-            Object.defineProperty(b.prototype, "constructor", {
-                writable: !0,
-                configurable: !0,
-                enumerable: !1,
-                value: b
-            });
-            return b;
-        }();
-    }
-    function Y(a, b, d) {
-        function c(b) {
-            return function(d) {
-                for (var e = [], c = 0; c < arguments.length; ++c) {
-                    e[c] = arguments[c];
-                }
-                c = [];
-                for (var f = [], m = 0; m < e.length; m++) {
-                    var q = e[m];
-                    q instanceof Element && l(q) && f.push(q);
-                    if (q instanceof DocumentFragment) for (q = q.firstChild; q; q = q.nextSibling) {
-                        c.push(q);
-                    } else c.push(q);
-                }
-                b.apply(this, e);
-                for (e = 0; e < f.length; e++) {
-                    z(a, f[e]);
-                }
-                if (l(this)) for (e = 0; e < c.length; e++) {
-                    f = c[e], f instanceof Element && x(a, f);
-                }
-            };
-        }
-        void 0 !== d.h && (b.prepend = c(d.h));
-        void 0 !== d.append && (b.append = c(d.append));
-    }
-    function ya() {
-        var a = X;
-        r(Document.prototype, "createElement", (function(b) {
-            if (this.__CE_hasRegistry) {
-                var d = a.a.get(b);
-                if (d) return new d.constructorFunction;
-            }
-            b = F.call(this, b);
-            w(a, b);
-            return b;
-        }));
-        r(Document.prototype, "importNode", (function(b, d) {
-            b = ha.call(this, b, !!d);
-            this.__CE_hasRegistry ? A(a, b) : v(a, b);
-            return b;
-        }));
-        r(Document.prototype, "createElementNS", (function(b, d) {
-            if (this.__CE_hasRegistry && (null === b || "http://www.w3.org/1999/xhtml" === b)) {
-                var c = a.a.get(d);
-                if (c) return new c.constructorFunction;
-            }
-            b = G.call(this, b, d);
-            w(a, b);
-            return b;
-        }));
-        Y(a, Document.prototype, {
-            h: ia,
-            append: ja
-        });
-    }
-    function za() {
-        function a(a, c) {
-            Object.defineProperty(a, "textContent", {
-                enumerable: c.enumerable,
-                configurable: !0,
-                get: c.get,
-                set: function set(a) {
-                    if (this.nodeType === Node.TEXT_NODE) c.set.call(this, a); else {
-                        var d = void 0;
-                        if (this.firstChild) {
-                            var e = this.childNodes, k = e.length;
-                            if (0 < k && l(this)) {
-                                d = Array(k);
-                                for (var h = 0; h < k; h++) {
-                                    d[h] = e[h];
-                                }
-                            }
-                        }
-                        c.set.call(this, a);
-                        if (d) for (a = 0; a < d.length; a++) {
-                            z(b, d[a]);
-                        }
-                    }
-                }
-            });
-        }
-        var b = X;
-        r(Node.prototype, "insertBefore", (function(a, c) {
-            if (a instanceof DocumentFragment) {
-                var e = Array.prototype.slice.apply(a.childNodes);
-                a = J.call(this, a, c);
-                if (l(this)) for (c = 0; c < e.length; c++) {
-                    x(b, e[c]);
-                }
-                return a;
-            }
-            e = l(a);
-            c = J.call(this, a, c);
-            e && z(b, a);
-            l(this) && x(b, a);
-            return c;
-        }));
-        r(Node.prototype, "appendChild", (function(a) {
-            if (a instanceof DocumentFragment) {
-                var c = Array.prototype.slice.apply(a.childNodes);
-                a = I.call(this, a);
-                if (l(this)) for (var e = 0; e < c.length; e++) {
-                    x(b, c[e]);
-                }
-                return a;
-            }
-            c = l(a);
-            e = I.call(this, a);
-            c && z(b, a);
-            l(this) && x(b, a);
-            return e;
-        }));
-        r(Node.prototype, "cloneNode", (function(a) {
-            a = H.call(this, !!a);
-            this.ownerDocument.__CE_hasRegistry ? A(b, a) : v(b, a);
-            return a;
-        }));
-        r(Node.prototype, "removeChild", (function(a) {
-            var c = l(a), e = K.call(this, a);
-            c && z(b, a);
-            return e;
-        }));
-        r(Node.prototype, "replaceChild", (function(a, c) {
-            if (a instanceof DocumentFragment) {
-                var e = Array.prototype.slice.apply(a.childNodes);
-                a = L.call(this, a, c);
-                if (l(this)) for (z(b, c), c = 0; c < e.length; c++) {
-                    x(b, e[c]);
-                }
-                return a;
-            }
-            e = l(a);
-            var f = L.call(this, a, c), d = l(this);
-            d && z(b, c);
-            e && z(b, a);
-            d && x(b, a);
-            return f;
-        }));
-        M && M.get ? a(Node.prototype, M) : ca(b, (function(b) {
-            a(b, {
-                enumerable: !0,
-                configurable: !0,
-                get: function get() {
-                    for (var a = [], b = 0; b < this.childNodes.length; b++) {
-                        var f = this.childNodes[b];
-                        f.nodeType !== Node.COMMENT_NODE && a.push(f.textContent);
-                    }
-                    return a.join("");
-                },
-                set: function set(a) {
-                    for (;this.firstChild; ) {
-                        K.call(this, this.firstChild);
-                    }
-                    null != a && "" !== a && I.call(this, document.createTextNode(a));
-                }
-            });
-        }));
-    }
-    function Aa(a) {
-        function b(b) {
-            return function(e) {
-                for (var c = [], d = 0; d < arguments.length; ++d) {
-                    c[d] = arguments[d];
-                }
-                d = [];
-                for (var k = [], h = 0; h < c.length; h++) {
-                    var m = c[h];
-                    m instanceof Element && l(m) && k.push(m);
-                    if (m instanceof DocumentFragment) for (m = m.firstChild; m; m = m.nextSibling) {
-                        d.push(m);
-                    } else d.push(m);
-                }
-                b.apply(this, c);
-                for (c = 0; c < k.length; c++) {
-                    z(a, k[c]);
-                }
-                if (l(this)) for (c = 0; c < d.length; c++) {
-                    k = d[c], k instanceof Element && x(a, k);
-                }
-            };
-        }
-        var d = Element.prototype;
-        void 0 !== V && (d.before = b(V));
-        void 0 !== V && (d.after = b(qa));
-        void 0 !== ra && r(d, "replaceWith", (function(b) {
-            for (var e = [], c = 0; c < arguments.length; ++c) {
-                e[c] = arguments[c];
-            }
-            c = [];
-            for (var d = [], k = 0; k < e.length; k++) {
-                var h = e[k];
-                h instanceof Element && l(h) && d.push(h);
-                if (h instanceof DocumentFragment) for (h = h.firstChild; h; h = h.nextSibling) {
-                    c.push(h);
-                } else c.push(h);
-            }
-            k = l(this);
-            ra.apply(this, e);
-            for (e = 0; e < d.length; e++) {
-                z(a, d[e]);
-            }
-            if (k) for (z(a, this), e = 0; e < c.length; e++) {
-                d = c[e], d instanceof Element && x(a, d);
-            }
-        }));
-        void 0 !== sa && r(d, "remove", (function() {
-            var b = l(this);
-            sa.call(this);
-            b && z(a, this);
-        }));
-    }
-    function Ba() {
-        function a(a, b) {
-            Object.defineProperty(a, "innerHTML", {
-                enumerable: b.enumerable,
-                configurable: !0,
-                get: b.get,
-                set: function set(a) {
-                    var e = this, d = void 0;
-                    l(this) && (d = [], p(this, (function(a) {
-                        a !== e && d.push(a);
-                    })));
-                    b.set.call(this, a);
-                    if (d) for (var f = 0; f < d.length; f++) {
-                        var t = d[f];
-                        1 === t.__CE_state && c.disconnectedCallback(t);
-                    }
-                    this.ownerDocument.__CE_hasRegistry ? A(c, this) : v(c, this);
-                    return a;
-                }
-            });
-        }
-        function b(a, b) {
-            r(a, "insertAdjacentElement", (function(a, e) {
-                var d = l(e);
-                a = b.call(this, a, e);
-                d && z(c, e);
-                l(a) && x(c, e);
-                return a;
-            }));
-        }
-        function d(a, b) {
-            function e(a, b) {
-                for (var e = []; a !== b; a = a.nextSibling) {
-                    e.push(a);
-                }
-                for (b = 0; b < e.length; b++) {
-                    A(c, e[b]);
-                }
-            }
-            r(a, "insertAdjacentHTML", (function(a, c) {
-                a = a.toLowerCase();
-                if ("beforebegin" === a) {
-                    var d = this.previousSibling;
-                    b.call(this, a, c);
-                    e(d || this.parentNode.firstChild, this);
-                } else if ("afterbegin" === a) d = this.firstChild, b.call(this, a, c), e(this.firstChild, d); else if ("beforeend" === a) d = this.lastChild, 
-                b.call(this, a, c), e(d || this.firstChild, null); else if ("afterend" === a) d = this.nextSibling, 
-                b.call(this, a, c), e(this.nextSibling, d); else throw new SyntaxError("The value provided (" + String(a) + ") is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'.");
-            }));
-        }
-        var c = X;
-        N && r(Element.prototype, "attachShadow", (function(a) {
-            a = N.call(this, a);
-            var b = c;
-            if (b.b && !a.__CE_patched) {
-                a.__CE_patched = !0;
-                for (var e = 0; e < b.c.length; e++) {
-                    b.c[e](a);
-                }
-            }
-            return this.__CE_shadowRoot = a;
-        }));
-        O && O.get ? a(Element.prototype, O) : W && W.get ? a(HTMLElement.prototype, W) : da(c, (function(b) {
-            a(b, {
-                enumerable: !0,
-                configurable: !0,
-                get: function get() {
-                    return H.call(this, !0).innerHTML;
-                },
-                set: function set(a) {
-                    var b = "template" === this.localName, c = b ? this.content : this, e = G.call(document, this.namespaceURI, this.localName);
-                    for (e.innerHTML = a; 0 < c.childNodes.length; ) {
-                        K.call(c, c.childNodes[0]);
-                    }
-                    for (a = b ? e.content : e; 0 < a.childNodes.length; ) {
-                        I.call(c, a.childNodes[0]);
-                    }
-                }
-            });
-        }));
-        r(Element.prototype, "setAttribute", (function(a, b) {
-            if (1 !== this.__CE_state) return Q.call(this, a, b);
-            var e = P.call(this, a);
-            Q.call(this, a, b);
-            b = P.call(this, a);
-            c.attributeChangedCallback(this, a, e, b, null);
-        }));
-        r(Element.prototype, "setAttributeNS", (function(a, b, d) {
-            if (1 !== this.__CE_state) return T.call(this, a, b, d);
-            var e = S.call(this, a, b);
-            T.call(this, a, b, d);
-            d = S.call(this, a, b);
-            c.attributeChangedCallback(this, b, e, d, a);
-        }));
-        r(Element.prototype, "removeAttribute", (function(a) {
-            if (1 !== this.__CE_state) return R.call(this, a);
-            var b = P.call(this, a);
-            R.call(this, a);
-            null !== b && c.attributeChangedCallback(this, a, b, null, null);
-        }));
-        r(Element.prototype, "removeAttributeNS", (function(a, b) {
-            if (1 !== this.__CE_state) return U.call(this, a, b);
-            var d = S.call(this, a, b);
-            U.call(this, a, b);
-            var e = S.call(this, a, b);
-            d !== e && c.attributeChangedCallback(this, b, d, e, a);
-        }));
-        ua ? b(HTMLElement.prototype, ua) : ma ? b(Element.prototype, ma) : console.warn("Custom Elements: `Element#insertAdjacentElement` was not patched.");
-        va ? d(HTMLElement.prototype, va) : na ? d(Element.prototype, na) : console.warn("Custom Elements: `Element#insertAdjacentHTML` was not patched.");
-        Y(c, Element.prototype, {
-            h: oa,
-            append: pa
-        });
-        Aa(c);
-    }
-    var Z = window.customElements;
-    if (!Z || Z.forcePolyfill || "function" != typeof Z.define || "function" != typeof Z.get) {
-        var X = new u;
-        xa();
-        ya();
-        Y(X, DocumentFragment.prototype, {
-            h: ka,
-            append: la
-        });
-        za();
-        Ba();
-        document.__CE_hasRegistry = !0;
-        var customElements = new E(X);
-        Object.defineProperty(window, "customElements", {
-            configurable: !0,
-            enumerable: !0,
-            value: customElements
-        });
-    }
-}).call(self);
-
-window.CustomElementRegistry = Reflect.get(Reflect.getPrototypeOf(window.customElements), "constructor");
-
 function flattenDeep(arr1) {
     return arr1.reduce((function(acc, val) {
         return Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val);
@@ -974,6 +276,10 @@ var Reflect$1 = window.Reflect;
 
 var construct = Reflect$1.construct, _deleteProperty = Reflect$1.deleteProperty, _get = Reflect$1.get, _getOwnPropertyDescriptor = Reflect$1.getOwnPropertyDescriptor, getPrototypeOf = Reflect$1.getPrototypeOf, _has = Reflect$1.has, _ownKeys = Reflect$1.ownKeys, _set = Reflect$1.set;
 
+function isprimitive(a) {
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
+}
+
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -1016,10 +322,6 @@ function isSet(a) {
 
 if (!isfunction(window.HTMLElement) || !isfunction(window.Proxy) || !isobject(window.customElements) || !isfunction(window.CustomElementRegistry)) {
     throw new TypeError(" browser not supported !");
-}
-
-function isprimitive(a) {
-    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
 
 var _a, _b;
@@ -1065,10 +367,10 @@ var ReactiveState = function() {
     _createClass(ReactiveState, [ {
         key: addallistenerssymbol,
         value: function value() {
-            var _this = this;
+            var _this2 = this;
             this[memlisteners].forEach((function(_ref) {
                 var _ref2 = _slicedToArray(_ref, 2), value = _ref2[0], callback = _ref2[1];
-                _this[eventtargetsymbol].addEventListener(value, callback);
+                _this2[eventtargetsymbol].addEventListener(value, callback);
             }));
         }
     }, {
@@ -1098,19 +400,19 @@ var ReactiveState = function() {
     }, {
         key: subscribesymbol,
         value: function value(callback, eventname) {
-            var _this2 = this;
+            var _this3 = this;
             var name = eventname ? String(eventname) : "value";
             this[memlisteners].push([ name, function(event) {
-                return callback.call(undefined, _this2, _get(event, "detail"));
+                return callback.call(undefined, _this3, _get(event, "detail"));
             } ]);
         }
     }, {
         key: removeallistenerssymbol,
         value: function value() {
-            var _this3 = this;
+            var _this4 = this;
             this[memlisteners].forEach((function(_ref3) {
                 var _ref4 = _slicedToArray(_ref3, 2), value = _ref4[0], callback = _ref4[1];
-                _this3[eventtargetsymbol].removeEventListener(value, callback);
+                _this4[eventtargetsymbol].removeEventListener(value, callback);
             }));
         }
     }, {
@@ -1371,17 +673,18 @@ function toArray(a) {
 var eventlistenerssymbol = Symbol("eventlisteners");
 
 function onevent(element, eventname, callback) {
-    if (!element[eventlistenerssymbol]) {
-        element[eventlistenerssymbol] = [];
-    }
     firstaddlisteners(element, eventname, toArray(callback));
 }
 
 function firstaddlisteners(ele, event, callarray) {
+    var element = ele;
     callarray.forEach((function(call) {
         if (!isfunction(call)) {
             console.error(call);
             throw TypeError(invalid_Function);
+        }
+        if (!element[eventlistenerssymbol]) {
+            element[eventlistenerssymbol] = [];
         }
         ele[eventlistenerssymbol].push([ event, call ]);
         domaddlisten(ele, event, call);
@@ -1532,6 +835,8 @@ function mount(ele, container) {
     return container;
 }
 
+var String$1 = window.String;
+
 var Reflect$2 = window.Reflect;
 
 var get$1 = Reflect$2.get, set$1 = Reflect$2.set;
@@ -1580,7 +885,7 @@ function createeleattragentreadwrite(ele) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
-                var v = getattribute(ele, String(key));
+                var v = getattribute(ele, String$1(key));
                 if (v === "") {
                     return true;
                 }
@@ -1589,7 +894,7 @@ function createeleattragentreadwrite(ele) {
                 }
                 if (isstring$1(v)) {
                     try {
-                        return JSON.parse(String(v));
+                        return JSON.parse(String$1(v));
                     } catch (error) {
                         return v;
                     }
@@ -1597,41 +902,45 @@ function createeleattragentreadwrite(ele) {
             }
         },
         set: function set(t, key, v) {
+            if ("function" === typeof v) {
+                console.error(v);
+                throw TypeError("不允许设置属性为函数");
+            }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
             } else if (key === "style") {
-                setattribute(ele, String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
+                setattribute(ele, String$1(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v));
                 return true;
             } else if (key === "class" && isobject$1(v)) {
                 if (isArray(v)) {
-                    setattribute(ele, String(key), v.join(" "));
+                    setattribute(ele, String$1(key), v.join(" "));
                 } else if (isSet$1(v)) {
-                    setattribute(ele, String(key), _toConsumableArray(v).join(" "));
+                    setattribute(ele, String$1(key), _toConsumableArray(v).join(" "));
                 } else {
-                    setattribute(ele, String(key), JSON.stringify(v));
+                    setattribute(ele, String$1(key), JSON.stringify(v));
                 }
             } else {
                 if (isSet$1(v)) {
-                    setattribute(ele, String(key), JSON.stringify(_toConsumableArray(v)));
+                    setattribute(ele, String$1(key), JSON.stringify(_toConsumableArray(v)));
                 } else {
                     if (v === true) {
                         v = "";
                     }
-                    setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
+                    setattribute(ele, String$1(key), isobject$1(v) ? JSON.stringify(v) : String$1(v));
                     return true;
                 }
             }
             return true;
         },
         deleteProperty: function deleteProperty(t, k) {
-            removeAttribute$1(ele, String(k));
+            removeAttribute$1(ele, String$1(k));
             return true;
         },
         has: function has(target, key) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return true;
             } else {
-                return hasAttribute(ele, String(key));
+                return hasAttribute(ele, String$1(key));
             }
         },
         defineProperty: function defineProperty() {
@@ -1651,6 +960,9 @@ function createeleattragentreadwrite(ele) {
             } else {
                 return;
             }
+        },
+        setPrototypeOf: function setPrototypeOf() {
+            return false;
         }
     });
     return outputattrs;
@@ -1751,7 +1063,7 @@ var Virtualdom = function Virtualdom() {
         })))))),
         directives: Object.fromEntries(propsentriesNOTevents.filter((function(_ref28) {
             var _ref29 = _slicedToArray(_ref28, 1), key = _ref29[0];
-            return /\*/.test(key[0]);
+            return /\*/.test(key[0]) || key[0].startsWith("_");
         })).map((function(_ref30) {
             var _ref31 = _slicedToArray(_ref30, 2), key = _ref31[0], value = _ref31[1];
             return [ key.slice(1).toLowerCase().trim(), value ];
@@ -1868,21 +1180,18 @@ function handleprops(element, vdom) {
                 }
             }));
         }));
-        if (!element[eventlistenerssymbol]) {
-            element[eventlistenerssymbol] = [];
-        }
         Object.entries(vdom.onevent).forEach((function(_ref38) {
             var _ref39 = _slicedToArray(_ref38, 2), event = _ref39[0], callbacks = _ref39[1];
             onevent(element, event, callbacks);
         }));
     })(element, vdom);
-    if (!element[bindstatesymbol]) {
-        element[bindstatesymbol] = new Set;
-    }
     [].concat(_toConsumableArray(Object.values(vdom.bindattr)), _toConsumableArray(Object.values(vdom.directives))).flat().filter((function(e) {
         return isReactiveState(e);
     })).forEach((function(e) {
-        return element[bindstatesymbol].add(e);
+        if (!element[bindstatesymbol]) {
+            element[bindstatesymbol] = new Set;
+        }
+        element[bindstatesymbol].add(e);
     }));
 }
 
@@ -2056,7 +1365,7 @@ var createstate = function createstate(init) {
 
 function createstate$1(init) {
     if (isprimitive(init)) {
-        return new Proxy(new ReactiveState(init), {
+        return getproperyreadproxy(new Proxy(new ReactiveState(init), {
             defineProperty: function defineProperty() {
                 return false;
             },
@@ -2075,7 +1384,7 @@ function createstate$1(init) {
             setPrototypeOf: function setPrototypeOf() {
                 return false;
             }
-        });
+        }));
     } else if (isReactiveState(init)) {
         return createstate$1(init.value);
     } else if (isobject(init)) {
@@ -2095,7 +1404,7 @@ function createstate$1(init) {
                 var myvalue = _get(target, "value");
                 if (_has(myvalue, key)) {
                     _deleteProperty(myvalue, key);
-                    target[dispatchsymbol](key);
+                    target[dispatchsymbol](String(key));
                     return true;
                 } else {
                     return true;
@@ -2135,7 +1444,7 @@ function createstate$1(init) {
                         }
                     } else {
                         return observedeepagent(_get(value, key), (function() {
-                            target[dispatchsymbol](key);
+                            target[dispatchsymbol](String(key));
                         }));
                     }
                 }
@@ -2151,7 +1460,7 @@ function createstate$1(init) {
                     return true;
                 } else if (!_has(target, key)) {
                     _set(myvalue, key, value);
-                    target[dispatchsymbol](key);
+                    target[dispatchsymbol](String(key));
                 } else if (key === "length") {
                     _set(myvalue, key, value);
                     target[dispatchsymbol](key);
@@ -2271,12 +1580,14 @@ function isCSSStyleRule(a) {
 
 function selectoraddprefix(cssstylerule, prefix) {
     var selectorText = cssstylerule.selectorText;
-    var prefixselector = prefix + " " + selectorText;
-    if (selectorText.startsWith("*")) {
-        cssstylerule.selectorText = selectorText.replace("*", prefix) + "," + prefixselector;
-    } else {
-        cssstylerule.selectorText = prefixselector;
-    }
+    var selectorarray = selectorText.split(",");
+    cssstylerule.selectorText = selectorarray.map((function(selectorText) {
+        var prefixselector = prefix + " " + selectorText;
+        if (selectorText.startsWith("*")) {
+            prefixselector = prefixselector + "," + selectorText.replace("*", prefix);
+        }
+        return prefixselector;
+    })).join(",");
     return cssstylerule;
 }
 
@@ -2293,7 +1604,7 @@ function prefixcssrules(cssRulesarray, prefix) {
         } else {
             return cssrule;
         }
-    }));
+    })).filter(Boolean);
 }
 
 var componentsstylesheet = {};
@@ -2349,6 +1660,12 @@ function loadlinkstyle(stylelinkelement, container) {
     }));
 }
 
+function waitloadallstyle(prefix, _this) {
+    return Promise.all(_toConsumableArray(componentsstylesheet[prefix]).map((function(styleurl) {
+        return loadlinkstyle(createlinkstylesheet(styleurl), _this);
+    })));
+}
+
 var innerstatesymbol = Symbol("innerstate");
 
 var attributessymbol = Symbol("attributes");
@@ -2369,22 +1686,22 @@ function createComponent(custfun) {
         return _d = function(_AttrChange) {
             _inherits(Component, _AttrChange);
             function Component() {
-                var _this4;
+                var _this5;
                 var propsjson = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                 var children = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
                 _classCallCheck(this, Component);
-                _this4 = _possibleConstructorReturn(this, _getPrototypeOf(Component).call(this));
-                _this4[_b] = false;
-                _this4[_c] = {};
-                var css = _this4.constructor["css"];
+                _this5 = _possibleConstructorReturn(this, _getPrototypeOf(Component).call(this));
+                _this5[_b] = false;
+                _this5[_c] = {};
+                var css = _this5.constructor["css"];
                 if (css) {
-                    var prefix = _this4.tagName.toLowerCase();
+                    var prefix = _this5.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
                 }
-                var defaultProps = _this4.constructor["defaultProps"];
-                var attrs = createeleattragentreadwrite(_assertThisInitialized(_this4));
+                var defaultProps = _this5.constructor["defaultProps"];
+                var attrs = createeleattragentreadwrite(_assertThisInitialized(_this5));
                 if (isobject(defaultProps)) {
                     Object.assign(attrs, defaultProps);
                 }
@@ -2397,7 +1714,7 @@ function createComponent(custfun) {
                     var _ref41 = _slicedToArray(_ref40, 2), key = _ref41[0], value = _ref41[1];
                     return [ key, createstate(value) ];
                 })));
-                _this4[attributessymbol] = readonlyproxy(thisattributess);
+                _this5[attributessymbol] = readonlyproxy(thisattributess);
                 var readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref42) {
                     var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
                     return [ key, readonlyproxy(value) ];
@@ -2414,22 +1731,22 @@ function createComponent(custfun) {
                 }
                 if (isvalidvdom(possiblyvirtualdom)) {
                     var thisvdomsymbol = toArray(possiblyvirtualdom);
-                    _this4[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
-                    _this4[mountedsymbol] = getMounted();
-                    _this4[unmountedsymbol] = getUnMounted();
-                    _this4[innerstatesymbol] = getstates();
+                    _this5[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+                    _this5[mountedsymbol] = getMounted();
+                    _this5[unmountedsymbol] = getUnMounted();
+                    _this5[innerstatesymbol] = getstates();
                     closectx();
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);
                     throw Error(invalid_Virtualdom);
                 }
-                return _this4;
+                return _this5;
             }
             _createClass(Component, [ {
                 key: "connectedCallback",
                 value: function connectedCallback() {
-                    var _this5 = this;
+                    var _this6 = this;
                     if (!this[elementsymbol]) {
                         this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
                     }
@@ -2439,10 +1756,8 @@ function createComponent(custfun) {
                         var prefix = this.tagName.toLowerCase();
                         if (_css && componentsstylesheet[prefix]) {
                             seteletext(this, "");
-                            Promise.all(_toConsumableArray(componentsstylesheet[prefix]).map((function(styleurl) {
-                                return loadlinkstyle(createlinkstylesheet(styleurl), _this5);
-                            }))).then((function() {
-                                mount(_this5[elementsymbol], _this5, false);
+                            waitloadallstyle(prefix, this).then((function() {
+                                mount(_this6[elementsymbol], _this6, false);
                             }));
                         } else {
                             mount(this[elementsymbol], this);
@@ -2492,6 +1807,11 @@ function onmounted(ele) {
             ele[bindstatesymbol].forEach((function(state) {
                 rewatch(state);
             }));
+            if (ele[innerstatesymbol]) {
+                ele[innerstatesymbol].forEach((function(state) {
+                    rewatch(state);
+                }));
+            }
         }
         onmounted(getdomchildren(ele));
     }
@@ -2546,15 +1866,15 @@ function conditon(conditon, iftrue, iffalse) {
     var Condition = function(_AttrChange2) {
         _inherits(Condition, _AttrChange2);
         function Condition() {
-            var _this6;
+            var _this7;
             _classCallCheck(this, Condition);
-            _this6 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
-            _this6[_b] = false;
+            _this7 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
+            _this7[_b] = false;
             var optionstrue = _get(options, "true");
             var optionsfalse = _get(options, "false");
-            _this6[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
-            _this6[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
-            return _this6;
+            _this7[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
+            _this7[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
+            return _this7;
         }
         _createClass(Condition, [ {
             key: (_a = componentsymbol, _b = readysymbol, handlefalse),
@@ -2671,10 +1991,31 @@ function Arraycomputed(state, callback) {
             var newvalue = getter();
             if (newvalue !== memorized) {
                 reactivestate[dispatchsymbol]();
+                memorized = newvalue;
             }
         }));
     }));
-    return readonlyproxy(reactivestate);
+    return getproperyreadproxy(readonlyproxy(reactivestate));
+}
+
+function getproperyreadproxy(a) {
+    return new Proxy(a, {
+        ownKeys: function ownKeys(target) {
+            return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(_get(target, "value"))))));
+        },
+        has: function has(target, key) {
+            var myvalue = _get(target, "value");
+            return _has(target, key) || _has(myvalue, key);
+        },
+        get: function get(target, key) {
+            var myvalue = _get(target, "value");
+            if (_has(target, key)) {
+                return _get(target, key);
+            } else if (_has(myvalue, key)) {
+                return _get(myvalue, key);
+            }
+        }
+    });
 }
 
 function createRef(init) {
@@ -2935,7 +2276,7 @@ var vdom = createElement(createComponent(mycomapp));
 
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 
-var css = '@import url(https://cdn.staticfile.org/typo.css/1.1/typo.css);@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);p{color:#0f0!important}@font-face{font-family:octicons-anchor;src:url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format("woff")}*{color:purple!important;font-size:50px}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}@media (max-width:500px){hr#hidewidthless500{display:none}}.recommend-container .recommend-user .item{margin-bottom:16px}.recommend-container .recommend-user .ui.button{padding:3px 5px;margin-right:0}.recommend-container .recommend-user .header .pull-right{color:#005980;cursor:pointer}.recommend-container .recommend-user .header .pull-right.disabled{opacity:.7;cursor:default}.recommend-container .recommend-user .icon-reset{margin-top:-1px;height:16px;font-size:16px;margin-right:2px}.recommend-container .recommend-user__content{position:relative}.recommend-container .dimmer.active{z-index:1}.recommend-container .recommend-list__user{-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;margin-right:4px}.recommend-container .recommend-list__user strong{color:#005980}.recommend-container .recommend-list__user .recommend-list__user-info{margin:0 4px 0 8px;max-width:155px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__user .recommend-list__user-info.is-follow{max-width:125px}.recommend-container .recommend-list__user .recommend-list__user-info>div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__flollow .disable{opacity:.5}.recommend-container .recommend-project .icon-recommended{color:#fe7300}.recommend-container .recommend-project .project-label{display:inline-block}.recommend-container .recommend-project .recommend-list{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.recommend-container .recommend-project .recommend-list>*{word-break:break-all}.recommend-container .recommend-project .recommend-list .recommend-project__describe{overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical}.recommend-container .recommend-project .item{margin-bottom:16px}.recommend-container .recommend-project .recommend-project__name{margin-bottom:4px;color:#005980}.recommend-container .recent_visits .ui.items{margin-right:0;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recent_visits .avatar-item{margin-right:-22px!important}.recommend-container .recent_visits .item{width:20%;min-width:0;font-size:16px}.recommend-container .recent_visits .empty-visitor.item{font-size:14px;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1}.dashboard-content.twelve{padding-right:0!important}.dashboard-content .gitee-headbread .git-user-selection-dropdown{margin-right:0!important}.dashboard-content .dashboard-team .git-user-content-header{display:none}.dashboard-content .gitee-headbread{margin-bottom:24px}.dashboard-content .git-dashboard-projects-menu{margin-bottom:24px!important}.dashboard-content .git-dashboard-projects-menu .f-bold{color:#fe7300;border-bottom:2px solid #fe7300!important}.dashboard-content .git-dashboard-projects-menu>a.item{font-size:16px;padding:8px 18px!important}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input{width:150px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input input{margin-top:-6px;font-size:12px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input .icon-search{margin-top:-4px}.dashboard-content #event-timeline-panel h3.event-timeline-title{font-size:16px;margin-top:0;margin-bottom:16px;display:inline-block}.dashboard-content #event-timeline-panel .event-timeline.content{padding:0 0 18px 12px}.dashboard-content #event-timeline-panel .event-actionbar .dropdown.icon{margin-left:4px}.dashboard-content #event-timeline-panel .message-container .message{margin:0 0 1em}.dashboard-content .issues-filter__item{display:block;padding:0!important;color:initial!important;font-weight:500!important}.dashboard-content .issues-dropdown{margin-top:-6px!important}.dashboard-content .issues-dropdown .pl-0.f-bold{padding-left:0!important}.dashboard-content .dashboard-team .dashboard-team_info{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .ui.image{width:40px;height:40px;min-width:40px}.dashboard-content .dashboard-team .dashboard-team__contaniner .dashboard-team__name{font-size:16px;font-weight:700;overflow:hidden;word-break:keep-all;text-overflow:ellipsis;display:block}.dashboard-content .dashboard-team .dashboard-team__contaniner a{color:#005980!important}.dashboard-content .dashboard-team .dashboard-team__contaniner>.item:first-child{padding-top:0!important}.dashboard-content .dashboard-team .dashboard-team__contaniner .item{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .dashboard-team__contaniner .content{display:-webkit-box!important;display:-webkit-flex!important;display:-moz-box!important;display:-ms-flexbox!important;display:flex!important;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;overflow:hidden}.dashboard-content .dashboard-team .dashboard-team__contaniner .content:after{content:none}.dashboard-content .dashboard-team .dashboard-team__contaniner .content i{font-size:16px}.dashboard-content .dashboard-team .icon-enterprise-badge{margin-left:4px}.dashboard-content .dashboard-team .dashboard-team__operate{min-width:75px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.dashboard-content .dashboard-team .dashboard-team__operate.has-exit{min-width:150px}.recommend-project .icon-help-circle{vertical-align:baseline}.dashboard-content__show{width:608px!important;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}.ui.container.user_page{width:1240px}#rc-users__container{position:relative}#rc-users__container .secondary-navigation .active{color:#fe7300!important}#rc-users__container .dashboard-content{padding-right:32px;padding-left:32px;padding-top:24px}#rc-users__container .dashboard-sidebar{padding:16px 0 0;width:280px!important;margin-left:10px}#rc-users__container .dashboard-sidebar .dashboard-group .item{margin:8px 0}#rc-users__container .dashboard-sidebar .dashboard-group:last-child{margin-bottom:0!important}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar{padding-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card{width:100%;margin-top:32px;margin-bottom:0;padding-bottom:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card .header{font-size:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name h4{font-size:14px;display:inline-block}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .description{margin-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex{margin-top:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex:first-child{margin-top:12px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .quit i{margin-top:0}#rc-users__container .has-active .content{padding-left:0 2px 0 8px}#rc-users__container .navigation .header{padding-right:8px;border-bottom:1px solid #e3e9ed;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;padding-bottom:4px}#rc-users__container .navigation .header,#rc-users__container .navigation .header .title{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}#rc-users__container .navigation .header .title{font-size:16px}#rc-users__container .navigation .header .avatar.image{margin-right:0}#rc-users__container .navigation .header strong{font-size:16px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#rc-users__container .navigation .header strong a{color:unset}#rc-users__container .navigation .header .actions{margin-top:4px}#rc-users__container .navigation .header .actions i{color:#005980}#rc-users__container .navigation.user i{color:#989dad}#rc-users__container .navigation.user .content{padding:0 8px}#rc-users__container .navigation .items>a{color:#40485b}#rc-users__container .navigation .items>a:hover{color:#095eab}#rc-users__container .navigation .items>a:active{color:#064177}#rc-users__container .navigation .items>a:hover{color:#40485b}#rc-users__container .navigation .item:hover .content{background:#f8f8f8}#rc-users__container .navigation .item .active{color:#fe7300;background:#f8f8f8}#rc-users__container .navigation .item .active .num{color:inherit}#rc-users__container .navigation .item:hover .exit{display:inline-block}#rc-users__container .navigation .icon-add,#rc-users__container .navigation .icon-search{color:#8c92a4!important}#rc-users__container .navigation .num{font-size:12px;font-weight:500;color:#8c92a4}#rc-users__container .navigation .gray{color:#8c92a4}#rc-users__container .navigation .avatar.image{width:32px;height:32px}#rc-users__container .twitter-typeahead{width:100%}#rc-users__container .gray{color:#8c92a4}#rc-users__container .ui.container{width:1240px}#rc-users__container .contribution-events{padding-top:32px}#rc-users__container #git-footer-main{min-width:1240px}#rc-users__container .gitee-headbread .gitee-divider{display:inline-block;opacity:.5;margin:0 .2rem;color:rgba(0,0,0,.4);vertical-align:baseline}#rc-users__container .git-user-content .git-user-content-header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:16px}#rc-users__container .ui.button.js-project-watch{background:#fff;border:1px solid rgba(140,146,164,.5);padding:2px 5px;margin:0}#rc-users__container .recommend-container{width:248px!important}.users__personal-avatar{position:relative;margin:0 auto 10px;width:160px;height:160px}.users__personal-avatar .over-avatar{position:absolute;top:0;left:0;width:100%;height:100%;color:#fff;font-size:14px;text-align:center;line-height:200px;border:4px solid #eee;border-radius:50%;background:rgba(0,0,0,.5);cursor:pointer;display:none}.users__personal-avatar .over-avatar:hover{display:block}.users__personal-avatar .ui.image.avatar{margin:0;width:100%;height:100%;border:4px solid #eee}.users__personal-avatar .ui.image.avatar:hover+.over-avatar{display:block}.users__personal-avatar .avatar-gender{position:absolute;bottom:2px;right:27px;width:32px;height:32px;border-radius:50%;color:#fff;font-size:21px;text-align:center;line-height:30px;border:2px solid #fff}.users__personal-avatar .avatar-gender.mars{background:#3eb4ff}.users__personal-avatar .avatar-gender.venus{background:#ff5bc6}.users__personal-name{text-align:center}.users__personal-name h2,.users__personal-name p{margin:8px 0 0;word-break:break-all}.users__personal-name h2 span,.users__personal-name p span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__personal-name .remark-name{color:#8c92a4;font-size:14px;font-weight:400;display:inline}.users__personal-name .ui.small.label{margin-bottom:.5em;padding:.4em .7em;font-weight:400}.users__personal-setting{margin:15px auto;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__personal-setting .ui.button{margin:0;width:45%;font-size:14px}.users__personal-setting .ui.button.basic{border:1px solid #ccc}.users__personal-socials .ui.grid{padding:0 1rem}.users__personal-socials .ui.grid .column{padding:1rem 0;text-align:center}.users__personal-socials .social-count{font-size:18px;font-weight:700}.users__personal-socials .social-name{padding-top:5px;color:#40485b;font-size:12px;display:block}.users__personal-info{padding:15px 0;color:#8c92a4}.users__personal-info .info-item{padding:3px 0;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-info .info-item i.iconfont{width:20px;text-align:center}.users__personal-info .info-item i.iconfont.icon-time{font-size:12px}.users__personal-achievement{padding:10px 0}.users__personal-achievement h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-achievement .ui.list .item .content{line-height:1.8}.users__personal-achievement .ui.list .item .content .description{color:#7687ab}.users__personal-groups{padding:10px 0}.users__personal-groups h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-groups .ui.list{margin:0}.users__personal-groups .ui.list:not(.more-groups){margin-top:1em}.users__personal-groups .ui.list .item{padding:.3em 0}.users__personal-groups .ui.list .item a{color:#005980!important}.users__personal-groups .ui.list .item a:hover{color:#4c8aa6!important}.users__personal-groups .ui.list .item a:active{color:#003e59!important}.users__personal-groups .ui.list .item .content{line-height:1.8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-groups .ui.list .item .right.floated.content{color:#7687ab}.users__personal-groups .ui.list .item .right.floated.content .mr-1{width:24px;display:inline-block}.users__personal-groups .load-more-groups{margin-top:8px;display:block;color:#7687ab}.users__personal-groups .load-more-groups:hover{color:#9fabc4}.users__personal-groups .load-more-groups:active{color:#525e77}.users__navbar .ui.secondary.pointing.menu{border-bottom:2px solid #dededf}.users__navbar .ui.secondary.pointing.menu>.item{margin-bottom:-2px;padding:10px 30px;min-width:100px;text-align:center;border-width:2px}.users__navbar .ui.secondary.pointing.menu>.item.active{color:#fe7300;border-color:#fe7300}.users__navbar .ui.secondary.pointing.menu>.item.active .ui.label{color:#fe7300;background:rgba(254,115,0,.2)}.users__header{margin-top:2em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__header h3{margin:0}.users__header .ui.dropdown{padding:.5em .92857em}.users__popular-projects .ui.cards{margin:0 -.5em -.5em}.users__popular-projects .ui.cards .ui.card{margin:.5em!important;padding:1em;width:calc(50% - 1em)!important;border:1px solid #dce3e8;-webkit-box-shadow:none;box-shadow:none}.users__popular-projects .ui.cards .ui.card .content{padding:0}.users__popular-projects .ui.cards .ui.card .content .popular-project-title{font-size:16px;word-break:break-all;vertical-align:middle}.users__popular-projects .ui.cards .ui.card .content .git-project-gvp-badge{margin-top:-3px}.users__popular-projects .ui.cards .ui.card .content i.iconfont{font-size:14px}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-mode-table{margin-top:1px;color:#d0d0d0;cursor:move}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-recommended{color:#fe7300;font-weight:400}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-watch{font-size:12px;vertical-align:baseline}.users__popular-projects .ui.cards .ui.card .content .description{color:#8c92a4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__popular-projects .ui.cards .ui.card .extra.content{padding-top:1em;border:none!important;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__popular-projects .ui.cards .ui.card .extra.content:after{content:none}.users__popular-projects .ui.cards .ui.card .extra.content .left .ui.small.label{padding:.4em .7em}.users__popular-projects .ui.cards .ui.card .extra.content .right a{padding:0 .2em;color:#8c92a4}.users__popular-projects .ui.cards .ui.card .extra.content .right a:hover{color:#aeb2bf}.users__popular-projects .ui.cards .ui.card .extra.content .right a:active{color:#626672}.users__popular-projects .ui.cards .ui.card.sortable-chosen{background:#fed!important}.users__contribution-panel .less{background-color:#eee}.users__contribution-panel .little{background-color:#d6e685}.users__contribution-panel .some{background-color:#8cc665}.users__contribution-panel .many{background-color:#44a340}.users__contribution-panel .much{background-color:#1e6823}.users__contribution-panel .contribution-box{padding-top:20px;height:125px;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.users__contribution-panel .contribution-box .left-side{width:32px;font-size:12px;text-align:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}.users__contribution-panel .contribution-box .left-side,.users__contribution-panel .contribution-box .right-side{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.users__contribution-panel .contribution-box .right-side{position:relative;width:100%;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.users__contribution-panel .contribution-box .right-side .box{width:1.88679%;height:15px;border:1px solid #fff}.users__contribution-panel .contribution-box .right-side .box[data-content]:hover{border:1px solid #000}.users__contribution-panel .contribution-box .right-side .month{position:absolute;top:0;margin-top:-15px;margin-left:-15px;min-width:45px;font-size:12px;text-align:center}.users__contribution-panel .contribution-tip{margin-top:10px;padding-right:10px;font-size:12px;text-align:right}.users__contribution-panel .contribution-tip .word{font-size:12px;vertical-align:top;display:inline-block}.users__contribution-panel .contribution-tip .ui.horizontal.list>.item{margin:0 1px;width:12px;height:12px;vertical-align:text-bottom}.users__contribution-panel .contribution-describ p{margin:0 20px 0 0;display:inline-block}.users__contribution-panel .contribution-describ p.text-muted{margin-top:10px;display:block}.users__customize-modal .ui.form{min-height:180px}.users__customize-modal .grouped.fields{margin:.2em 0 1em!important;padding:10px 0;max-height:20em;overflow-y:auto}.users__customize-modal .grouped.fields .field{padding:5px!important}.users__customize-modal .grouped.fields .field .ui.checkbox{width:100%}.users__customize-modal .grouped.fields .field label{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__customize-modal .grouped.fields .field label span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__customize-modal .grouped.fields .field label .star-count{min-width:4em;text-align:right}.users__customize-modal .grouped.fields .field.active{background:rgba(254,115,0,.2)}.users__report-modal .appeal-success-tip{text-align:center}.users__report-modal .appeal-success-tip i.iconfont{font-size:7rem;color:#4baf50}.users__report-modal .ui.items{padding:20px;background:#f4f5f6}.users__report-modal .ui.items .ui.image{width:50px}.users__report-modal .ui.items .content .header{color:#40485b}.users__report-modal .ui.items .content .description{color:#8c92a4;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__report-modal .ui.segment.loader-block{border:0;min-height:100px}.users__report-modal .action-types .item{margin:5px;padding:10px 20px;min-width:120px;text-align:center;display:inline-block;background:#f2f2f2;border-radius:5px;cursor:pointer}.users__report-modal .action-types .item.active,.users__report-modal .action-types .item:active,.users__report-modal .action-types .item:hover{color:#fe7300}.users__report-modal .extra-content textarea{width:100%;height:5em}#user-show-detail .git-dashboard-projects-menu>.f-bold{color:#fe7300}#user-show-detail .git-codes-tags{margin-bottom:16px}#user-show-detail .git-user-twl-col>.gitee-headbread{margin-bottom:16px;margin-top:10px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu{margin-bottom:14px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu>a{font-size:14px}.recommend-container{padding:24px 0 0!important}.recommend-container .recommend-notice{background-color:#fffeed!important;margin-bottom:24px}.recommend-container .recommend-notice>.header{margin-right:8px!important}.recommend-container .ui.message{color:#40485b;padding:12px 16px;-webkit-box-shadow:0 0 0 1px #e2d8bf inset,0 0 0 0 transparent;box-shadow:inset 0 0 0 1px #e2d8bf,0 0 0 0 transparent}.recommend-container .ui.message i{position:absolute;top:0;right:0;font-size:.8em;margin-top:8px;margin-right:8px;cursor:pointer;color:#005980}.recommend-container .ui.message .header{color:#40485b;font-size:14px}.recommend-container .ui.message .content{margin-top:4px}.recommend-container .recommend-block{margin-bottom:32px}.recommend-container .recommend-block>.items{margin-top:0}.recommend-container .recommend-block .header{margin-bottom:16px}.recommend-container .recommend-block .header strong{font-size:16px}.recommend-container .recommend-block .recommend-list{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recommend-block .item{margin:0}.recommend-container .recommend-user .header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:end;-webkit-align-items:flex-end;-moz-box-align:end;-ms-flex-align:end;align-items:flex-end}.recommend-container .recommend-user .recommend-list{-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}';
+var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);html{color:#444333;background:#fff;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-rendering:optimizelegibility}article,aside,blockquote,body,button,code,dd,details,dl,dt,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,input,legend,li,menu,nav,ol,p,pre,section,td,textarea,th,ul{margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}audio,canvas,video{display:inline-block;*display:inline;*zoom:1}body,button,input,select,textarea{font:500 .875em/1.8 Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif}button,input{*width:auto;*overflow:visible;line-height:22px}table{border-collapse:collapse;border-spacing:0}th{text-align:inherit}fieldset,img{border:0}img{-ms-interpolation-mode:bicubic}iframe{display:block}blockquote{font-family:Optima,Georgia,STSong,serif;margin:1em 0;color:#999;padding:.6em 1em;background:#f8f8f8;border-left:.4em solid #ddd}blockquote blockquote{padding:0 0 0 1em;margin-left:2em}abbr,acronym{border-bottom:1px dotted;font-variant:normal}abbr{cursor:help}del{text-decoration:line-through}address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:400}ol,ul{list-style:none}caption,th{text-align:left}q:after,q:before{content:""}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:text-top\\9}:root sub,:root sup{vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}a:hover{text-decoration:underline}a,ins{text-decoration:none}.typo-u,u{text-decoration:underline}mark{background:#fffdd1}code,pre{font-family:Courier New,Courier,monospace;white-space:pre-wrap;word-wrap:break-word}pre{background:#f8f8f8;border:1px solid #ddd;padding:1em 1.5em}hr{border:none;border-bottom:1px solid #cfcfcf;margin-bottom:10px;*color:pink;*filter:chroma(color=pink);height:10px;*margin:-7px 0 2px}.typo-small,figcaption,small{font-size:.9em;color:#888}[draggable]{cursor:move}.clearfix:after,.clearfix:before{content:"";display:table}.clearfix:after{clear:both}.clearfix{zoom:1}.textwrap,.textwrap td,.textwrap th{word-wrap:break-word;word-break:break-all}.textwrap-table{table-layout:fixed}.typo-dl,.typo-form,.typo-hr,.typo-ol,.typo-p,.typo-pre,.typo-table,.typo-ul,.typo dl,.typo form,.typo hr,.typo ol,.typo p,.typo pre,.typo table,.typo ul{margin-bottom:1.2em}h1,h2,h3,h4,h5,h6{font-weight:500;*font-weight:800;font-family:Helvetica Neue,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif;color:#333}.typo-h1,.typo-h2,.typo-h3,.typo-h4,.typo-h5,.typo-h6,.typo h1,.typo h2,.typo h3,.typo h4,.typo h5,.typo h6{margin-bottom:.4em;line-height:1.5}.typo-h1,.typo h1{font-size:1.8em}.typo-h2,.typo h2{font-size:1.6em}.typo-h3,.typo h3{font-size:1.4em}.typo-h4,.typo h4{font-size:1.2em}.typo-h5,.typo-h6,.typo h5,.typo h6{font-size:1em}.typo-ul,.typo ul{margin-left:1.3em;list-style:disc}.typo-ol,.typo ol{list-style:decimal;margin-left:1.9em}.typo-ol ol,.typo-ol ul,.typo-ul ol,.typo-ul ul,.typo li ol,.typo li ul{margin-top:0;margin-bottom:0;margin-left:2em}.typo-ol ul,.typo-ul ul,.typo li ul{list-style:circle}.typo-table td .typo table caption,.typo-table th,.typo table td,.typo table th{border:1px solid #ddd;padding:.5em 1em;color:#666}.typo-table th,.typo table th{background:#fbfbfb}.typo-table thead th,.typo table thead th{background:#f1f1f1}.typo table .caption{border-bottom:none}.typo-input,.typo-textarea{-webkit-appearance:none;border-radius:0}::-moz-selection{background:#08c;color:#fff}::selection{background:#08c;color:#fff}.typo-em,.typo em,caption,legend{font-weight:700}p{color:#0f0!important}@font-face{font-family:octicons-anchor;src:url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format("woff")}*{color:purple!important;font-size:50px}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}@media (max-width:500px){hr#hidewidthless500{display:none}}.recommend-container .recommend-user .item{margin-bottom:16px}.recommend-container .recommend-user .ui.button{padding:3px 5px;margin-right:0}.recommend-container .recommend-user .header .pull-right{color:#005980;cursor:pointer}.recommend-container .recommend-user .header .pull-right.disabled{opacity:.7;cursor:default}.recommend-container .recommend-user .icon-reset{margin-top:-1px;height:16px;font-size:16px;margin-right:2px}.recommend-container .recommend-user__content{position:relative}.recommend-container .dimmer.active{z-index:1}.recommend-container .recommend-list__user{-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;margin-right:4px}.recommend-container .recommend-list__user strong{color:#005980}.recommend-container .recommend-list__user .recommend-list__user-info{margin:0 4px 0 8px;max-width:155px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__user .recommend-list__user-info.is-follow{max-width:125px}.recommend-container .recommend-list__user .recommend-list__user-info>div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__flollow .disable{opacity:.5}.recommend-container .recommend-project .icon-recommended{color:#fe7300}.recommend-container .recommend-project .project-label{display:inline-block}.recommend-container .recommend-project .recommend-list{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.recommend-container .recommend-project .recommend-list>*{word-break:break-all}.recommend-container .recommend-project .recommend-list .recommend-project__describe{overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical}.recommend-container .recommend-project .item{margin-bottom:16px}.recommend-container .recommend-project .recommend-project__name{margin-bottom:4px;color:#005980}.recommend-container .recent_visits .ui.items{margin-right:0;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recent_visits .avatar-item{margin-right:-22px!important}.recommend-container .recent_visits .item{width:20%;min-width:0;font-size:16px}.recommend-container .recent_visits .empty-visitor.item{font-size:14px;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1}.dashboard-content.twelve{padding-right:0!important}.dashboard-content .gitee-headbread .git-user-selection-dropdown{margin-right:0!important}.dashboard-content .dashboard-team .git-user-content-header{display:none}.dashboard-content .gitee-headbread{margin-bottom:24px}.dashboard-content .git-dashboard-projects-menu{margin-bottom:24px!important}.dashboard-content .git-dashboard-projects-menu .f-bold{color:#fe7300;border-bottom:2px solid #fe7300!important}.dashboard-content .git-dashboard-projects-menu>a.item{font-size:16px;padding:8px 18px!important}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input{width:150px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input input{margin-top:-6px;font-size:12px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input .icon-search{margin-top:-4px}.dashboard-content #event-timeline-panel h3.event-timeline-title{font-size:16px;margin-top:0;margin-bottom:16px;display:inline-block}.dashboard-content #event-timeline-panel .event-timeline.content{padding:0 0 18px 12px}.dashboard-content #event-timeline-panel .event-actionbar .dropdown.icon{margin-left:4px}.dashboard-content #event-timeline-panel .message-container .message{margin:0 0 1em}.dashboard-content .issues-filter__item{display:block;padding:0!important;color:initial!important;font-weight:500!important}.dashboard-content .issues-dropdown{margin-top:-6px!important}.dashboard-content .issues-dropdown .pl-0.f-bold{padding-left:0!important}.dashboard-content .dashboard-team .dashboard-team_info{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .ui.image{width:40px;height:40px;min-width:40px}.dashboard-content .dashboard-team .dashboard-team__contaniner .dashboard-team__name{font-size:16px;font-weight:700;overflow:hidden;word-break:keep-all;text-overflow:ellipsis;display:block}.dashboard-content .dashboard-team .dashboard-team__contaniner a{color:#005980!important}.dashboard-content .dashboard-team .dashboard-team__contaniner>.item:first-child{padding-top:0!important}.dashboard-content .dashboard-team .dashboard-team__contaniner .item{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .dashboard-team__contaniner .content{display:-webkit-box!important;display:-webkit-flex!important;display:-moz-box!important;display:-ms-flexbox!important;display:flex!important;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;overflow:hidden}.dashboard-content .dashboard-team .dashboard-team__contaniner .content:after{content:none}.dashboard-content .dashboard-team .dashboard-team__contaniner .content i{font-size:16px}.dashboard-content .dashboard-team .icon-enterprise-badge{margin-left:4px}.dashboard-content .dashboard-team .dashboard-team__operate{min-width:75px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.dashboard-content .dashboard-team .dashboard-team__operate.has-exit{min-width:150px}.recommend-project .icon-help-circle{vertical-align:baseline}.dashboard-content__show{width:608px!important;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}.ui.container.user_page{width:1240px}#rc-users__container{position:relative}#rc-users__container .secondary-navigation .active{color:#fe7300!important}#rc-users__container .dashboard-content{padding-right:32px;padding-left:32px;padding-top:24px}#rc-users__container .dashboard-sidebar{padding:16px 0 0;width:280px!important;margin-left:10px}#rc-users__container .dashboard-sidebar .dashboard-group .item{margin:8px 0}#rc-users__container .dashboard-sidebar .dashboard-group:last-child{margin-bottom:0!important}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar{padding-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card{width:100%;margin-top:32px;margin-bottom:0;padding-bottom:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card .header{font-size:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name h4{font-size:14px;display:inline-block}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .description{margin-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex{margin-top:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex:first-child{margin-top:12px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .quit i{margin-top:0}#rc-users__container .has-active .content{padding-left:0 2px 0 8px}#rc-users__container .navigation .header{padding-right:8px;border-bottom:1px solid #e3e9ed;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;padding-bottom:4px}#rc-users__container .navigation .header,#rc-users__container .navigation .header .title{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}#rc-users__container .navigation .header .title{font-size:16px}#rc-users__container .navigation .header .avatar.image{margin-right:0}#rc-users__container .navigation .header strong{font-size:16px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#rc-users__container .navigation .header strong a{color:unset}#rc-users__container .navigation .header .actions{margin-top:4px}#rc-users__container .navigation .header .actions i{color:#005980}#rc-users__container .navigation.user i{color:#989dad}#rc-users__container .navigation.user .content{padding:0 8px}#rc-users__container .navigation .items>a{color:#40485b}#rc-users__container .navigation .items>a:hover{color:#095eab}#rc-users__container .navigation .items>a:active{color:#064177}#rc-users__container .navigation .items>a:hover{color:#40485b}#rc-users__container .navigation .item:hover .content{background:#f8f8f8}#rc-users__container .navigation .item .active{color:#fe7300;background:#f8f8f8}#rc-users__container .navigation .item .active .num{color:inherit}#rc-users__container .navigation .item:hover .exit{display:inline-block}#rc-users__container .navigation .icon-add,#rc-users__container .navigation .icon-search{color:#8c92a4!important}#rc-users__container .navigation .num{font-size:12px;font-weight:500;color:#8c92a4}#rc-users__container .navigation .gray{color:#8c92a4}#rc-users__container .navigation .avatar.image{width:32px;height:32px}#rc-users__container .twitter-typeahead{width:100%}#rc-users__container .gray{color:#8c92a4}#rc-users__container .ui.container{width:1240px}#rc-users__container .contribution-events{padding-top:32px}#rc-users__container #git-footer-main{min-width:1240px}#rc-users__container .gitee-headbread .gitee-divider{display:inline-block;opacity:.5;margin:0 .2rem;color:rgba(0,0,0,.4);vertical-align:baseline}#rc-users__container .git-user-content .git-user-content-header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:16px}#rc-users__container .ui.button.js-project-watch{background:#fff;border:1px solid rgba(140,146,164,.5);padding:2px 5px;margin:0}#rc-users__container .recommend-container{width:248px!important}.users__personal-avatar{position:relative;margin:0 auto 10px;width:160px;height:160px}.users__personal-avatar .over-avatar{position:absolute;top:0;left:0;width:100%;height:100%;color:#fff;font-size:14px;text-align:center;line-height:200px;border:4px solid #eee;border-radius:50%;background:rgba(0,0,0,.5);cursor:pointer;display:none}.users__personal-avatar .over-avatar:hover{display:block}.users__personal-avatar .ui.image.avatar{margin:0;width:100%;height:100%;border:4px solid #eee}.users__personal-avatar .ui.image.avatar:hover+.over-avatar{display:block}.users__personal-avatar .avatar-gender{position:absolute;bottom:2px;right:27px;width:32px;height:32px;border-radius:50%;color:#fff;font-size:21px;text-align:center;line-height:30px;border:2px solid #fff}.users__personal-avatar .avatar-gender.mars{background:#3eb4ff}.users__personal-avatar .avatar-gender.venus{background:#ff5bc6}.users__personal-name{text-align:center}.users__personal-name h2,.users__personal-name p{margin:8px 0 0;word-break:break-all}.users__personal-name h2 span,.users__personal-name p span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__personal-name .remark-name{color:#8c92a4;font-size:14px;font-weight:400;display:inline}.users__personal-name .ui.small.label{margin-bottom:.5em;padding:.4em .7em;font-weight:400}.users__personal-setting{margin:15px auto;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__personal-setting .ui.button{margin:0;width:45%;font-size:14px}.users__personal-setting .ui.button.basic{border:1px solid #ccc}.users__personal-socials .ui.grid{padding:0 1rem}.users__personal-socials .ui.grid .column{padding:1rem 0;text-align:center}.users__personal-socials .social-count{font-size:18px;font-weight:700}.users__personal-socials .social-name{padding-top:5px;color:#40485b;font-size:12px;display:block}.users__personal-info{padding:15px 0;color:#8c92a4}.users__personal-info .info-item{padding:3px 0;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-info .info-item i.iconfont{width:20px;text-align:center}.users__personal-info .info-item i.iconfont.icon-time{font-size:12px}.users__personal-achievement{padding:10px 0}.users__personal-achievement h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-achievement .ui.list .item .content{line-height:1.8}.users__personal-achievement .ui.list .item .content .description{color:#7687ab}.users__personal-groups{padding:10px 0}.users__personal-groups h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-groups .ui.list{margin:0}.users__personal-groups .ui.list:not(.more-groups){margin-top:1em}.users__personal-groups .ui.list .item{padding:.3em 0}.users__personal-groups .ui.list .item a{color:#005980!important}.users__personal-groups .ui.list .item a:hover{color:#4c8aa6!important}.users__personal-groups .ui.list .item a:active{color:#003e59!important}.users__personal-groups .ui.list .item .content{line-height:1.8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-groups .ui.list .item .right.floated.content{color:#7687ab}.users__personal-groups .ui.list .item .right.floated.content .mr-1{width:24px;display:inline-block}.users__personal-groups .load-more-groups{margin-top:8px;display:block;color:#7687ab}.users__personal-groups .load-more-groups:hover{color:#9fabc4}.users__personal-groups .load-more-groups:active{color:#525e77}.users__navbar .ui.secondary.pointing.menu{border-bottom:2px solid #dededf}.users__navbar .ui.secondary.pointing.menu>.item{margin-bottom:-2px;padding:10px 30px;min-width:100px;text-align:center;border-width:2px}.users__navbar .ui.secondary.pointing.menu>.item.active{color:#fe7300;border-color:#fe7300}.users__navbar .ui.secondary.pointing.menu>.item.active .ui.label{color:#fe7300;background:rgba(254,115,0,.2)}.users__header{margin-top:2em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__header h3{margin:0}.users__header .ui.dropdown{padding:.5em .92857em}.users__popular-projects .ui.cards{margin:0 -.5em -.5em}.users__popular-projects .ui.cards .ui.card{margin:.5em!important;padding:1em;width:calc(50% - 1em)!important;border:1px solid #dce3e8;-webkit-box-shadow:none;box-shadow:none}.users__popular-projects .ui.cards .ui.card .content{padding:0}.users__popular-projects .ui.cards .ui.card .content .popular-project-title{font-size:16px;word-break:break-all;vertical-align:middle}.users__popular-projects .ui.cards .ui.card .content .git-project-gvp-badge{margin-top:-3px}.users__popular-projects .ui.cards .ui.card .content i.iconfont{font-size:14px}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-mode-table{margin-top:1px;color:#d0d0d0;cursor:move}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-recommended{color:#fe7300;font-weight:400}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-watch{font-size:12px;vertical-align:baseline}.users__popular-projects .ui.cards .ui.card .content .description{color:#8c92a4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__popular-projects .ui.cards .ui.card .extra.content{padding-top:1em;border:none!important;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__popular-projects .ui.cards .ui.card .extra.content:after{content:none}.users__popular-projects .ui.cards .ui.card .extra.content .left .ui.small.label{padding:.4em .7em}.users__popular-projects .ui.cards .ui.card .extra.content .right a{padding:0 .2em;color:#8c92a4}.users__popular-projects .ui.cards .ui.card .extra.content .right a:hover{color:#aeb2bf}.users__popular-projects .ui.cards .ui.card .extra.content .right a:active{color:#626672}.users__popular-projects .ui.cards .ui.card.sortable-chosen{background:#fed!important}.users__contribution-panel .less{background-color:#eee}.users__contribution-panel .little{background-color:#d6e685}.users__contribution-panel .some{background-color:#8cc665}.users__contribution-panel .many{background-color:#44a340}.users__contribution-panel .much{background-color:#1e6823}.users__contribution-panel .contribution-box{padding-top:20px;height:125px;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.users__contribution-panel .contribution-box .left-side{width:32px;font-size:12px;text-align:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}.users__contribution-panel .contribution-box .left-side,.users__contribution-panel .contribution-box .right-side{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.users__contribution-panel .contribution-box .right-side{position:relative;width:100%;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.users__contribution-panel .contribution-box .right-side .box{width:1.88679%;height:15px;border:1px solid #fff}.users__contribution-panel .contribution-box .right-side .box[data-content]:hover{border:1px solid #000}.users__contribution-panel .contribution-box .right-side .month{position:absolute;top:0;margin-top:-15px;margin-left:-15px;min-width:45px;font-size:12px;text-align:center}.users__contribution-panel .contribution-tip{margin-top:10px;padding-right:10px;font-size:12px;text-align:right}.users__contribution-panel .contribution-tip .word{font-size:12px;vertical-align:top;display:inline-block}.users__contribution-panel .contribution-tip .ui.horizontal.list>.item{margin:0 1px;width:12px;height:12px;vertical-align:text-bottom}.users__contribution-panel .contribution-describ p{margin:0 20px 0 0;display:inline-block}.users__contribution-panel .contribution-describ p.text-muted{margin-top:10px;display:block}.users__customize-modal .ui.form{min-height:180px}.users__customize-modal .grouped.fields{margin:.2em 0 1em!important;padding:10px 0;max-height:20em;overflow-y:auto}.users__customize-modal .grouped.fields .field{padding:5px!important}.users__customize-modal .grouped.fields .field .ui.checkbox{width:100%}.users__customize-modal .grouped.fields .field label{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__customize-modal .grouped.fields .field label span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__customize-modal .grouped.fields .field label .star-count{min-width:4em;text-align:right}.users__customize-modal .grouped.fields .field.active{background:rgba(254,115,0,.2)}.users__report-modal .appeal-success-tip{text-align:center}.users__report-modal .appeal-success-tip i.iconfont{font-size:7rem;color:#4baf50}.users__report-modal .ui.items{padding:20px;background:#f4f5f6}.users__report-modal .ui.items .ui.image{width:50px}.users__report-modal .ui.items .content .header{color:#40485b}.users__report-modal .ui.items .content .description{color:#8c92a4;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__report-modal .ui.segment.loader-block{border:0;min-height:100px}.users__report-modal .action-types .item{margin:5px;padding:10px 20px;min-width:120px;text-align:center;display:inline-block;background:#f2f2f2;border-radius:5px;cursor:pointer}.users__report-modal .action-types .item.active,.users__report-modal .action-types .item:active,.users__report-modal .action-types .item:hover{color:#fe7300}.users__report-modal .extra-content textarea{width:100%;height:5em}#user-show-detail .git-dashboard-projects-menu>.f-bold{color:#fe7300}#user-show-detail .git-codes-tags{margin-bottom:16px}#user-show-detail .git-user-twl-col>.gitee-headbread{margin-bottom:16px;margin-top:10px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu{margin-bottom:14px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu>a{font-size:14px}.recommend-container{padding:24px 0 0!important}.recommend-container .recommend-notice{background-color:#fffeed!important;margin-bottom:24px}.recommend-container .recommend-notice>.header{margin-right:8px!important}.recommend-container .ui.message{color:#40485b;padding:12px 16px;-webkit-box-shadow:0 0 0 1px #e2d8bf inset,0 0 0 0 transparent;box-shadow:inset 0 0 0 1px #e2d8bf,0 0 0 0 transparent}.recommend-container .ui.message i{position:absolute;top:0;right:0;font-size:.8em;margin-top:8px;margin-right:8px;cursor:pointer;color:#005980}.recommend-container .ui.message .header{color:#40485b;font-size:14px}.recommend-container .ui.message .content{margin-top:4px}.recommend-container .recommend-block{margin-bottom:32px}.recommend-container .recommend-block>.items{margin-top:0}.recommend-container .recommend-block .header{margin-bottom:16px}.recommend-container .recommend-block .header strong{font-size:16px}.recommend-container .recommend-block .recommend-list{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recommend-block .item{margin:0}.recommend-container .recommend-user .header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:end;-webkit-align-items:flex-end;-moz-box-align:end;-ms-flex-align:end;align-items:flex-end}.recommend-container .recommend-user .recommend-list{-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}';
 
 (function() {
     var mycom = function mycom(props, children) {
@@ -3823,16 +3164,14 @@ var store = {
     decrement: decrement
 };
 
-var mycomapp$2 = function mycomapp() {
+var mycomappclass = createComponent((function() {
     var vdom = createElement("div", null, createElement("h3", null, " 点击数字"), createElement("h2", null, "number:", store.number), createElement("button", {
         onclick: store.increment
     }, "increment"), createElement("button", {
         onclick: store.decrement
     }, "decrement"));
     return vdom;
-};
-
-var mycomappclass = createComponent(mycomapp$2);
+}));
 
 var vdom$4 = [ createElement(mycomappclass), createElement(mycomappclass), createElement(mycomappclass) ];
 

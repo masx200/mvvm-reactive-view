@@ -2,6 +2,10 @@ const Reflect$1 = window.Reflect;
 
 const {construct: construct, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, set: set} = Reflect$1;
 
+function isprimitive(a) {
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
+}
+
 function isundefined(a) {
     return typeof a === "undefined";
 }
@@ -44,10 +48,6 @@ function isSet(a) {
 
 if (!isfunction(window.HTMLElement) || !isfunction(window.Proxy) || !isobject(window.customElements) || !isfunction(window.CustomElementRegistry)) {
     throw new TypeError(" browser not supported !");
-}
-
-function isprimitive(a) {
-    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a);
 }
 
 var _a, _b;
@@ -375,17 +375,18 @@ function toArray(a) {
 const eventlistenerssymbol = Symbol("eventlisteners");
 
 function onevent(element, eventname, callback) {
-    if (!element[eventlistenerssymbol]) {
-        element[eventlistenerssymbol] = [];
-    }
     firstaddlisteners(element, eventname, toArray(callback));
 }
 
 function firstaddlisteners(ele, event, callarray) {
+    const element = ele;
     callarray.forEach(call => {
         if (!isfunction(call)) {
             console.error(call);
             throw TypeError(invalid_Function);
+        }
+        if (!element[eventlistenerssymbol]) {
+            element[eventlistenerssymbol] = [];
         }
         ele[eventlistenerssymbol].push([ event, call ]);
         domaddlisten(ele, event, call);
@@ -517,6 +518,8 @@ function mount(ele, container, clear = true) {
     return container;
 }
 
+const String$1 = window.String;
+
 const Reflect$2 = window.Reflect;
 
 const {get: get$1, set: set$1} = Reflect$2;
@@ -562,7 +565,7 @@ function createeleattragentreadwrite(ele) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
-                const v = getattribute(ele, String(key));
+                const v = getattribute(ele, String$1(key));
                 if (v === "") {
                     return true;
                 }
@@ -571,7 +574,7 @@ function createeleattragentreadwrite(ele) {
                 }
                 if (isstring$1(v)) {
                     try {
-                        return JSON.parse(String(v));
+                        return JSON.parse(String$1(v));
                     } catch (error) {
                         return v;
                     }
@@ -579,41 +582,45 @@ function createeleattragentreadwrite(ele) {
             }
         },
         set(t, key, v) {
+            if ("function" === typeof v) {
+                console.error(v);
+                throw TypeError("不允许设置属性为函数");
+            }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
             } else if (key === "style") {
-                setattribute(ele, String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
+                setattribute(ele, String$1(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v));
                 return true;
             } else if (key === "class" && isobject$1(v)) {
                 if (isArray(v)) {
-                    setattribute(ele, String(key), v.join(" "));
+                    setattribute(ele, String$1(key), v.join(" "));
                 } else if (isSet$1(v)) {
-                    setattribute(ele, String(key), [ ...v ].join(" "));
+                    setattribute(ele, String$1(key), [ ...v ].join(" "));
                 } else {
-                    setattribute(ele, String(key), JSON.stringify(v));
+                    setattribute(ele, String$1(key), JSON.stringify(v));
                 }
             } else {
                 if (isSet$1(v)) {
-                    setattribute(ele, String(key), JSON.stringify([ ...v ]));
+                    setattribute(ele, String$1(key), JSON.stringify([ ...v ]));
                 } else {
                     if (v === true) {
                         v = "";
                     }
-                    setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
+                    setattribute(ele, String$1(key), isobject$1(v) ? JSON.stringify(v) : String$1(v));
                     return true;
                 }
             }
             return true;
         },
         deleteProperty(t, k) {
-            removeAttribute$1(ele, String(k));
+            removeAttribute$1(ele, String$1(k));
             return true;
         },
         has(target, key) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return true;
             } else {
-                return hasAttribute(ele, String(key));
+                return hasAttribute(ele, String$1(key));
             }
         },
         defineProperty() {
@@ -634,6 +641,9 @@ function createeleattragentreadwrite(ele) {
             } else {
                 return;
             }
+        },
+        setPrototypeOf() {
+            return false;
         }
     });
     return outputattrs;
@@ -703,7 +713,7 @@ class Virtualdom {
             props: Object.fromEntries(字母开头的entries.filter(e => !isReactiveState(e[1]))),
             children: children.flat(),
             onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ])),
-            directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+            directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_")).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
         });
         Object.defineProperty(this, Symbol.toStringTag, {
             value: "virtualdom",
@@ -818,17 +828,16 @@ function handleprops(element, vdom) {
                 }
             });
         });
-        if (!element[eventlistenerssymbol]) {
-            element[eventlistenerssymbol] = [];
-        }
         Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
     })(element, vdom);
-    if (!element[bindstatesymbol]) {
-        element[bindstatesymbol] = new Set;
-    }
-    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat().filter(e => isReactiveState(e)).forEach(e => element[bindstatesymbol].add(e));
+    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat().filter(e => isReactiveState(e)).forEach(e => {
+        if (!element[bindstatesymbol]) {
+            element[bindstatesymbol] = new Set;
+        }
+        element[bindstatesymbol].add(e);
+    });
 }
 
 const attributeChangedCallback = "attributeChangedCallback";
@@ -988,7 +997,7 @@ var createstate = init => {
 
 function createstate$1(init) {
     if (isprimitive(init)) {
-        return new Proxy(new ReactiveState(init), {
+        return getproperyreadproxy(new Proxy(new ReactiveState(init), {
             defineProperty() {
                 return false;
             },
@@ -1007,7 +1016,7 @@ function createstate$1(init) {
             setPrototypeOf() {
                 return false;
             }
-        });
+        }));
     } else if (isReactiveState(init)) {
         return createstate$1(init.value);
     } else if (isobject(init)) {
@@ -1027,7 +1036,7 @@ function createstate$1(init) {
                 const myvalue = get(target, "value");
                 if (has(myvalue, key)) {
                     deleteProperty(myvalue, key);
-                    target[dispatchsymbol](key);
+                    target[dispatchsymbol](String(key));
                     return true;
                 } else {
                     return true;
@@ -1067,7 +1076,7 @@ function createstate$1(init) {
                         }
                     } else {
                         return observedeepagent(get(value, key), () => {
-                            target[dispatchsymbol](key);
+                            target[dispatchsymbol](String(key));
                         });
                     }
                 }
@@ -1083,7 +1092,7 @@ function createstate$1(init) {
                     return true;
                 } else if (!has(target, key)) {
                     set(myvalue, key, value);
-                    target[dispatchsymbol](key);
+                    target[dispatchsymbol](String(key));
                 } else if (key === "length") {
                     set(myvalue, key, value);
                     target[dispatchsymbol](key);
@@ -1243,12 +1252,14 @@ function isCSSStyleRule(a) {
 
 function selectoraddprefix(cssstylerule, prefix) {
     const selectorText = cssstylerule.selectorText;
-    const prefixselector = prefix + " " + selectorText;
-    if (selectorText.startsWith("*")) {
-        cssstylerule.selectorText = selectorText.replace("*", prefix) + "," + prefixselector;
-    } else {
-        cssstylerule.selectorText = prefixselector;
-    }
+    const selectorarray = selectorText.split(",");
+    cssstylerule.selectorText = selectorarray.map(selectorText => {
+        let prefixselector = prefix + " " + selectorText;
+        if (selectorText.startsWith("*")) {
+            prefixselector = prefixselector + "," + selectorText.replace("*", prefix);
+        }
+        return prefixselector;
+    }).join(",");
     return cssstylerule;
 }
 
@@ -1265,7 +1276,7 @@ function prefixcssrules(cssRulesarray, prefix) {
         } else {
             return cssrule;
         }
-    });
+    }).filter(Boolean);
 }
 
 const componentsstylesheet = {};
@@ -1317,6 +1328,10 @@ function loadlinkstyle(stylelinkelement, container) {
         stylelinkelement.onerror = loaderrorfun;
         appendchild(container, stylelinkelement);
     });
+}
+
+function waitloadallstyle(prefix, _this) {
+    return Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
 }
 
 const innerstatesymbol = Symbol("innerstate");
@@ -1394,7 +1409,7 @@ function createComponent(custfun) {
                     const prefix = this.tagName.toLowerCase();
                     if (css && componentsstylesheet[prefix]) {
                         seteletext(this, "");
-                        Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), this))).then(() => {
+                        waitloadallstyle(prefix, this).then(() => {
                             mount(this[elementsymbol], this, false);
                         });
                     } else {
@@ -1435,6 +1450,11 @@ function onmounted(ele) {
             ele[bindstatesymbol].forEach(state => {
                 rewatch(state);
             });
+            if (ele[innerstatesymbol]) {
+                ele[innerstatesymbol].forEach(state => {
+                    rewatch(state);
+                });
+            }
         }
         onmounted(getdomchildren(ele));
     }
@@ -1590,10 +1610,31 @@ function Arraycomputed(state, callback) {
             let newvalue = getter();
             if (newvalue !== memorized) {
                 reactivestate[dispatchsymbol]();
+                memorized = newvalue;
             }
         });
     });
-    return readonlyproxy(reactivestate);
+    return getproperyreadproxy(readonlyproxy(reactivestate));
+}
+
+function getproperyreadproxy(a) {
+    return new Proxy(a, {
+        ownKeys(target) {
+            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
+        },
+        has(target, key) {
+            const myvalue = get(target, "value");
+            return has(target, key) || has(myvalue, key);
+        },
+        get(target, key) {
+            const myvalue = get(target, "value");
+            if (has(target, key)) {
+                return get(target, key);
+            } else if (has(myvalue, key)) {
+                return get(myvalue, key);
+            }
+        }
+    });
 }
 
 function createRef(init) {

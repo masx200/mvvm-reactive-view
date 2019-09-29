@@ -1,10 +1,10 @@
 import {
-  deleteProperty,
+  //   deleteProperty,
   get,
-  getOwnPropertyDescriptor,
+  //   getOwnPropertyDescriptor,
   has,
-  ownKeys,
-  set
+  ownKeys
+  //   set
 } from "./reflect";
 
 import ReactiveState, {
