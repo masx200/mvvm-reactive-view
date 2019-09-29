@@ -28,7 +28,7 @@ function createstate(
   init: string | number | boolean | undefined | ReactiveState | object
 ): ReactiveState {
   if (isprimitive(init)) {
-    return new Proxy(new ReactiveState(init), {
+    return getproperyreadproxy(new Proxy(new ReactiveState(init), {
       defineProperty() {
         return false;
       },
@@ -52,7 +52,7 @@ function createstate(
       setPrototypeOf() {
         return false;
       }
-    });
+    }));
   } else if (
     isReactiveState(init)
     // init instanceof ReactiveState
