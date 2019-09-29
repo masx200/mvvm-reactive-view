@@ -90,6 +90,11 @@ function Arraycomputed(
       let newvalue = getter();
       if (newvalue !== memorized) {
         reactivestate[dispatchsymbol]();
+
+memorized=newvalue
+
+
+
       }
       //
     });
@@ -102,6 +107,11 @@ functiom getproperyreadproxy(a){
 
 
 return new Proxy(a,{
+ownKeys(target) {
+        return Array.from(
+          new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
+        );
+      },
 has(target, key) {
         const myvalue = get(target, "value");
         return has(target, key) || has(myvalue, key);
