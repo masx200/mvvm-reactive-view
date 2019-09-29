@@ -103,7 +103,7 @@ memorized=newvalue
   return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
-functiom getproperyreadproxy(a){
+export function getproperyreadproxy(a){
 
 
 return new Proxy(a,{
