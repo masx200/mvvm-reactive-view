@@ -1,3 +1,12 @@
+import {
+  deleteProperty,
+  get,
+  getOwnPropertyDescriptor,
+  has,
+  ownKeys,
+  set
+} from "./reflect";
+
 import ReactiveState, {
   isReactiveState,
   dispatchsymbol
@@ -86,14 +95,17 @@ function Arraycomputed(
     });
   });
 
-  return readonlyproxy(reactivestate);
+  return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
 functiom getproperyreadproxy(a){
 
 
 return new Proxy(a,{
-
+has(target, key) {
+        const myvalue = get(target, "value");
+        return has(target, key) || has(myvalue, key);
+      },
 get(target, key){
 
 const myvalue = get(target, "value");
