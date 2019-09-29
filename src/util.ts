@@ -47,4 +47,4 @@ export function isSet(a: any): a is Set<any> {
   return gettagtype(a) === "set" && a instanceof Set;
 }
 import isprimitive from "./isprimitive";
-export{isprimitive}
+export { isprimitive };

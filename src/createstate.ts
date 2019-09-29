@@ -1,4 +1,4 @@
-import{getproperyreadproxy}from "./computed"
+import { getproperyreadproxy } from "./computed";
 
 import { invalid_primitive_or_object_state } from "./primitivestate";
 
@@ -30,31 +30,33 @@ function createstate(
   init: string | number | boolean | undefined | ReactiveState | object
 ): ReactiveState {
   if (isprimitive(init)) {
-    return getproperyreadproxy(new Proxy(new ReactiveState(init), {
-      defineProperty() {
-        return false;
-      },
-      deleteProperty() {
-        return false;
-      },
-      set(target, key, value) {
-        /*  if (key === textnodesymbol) {
+    return getproperyreadproxy(
+      new Proxy(new ReactiveState(init), {
+        defineProperty() {
+          return false;
+        },
+        deleteProperty() {
+          return false;
+        },
+        set(target, key, value) {
+          /*  if (key === textnodesymbol) {
           return set(target, key, value);
         } */
-        if (key === "value" && isprimitive(value)) {
-          // if (target[key] !== value) {
-          set(target, key, value);
-          target[dispatchsymbol]();
-          // }
-          return true;
-        } else {
+          if (key === "value" && isprimitive(value)) {
+            // if (target[key] !== value) {
+            set(target, key, value);
+            target[dispatchsymbol]();
+            // }
+            return true;
+          } else {
+            return false;
+          }
+        },
+        setPrototypeOf() {
           return false;
         }
-      },
-      setPrototypeOf() {
-        return false;
-      }
-    }));
+      })
+    );
   } else if (
     isReactiveState(init)
     // init instanceof ReactiveState

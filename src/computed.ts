@@ -91,10 +91,7 @@ function Arraycomputed(
       if (newvalue !== memorized) {
         reactivestate[dispatchsymbol]();
 
-memorized=newvalue
-
-
-
+        memorized = newvalue;
       }
       //
     });
@@ -103,31 +100,25 @@ memorized=newvalue
   return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
-export function getproperyreadproxy(a){
+export function getproperyreadproxy(a) {
+  return new Proxy(a, {
+    ownKeys(target) {
+      return Array.from(
+        new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
+      );
+    },
+    has(target, key) {
+      const myvalue = get(target, "value");
+      return has(target, key) || has(myvalue, key);
+    },
+    get(target, key) {
+      const myvalue = get(target, "value");
 
-
-return new Proxy(a,{
-ownKeys(target) {
-        return Array.from(
-          new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
-        );
-      },
-has(target, key) {
-        const myvalue = get(target, "value");
-        return has(target, key) || has(myvalue, key);
-      },
-get(target, key){
-
-const myvalue = get(target, "value");
-
- if(has(target, key)) {
-          return get(target, key);
-}else(has(myvalue, key)){
-return get(myvalue, key);
-}
-
-}
-)
-
-
+      if (has(target, key)) {
+        return get(target, key);
+      } else if (has(myvalue, key)) {
+        return get(myvalue, key);
+      }
+    }
+  });
 }

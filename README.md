@@ -193,7 +193,7 @@ https://tc39.es/proposal-flatMap/
 
 # 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
 
-## ReactiveState,基于 EventTarget和Proxy,
+## ReactiveState,基于 EventTarget 和 Proxy,
 
 ### 如果状态跟视图绑定，则状态改变引起界面刷新是异步的
 
@@ -262,23 +262,24 @@ const css = `
   color: purple !important;
 
   font-size: 50px;
-}`
-const Hellowordclass=createComponent(
-Object.assign(
-()=>{
+}`;
+const Hellowordclass = createComponent(
+  Object.assign(
+    () => {
+      return <div> hello world</div>;
+    },
+    { css, defaultProps }
+  )
+);
+document.body.appendChild(
+  createApp(
+    <Hellowordclass />,
 
-return <div> hello world</div>
-
-},{css,defaultProps}
-
-))
-document.body.appendChild(createApp(
-
-<Hellowordclass/>
-
-, document.createElement("div")));
-
+    document.createElement("div")
+  )
+);
 ```
+
 ## 父子组件传数据
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递
@@ -467,17 +468,17 @@ html`
 2.使用"on"+事件名称
 
 ```jsx
-<button onclick={e=>console.log(e)}/>
+<button onclick={e => console.log(e)} />
 ```
 
 # 使用指令
 
 1.属性名为'\*'+指令名称,属性值为值
 
-2.使用"_"+指令名称
+2.使用"\_"+指令名称
 
 ```jsx
-<button _text="click me"/>
+<button _text="click me" />
 ```
 
 现已支持的指令有 `'ref','html','text'，"value"`
@@ -489,7 +490,7 @@ html`
 ```ts
 const ref = createRef();
 
-html`
+var vdom = html`
   <div *ref=${ref} />
 `;
 

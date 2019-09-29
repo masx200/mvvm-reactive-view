@@ -90,7 +90,7 @@ export default class ReactiveState /* extends forkarray  */ {
       name,
       (event: Event) => callback.call(undefined, this, get(event, "detail"))
     ]);
-  }
+  } /*  */
   [removeallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
       this[eventtargetsymbol].removeEventListener(value, callback);
