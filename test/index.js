@@ -3,9 +3,9 @@ import "../polyfill/Array-prototype-flat.js";
 import "../polyfill/Object-fromEntries.js";
 import "./index1.js";
 
-import "./compositionapi";
+import"index-compositionapi.js"
 import "./index3.js";
-import "./myrootapp";
+import "./index-myrootapp";
 import "./index-x.js";
 import "./index2.js";
 import "./teststore";
