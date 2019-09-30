@@ -17,7 +17,7 @@ export default function createElement(
   //   console.log(type, props, children);
   let typenormalized = isstring(type) || isfunction(type) ? type : "";
   const propsnormalized = isobject(props) ? props : {};
-  const childrennormalized = children.flat(Infinity).filter(a=>!!a);
+  const childrennormalized = children.flat(Infinity).map(a=>a===0?"0":a).filter(a=>!!a);
   if (
     isstring(typenormalized)
     //   typeof typenormalized === "string"
