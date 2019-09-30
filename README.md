@@ -202,7 +202,7 @@ https://tc39.es/proposal-flatMap/
 
 # 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
 
-## `ReactiveState`,基于 EventTarget 和 Proxy,
+## `ReactiveState`,基于 `EventTarget` 和 `Proxy`,
 
 ### 如果状态跟视图绑定，则状态改变引起界面刷新是异步的
 
