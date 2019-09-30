@@ -3,7 +3,7 @@ import "../polyfill/Array-prototype-flat.js";
 import "../polyfill/Object-fromEntries.js";
 import "./index1.js";
 
-import"index-compositionapi.js"
+import"./index-compositionapi.js"
 import "./index3.js";
 import "./index-myrootapp";
 import "./index-x.js";
