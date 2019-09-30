@@ -466,7 +466,7 @@ document.body.appendChild(
 );
 ```
 
-# 支持使用给元素的 class 属性赋值 Set 类型,自动转成 字符串
+# 支持元素的 class 属性赋值 Set 类型,自动转成 字符串
 
 `class`属性支持的类型有
 
