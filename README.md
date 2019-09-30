@@ -249,11 +249,11 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 
 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 
-```js
+```jsx
 var mystate = createState(true);
 var vdom = condition(
   mystate,
-  ["testtrue"],
+ <p> {["testtrue"]}</p>,
   createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(createApp(vdom, document.createElement("div")));
