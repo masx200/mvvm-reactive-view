@@ -328,8 +328,6 @@ HOC可以劫持props，在不遵守约定的情况下也可能造成冲突。
 
 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
 
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
-
 ## 可以给组件设置默认属性,设置组件初始化函数的`defaultProps`属性即可
 
 组件初始化函数需要返回一个`虚拟DOM`
@@ -339,6 +337,9 @@ HOC可以劫持props，在不遵守约定的情况下也可能造成冲突。
 ## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
 
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
+
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
 ```js
 var mycom = (props, children) => {
