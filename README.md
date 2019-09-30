@@ -10,7 +10,7 @@
 
 ## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`
 
-## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，
+## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -26,10 +26,11 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
 
 ```html
 <script
-      type="module"
-      src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
-    ></script>
+  type="module"
+  src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
+></script>
 ```
+
 # 安装 npm 模块
 
 ```powershell
@@ -294,7 +295,7 @@ document.body.appendChild(
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数
 
-抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，它们已经被废弃。
+抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，它们已经被废弃。
 
 https://blog.csdn.net/sinat_17775997/article/details/89181398
 
@@ -302,17 +303,17 @@ https://blog.csdn.net/sinat_17775997/article/details/89181398
 
 Mixin 可能会相互依赖，相互耦合，不利于代码维护
 
-不同的Mixin中的方法可能会相互冲突
+不同的 Mixin 中的方法可能会相互冲突
 
-Mixin非常多时，组件是可以感知到的，
+Mixin 非常多时，组件是可以感知到的，
 
 甚至还要为其做相关处理，这样会给代码造成滚雪球式的复杂性
 
-### HOC的缺陷
+### HOC 的缺陷
 
-HOC需要在原组件上进行包裹或者嵌套，如果大量使用HOC，将会产生非常多的嵌套，这让调试变得非常困难。
+HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难。
 
-HOC可以劫持props，在不遵守约定的情况下也可能造成冲突。
+HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 ## 逻辑组合复用
 
@@ -337,7 +338,6 @@ HOC可以劫持props，在不遵守约定的情况下也可能造成冲突。
 ## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
 
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
-
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
@@ -410,26 +410,27 @@ setTimeout(() => {
 另一个解决办法是异步`fetch`加载`css`文本
 
 ```js
-(
-async()=>{
-const defaultProps = { cccccc: "bbbbbbb" };
-const css = await(await fetch("https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css")).text()
-const Hellowordclass = createComponent(
-  Object.assign(
-    () => {
-      return createElement("div" ,undefined,"hello world");
-    },
-    { css, defaultProps }
-  )
-);
-document.body.appendChild(
-  createApp(
-    createElement(Hellowordclass),
+(async () => {
+  const defaultProps = { cccccc: "bbbbbbb" };
+  const css = await (await fetch(
+    "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
+  )).text();
+  const Hellowordclass = createComponent(
+    Object.assign(
+      () => {
+        return createElement("div", undefined, "hello world");
+      },
+      { css, defaultProps }
+    )
+  );
+  document.body.appendChild(
+    createApp(
+      createElement(Hellowordclass),
 
-    document.createElement("div")
-  )
-);
-})()
+      document.createElement("div")
+    )
+  );
+})();
 ```
 
 # 使用 webcomponents costum elements
