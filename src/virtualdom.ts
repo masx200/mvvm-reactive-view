@@ -7,6 +7,9 @@ import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
 export default class Virtualdom {
+  get [Symbol.toStringTag]() {
+    return "VirtualDOM";
+}
   //   options: any |undefined
   element: undefined | Element | Node;
   type: string | Function | Class = "";
@@ -121,9 +124,11 @@ value
           ])
       )
     });
-    Object.defineProperty(this, Symbol.toStringTag, {
+  /* 
+ Object.defineProperty(this, Symbol.toStringTag, {
       value: "virtualdom",
       configurable: true
     });
+*/
   }
 }
