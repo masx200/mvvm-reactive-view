@@ -23,7 +23,14 @@ ownKeys(Array.prototype).forEach(key => {
 Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
-export default class ReactiveState /* extends forkarray  */ {
+export default class ReactiveState
+ /* extends forkarray  */ 
+{
+
+  get [Symbol.toStringTag]() {
+    return "ReativeState";
+
+}
   [addallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
       this[eventtargetsymbol].addEventListener(value, callback);
@@ -52,10 +59,15 @@ export default class ReactiveState /* extends forkarray  */ {
     }
     // this[eventtargetsymbol] = new EventTarget();
 
+
+/*
     Object.defineProperty(this, Symbol.toStringTag, {
       value: "ReactiveState",
       configurable: true
     });
+
+*/
+
   }
 
   valueOf() {
