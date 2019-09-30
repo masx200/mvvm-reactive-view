@@ -1,5 +1,5 @@
 export const innerstatesymbol = Symbol("innerstate");
-
+import {setimmediate}from"./setimmediate"
 import { readysymbol } from "./readysymbol";
 import render from "./rendervdomtoreal";
 import readonlyproxy from "./readonlyproxy";
@@ -215,8 +215,13 @@ export function createComponent(custfun: Custom): Class {
             mount(this[elementsymbol], this);
           }
         }
+//把mounted callback 异步执行
+        this[mountedsymbol].forEach(f => {
 
-        this[mountedsymbol].forEach(f => f());
+setimmediate(
+f
+)
+});
         onmounted(this);
       }
       disconnectedCallback() {
