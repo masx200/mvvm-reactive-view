@@ -1,2 +1,2 @@
-const componentsymbol = Symbol("iscomponent");
+const componentsymbol = Symbol("component");
 export { componentsymbol };
