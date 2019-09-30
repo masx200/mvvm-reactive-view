@@ -1,6 +1,6 @@
 import { getproperyreadproxy } from "./computed";
 
-import { invalid_primitive_or_object_state } from './reactivestate';
+import { invalid_primitive_or_object_state } from "./reactivestate";
 
 import {
   deleteProperty,
@@ -17,7 +17,7 @@ import ReactiveState, {
   dispatchsymbol,
   // textnodesymbol,
   isReactiveState
-} from './reactivestate';
+} from "./reactivestate";
 import { usestste } from "./context-mounted-unmounted-";
 export default (init: any) => {
   /* 收集组件内部创建的 ReactiveState*/
@@ -43,13 +43,14 @@ function createstate(
           return set(target, key, value);
         } */
           if (key === "value" && isprimitive(value)) {
-            // if (target[key] !== value) {
-            set(target, key, value);
-            target[dispatchsymbol]();
-            // }
+            if (target[key] !== value) {
+              /* 如果相同则不触发事件 */
+              set(target, key, value);
+              target[dispatchsymbol]();
+            }
             return true;
           } else {
-            return false;
+            return true;
           }
         },
         setPrototypeOf() {

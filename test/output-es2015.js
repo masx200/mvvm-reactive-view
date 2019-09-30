@@ -906,13 +906,19 @@ function asserthtmlelement(ele) {
 function createeleattragentreadwrite(ele) {
     asserthtmlelement(ele);
     var isinputtextortextareaflag = isinputtextortextarea(ele);
+    var isinputcheckbox = "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
     var temp = Object.create(null);
     var outputattrs = new Proxy(temp, {
         ownKeys: function ownKeys() {
             var keys = attributesownkeys(ele);
-            return isinputtextortextareaflag ? Array.from(new Set([].concat(_toConsumableArray(keys), [ valuestring ]))) : keys;
+            return Array.from(new Set([ isinputcheckbox ? "checked" : undefined, isinputtextortextareaflag ? Array.from(new Set([].concat(_toConsumableArray(keys), [ valuestring ]))) : keys ].flat(Infinity).filter((function(a) {
+                return !!a;
+            }))));
         },
         get: function get(target, key) {
+            if (isinputcheckbox && key === "checked") {
+                return get$1(ele, "checked");
+            }
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
@@ -1273,7 +1279,7 @@ function setimmediate(fun) {
 function readonlyproxy(target) {
     return new Proxy(target, {
         set: function set() {
-            return false;
+            return true;
         },
         defineProperty: function defineProperty() {
             return false;
@@ -1415,11 +1421,13 @@ function createstate$1(init) {
             },
             set: function set(target, key, value) {
                 if (key === "value" && isprimitive(value)) {
-                    _set(target, key, value);
-                    target[dispatchsymbol]();
+                    if (target[key] !== value) {
+                        _set(target, key, value);
+                        target[dispatchsymbol]();
+                    }
                     return true;
                 } else {
-                    return false;
+                    return true;
                 }
             },
             setPrototypeOf: function setPrototypeOf() {
@@ -2734,9 +2742,15 @@ var list = Array(10).fill().map((function(v, i) {
     return i;
 }));
 
-watch(check, console.log);
+watch(check, (function(a) {
+    return console.log(a);
+}));
 
-var vdom$2 = createElement("div", null, [ createElement("input", {
+watch(notcheck, (function(a) {
+    return console.log(a);
+}));
+
+var vdom$2 = createElement(Fragment, null, [ createElement("input", {
     type: "checkbox",
     _checked: check
 }), createElement("input", {

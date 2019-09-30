@@ -555,13 +555,17 @@ function asserthtmlelement(ele) {
 function createeleattragentreadwrite(ele) {
     asserthtmlelement(ele);
     const isinputtextortextareaflag = isinputtextortextarea(ele);
+    const isinputcheckbox = "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
     var temp = Object.create(null);
     const outputattrs = new Proxy(temp, {
         ownKeys() {
             const keys = attributesownkeys(ele);
-            return isinputtextortextareaflag ? Array.from(new Set([ ...keys, valuestring ])) : keys;
+            return Array.from(new Set([ isinputcheckbox ? "checked" : undefined, isinputtextortextareaflag ? Array.from(new Set([ ...keys, valuestring ])) : keys ].flat(Infinity).filter(a => !!a)));
         },
         get(target, key) {
+            if (isinputcheckbox && key === "checked") {
+                return get$1(ele, "checked");
+            }
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
@@ -874,7 +878,7 @@ function setimmediate(fun) {
 function readonlyproxy(target) {
     return new Proxy(target, {
         set() {
-            return false;
+            return true;
         },
         defineProperty() {
             return false;
@@ -1014,11 +1018,13 @@ function createstate$1(init) {
             },
             set(target, key, value) {
                 if (key === "value" && isprimitive(value)) {
-                    set(target, key, value);
-                    target[dispatchsymbol]();
+                    if (target[key] !== value) {
+                        set(target, key, value);
+                        target[dispatchsymbol]();
+                    }
                     return true;
                 } else {
-                    return false;
+                    return true;
                 }
             },
             setPrototypeOf() {

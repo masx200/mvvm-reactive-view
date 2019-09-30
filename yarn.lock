@@ -1892,8 +1892,8 @@ doctrine@^3.0.0:
     esutils "^2.0.2"
 
 "dom-element-attribute-agent-proxy@https://gitee.com/masx200/dom-element-attribute-agent-proxy.git":
-  version "1.1.10"
-  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#d22682a8122a1dc02c354445a6fc6d108c4affe2"
+  version "1.1.12"
+  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#a77e0362e26ab61a8200dd6c6ceb3760ab04fac1"
 
 dom-serializer@0:
   version "0.2.1"

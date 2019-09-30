@@ -21,9 +21,10 @@ const notcheck = computed(check, a => !a);
 var list = Array(10)
   .fill()
   .map((v, i) => i);
-watch(check, console.log);
+watch(check, a => console.log(a));
+watch(notcheck, a => console.log(a));
 var vdom = (
-  <div>
+  <>
     {[
       <input type="checkbox" _checked={check} />,
       <input type="checkbox" _checked={notcheck} />,
@@ -471,7 +472,7 @@ var vdom = (
         </header>
       </>
     ]}
-  </div>
+  </>
 );
 console.log(vdom, temp_ref);
 document.body.appendChild(createApp(vdom, document.createElement("div")));
