@@ -24,13 +24,13 @@ Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState
- /* extends forkarray  */ 
-{
+/* extends forkarray  */
 
-  get [Symbol.toStringTag]() {
+{
+  /* get [Symbol.toStringTag]() {
     return "ReativeState";
 
-}
+} */
   [addallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
       this[eventtargetsymbol].addEventListener(value, callback);
@@ -59,15 +59,13 @@ export default class ReactiveState
     }
     // this[eventtargetsymbol] = new EventTarget();
 
-
-/*
+    /*
     Object.defineProperty(this, Symbol.toStringTag, {
       value: "ReactiveState",
       configurable: true
     });
 
 */
-
   }
 
   valueOf() {
@@ -118,3 +116,6 @@ export default class ReactiveState
       : void 0;
   }
 }
+Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
+  value: "ReactiveState"
+});

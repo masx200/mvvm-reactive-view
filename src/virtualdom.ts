@@ -1,27 +1,27 @@
 export function isVirtualdom(a: any): a is Virtualdom {
   return a instanceof Virtualdom;
 }
-import ReactiveState, { isReactiveState } from './reactivestate';
+import ReactiveState, { isReactiveState } from "./reactivestate";
 // import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
 export default class Virtualdom {
-  get [Symbol.toStringTag]() {
+  /* get [Symbol.toStringTag]() {
     return "VirtualElement";
-}
+  } */
   //   options: any |undefined
   element: undefined | Element | Node;
   type: string | Function | Class = "";
   props: { [key: string]: string | object } = {};
-  children: Array<Virtualdom | string | ReactiveState> = [];
+  children: Array<Virtualdom | string | ReactiveState | number> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState } = {};
   constructor(
     type: Function | string = "",
     props: object = {},
-    children: Array<Virtualdom | string | ReactiveState> = []
+    children: Array<Virtualdom | string | ReactiveState | number> = []
   ) {
     const 字母大小写 = /[A-Za-z]/;
     // console.log(type, props, children);
@@ -124,7 +124,7 @@ value
           ])
       )
     });
-  /* 
+    /* 
  Object.defineProperty(this, Symbol.toStringTag, {
       value: "virtualdom",
       configurable: true
@@ -132,3 +132,6 @@ value
 */
   }
 }
+Reflect.defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
+  value: "VirtualElement"
+});

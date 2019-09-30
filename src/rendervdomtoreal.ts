@@ -2,7 +2,7 @@ export const bindstatesymbol = Symbol("bindstate");
 
 export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
-import ReactiveState /* textnodesymbol */ from './reactivestate';
+import ReactiveState /* textnodesymbol */ from "./reactivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
 import onevent /*  eventlistenerssymbol  */ from "./onevent";
@@ -168,7 +168,7 @@ export default function render(
   }
 }
 
-import { isReactiveState } from './reactivestate';
+import { isReactiveState } from "./reactivestate";
 import { isconnected } from "./isconnected";
 import { componentsymbol } from "./iscomponent";
 function handleprops(
@@ -185,7 +185,13 @@ function handleprops(
     });
 
     const attribute1 = createeleattr(element);
-    Object.assign(attribute1, vdom.props);
+    Object.assign(
+      attribute1,
+
+      /* 把属性为false的先不设置 */
+      vdom.props
+      // Object.fromEntries(Object.entries(vdom.props).filter())
+    );
     /* 添加常量的属性 */
     element[virtualdomsymbol] = vdom;
     vdom.element = element;

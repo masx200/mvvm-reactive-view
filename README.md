@@ -253,7 +253,7 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 var mystate = createState(true);
 var vdom = condition(
   mystate,
- <p> {["testtrue"]}</p>,
+  <p> {["testtrue"]}</p>,
   createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(createApp(vdom, document.createElement("div")));
@@ -536,8 +536,6 @@ html`
 
 2.使用"\_"+指令名称
 
-
-
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
 ### 指令`ref`用来获取元素的引用
@@ -569,24 +567,17 @@ console.log(ref.value);
 ### 指令`value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
 ```jsx
-<input 
-_value={state}
-/>
+<input _value={state} />
 ```
 
 ```jsx
-<textarea 
-_value={state}
-/>
+<textarea _value={state} />
 ```
 
 ### 指令`checked`只是一个简单的`checkbox`表单`input`元素的`checked`值双向绑定语法糖
 
 ```jsx
-
-<input type="checkbox"
-_checked={state}
-/>
+<input type="checkbox" _checked={state} />
 ```
 
 # 扩展自定义指令

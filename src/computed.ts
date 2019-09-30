@@ -52,17 +52,17 @@ export default (
   usestste(state1);
   return state1;
 };
-
-
-
+/* interface Call{
+    (...[]:Array)
+} */
 function Arraycomputed(
   state: ReactiveState[],
   callback: Function
 ): ReactiveState {
   const reactivestate = new ReactiveState();
   const getter = () => {
-    const value= callback.call(undefined, ...state);
-return isReactiveState(value)?value.value:value
+    const value = callback.call(undefined, ...state.map(st => st.value));
+    return isReactiveState(value) ? value.value : value;
   };
   defineProperty(reactivestate, "value", {
     get: getter,

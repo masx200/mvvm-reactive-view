@@ -84,10 +84,6 @@ class ReactiveState {
             console.error(init);
             throw TypeError(invalid_primitive_or_object_state);
         }
-        Object.defineProperty(this, Symbol.toStringTag, {
-            value: "ReactiveState",
-            configurable: true
-        });
     }
     [addallistenerssymbol]() {
         this[memlisteners].forEach(([value, callback]) => {
@@ -127,7 +123,11 @@ class ReactiveState {
     }
 }
 
-const componentsymbol = Symbol("iscomponent");
+Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
+    value: "ReactiveState"
+});
+
+const componentsymbol = Symbol("component");
 
 const readysymbol = Symbol("ready");
 
@@ -584,7 +584,11 @@ function createeleattragentreadwrite(ele) {
         set(t, key, v) {
             if ("function" === typeof v) {
                 console.error(v);
-                throw TypeError("\u4e0d\u5141\u8bb8\u8bbe\u7f6e\u5c5e\u6027\u4e3a\u51fd\u6570");
+                throw TypeError("Setting properties as functions is not allowed");
+            }
+            if (geteletagname(ele) === "input" && key === "checked") {
+                set$1(ele, key, v);
+                return true;
             }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
@@ -715,12 +719,12 @@ class Virtualdom {
             onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat() ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat() ]) ])),
             directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_")).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
         });
-        Object.defineProperty(this, Symbol.toStringTag, {
-            value: "virtualdom",
-            configurable: true
-        });
     }
 }
+
+Reflect.defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
+    value: "VirtualElement"
+});
 
 const bindstatesymbol = Symbol("bindstate");
 
@@ -1151,7 +1155,7 @@ function htm(t) {
 function createElement(type = "", props = {}, ...children) {
     let typenormalized = isstring(type) || isfunction(type) ? type : "";
     const propsnormalized = isobject(props) ? props : {};
-    const childrennormalized = children.flat(Infinity);
+    const childrennormalized = children.flat(Infinity).map(a => a === 0 ? "0" : a).filter(a => !!a);
     if (isstring(typenormalized)) {
         typenormalized = typenormalized.trim().toLowerCase();
     }
@@ -1606,7 +1610,8 @@ var computed = (state, callback) => {
 function Arraycomputed(state, callback) {
     const reactivestate = new ReactiveState;
     const getter = () => {
-        return callback.call(undefined, ...state);
+        const value = callback.call(undefined, ...state.map(st => st.value));
+        return isReactiveState(value) ? value.value : value;
     };
     defineProperty$1(reactivestate, "value", {
         get: getter,
@@ -1675,9 +1680,28 @@ extenddirectives({
             [ "change", "input" ].forEach(eventname => {
                 const origin = vdom.onevent[eventname];
                 const eventsarray = [ origin ].flat(Infinity);
-                Reflect.set(vdom.onevent, eventname, eventsarray.concat([ e => {
+                Reflect.set(vdom.onevent, eventname, [ ...eventsarray, e => {
                     return value.value = e.target.value;
-                } ]).filter(Boolean));
+                } ].filter(Boolean));
+            });
+        } else {
+            console.error(value);
+            console.error(vdom);
+            throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+        }
+    }
+});
+
+extenddirectives({
+    checked(element, value, vdom) {
+        if (isReactiveState(value) && vdom.type === "input") {
+            vdom.bindattr["checked"] = value;
+            [ "change", "input" ].forEach(eventname => {
+                const origin = vdom.onevent[eventname];
+                const eventsarray = [ origin ].flat(Infinity);
+                Reflect.set(vdom.onevent, eventname, [ ...eventsarray, e => {
+                    return value.value = e.target.checked;
+                } ].filter(Boolean));
             });
         } else {
             console.error(value);
