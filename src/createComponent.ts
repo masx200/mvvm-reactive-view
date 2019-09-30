@@ -216,16 +216,32 @@ export function createComponent(custfun: Custom): Class {
           }
         }
 //把mounted callback 异步执行
-        this[mountedsymbol].forEach(f => {
+        this[mountedsymbol].forEach(f =>
+ {
 
 setimmediate(
 f
 )
-});
+}
+
+);
         onmounted(this);
       }
       disconnectedCallback() {
-        this[unmountedsymbol].forEach(f => f());
+        this[unmountedsymbol].forEach(f => 
+
+
+{
+
+setimmediate(
+f
+)
+}
+
+
+
+
+);
         onunmounted(this);
       }
       attributeChangedCallback(
