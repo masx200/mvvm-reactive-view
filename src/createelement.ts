@@ -9,8 +9,8 @@ export default function createElement(
 export default function createElement(
   type: Function | string = "",
   props: any = {},
-  ...children: Array<Virtualdom | string | ReactiveState>
-): Virtualdom | Array<Virtualdom | string | ReactiveState> {
+  ...children: Array<Virtualdom | string |number| ReactiveState>
+): Virtualdom | Array<Virtualdom | string | number|ReactiveState> {
   // | Array<Virtualdom | string>
   // if(isarray()){}
   /* add fragment element */
