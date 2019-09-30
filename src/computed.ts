@@ -53,25 +53,7 @@ export default (
   return state1;
 };
 
-/* function computed(state: ReactiveState, callback: Function): ReactiveState {
-  const reactivestate = new ReactiveState();
-  const getter = () => {
-    return callback.call(undefined, state);
-  };
-  defineProperty(reactivestate, "value", {
-    get: getter,
-    configurable: true
-  });
-  let memorized = getter();
-  watch(state, () => {
-    let newvalue = getter();
-    if (newvalue !== memorized) {
-      reactivestate[dispatchsymbol]();
-    }
-    //
-  });
-  return readonlyproxy(reactivestate);
-} */
+
 
 function Arraycomputed(
   state: ReactiveState[],
@@ -79,7 +61,8 @@ function Arraycomputed(
 ): ReactiveState {
   const reactivestate = new ReactiveState();
   const getter = () => {
-    return callback.call(undefined, ...state);
+    const value= callback.call(undefined, ...state);
+return isReactiveState(value)?value.value:value
   };
   defineProperty(reactivestate, "value", {
     get: getter,
