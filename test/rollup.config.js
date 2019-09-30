@@ -27,7 +27,7 @@ export default [
     input: "./test/index.js",
     output: [
       {
-        file: "./test/index-es2015.js",
+        file: "./test/output-es2015.js",
         format: "esm",
         sourcemap: true
       }
