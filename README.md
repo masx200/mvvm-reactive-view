@@ -8,6 +8,8 @@
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
 
+## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`
+
 ## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
@@ -199,7 +201,7 @@ https://tc39.es/proposal-flatMap/
 
 # 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
 
-## ReactiveState,基于 EventTarget 和 Proxy,
+## `ReactiveState`,基于 EventTarget 和 Proxy,
 
 ### 如果状态跟视图绑定，则状态改变引起界面刷新是异步的
 
@@ -209,7 +211,7 @@ https://tc39.es/proposal-flatMap/
 
 ### 如果初始值是对象类型则不能修改为原始类型，
 
-## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 redux,vuex,mobx
+## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 `redux,vuex,mobx`
 
 ```jsx
 const number = createState(10);
