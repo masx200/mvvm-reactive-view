@@ -8,7 +8,7 @@
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
 
-## 有着面向未来的函数式`API`，方便复用逻辑和重用
+## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -22,6 +22,12 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
 https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
 
+```html
+<script
+      type="module"
+      src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
+    ></script>
+```
 # 安装 npm 模块
 
 ```powershell
@@ -284,7 +290,25 @@ document.body.appendChild(
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数
 
-抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，
+抛弃` mixin`(`混入`)和`hoc`(`高阶组件`)，它们已经被废弃。
+
+https://blog.csdn.net/sinat_17775997/article/details/89181398
+
+### Mixin 带来的风险：
+
+Mixin 可能会相互依赖，相互耦合，不利于代码维护
+
+不同的Mixin中的方法可能会相互冲突
+
+Mixin非常多时，组件是可以感知到的，
+
+甚至还要为其做相关处理，这样会给代码造成滚雪球式的复杂性
+
+### HOC的缺陷
+
+HOC需要在原组件上进行包裹或者嵌套，如果大量使用HOC，将会产生非常多的嵌套，这让调试变得非常困难。
+
+HOC可以劫持props，在不遵守约定的情况下也可能造成冲突。
 
 ## 逻辑组合复用
 
