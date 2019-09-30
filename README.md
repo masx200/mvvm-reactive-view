@@ -263,6 +263,8 @@ setTimeout(() => {
 
 # 组件化
 
+一个简单的`helloworld`示例如下
+
 ```jsx
 const defaultProps = { cccccc: "bbbbbbb" };
 const css = `
