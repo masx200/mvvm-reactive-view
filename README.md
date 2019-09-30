@@ -580,12 +580,12 @@ _value={state}
 
 ### 指令`checked`只是一个简单的`checkbox`表单`input`元素的`checked`值双向绑定语法糖
 
-`jsx
+```jsx
 
 <input type="checkbox"
 _checked={state}
 />
-`
+```
 
 # 扩展自定义指令
 
