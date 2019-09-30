@@ -536,9 +536,7 @@ html`
 
 2.使用"\_"+指令名称
 
-```jsx
-<button _text="click me" />
-```
+
 
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
@@ -563,6 +561,10 @@ console.log(ref.value);
 ### 指令`text`用来设置元素的`textContent`
 
 `*text=${state}`
+
+```jsx
+<button _text="click me" />
+```
 
 ### 指令`value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
