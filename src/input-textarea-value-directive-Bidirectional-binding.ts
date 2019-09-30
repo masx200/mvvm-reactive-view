@@ -24,12 +24,13 @@ directives({
         Reflect.set(
           vdom.onevent,
           eventname,
-          eventsarray
-            .concat([
+         [... eventsarray,
+           // .concat([
               (e: any) => {
                 return (value.value = e.target.value);
               }
-            ])
+           // ])
+]
             .filter(Boolean)
         );
       });
