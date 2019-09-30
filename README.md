@@ -811,7 +811,7 @@ function watch(state: ReactiveState, callback: Function): void;
 
 # 列表渲染
 
-1.不变的列表
+1.不变的列表，没有响应性
 
 ```jsx
 const numbers = [1, 2, 3, 4, 5];
@@ -820,6 +820,6 @@ const listItems = numbers.map(number => <li>{number}</li>);
 createApp(<ul>{listItems}</ul>, document.getElementById("root"));
 ```
 
-2.可变的列表
+2.可变的列表，有响应式
 
 尚在开发中
