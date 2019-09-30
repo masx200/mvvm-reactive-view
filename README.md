@@ -542,7 +542,7 @@ html`
 
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
-### 指令`*ref`用来获取元素的引用
+### 指令`ref`用来获取元素的引用
 
 `*ref=${ref}`
 
@@ -556,15 +556,15 @@ var vdom = html`
 console.log(ref.value);
 ```
 
-### 指令`*html`用来设置元素的`innerHTML`
+### 指令`html`用来设置元素的`innerHTML`
 
 `*html=${state}`
 
-### 指令`*text`用来设置元素的`textContent`
+### 指令`text`用来设置元素的`textContent`
 
 `*text=${state}`
 
-### 指令`*value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
+### 指令`value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
 
 ```jsx
 <input 
