@@ -41,3 +41,38 @@ directives({
     }
   }
 });
+directives({
+  checked(element: any, value: ReactiveState, vdom: Virtualdom) {
+    if (
+      isReactiveState(value) &&
+      //   value instanceof ReactiveState
+
+      (vdom.type === "input" )
+    ) {
+      vdom.bindattr["checked"] = value;
+      ["change", "input"].forEach(eventname => {
+        const origin = vdom.onevent[eventname];
+
+        const eventsarray = [origin].flat(Infinity);
+
+        // vdom.onevent[eventname] =
+        Reflect.set(
+          vdom.onevent,
+          eventname,
+         [... eventsarray,
+           // .concat([
+              (e: any) => {
+                return (value.value = e.target.checked);
+              }
+           // ])
+]
+            .filter(Boolean)
+        );
+      });
+    } else {
+      console.error(value);
+      console.error(vdom);
+      throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+    }
+  }
+});
