@@ -835,8 +835,6 @@ function mount(ele, container) {
     return container;
 }
 
-var String$1 = window.String;
-
 var Reflect$2 = window.Reflect;
 
 var get$1 = Reflect$2.get, set$1 = Reflect$2.set;
@@ -885,7 +883,7 @@ function createeleattragentreadwrite(ele) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
-                var v = getattribute(ele, String$1(key));
+                var v = getattribute(ele, String(key));
                 if (v === "") {
                     return true;
                 }
@@ -894,7 +892,7 @@ function createeleattragentreadwrite(ele) {
                 }
                 if (isstring$1(v)) {
                     try {
-                        return JSON.parse(String$1(v));
+                        return JSON.parse(String(v));
                     } catch (error) {
                         return v;
                     }
@@ -902,45 +900,41 @@ function createeleattragentreadwrite(ele) {
             }
         },
         set: function set(t, key, v) {
-            if ("function" === typeof v) {
-                console.error(v);
-                throw TypeError("\u4e0d\u5141\u8bb8\u8bbe\u7f6e\u5c5e\u6027\u4e3a\u51fd\u6570");
-            }
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
             } else if (key === "style") {
-                setattribute(ele, String$1(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v));
+                setattribute(ele, String(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String(v));
                 return true;
             } else if (key === "class" && isobject$1(v)) {
                 if (isArray(v)) {
-                    setattribute(ele, String$1(key), v.join(" "));
+                    setattribute(ele, String(key), v.join(" "));
                 } else if (isSet$1(v)) {
-                    setattribute(ele, String$1(key), _toConsumableArray(v).join(" "));
+                    setattribute(ele, String(key), _toConsumableArray(v).join(" "));
                 } else {
-                    setattribute(ele, String$1(key), JSON.stringify(v));
+                    setattribute(ele, String(key), JSON.stringify(v));
                 }
             } else {
                 if (isSet$1(v)) {
-                    setattribute(ele, String$1(key), JSON.stringify(_toConsumableArray(v)));
+                    setattribute(ele, String(key), JSON.stringify(_toConsumableArray(v)));
                 } else {
                     if (v === true) {
                         v = "";
                     }
-                    setattribute(ele, String$1(key), isobject$1(v) ? JSON.stringify(v) : String$1(v));
+                    setattribute(ele, String(key), isobject$1(v) ? JSON.stringify(v) : String(v));
                     return true;
                 }
             }
             return true;
         },
         deleteProperty: function deleteProperty(t, k) {
-            removeAttribute$1(ele, String$1(k));
+            removeAttribute$1(ele, String(k));
             return true;
         },
         has: function has(target, key) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return true;
             } else {
-                return hasAttribute(ele, String$1(key));
+                return hasAttribute(ele, String(key));
             }
         },
         defineProperty: function defineProperty() {
@@ -960,9 +954,6 @@ function createeleattragentreadwrite(ele) {
             } else {
                 return;
             }
-        },
-        setPrototypeOf: function setPrototypeOf() {
-            return false;
         }
     });
     return outputattrs;
@@ -1228,6 +1219,12 @@ var AttrChange = function(_HTMLElement) {
     } ]);
     return AttrChange;
 }(_wrapNativeSuper(HTMLElement));
+
+function setimmediate(fun) {
+    return Promise.resolve().then((function() {
+        return fun();
+    }));
+}
 
 function readonlyproxy(target) {
     return new Proxy(target, {
@@ -1764,7 +1761,7 @@ function createComponent(custfun) {
                         }
                     }
                     this[mountedsymbol].forEach((function(f) {
-                        return f();
+                        setimmediate(f);
                     }));
                     onmounted(this);
                 }
@@ -1772,7 +1769,7 @@ function createComponent(custfun) {
                 key: "disconnectedCallback",
                 value: function disconnectedCallback() {
                     this[unmountedsymbol].forEach((function(f) {
-                        return f();
+                        setimmediate(f);
                     }));
                     onunmounted(this);
                 }

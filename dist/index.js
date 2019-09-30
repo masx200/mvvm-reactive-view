@@ -863,6 +863,10 @@ class AttrChange extends HTMLElement {
     }
 }
 
+function setimmediate(fun) {
+    return Promise.resolve().then(() => fun());
+}
+
 function readonlyproxy(target) {
     return new Proxy(target, {
         set() {
@@ -1416,11 +1420,15 @@ function createComponent(custfun) {
                         mount(this[elementsymbol], this);
                     }
                 }
-                this[mountedsymbol].forEach(f => f());
+                this[mountedsymbol].forEach(f => {
+                    setimmediate(f);
+                });
                 onmounted(this);
             }
             disconnectedCallback() {
-                this[unmountedsymbol].forEach(f => f());
+                this[unmountedsymbol].forEach(f => {
+                    setimmediate(f);
+                });
                 onunmounted(this);
             }
             attributeChangedCallback(name) {
