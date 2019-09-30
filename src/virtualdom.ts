@@ -8,7 +8,7 @@ import { Class } from "./customclass";
 
 export default class Virtualdom {
   get [Symbol.toStringTag]() {
-    return "VirtualDOM";
+    return "VirtualElement";
 }
   //   options: any |undefined
   element: undefined | Element | Node;
