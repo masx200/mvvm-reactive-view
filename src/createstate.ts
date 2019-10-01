@@ -84,11 +84,11 @@ if(
 Object.values(init).map(a=>isReactiveState(a)).includes(true)
 
 ){
-if(gettagtype(init) === "array"){
+if(isarray(init) ){
 
 
 }else
-if(gettagtype(init) === "object"){
+if(isplainobject(init)){
 
 
 initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
@@ -161,7 +161,7 @@ reactive
 
         if (
           key === "value" &&
-          (gettagtype(value) === "array" || gettagtype(value) === "object")
+          (isarray(value)  || isplainobject(value))
         ) {
           return deepobserve(get(target, key), (_target, patharray) => {
             target[dispatchsymbol](patharray[0]);
