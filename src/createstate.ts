@@ -94,12 +94,14 @@ if(gettagtype(init) === "object"){
 initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
 let unwrapvalue=value
 if(isReactiveState(value)){
+unwrapvalue=value.value
+
 
 watch(value,state=>{
 set(reactive.value,key,value.value)
 reactive[dispatchsymbol](String(key));
 })
-unwrapvalue=value.value
+
 
 
 }
