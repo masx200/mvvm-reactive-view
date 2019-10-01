@@ -85,7 +85,23 @@ Object.values(init).map(a=>isReactiveState(a)).includes(true)
 
 initobj={...init}
 
+Object.entries(init).filter(([key,a])=>isReactiveState(a))
 
+.forEach(([key,state])=>{
+
+defineProperty(initobj,key,{
+
+get(){
+
+return state.valueOf()
+
+
+},
+configurable: true
+
+})
+
+})
 
 
 }
