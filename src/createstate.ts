@@ -66,18 +66,65 @@ function createstate(
     return createstate(init.value);
   } else if (isobject(init)) {
 
-
+let reactive
 //如果在 ReactiveState属性中包含 ReactiveState，则转换成语法糖
 
-//ReactiveState= {aaaaa:ReactiveState}
+//ReactiveState1=createstate( {aaaaa:ReactiveState2})
 
 // 
 /*
-watch(ReactiveState,state=>{
-ReactiveState.aaaaa=state.value
+watch(ReactiveState2,state=>{
+ReactiveState1.aaaaa=state.value
 
 })*/
-    return new Proxy(new ReactiveState(init), {
+
+let initobj=init
+
+if(
+Object.values(init).map(a=>isReactiveState(a)).includes(true)
+
+){
+if(gettagtype(init) === "array"){
+
+
+}else
+if(gettagtype(init) === "object"){
+
+
+initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
+let unwrapvalue=value
+if(isReactiveState(value)){
+
+watch(value,state=>{
+set(reactive.value,key,value.value)
+
+})
+unwrapvalue=value.value
+
+
+}
+return [key,
+
+unwrapvalue
+
+
+]
+
+})
+
+}
+
+}
+
+reactive=new ReactiveState(
+
+initobj
+
+)
+    return new Proxy(
+reactive
+
+, {
       defineProperty() {
         return false;
       },
