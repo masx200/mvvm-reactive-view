@@ -61,7 +61,7 @@ function Arraycomputed(
 ): ReactiveState {
   const reactivestate = new ReactiveState();
   const getter = () => {
-    const value = callback.call(undefined, ...state.map(st => st.value));
+    const value = callback.call(undefined, ...state.map(st => st.valueOf()));
     return isReactiveState(value) ? value.value : value;
   };
   defineProperty(reactivestate, "value", {
