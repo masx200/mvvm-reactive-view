@@ -1,4 +1,4 @@
-export const requestAnimationFrame = window.requestAnimationFrame;
+export const{ requestAnimationFrame} = window
 import { seteletext, setelehtml } from "./dom";
 
 import { watch } from "./watch";
