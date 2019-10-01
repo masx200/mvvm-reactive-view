@@ -68,7 +68,7 @@ export default class ReactiveState
 */
   }
 
-  valueOf() {
+  valueOf=() =>{
     return this.value;
   }
   toString() {
