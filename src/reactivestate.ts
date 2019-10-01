@@ -67,7 +67,7 @@ export default class ReactiveState
 
 */
   }
-
+//剑头函数绑定this
   valueOf=() =>{
     return this.value;
   }
