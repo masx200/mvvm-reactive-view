@@ -72,26 +72,19 @@ let reactive
 //ReactiveState1=createstate( {aaaaa:ReactiveState2})
 
 // 
-/*
-watch(ReactiveState2,state=>{
-ReactiveState1.aaaaa=state.value
 
-})*/
 
 let initobj=init
 
-if(
+if((isplainobject(init))&&
 Object.values(init).map(a=>isReactiveState(a)).includes(true)
 
 ){
 
 
-//if(isarray(init) ){
 
 
-//}else
 
-if(isplainobject(init)){
 
 
 initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
@@ -117,7 +110,7 @@ unwrapvalue
 
 })
 
-}
+
 
 }
 
