@@ -163,7 +163,7 @@ reactive
           key === "value" &&
           (isarray(value)  || isplainobject(value))
         ) {
-          return deepobserve(get(target, key), (_target, patharray) => {
+          return deepobserve(get(target, key), (_target_, patharray) => {
             target[dispatchsymbol](patharray[0]);
           });
         } else if (has(target, key)) {
