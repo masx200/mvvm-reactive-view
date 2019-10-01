@@ -1,3 +1,7 @@
+export {isplainobject}
+
+const isplainobject=a=>gettagtype(a) === "object"
+
 import { /* has,  */ get } from "./reflect";
 import { isFunction } from "./util";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
