@@ -65,6 +65,13 @@ function createstate(
     // 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
     return createstate(init.value);
   } else if (isobject(init)) {
+
+
+//如果在 ReactiveState属性中包含 ReactiveState，则转换成语法糖
+
+// {aaaaa:ReactiveState}
+
+
     return new Proxy(new ReactiveState(init), {
       defineProperty() {
         return false;
