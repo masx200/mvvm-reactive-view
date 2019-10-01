@@ -5,7 +5,11 @@ import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
 import typescript from "rollup-plugin-typescript";
 
-const banner=`const {String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,HTMLElement,Set}=window;`
+const banner=`const {String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,HTMLElement,Set,Math,Error,TypeError,EventTarget}=window;`
+
+
+
+
 const myterserplugin = terser({
   sourcemap: true,
   toplevel: true,
