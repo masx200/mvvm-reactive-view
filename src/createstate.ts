@@ -119,6 +119,10 @@ let reactive
 initobj
 
 )
+
+
+
+
     return new Proxy(
 reactive
 
@@ -201,7 +205,7 @@ reactive
       set(target, key, value) {
 if(isReactiveState(value)){
 //如果遇到 isReactiveState则自动解包
-value=value.vauleOf()
+value=value.valueOf()
 
 }
         /*   if (key === textnodesymbol) {
