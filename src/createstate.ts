@@ -84,10 +84,13 @@ if(
 Object.values(init).map(a=>isReactiveState(a)).includes(true)
 
 ){
-if(isarray(init) ){
 
 
-}else
+//if(isarray(init) ){
+
+
+//}else
+
 if(isplainobject(init)){
 
 
