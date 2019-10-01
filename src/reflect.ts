@@ -4,7 +4,7 @@ export default Reflect;
 export const {
   //   apply,
   construct,
-  //   defineProperty,
+     defineProperty,
   deleteProperty,
   get,
   getOwnPropertyDescriptor,
