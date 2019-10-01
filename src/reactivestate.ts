@@ -83,11 +83,11 @@ export default class ReactiveState
   }
   [dispatchsymbol](eventname?: string) {
     const name = eventname ? String(eventname) : "value";
-    if (name !== "value") {
-      this[eventtargetsymbol].dispatchEvent(
-        new CustomEvent(name, { detail: name })
-      );
-    }
+  //  if (name !== "value") {
+  //    this[eventtargetsymbol].dispatchEvent(
+   //     new CustomEvent(name, { detail: name })
+    //  );
+   // }
 
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
