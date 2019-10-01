@@ -66,7 +66,7 @@ function createstate(
     return createstate(init.valueOf());
   } else if (isobject(init)) {
 
-let reactive
+
 //如果在 ReactiveState属性中包含 ReactiveState，则转换成语法糖
 
 //ReactiveState1=createstate( {aaaaa:ReactiveState2})
@@ -82,10 +82,10 @@ Object.values(init).map(a=>isReactiveState(a)).includes(true)
 ){
 
 
+initobj={...init}
 
 
-
-
+/*
 
 initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
 let unwrapvalue=value
@@ -110,11 +110,11 @@ unwrapvalue
 
 })
 
-
+*/
 
 }
-
-reactive=new ReactiveState(
+let reactive
+=new ReactiveState(
 
 initobj
 
@@ -199,6 +199,11 @@ reactive
         );
       },
       set(target, key, value) {
+if(isReactiveState(value)){
+//如果遇到 isReactiveState则自动解包
+value=value.vauleOf()
+
+}
         /*   if (key === textnodesymbol) {
           return set(target, key, value);
         } */
