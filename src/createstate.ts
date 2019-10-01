@@ -76,18 +76,19 @@ function createstate(
 
 
 let initobj=init
+const containReactiveState=(isplainobject(init))&&Object.values(init).map(a=>isReactiveState(a)).includes(true)
+const state_entries=Object.entries(init).filter(([key,a])=>isReactiveState(a))
 
-if((isplainobject(init))&&
-Object.values(init).map(a=>isReactiveState(a)).includes(true)
-
+if(
+containReactiveState
 ){
 
 
 initobj={...init}
 
-Object.entries(init).filter(([key,a])=>isReactiveState(a))
-
-.forEach(([key,state])=>{
+state_entries
+.forEach(
+([key,state])=>{
 
 defineProperty(initobj,key,{
 
@@ -113,7 +114,14 @@ initobj
 )
 
 
+if(containReactiveState){
+state_entries.forEach(
+([key,state])=>{
 
+
+}
+)
+}
 
     return new Proxy(
 reactive
