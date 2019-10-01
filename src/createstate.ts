@@ -3,6 +3,7 @@ import { getproperyreadproxy } from "./computed";
 import { invalid_primitive_or_object_state } from "./reactivestate";
 
 import {
+defineProperty,
   deleteProperty,
   get,
   getOwnPropertyDescriptor,
