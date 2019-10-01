@@ -11,7 +11,7 @@ import { invalid_Function } from "./context-mounted-unmounted-";
 export function watch(
   state: ReactiveState,
   callback: Function,
-  statekey?: string
+//  statekey?: string
 ): void {
   if (
     !(
@@ -25,14 +25,16 @@ export function watch(
     throw TypeError(invalid_ReactiveState + invalid_Function);
   }
 
-  if (statekey) {
-    state[subscribesymbol](callback, statekey);
-  } else {
+//  if (statekey) {
+ 
+//   state[subscribesymbol](callback, statekey);
+ // } else {
     state[subscribesymbol](callback);
-  }
+//  }
 
   requestAnimationFrame(() => {
-    state[addallistenerssymbol]();
+rewatch(state)
+   // state[addallistenerssymbol]();
   });
 }
 export function unwatch(state: ReactiveState): void {
