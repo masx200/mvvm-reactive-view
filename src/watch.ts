@@ -1,4 +1,4 @@
-import { requestAnimationFrame } from "./directives";
+//import { requestAnimationFrame } from "./directives";
 import { isFunction } from "./util";
 import ReactiveState, {
   isReactiveState,
