@@ -11,7 +11,7 @@ import {
   set
 } from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
-import { isobject, isSet, gettagtype } from "./util";
+import {isarray,isplainobject, isobject, isSet, gettagtype } from "./util";
 import isprimitive from "./isprimitive";
 import ReactiveState, {
   dispatchsymbol,
