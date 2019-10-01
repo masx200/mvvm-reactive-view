@@ -118,7 +118,12 @@ if(containReactiveState){
 state_entries.forEach(
 ([key,state])=>{
 
+watch(state,()=>{
 
+
+reactive[dispatchsymbol](String(key));
+
+})
 }
 )
 }
