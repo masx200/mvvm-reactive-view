@@ -1,6 +1,6 @@
 export {isplainobject}
 
-const isplainobject=a=>gettagtype(a) === "object"
+const isplainobject=a=>isobject(a)&&gettagtype(a) === "object"
 
 import { /* has,  */ get } from "./reflect";
 import { isFunction } from "./util";
