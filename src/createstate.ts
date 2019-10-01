@@ -85,32 +85,7 @@ Object.values(init).map(a=>isReactiveState(a)).includes(true)
 initobj={...init}
 
 
-/*
 
-initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
-let unwrapvalue=value
-if(isReactiveState(value)){
-unwrapvalue=value.valueOf()
-
-
-watch(value,state=>{
-set(reactive.value,key,state.value)
-reactive[dispatchsymbol](String(key));
-})
-
-
-
-}
-return [key,
-
-unwrapvalue
-
-
-]
-
-})
-
-*/
 
 }
 let reactive
