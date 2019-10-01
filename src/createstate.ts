@@ -13,7 +13,7 @@ defineProperty,
 } from "./reflect";
 import deepobserve from "deep-observe-agent-proxy";
 import {isarray,isplainobject, isobject, isSet, gettagtype } from "./util";
-import isprimitive from "./isprimitive";
+import{ isprimitive }from "./util";
 import ReactiveState, {
   dispatchsymbol,
   // textnodesymbol,
