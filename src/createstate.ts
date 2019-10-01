@@ -98,7 +98,7 @@ unwrapvalue=value.value
 
 
 watch(value,state=>{
-set(reactive.value,key,value.value)
+set(reactive.value,key,state.value)
 reactive[dispatchsymbol](String(key));
 })
 
