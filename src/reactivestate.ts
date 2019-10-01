@@ -93,10 +93,11 @@ export default class ReactiveState
       new CustomEvent("value", { detail: name })
     );
   }
-  [subscribesymbol](callback: Function, eventname?: string) {
+  [subscribesymbol](callback: Function/*, eventname?: string*/) {
     // this[eventtargetsymbol].addEventListener("value", callback);
-    const name = eventname ? String(eventname) : "value";
-    this[memlisteners].push([
+   // const name = eventname ? String(eventname) : "value";
+  const name="value";
+  this[memlisteners].push([
       name,
       (event: Event) => callback.call(undefined, this, get(event, "detail"))
     ]);
