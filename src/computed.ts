@@ -1,4 +1,5 @@
 import {
+defineProperty,
   //   deleteProperty,
   get,
   //   getOwnPropertyDescriptor,
@@ -18,7 +19,7 @@ import { invalid_Function, usestste } from "./context-mounted-unmounted-";
 import readonlyproxy from "./readonlyproxy";
 import { watch } from "./watch";
 import { toArray } from "./toArray";
-const { defineProperty } = Object;
+//const { defineProperty } = Object;
 export default (
   state: ReactiveState | Array<ReactiveState>,
   callback: Function
