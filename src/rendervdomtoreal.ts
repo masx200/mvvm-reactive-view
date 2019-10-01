@@ -201,7 +201,7 @@ function handleprops(
       attribute1[key] = primitivestate.value;
       watch(primitivestate, (state: { value: any }) => {
         if (isconnected(element)) {
-          attribute1[key] = state.value;
+          attribute1[key] = state.valueOf();
         }
       });
       /*     primitivestate[subscribesymbol]();
