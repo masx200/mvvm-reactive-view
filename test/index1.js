@@ -185,14 +185,24 @@ import {
     "test"
   ]);
   const stylestate = createState({ display: "block", width: "100%" });
-  const classsetstate = createState(
+ 
+//
+ const classsetstate = createState(
     new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"])
   );
+
+
   console.log("classsetstate", classsetstate);
-  watch(classsetstate, console.log);
+  watch(classsetstate, a=>console.log(a));
   setTimeout(() => {
     classsetstate.add("vvvvvvvvvvv");
   }, 5000);
+setTimeout(() => {
+    classsetstate.delete("eeeeeeee");
+  }, 4000);
+
+//
+
   const vdomobj = html`
     <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
     <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
