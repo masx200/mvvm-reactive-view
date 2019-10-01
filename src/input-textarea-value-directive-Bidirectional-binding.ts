@@ -1,3 +1,5 @@
+import{toArray}from"./toArray"
+import{set}from"./reflect"
 import ReactiveState, {
   // ReactiveState,
   isReactiveState
@@ -18,18 +20,18 @@ directives({
       ["change", "input"].forEach(eventname => {
         const origin = vdom.onevent[eventname];
 
-        const eventsarray = [origin].flat(Infinity);
+        const eventsarray = toArray(origin);
 
-        // vdom.onevent[eventname] =
-        Reflect.set(
+        
+        set(
           vdom.onevent,
           eventname,
          [... eventsarray,
-           // .concat([
+           
               (e: any) => {
                 return (value.value = e.target.value);
               }
-           // ])
+           
 ]
             .filter(Boolean)
         );
@@ -53,18 +55,19 @@ directives({
       ["change", "input"].forEach(eventname => {
         const origin = vdom.onevent[eventname];
 
-        const eventsarray = [origin].flat(Infinity);
+        const eventsarray = toArray(origin);
 
-        // vdom.onevent[eventname] =
-        Reflect.set(
+
+        
+        set(
           vdom.onevent,
           eventname,
          [... eventsarray,
-           // .concat([
+           
               (e: any) => {
                 return (value.value = e.target.checked);
               }
-           // ])
+           
 ]
             .filter(Boolean)
         );
