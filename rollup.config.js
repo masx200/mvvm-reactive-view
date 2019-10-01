@@ -4,6 +4,8 @@ import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
 import typescript from "rollup-plugin-typescript";
+
+const banner=`const {String,Array,document,Object,Reflect,Proxy,Symbol,Boolean}=window;`
 const myterserplugin = terser({
   sourcemap: true,
   toplevel: true,
@@ -24,7 +26,7 @@ export default [
   {
     input: "./src/index.ts",
     output: [
-      {
+      {banner,
         file: "./dist/index.js",
         format: "esm",
         sourcemap: true
@@ -51,6 +53,7 @@ export default [
     input: "./dist/index.js",
     output: [
       {
+
         file: "./dist/index.min.js",
         format: "esm",
         sourcemap: true
