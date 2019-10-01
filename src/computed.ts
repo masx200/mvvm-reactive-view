@@ -34,9 +34,9 @@ export default (
     console.error(callback);
     throw TypeError(invalid_ReactiveState + invalid_Function);
   }
-  let state1array: ReactiveState[];
+  const state1array: ReactiveState[]
   //   if (isReactiveState(state)) {
-  state1array = toArray(state);
+  = toArray(state);
   /*  state1 = Arraycomputed(
       toArray(state),
 
