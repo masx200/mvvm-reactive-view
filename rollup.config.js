@@ -5,7 +5,8 @@ import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
 import typescript from "rollup-plugin-typescript";
 
-const banner=`const {requestAnimationFrame，URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,HTMLElement,Set,Math,Error,TypeError,EventTarget,JSON,Map}=window;`;
+const banner=
+`const {requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,HTMLElement,Set,Math,Error,TypeError,EventTarget,JSON,Map}=window;`;
 
 
 
