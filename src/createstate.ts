@@ -63,7 +63,7 @@ function createstate(
     // init instanceof ReactiveState
   ) {
     // 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
-    return createstate(init.value);
+    return createstate(init.valueOf());
   } else if (isobject(init)) {
 
 let reactive
@@ -90,7 +90,7 @@ Object.values(init).map(a=>isReactiveState(a)).includes(true)
 initobj=Object.fromEntries(Object.entries(init).map(([key,value])=>{
 let unwrapvalue=value
 if(isReactiveState(value)){
-unwrapvalue=value.value
+unwrapvalue=value.valueOf()
 
 
 watch(value,state=>{
