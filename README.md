@@ -154,8 +154,7 @@ createApp(vdom, document.getElementById("root"));
 
 ## 为什么选择`jsx`？而不是`template`？
 
-`jsx`的表现能力明显强于`template`，`template`中无法写函数与对象，只能写字符串，类似`vue`和`angular`的模板`DSL`会让人很难理解
-
+`jsx`的表现能力明显强于`template`，`template`中无法写函数与对象，只能写字符串，类似`vue`和`angular`的模板`DSL`会让人很难理解，模板`dsl`不如`jsx`灵活
 
 ## 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
 
