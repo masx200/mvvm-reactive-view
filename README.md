@@ -4,6 +4,8 @@
 
 ## 基于 `Proxy`,基于`虚拟 dom`,支持 `jsx` 和 `hyperscript`,前端 `javascript` 库
 
+
+
 ## 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用`diff`算法，响应式状态直接与元素绑定，高效更新，性能更强
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
@@ -11,6 +13,9 @@
 ## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`
 
 ## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
+
+
+
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -146,6 +151,11 @@ createApp(vdom, document.getElementById("root"));
 ```
 
 # 支持`jsx`和使用 `hyperscript`
+
+## 为什么选择`jsx`？而不是`template`？
+
+`jsx`的表现能力明显强于`template`，`template`中无法写函数与对象，只能写字符串，类似`vue`和`angular`的模板`DSL`会让人很难理解
+
 
 ## 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
 
