@@ -174,7 +174,7 @@ reactive
         } else if (has(target, key)) {
           return get(target, key);
         } else if (has(value, key)) {
-          if (isSet(value) && (key === "add" || key === "delete")) {
+          if (isSet(value) ) {
             const myvalue = value;
             if (key === "add") {
               return (add: any) => {
@@ -191,7 +191,21 @@ reactive
                   target[dispatchsymbol]();
                   return returnvalue;
                 }
-              };
+              }
+else if (key === "clear") {
+              return () => {
+                if (myvalue.length) {
+                  const returnvalue = Set.prototype[key].call(myvalue);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
+              }
+else {
+
+return  get(value, key)
+}
+
+
             }
           } else {
             return deepobserve(get(value, key), () => {
