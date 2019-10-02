@@ -305,7 +305,7 @@ document.body.appendChild(
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数
 
-抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，它们已经被废弃。
+抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，让人难以理解，难以使用，它们已经被废弃。
 
 https://blog.csdn.net/sinat_17775997/article/details/89181398
 
@@ -325,7 +325,7 @@ HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将
 
 HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
-## 逻辑组合复用
+## 更好的逻辑组合复用方法
 
 受到 `Vue Composition API`和`React Hooks`的启发,
 
