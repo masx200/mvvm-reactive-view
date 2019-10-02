@@ -23,7 +23,7 @@ export default class Virtualdom {
     props: object = {},
     children: Array<Virtualdom | string | ReactiveState | number> = []
   ) {
-    const 字母大小写 = /[A-Za-z]/;
+    const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
     // console.log(type, props, children);
     //添加支持on开头事件绑定写法
     const propsentries = Object.entries(props);
