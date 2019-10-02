@@ -72,7 +72,7 @@ export default class ReactiveState
     return this.value;
   }
   toString() {
-    const value = this.value;
+    const value = this.valueOf();
     return isprimitive(value)
       ? String(value)
       : isSet(value)
@@ -109,7 +109,7 @@ export default class ReactiveState
   }
   [Symbol.toPrimitive]() {
     //return this.value;
-    const value = this.value;
+    const value = this.valueOf();
     return isprimitive(value)
       ? value
       : isobject(value)
