@@ -91,7 +91,7 @@ state_entries
 ([key,state])=>{
 
 defineProperty(initobj,key,{
-emmurable:true,
+enumerable:true,
 get(){
 
 return state.valueOf()
