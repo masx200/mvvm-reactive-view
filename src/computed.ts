@@ -107,14 +107,18 @@ export function getproperyreadproxy(a: object) {
       return has(target, key) || has(myvalueobj, key);
     },
     get(target, key) {
-      const myvalue = get(target, "value");
-      const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
-
+      
       if (has(target, key)) {
         return get(target, key);
-      } else if (has(myvalueobj, key)) {
+      } else
+{
+const myvalue = get(target, "value");
+      const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
+
+ if (has(myvalueobj, key)) {
         return get(myvalueobj, key);
       }
+}
       //   return get(target, key);
       /*  const myvalue = get(target, "value");
 
