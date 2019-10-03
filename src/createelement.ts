@@ -31,12 +31,15 @@ export default function createElement(
     "" === typenormalized
   ) {
     return childrennormalized;
-  }
+  }else
+
   /* propsnormalized = Object.fromEntries(
     Object.entries(propsnormalized).map(([key, value]) => [
       key.trim().toLowerCase(),
       value
     ])
   ); */
+{
   return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
+}
 }
