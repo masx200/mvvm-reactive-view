@@ -11,10 +11,19 @@ import ReactiveState, {
 } from './reactivestate';
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
-export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,callback:CallbackReactiveState<T>){
+export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,
+
+callback:CallbackReactiveState<T>){
 if(isarray(state))
 {
+state.forEach(state=>{
 
+watchsingle(state,()=>{
+
+callback(...state)
+})
+
+})
 }
 else if(isReactiveState(state)){
 
@@ -45,11 +54,15 @@ function watchsingle(
     throw TypeError(invalid_ReactiveState + invalid_Function);
   }
 
+
+
+state[subscribesymbol](callback);
+
 //  if (statekey) {
  
 //   state[subscribesymbol](callback, statekey);
  // } else {
-    state[subscribesymbol](callback);
+    
 //  }
 
   requestAnimationFrame(() => {
