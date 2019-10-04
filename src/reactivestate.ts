@@ -31,11 +31,14 @@ deleteProperty(forkarray.prototype, "length"); */
 
 export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
 
-{
+
   /* get [Symbol.toStringTag]() {
     return "ReativeState";
 
 } */
+
+{
+
   [addallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
       this[eventtargetsymbol].addEventListener(value, callback);
