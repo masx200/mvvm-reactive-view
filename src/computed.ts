@@ -65,11 +65,17 @@ function Arraycomputed(
     const value = callback.call(undefined, ...state.map(st => st.valueOf()));
     return isReactiveState(value) ? value.value : value;
   };
+
+let memorized = getter();
+
+if(isFunction(memorized)){
+throw new TypeError()
+}
   defineProperty(reactivestate, "value", {
     get: getter,
     configurable: true
   });
-  let memorized = getter();
+  
   state.forEach(state => {
     watch(state, () => {
       let newvalue = getter();
