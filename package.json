@@ -25,10 +25,11 @@
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {
-        "deep-observe-agent-proxy": "https://gitee.com/masx200/deep-observe-agent-proxy.git",
-        "dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git"
-    },
+          },
     "devDependencies": {
+"deep-observe-agent-proxy": "https://gitee.com/masx200/deep-observe-agent-proxy.git",
+        "dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git"
+  ,
         "@babel/core": "^7.6.0",
         "@babel/plugin-proposal-class-properties": "^7.5.5",
         "@babel/plugin-transform-react-jsx": "^7.3.0",
