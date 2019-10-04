@@ -734,7 +734,7 @@ interface CallbackReactiveState<T extends string | number | boolean | undefined 
 }
 function computed<T>(
   state: ReactiveState<T> | ReactiveState<T>[],
-  callback:CallbackReactiveState
+  callback:CallbackReactiveState<T>
 ): ReactiveState<any>;
 ```
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
@@ -742,7 +742,7 @@ function computed<T>(
 ```ts
 function watch<T>(
 state: ReactiveState<T>| ReactiveState<T>[],
- callback: CallbackReactiveState): void;
+ callback: CallbackReactiveState<T>): void;
 ```
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
