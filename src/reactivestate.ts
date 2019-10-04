@@ -23,7 +23,7 @@ ownKeys(Array.prototype).forEach(key => {
 Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
-export default class ReactiveState
+export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
 /* extends forkarray  */
 
 {
@@ -40,10 +40,10 @@ export default class ReactiveState
     this[textnodesymbol] = textnode;
   } */
   // [textnodesymbol]: Text | undefined;
-  value: string | number | boolean | undefined | object;
+  value: T
   [eventtargetsymbol] = new EventTarget();
   [memlisteners]: Array<[string, EventListener]> = [];
-  constructor(init?: string | number | boolean | object | undefined) {
+  constructor(init?:T) {
     //super();
     if (isprimitive(init) || isobject(init)) {
       Object.defineProperty(this, "value", {
