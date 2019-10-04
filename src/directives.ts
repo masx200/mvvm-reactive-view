@@ -4,12 +4,17 @@ import { seteletext, setelehtml } from "./dom";
 import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
-import { isobject } from "./util";
+import { isobject,isfunction } from "./util";
 export default {
-  ref(ele: Element, ref: { value: any }) {
+  ref(ele: Element, ref: { value: any }|Function) {
     if (isobject(ref)) {
       ref.value = ele;
-    } else {
+    }else if(isfunction(ref)){
+
+ref.call(undefined,ele)
+}
+
+ else {
       throw TypeError("invalid ref");
     }
   },
