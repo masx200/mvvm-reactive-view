@@ -717,10 +717,9 @@ function createState(init: string | number | boolean | object): ReactiveState;
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-class ReactiveState {
-  value: string | number | boolean | undefined | object;
-
-  constructor(init: string | number | boolean | undefined | object);
+class ReactiveState<T extends string | number | boolean | undefined | object|bigint > {
+  value: T
+  constructor(init: T);
 }
 ```
 
@@ -729,12 +728,19 @@ class ReactiveState {
 ### 第一个参数是依赖项,或者依赖项数组,第二个参数是回调函数,返回一个响应式状态对象,
 
 ```typescript
-function computed(
+interface CallbackReactiveState{
+ (...Array<ReactiveState<T>>)=>T
+}
+function computed<T>(
   state: ReactiveState | ReactiveState[],
-  callback: Function
-): ReactiveState;
+  callback:CallbackReactiveState
+): ReactiveState<T>;
 ```
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
 
+```ts
+function watch(state: ReactiveState| ReactiveState[], callback: CallbackReactiveState): void;
+```
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
@@ -769,7 +775,7 @@ function useUnMounted(fun: Function): void;
 ```ts
 function condition(
   conditon: ReactiveState,
-  iftrue:
+  iftrue?:
     | Virtualdom
     | string
     | Array<Virtualdom | string | ReactiveState>
@@ -850,11 +856,7 @@ class Virtualdom {
 }
 ```
 
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
 
-```ts
-function watch(state: ReactiveState, callback: Function): void;
-```
 
 # 懒加载
 
