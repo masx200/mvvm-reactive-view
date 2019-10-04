@@ -1,5 +1,5 @@
 import { isString, isnumber, isboolean, isundefined } from "./util";
-type Primitive=string | number | boolean | undefined | object|bigint
+type Primitive=string | number | boolean | undefined |bigint
 export default function(a: any):a is Primitive{
   return (
     isString(a) ||
