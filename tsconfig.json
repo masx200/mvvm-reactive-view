@@ -18,12 +18,9 @@
     "baseUrl": ".",
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
-    /*  "paths": {
-      "*": ["node_modules/*"]
-    }, */
+        "noImplicitAny": true,
     "importHelpers": true
   },
   "include": ["*"]
-  //"exclude": ["node_modules", "**/node_modules/*"]
-  //"include": ["src/**/*.ts"]
+  
 }
