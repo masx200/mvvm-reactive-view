@@ -798,7 +798,14 @@ function createApp(
 ## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
 
 ```ts
-function createRef(init: any): {};
+interface Ref<T> {
+  value: T
+}
+
+function createRef<T>(value: T): Ref<T> {
+  return { value };
+}
+
 ```
 
 ## 虚拟 `dom` `Virtualdom`类
