@@ -20,6 +20,7 @@
     "experimentalDecorators": true,
         "noImplicitAny": true,
     "importHelpers": true,
+"moduleResolution":"node",
 "allowSyntheticDefaultImports":true
   },
   "include": ["*"]
