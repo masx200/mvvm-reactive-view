@@ -707,7 +707,7 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
 ```ts
-function createState(init: string | number | boolean | object): ReactiveState;
+function createState<T extends string | number | boolean | undefined | object|bigint > (init:T): ReactiveState<T>;
 ```
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
@@ -728,18 +728,21 @@ class ReactiveState<T extends string | number | boolean | undefined | object|big
 ### 第一个参数是依赖项,或者依赖项数组,第二个参数是回调函数,返回一个响应式状态对象,
 
 ```typescript
-interface CallbackReactiveState{
- (...Array<ReactiveState<T>>)=>T
+interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint > {
+  
+ (...Array<ReactiveState<T>>):any
 }
 function computed<T>(
-  state: ReactiveState | ReactiveState[],
+  state: ReactiveState<T> | ReactiveState<T>[],
   callback:CallbackReactiveState
-): ReactiveState<T>;
+): ReactiveState<any>;
 ```
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
 
 ```ts
-function watch(state: ReactiveState| ReactiveState[], callback: CallbackReactiveState): void;
+function watch<T>(
+state: ReactiveState<T>| ReactiveState<T>[],
+ callback: CallbackReactiveState): void;
 ```
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
