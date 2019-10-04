@@ -69,6 +69,7 @@ function Arraycomputed(
 let memorized = getter();
 
 if(isFunction(memorized)){
+console.error(memorized)
 throw new TypeError()
 }
   defineProperty(reactivestate, "value", {
