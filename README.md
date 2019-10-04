@@ -497,9 +497,9 @@ type classprop = string | Set<string> | Array<string>;
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
 html`
   <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
-    ${objstatearray}
+    
   </div>
-  ${objstate}
+  
   <div style=${stylestate} class=${classsetstate} />
 `;
 
@@ -521,8 +521,12 @@ type styleprop = string | object;
 `style=${{ display: "block", width: "500px" }}`
 
 ```js
+const stylestate = createState({ display: "block", width: "700px" });
+
 html`
-  <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
+<div style=${stylestate} class=${classsetstate} />
+
+  <div style=${{ display: "block", width: "100%" }}></div>
 `;
 ```
 
