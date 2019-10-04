@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
 "declaration": true,
     "noUnusedLocals": true,
     "module": "esnext",
