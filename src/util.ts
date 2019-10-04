@@ -5,14 +5,14 @@ const isplainobject=a=>isobject(a)&&gettagtype(a) === "object"
 import { /* has,  */ get } from "./reflect";
 import { isFunction } from "./util";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-export function isundefined(a: any) {
+export function isundefined(a: any):a is undefined {
   return typeof a === "undefined";
 }
 
 export function isnumber(a: any): a is number {
   return typeof a === "number";
 }
-export function isboolean(a: any) {
+export function isboolean(a: any) :a is boolean{
   return typeof a === "boolean";
 }
 export function isobject(a: any): a is object {
