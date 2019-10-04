@@ -565,7 +565,7 @@ console.log(ref.value);
 const ref =createRef( );
 
 var vdom = 
-  <div _ref=${ele=>ref.value=ele} />
+  <div _ref={ele=>ref.value=ele} />
 
 
 console.log(ref.value);
