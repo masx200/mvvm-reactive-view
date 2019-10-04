@@ -1,3 +1,6 @@
+import {CallbackReactiveState}from"./computed"
+
+
 //import { requestAnimationFrame } from "./directives";
 import { isFunction } from "./util";
 import ReactiveState, {
@@ -8,7 +11,11 @@ import ReactiveState, {
 } from './reactivestate';
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
-export function watch(
+export function watch(state,callback){}
+
+
+
+function watchsingle(
   state: ReactiveState,
   callback: Function,
 //  statekey?: string
