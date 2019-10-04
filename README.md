@@ -262,7 +262,7 @@ document.body.appendChild(createApp(vdom, document.createElement("div")));
 var mystate = createState(true);
 var vdom = condition(
   mystate,
-  <p> {["testtrue"]}</p>,
+ createElement( "p",null,["testtrue"]),
   createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(createApp(vdom, document.createElement("div")));
@@ -547,7 +547,7 @@ html`
 
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
-### 指令`ref`用来获取元素的引用
+### 指令`ref`用来获取元素的引用,值可以是`object`或者`Function`
 
 `*ref=${ref}`
 
@@ -557,6 +557,16 @@ const ref = createRef();
 var vdom = html`
   <div *ref=${ref} />
 `;
+
+console.log(ref.value);
+```
+
+```tsx
+const ref =createRef( );
+
+var vdom = 
+  <div _ref=${ele=>ref.value=ele} />
+
 
 console.log(ref.value);
 ```
