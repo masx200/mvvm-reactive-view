@@ -2,7 +2,7 @@ import {CallbackReactiveState}from"./computed"
 
 
 //import { requestAnimationFrame } from "./directives";
-import { isFunction } from "./util";
+import { isFunction ,isarray} from "./util";
 import ReactiveState, {
   isReactiveState,
   subscribesymbol,
@@ -11,7 +11,21 @@ import ReactiveState, {
 } from './reactivestate';
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
-export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,callback:CallbackReactiveState<T>){}
+export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,callback:CallbackReactiveState<T>){
+if(isarray(state))
+{
+
+}
+else if(isReactiveState(state)){
+
+watchsingle(state ,callback)
+}else{
+console.error(state);
+    console.error(callback);
+throw new TypeError()
+}
+
+}
 
 
 
@@ -27,8 +41,7 @@ function watchsingle(
       isFunction(callback)
     )
   ) {
-    console.error(state);
-    console.error(callback);
+    
     throw TypeError(invalid_ReactiveState + invalid_Function);
   }
 
