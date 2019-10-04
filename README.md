@@ -37,6 +37,20 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
   src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
 ></script>
 ```
+# `webcomponent` `custom-elements` `polyfill`
+
+```html
+<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
+```
+
+或者
+
+```js
+import "mvvm-reactive-view/polyfill/custom-elements.min.js";
+```
+
+https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
+
 
 # 安装 npm 模块
 
@@ -71,23 +85,16 @@ import {
 } from "mvvm-reactive-view";
 ```
 
-# 从 cdn 获取
+# 从 `cdn` 获取模块
+
+## 开发模式
+
+https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js
+
+## 生产模式
 
 https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
 
-# webcomponent custom-elements polyfill
-
-```html
-<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
-```
-
-或者
-
-```js
-import "mvvm-reactive-view/polyfill/custom-elements.min.js";
-```
-
-https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
 # 快速上手,可在浏览器中运行而不需要编译工具
 
