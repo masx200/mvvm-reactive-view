@@ -11,7 +11,7 @@ import ReactiveState, {
 } from './reactivestate';
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
-export function watch(state,callback){}
+export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,callback:CallbackReactiveState<T>){}
 
 
 
