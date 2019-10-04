@@ -1,3 +1,8 @@
+export interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint > {
+  
+ (...Array<ReactiveState<T>>):any
+}
+
 import {
 defineProperty,
   //   deleteProperty,
@@ -20,9 +25,9 @@ import readonlyproxy from "./readonlyproxy";
 import { watch } from "./watch";
 import { toArray } from "./toArray";
 //const { defineProperty } = Object;
-export default (
-  state: ReactiveState | Array<ReactiveState>,
-  callback: Function
+export default <T>(
+  state: ReactiveState <T>| Array<ReactiveState<T>>,
+  callback: CallbackReactiveState<T>
 ) => {
   if (
     !(
@@ -53,13 +58,11 @@ export default (
   usestste(state1);
   return state1;
 };
-/* interface Call{
-    (...[]:Array)
-} */
-function Arraycomputed(
-  state: ReactiveState[],
-  callback: Function
-): ReactiveState {
+
+function Arraycomputed<T>(
+  state: ReactiveState<T>[],
+  callback: CallbackReactiveState<T>
+): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
     const value = callback.call(undefined, ...state.map(st => st.valueOf()));
