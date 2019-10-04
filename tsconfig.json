@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
         "noImplicitAny": true,
-    "importHelpers": true
+    "importHelpers": true,
+"allowSyntheticDefaultImports":true
   },
   "include": ["*"]
   
