@@ -19,7 +19,9 @@
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
-关于 `Proxy`
+### 浏览器要求原生支持`Proxy`和`ECMASCRIPT2015+`
+
+### 关于 `Proxy`
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
 
