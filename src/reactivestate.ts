@@ -23,8 +23,13 @@ ownKeys(Array.prototype).forEach(key => {
 Object.assign(forkarray.prototype, forkarryaprototype);
 forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
-export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
 /* extends forkarray  */
+
+
+
+
+
+export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
 
 {
   /* get [Symbol.toStringTag]() {
