@@ -6,7 +6,10 @@ interface Extendfun {
 import directives from "./directives";
 export default function extenddirectives(options: {
   [s: string]: Extendfun;
-}): void {
+}={}
+)
+: void
+ {
   Object.entries(options).forEach(([key, value]) => {
     if (typeof value !== "function") {
       throw TypeError(invalid_Function);
