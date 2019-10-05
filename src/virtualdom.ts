@@ -8,10 +8,12 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
+type Vdomchildren=Array<Virtualdom | string | ReactiveState | number>
+
 export default class Virtualdom 
 <
-T extends Class|string|Function,
-K extends Array<Virtualdom | string | ReactiveState | number>
+T extends Class|string|Function
+
 >
 {
   /* get [Symbol.toStringTag]() {
@@ -21,14 +23,14 @@ K extends Array<Virtualdom | string | ReactiveState | number>
   element: undefined | Element | Node;
   type: T = "";
   props: ElementAttrs = {};
-  children: K = [];
+  children: Vdomchildren = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState<any> } = {};
   constructor(
     type: T= "",
     props: ElementAttrs = {},
-    children: K = []
+    children: Vdomchildren = []
   ) {
 //对象浅拷贝
 props={...props}
