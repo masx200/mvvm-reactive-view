@@ -183,10 +183,12 @@ function handleprops(
 ) {
   ((element, vdom) => {
     Object.entries(vdom.directives).forEach(([name, value]) => {
-      if (name in directives && typeof directives[name] === "function") {
+      if (/*name in directives &&*/ typeof directives[name] === "function") {
         directives[name](element, value, vdom);
       } else {
-        throw new Error("invalid directives " + name);
+console.error(vdom.directives)
+console.error("invalid directives " + name)
+        throw new Error();
       }
     });
 
