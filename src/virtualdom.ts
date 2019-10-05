@@ -8,7 +8,7 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
-type Vdomchildren=Array<Virtualdom | string | ReactiveState | number>
+export type Vdomchildren=Array<Virtualdom | string | ReactiveState | number>
 
 export default class Virtualdom 
 <
