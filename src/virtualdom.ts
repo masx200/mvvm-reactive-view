@@ -1,3 +1,4 @@
+import {defineProperty}from "./reflect"
 import {ElementAttrs}from"./createelement"
 export function isVirtualdom(a: any): a is Virtualdom {
   return a instanceof Virtualdom;
@@ -138,6 +139,6 @@ value
 */
   }
 }
-Reflect.defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
+defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
   value: "VirtualElement"
 });
