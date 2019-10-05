@@ -823,14 +823,26 @@ interface Extendfun {
 function createElement(
   type: Function | string = "",
   children: Array<Virtualdom | string | number|ReactiveState>
-): Virtualdom | Array<Virtualdom | string | number|ReactiveState>;
+): Virtualdom ;
+
+function createElement(
+  type:  "",
+  children: Array<Virtualdom | string | number|ReactiveState>
+):  Array<Virtualdom | string | number|ReactiveState>;
+
+function createElement(
+  type: "",
+  props: any = {},
+  ...children: Array<Virtualdom | string | number|ReactiveState>
+): Array<Virtualdom | string | number|ReactiveState>;
 
 
 function createElement(
   type: Function | string = "",
   props: any = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
-): Virtualdom | Array<Virtualdom | string | number|ReactiveState>;
+): Virtualdom ;
+
 ```
 
 ## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
