@@ -8,7 +8,8 @@ if (
   //||
   //   typeof CustomElementRegistry !== "function"
 ) {
-  throw new TypeError(" customElements  not supported !");
+console.error(" customElements  not supported !")
+  throw new TypeError();
 }
 import { isclassextendsHTMLElement } from "./customelement";
 
@@ -40,7 +41,9 @@ function RandomDefineCustomElement(
   length = 1
 ): string {
   if (!isclassextendsHTMLElement(initclass)) {
-    throw TypeError(invalid_custom_element_class);
+console.error(initclass)
+console.error(invalid_custom_element_class)
+    throw TypeError();
   }
 
   //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
@@ -82,7 +85,8 @@ customElements.define = function(
 ): void {
   if (!isclassextendsHTMLElement(constructor)) {
     console.error(constructor);
-    throw TypeError(invalid_custom_element_class);
+console.error(invalid_custom_element_class)
+    throw TypeError();
   }
   if (!customElements[elementset].has(constructor)) {
     if (has(customElements[elementmap], name)) {
@@ -133,7 +137,7 @@ function getrandomhexnumber() {
     .map((v, i) => i)
     [Math.floor(Math.random() * 16)].toString(16); */
 }
-function getrandomstringandnumber(length = 4) {
+function getrandomstringandnumber(length = 1) {
   return (
     Array(length)
       .fill(undefined)
