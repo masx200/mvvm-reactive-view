@@ -1,10 +1,11 @@
 import { isobject, isfunction } from "./util";
+const{HTMLElement,customElements,Proxy}=window
 if (
-  !isfunction(window.HTMLElement) ||
+  !isfunction(HTMLElement) ||
   //   typeof HTMLElement !== "function" ||
-  !isfunction(window.Proxy) ||
+  !isfunction(Proxy) ||
   //   typeof Proxy !== "function" ||
-  !isobject(window.customElements) 
+  !isobject(customElements) 
 /*||
   //   typeof customElements !== "object" ||
   !isfunction(window.CustomElementRegistry)
