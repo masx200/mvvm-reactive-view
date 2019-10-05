@@ -1,3 +1,4 @@
+import{Vdomchildren}from"./virtualdom"
 type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
 
 type classprop = string | Set<string> | Array<string>|ReactiveState<string | Set<string> | Array<string>>;
