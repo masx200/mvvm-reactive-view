@@ -37,7 +37,9 @@ export default function(
     | ReactiveState
 ): Virtualdom {
   if (!(isReactiveState(conditon) || isboolean(conditon))) {
-    throw TypeError(invalid_ReactiveState);
+console.error(conditon)
+console.error(invalid_ReactiveState)
+    throw TypeError();
   }
   [iftrue, iffalse].forEach(a => {
     if (!(isundefined(a) || isvalidvdom(a))) {
