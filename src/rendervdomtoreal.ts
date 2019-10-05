@@ -1,3 +1,7 @@
+import { isReactiveState } from "./reactivestate";
+import { isconnected } from "./isconnected";
+import { componentsymbol } from "./iscomponent";
+
 export const bindstatesymbol = Symbol("bindstate");
 
 export const reactivestatesymbol = Symbol("reactive");
@@ -26,7 +30,7 @@ function throwinvalideletype(type) {
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
 import { isobject, isArray, isfunction, isstring, isnumber } from "./util";
-import Virtualdom from "./virtualdom";
+import Virtualdom,{isVirtualdom} from "./virtualdom";
 export default function render(
   vdom: Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
@@ -67,7 +71,11 @@ export default function render(
     element[bindstatesymbol] = new Set();
     element[bindstatesymbol].add(reactive);
     return textnode;
-  } else if (vdom instanceof Virtualdom && "type" in vdom) {
+  } else if (
+isVirtualdom(vdom)
+//vdom instanceof Virtualdom && "type" in vdom
+
+) {
     const { type } = vdom;
     let element: Element | HTMLElement | SVGSVGElement | SVGElement;
     if (typeof type === "string") {
@@ -168,9 +176,6 @@ export default function render(
   }
 }
 
-import { isReactiveState } from "./reactivestate";
-import { isconnected } from "./isconnected";
-import { componentsymbol } from "./iscomponent";
 function handleprops(
   element: HTMLElement | Element | SVGSVGElement | SVGElement,
   vdom: Virtualdom
