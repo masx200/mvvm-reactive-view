@@ -31,6 +31,7 @@ watchsingle(state ,callback)
 }else{
 console.error(state);
     console.error(callback);
+console.error(invalid_ReactiveState + invalid_Function)
 throw new TypeError()
 }
 
@@ -50,8 +51,11 @@ function watchsingle(
       isFunction(callback)
     )
   ) {
-    
-    throw TypeError(invalid_ReactiveState + invalid_Function);
+console.error(state);
+    console.error(callback);
+    console.error(invalid_ReactiveState + invalid_Function)
+
+    throw TypeError();
   }
 
 
