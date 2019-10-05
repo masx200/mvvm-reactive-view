@@ -9,11 +9,11 @@ class?:classprop,
 import ReactiveState from './reactivestate';
 import { isstring, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
-export default function createElement(
-  type: Function | string,
+export default function createElement<T extends Function | string>(
+  type:T,
   props?: ElementAttrs,
   ...children: any[]
-): Virtualdom;
+): Virtualdom<T>;
 export default function createElement(
   type: Function | string = "",
   props: ElementAttrs= {},
