@@ -10,11 +10,37 @@ import ReactiveState from './reactivestate';
 import {isarray, isstring, isobject,isplainobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 
+export default
+function(
+  type: Function | string ,
+  children: Array<Virtualdom | string | number|ReactiveState>
+): Virtualdom ;
+export default
+function(
+  type:  "",
+  children: Array<Virtualdom | string | number|ReactiveState>
+):  Array<Virtualdom | string | number|ReactiveState>;
+export default
+function (
+  type: "",
+  props: any = {},
+  ...children: Array<Virtualdom | string | number|ReactiveState>
+): Array<Virtualdom | string | number|ReactiveState>;
+
+export default
+function (
+  type: Function | string ,
+  props: any = {},
+  ...children: Array<Virtualdom | string | number|ReactiveState>
+): Virtualdom ;
+
 //如果第二个参数是数组，则 变成
 /* 
 h(type,...children)
 h(type,children)
 */
+
+
 export default (type,propsorchildren,...children)=>
 {
 
