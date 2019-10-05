@@ -819,23 +819,30 @@ interface Extendfun {
 ## `h`等同于`createElement`,用来生成虚拟 `dom`
 
 ```ts
+
+function createElement(
+  type: Function | string = "",
+  children: Array<Virtualdom | string | number|ReactiveState>
+): Virtualdom | Array<Virtualdom | string | number|ReactiveState>;
+
+
 function createElement(
   type: Function | string = "",
   props: any = {},
-  ...children: Array<Virtualdom | string | number>
-): Virtualdom | Array<Virtualdom | string | number>;
+  ...children: Array<Virtualdom | string | number|ReactiveState>
+): Virtualdom | Array<Virtualdom | string | number|ReactiveState>;
 ```
 
-## 使用`MountElement`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
+## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function MountElement<T extends Element>(
-  vdom:
+  vdom:Node|Element
     | string
     | Virtualdom
     | number
     | ReactiveState
-    | (string | number | Virtualdom | ReactiveState)[],
+    | (string | number | Virtualdom | ReactiveState|Node|Element)[],
   container: T
 ): T;
 ```
