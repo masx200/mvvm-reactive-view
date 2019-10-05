@@ -824,15 +824,15 @@ function createElement(
 ## 使用`MountElement`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
-function MountElement(
+function MountElement<T extends Element>(
   vdom:
     | string
     | Virtualdom
     | number
     | ReactiveState
     | (string | number | Virtualdom | ReactiveState)[],
-  container: HTMLElement | Element
-): HTMLElement | Element;
+  container: T
+): T;
 ```
 
 ## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
