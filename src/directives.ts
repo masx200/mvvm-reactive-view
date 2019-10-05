@@ -6,8 +6,8 @@ import ReactiveState, { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
 import { isobject,isfunction } from "./util";
 
-
-const directive= {
+import {ExtendOptions}from"./extend-directive"
+const directive:ExtendOptions= {
   ref(ele: Element, ref: { value: any }|Function) {
     if (isobject(ref)) {
       ref.value = ele;
