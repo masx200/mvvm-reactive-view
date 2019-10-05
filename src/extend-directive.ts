@@ -9,7 +9,7 @@ export default function extenddirectives(options:
   [s: string]: Extendfun;
 }={}
 )
-: void
+
  {
   Object.entries(options).forEach(([key, value]) => {
     if (typeof value !== "function") {
@@ -24,4 +24,5 @@ throw new Error
       
     }
   });
+return directives
 }
