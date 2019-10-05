@@ -30,28 +30,8 @@ deleteProperty(forkarray.prototype, "length"); */
 
 
 export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
-
-
-  /* get [Symbol.toStringTag]() {
-    return "ReativeState";
-
-} */
-
 {
-
-  [addallistenerssymbol]() {
-    this[memlisteners].forEach(([value, callback]) => {
-      this[eventtargetsymbol].addEventListener(value, callback);
-    });
-  }
-  /*  [changetextnodesymbol](textnode: Text) {
-    this[textnodesymbol] = textnode;
-  } */
-  // [textnodesymbol]: Text | undefined;
-  value: T
-  [eventtargetsymbol] = new EventTarget();
-  [memlisteners]: Array<[string, EventListener]> = [];
-  constructor(init?:T) {
+constructor(init?:T) {
     //super();
     if (isprimitive(init) || isobject(init)) {
       Object.defineProperty(this, "value", {
@@ -76,6 +56,27 @@ console.error(invalid_primitive_or_object_state)
 
 */
   }
+
+  /* get [Symbol.toStringTag]() {
+  //  return "ReativeState";
+
+} */
+
+
+
+  [addallistenerssymbol]() {
+    this[memlisteners].forEach(([value, callback]) => {
+      this[eventtargetsymbol].addEventListener(value, callback);
+    });
+  }
+  /*  [changetextnodesymbol](textnode: Text) {
+    this[textnodesymbol] = textnode;
+  } */
+  // [textnodesymbol]: Text | undefined;
+  value: T
+  [eventtargetsymbol] = new EventTarget();
+  [memlisteners]: Array<[string, EventListener]> = [];
+  
 //剑头函数绑定this
   valueOf=() =>{
     return this.value;
