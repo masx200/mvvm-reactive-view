@@ -216,9 +216,18 @@ return  get(value, key)
 
             }
           } else {
-            return deepobserve(get(value, key), () => {
+//只深度观察array和plainobject
+if(
+(isarray(value)  || isplainobject(value))
+){
+return deepobserve(get(value, key), () => {
               target[dispatchsymbol](String(key));
             });
+}
+else{
+return get(value, key)
+}
+            
           }
 
           /*  */
