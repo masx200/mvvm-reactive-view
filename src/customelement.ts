@@ -42,7 +42,7 @@ export function createcostumelemet(
     return construct(initclass, [propsjson, children, options]); // (children);
   } else {
     console.error(initclass);
-
-    throw TypeError(invalid_custom_element_class);
+console.error(invalid_custom_element_class)
+    throw TypeError();
   }
 }
