@@ -31,6 +31,12 @@ export default (init: any) => {
 function createstate(
   init: string | number | boolean | undefined | ReactiveState | object
 ): ReactiveState {
+if (!isprimitive(init)) 
+ {
+    console.error(init);
+console.error(invalid_primitive_or_object_state)
+    throw TypeError();
+}
   if (isprimitive(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
@@ -257,11 +263,13 @@ value=value.valueOf()
         return false;
       }
     });
-  } else {
-    console.error(init);
-console.error(invalid_primitive_or_object_state)
-    throw TypeError();
+  }
+// else {
+ //   console.error(init);
+//console.error(invalid_primitive_or_object_state)
+  
+//  throw TypeError();
 
     //throw TypeError("invalid State");
-  }
+ // }
 }
