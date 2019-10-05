@@ -7,20 +7,20 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
-export default class Virtualdom {
+export default class Virtualdom <T extends Class|string|Function>{
   /* get [Symbol.toStringTag]() {
     return "VirtualElement";
   } */
   //   options: any |undefined
   element: undefined | Element | Node;
-  type: string | Function | Class = "";
+  type: T = "";
   props: ElementAttrs = {};
   children: Array<Virtualdom | string | ReactiveState | number> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState<any> } = {};
   constructor(
-    type: Function | string = "",
+    type: T= "",
     props: ElementAttrs = {},
     children: Array<Virtualdom | string | ReactiveState | number> = []
   ) {
