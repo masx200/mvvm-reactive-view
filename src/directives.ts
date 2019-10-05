@@ -5,7 +5,9 @@ import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
 import { isobject,isfunction } from "./util";
-export default {
+
+
+const directive= {
   ref(ele: Element, ref: { value: any }|Function) {
     if (isobject(ref)) {
       ref.value = ele;
@@ -122,3 +124,4 @@ function createhtmlandtextdirective(seteletext: Function, errorname: string) {
     }
   };
 }
+export default directive
