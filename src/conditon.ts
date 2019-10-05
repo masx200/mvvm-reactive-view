@@ -43,7 +43,9 @@ console.error(invalid_ReactiveState)
   }
   [iftrue, iffalse].forEach(a => {
     if (!(isundefined(a) || isvalidvdom(a))) {
-      throw new TypeError(invalid_Virtualdom);
+console.error(a)
+console.error(invalid_Virtualdom)
+      throw new TypeError();
     }
   });
   const options = { true: iftrue, false: iffalse };
