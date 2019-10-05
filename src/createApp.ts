@@ -61,7 +61,8 @@ console.error("Do not mount  to <html> or <body> <head>.")
     mount(elesarray, container);
   } else {
     console.error(vdom);
-    throw TypeError(invalid_Virtualdom);
+console.error(invalid_Virtualdom);
+    throw TypeError();
   }
 
   //
