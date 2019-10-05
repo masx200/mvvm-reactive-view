@@ -16,13 +16,17 @@ export default function extenddirectives(options: ExtendOptions
  {
   Object.entries(options).forEach(([key, value]) => {
     if (typeof value !== "function") {
-      throw TypeError(invalid_Function);
+console.error(value)
+console.error(invalid_Function)
+      throw TypeError();
     } else {
 if(!directives[key] ){
 Reflect.set(
 directives,key, value);
 }else{
-throw new Error
+console.error(directives)
+console.error("do not extend existing directive" )
+throw new Error()
 }
       
     }
