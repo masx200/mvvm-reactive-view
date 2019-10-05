@@ -4,7 +4,8 @@ interface Extendfun {
   (element: Element, value: any, vdom: Virtualdom): void;
 }
 import directives from "./directives";
-export default function extenddirectives(options: {
+export default function extenddirectives(options: 
+{
   [s: string]: Extendfun;
 }={}
 )
