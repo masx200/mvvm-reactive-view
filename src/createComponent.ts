@@ -138,6 +138,7 @@ export function createComponent(custfun: Custom): Class {
           );
         } catch (error) {
           closectx();
+console.error(error)
           throw error;
         }
 
@@ -161,7 +162,8 @@ export function createComponent(custfun: Custom): Class {
         } else {
           closectx();
           console.error(possiblyvirtualdom);
-          throw Error(invalid_Virtualdom);
+          console.error(invalid_Virtualdom)
+throw TypeError();
         }
 
         //   this[mountedsymbol] = getMounted();
@@ -242,6 +244,7 @@ export function createComponent(custfun: Custom): Class {
     };
   } else {
     console.error(custfun);
-    throw TypeError(invalid_Function);
+console.error(invalid_Function)
+    throw TypeError();
   }
 }
