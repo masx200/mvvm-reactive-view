@@ -181,8 +181,13 @@ https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react
 
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
-由于使用了 ECMAScript2019 的 api，所以需要自行添加 polyfill
+由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
 
+
+```js
+import 'core-js/features/array/flat'
+import "core-js/modules/es.object.from-entries";
+```
 https://github.com/zloirock/core-js
 
 https://github.com/tc39/proposal-object-from-entries
