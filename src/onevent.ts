@@ -14,14 +14,15 @@ export default function(
 */
   firstaddlisteners(element, eventname, toArray(callback));
   /*
-  if (isfunction(callback)) {
-    firstaddlisteners(element, eventname, [callback]);
-  } else if (isArray(callback)) {
-    firstaddlisteners(element, eventname, callback);
-  } else {
-    console.error(callback);
-    throw TypeError(invalid_Function);
-  }*/
+//  if (isfunction(callback)) {
+//    firstaddlisteners(element, eventname, [callback]);
+//  } else if (isArray(callback)) {
+//    firstaddlisteners(element, eventname, callback);
+ // } else {
+ //   console.error(callback);
+ //   throw TypeError(invalid_Function);
+ // }
+*/
 }
 export function firstaddlisteners(
   ele: Element | Node,
@@ -32,7 +33,8 @@ export function firstaddlisteners(
   callarray.forEach((call: EventListener) => {
     if (!isfunction(call)) {
       console.error(call);
-      throw TypeError(invalid_Function);
+console.error(invalid_Function)
+      throw TypeError();
     }
 
     if (!element[eventlistenerssymbol]) {
