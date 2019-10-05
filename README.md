@@ -202,7 +202,7 @@ https://tc39.es/proposal-flatMap/
     [
       "@babel/preset-env",
       {
-        "useBuiltIns": "usage",
+        
         "corejs": 3
       }
     ]
