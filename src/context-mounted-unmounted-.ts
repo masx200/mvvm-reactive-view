@@ -27,10 +27,14 @@ export function useMounted(fun: Function) {
     if (ctxopen) {
       MountedSet.add(fun);
     } else {
-      throw Error(errormessage);
+//console.error()
+console.error(errormessage)
+      throw Error();
     }
   } else {
-    throw TypeError(invalid_Function);
+console.error(fun)
+console.error(invalid_Function)
+    throw TypeError();
   }
 }
 
@@ -39,10 +43,15 @@ export function useUnMounted(fun: Function) {
     if (ctxopen) {
       UnMountedSet.add(fun);
     } else {
-      throw Error(errormessage);
+console.error(errormessage)
+      throw Error();
+      //throw Error(errormessage);
     }
   } else {
-    throw TypeError(invalid_Function);
+console.error(fun)
+console.error(invalid_Function)
+    throw TypeError();
+    //throw TypeError(invalid_Function);
   }
 }
 export function clearMounted() {
