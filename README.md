@@ -339,7 +339,7 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 集各家所长，但是跟它们完全不同，
 
-响应式状态可以独立于组件存在
+响应式状态可以独立于组件存在,`watch`,`computed`,`createState`函数可以在组件外使用
 
 基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。
 
@@ -453,7 +453,7 @@ setTimeout(() => {
 
 # 使用 webcomponents costum elements
 
-可以通过静态属性 static `defaultProps` 来设置默认值
+可以通过静态属性 `static` `defaultProps` 来设置默认值
 
 传递参数给元素，以 `json` 格式传递,
 
@@ -678,7 +678,7 @@ function useMousePosition() {
   return { x, y };
 }
 
-const mycomapp = () => {
+const mycomapp = createComponent(() => {
   const { x, y } = useMousePosition();
   const plus = computed(x, x => {
     return x + 100;
@@ -696,8 +696,8 @@ const mycomapp = () => {
       <p>x*y 是{multi}</p>
     </div>
   );
-};
-var vdom = createElement(createComponent(mycomapp));
+});
+var vdom = createElement((mycomapp));
 
 document.body.appendChild(createApp(vdom, document.createElement("div")));
 ```
