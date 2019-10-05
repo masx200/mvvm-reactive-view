@@ -799,10 +799,10 @@ function condition(
 ): Virtualdom;
 ```
 
-## 使用`directives`函数来扩展指令
+## 使用`directives`函数来扩展指令,返回已有的指令合集
 
 ```ts
-function directives(options: { [s: string]: Extendfun }): void;
+function directives(options?: { [s: string]: Extendfun }): object;
 
 interface Extendfun {
   (element: Element, value: any, vdom: Virtualdom): void;
