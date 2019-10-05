@@ -11,7 +11,13 @@ export default function extenddirectives(options: {
     if (typeof value !== "function") {
       throw TypeError(invalid_Function);
     } else {
-      directives[key] = value;
+if(!directives[key] ){
+Reflect.set(
+directives,key, value);
+}else{
+throw new Error
+}
+      
     }
   });
 }
