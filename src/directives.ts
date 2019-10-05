@@ -4,7 +4,7 @@ import { seteletext, setelehtml } from "./dom";
 import { watch } from "./watch";
 import ReactiveState, { isReactiveState } from './reactivestate';
 import { isconnected } from "./isconnected";
-import { isobject,isfunction } from "./util";
+import { isobject,isfunction ,isstring} from "./util";
 
 import {ExtendOptions}from"./extend-directive"
 const directive:ExtendOptions= {
@@ -17,7 +17,9 @@ ref.call(undefined,ele)
 }
 
  else {
-      throw TypeError("invalid ref");
+console.error(ref)
+console.error("invalid ref")
+      throw TypeError();
     }
   },
   html(ele: Element, html: string | ReactiveState) {
@@ -46,11 +48,13 @@ ref.call(undefined,ele)
         // console.log("html");
         /*  ele.innerHTML = String(html);*/
     /*
-        setelehtml(ele, String(html));
-      });
-    } else {
-      throw TypeError("invalid html");
-    }
+  //      setelehtml(ele, String(html));
+ //     });
+  //  } else {
+
+//console.error()
+  //    throw TypeError("invalid html");
+ //   }
 
 */
   },
@@ -83,9 +87,9 @@ ref.call(undefined,ele)
 
         /*  ele.textContent = String(text);*/
     /*    });
-    } else {
-      throw TypeError("invalid text");
-    }
+   // } else {
+  //    throw TypeError("invalid text");
+ //   }
 
 */
   }
@@ -93,7 +97,10 @@ ref.call(undefined,ele)
 function createhtmlandtextdirective(seteletext: Function, errorname: string) {
   return function(ele: Element, text: string | ReactiveState) {
     const element = ele;
-    if (typeof text == "string") {
+    if (
+isstring(text)
+//typeof text == "string"
+) {
       requestAnimationFrame(() => {
         seteletext(ele, text);
         /*    ele.textContent = text;*/
@@ -120,7 +127,9 @@ function createhtmlandtextdirective(seteletext: Function, errorname: string) {
         /*  ele.textContent = String(text);*/
       });
     } else {
-      throw TypeError("invalid " + errorname);
+console.error(text)
+console.error("invalid " + errorname)
+      throw TypeError();
     }
   };
 }
