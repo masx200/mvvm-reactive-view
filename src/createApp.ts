@@ -65,5 +65,7 @@ export default function MountElement<T extends Element>(
   return container;
 }
 function isNodeArray(array: any[]): array is Node[] {
-  return isArray(array) && !array.map(e => e instanceof Node).includes(false);
+//https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+  return isArray(array) && array.every(a=>a instanceof Node)
+//!array.map(e => e instanceof Node).includes(false);
 }
