@@ -25,7 +25,8 @@ import {
 } from "./dom";
 function throwinvalideletype(type) {
   console.error(type);
-  throw TypeError("invalid element type!");
+console.error("invalid element type!")
+  throw TypeError(/*"invalid element type!"*/);
 }
 import mount from "./mount";
 import createeleattr from "dom-element-attribute-agent-proxy";
