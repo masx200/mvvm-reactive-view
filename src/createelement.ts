@@ -7,7 +7,7 @@ class?:classprop,
 [key:string]:any
 }
 import ReactiveState from './reactivestate';
-import { isstring, isobject, isfunction } from "./util";
+import { isstring, isobject,isplainobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 export default function createElement<T extends Function | string>(
   type:T,
@@ -24,7 +24,7 @@ export default function createElement(
   /* add fragment element */
   //   console.log(type, props, children);
   let typenormalized = isstring(type) || isfunction(type) ? type : "";
-  const propsnormalized = isobject(props) ? props : {};
+  const propsnormalized = isplainobject(props) ? props : {};
   const childrennormalized = children.flat(Infinity).map(a=>a===0?"0":a).filter(a=>!!a);
   if (
     isstring(typenormalized)
