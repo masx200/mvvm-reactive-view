@@ -1,7 +1,7 @@
 import { invalid_Function } from "./context-mounted-unmounted-";
 import Virtualdom from "./virtualdom";
 export interface Extendfun {
-  (element: Element, value: any, vdom: Virtualdom): void;
+  (element?: Element, value: any, vdom?: Virtualdom): void;
 }
 export interface ExtendOptions{
 
