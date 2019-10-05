@@ -2,7 +2,7 @@ export const bindstatesymbol = Symbol("bindstate");
 
 export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
-import ReactiveState /* textnodesymbol */ from "./reactivestate";
+import ReactiveState ,{isReactiveState}/* textnodesymbol */ from "./reactivestate";
 export const virtualdomsymbol = Symbol("virtualdom");
 import directives from "./directives";
 import onevent /*  eventlistenerssymbol  */ from "./onevent";
@@ -48,7 +48,7 @@ export default function render(
     return createtextnode(vdom);
   } else if (typeof vdom === "string") {
     return createtextnode(vdom);
-  } else if (vdom instanceof ReactiveState) {
+  } else if (isReactiveState(vdom )/*instanceof ReactiveState*/) {
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
     textnode[reactivestatesymbol] = reactive;
@@ -58,7 +58,7 @@ export default function render(
       console.warn(error);
     } */
 
-    watch(reactive, (state: { value: string }) => {
+    watch(reactive, (state: ReactiveState) => {
       if (isconnected(element)) {
         changetext(textnode, String(state));
       }
@@ -199,7 +199,7 @@ function handleprops(
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
       attribute1[key] = primitivestate.value;
-      watch(primitivestate, (state: { value: any }) => {
+      watch(primitivestate, (state: ReactiveState) => {
         if (isconnected(element)) {
           attribute1[key] = state.valueOf();
         }
