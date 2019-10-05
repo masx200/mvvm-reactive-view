@@ -14,27 +14,27 @@ import Virtualdom from "./virtualdom";
 export default
 function(
   type: Function | string ,
-  propsorchildren?: Array<Virtualdom | string | number|ReactiveState>,
-...children: Array<Virtualdom | string | number|ReactiveState>
+  propsorchildren?: Vdomchildren,
+...children:Vdomchildren
 ): Virtualdom ;
 export default
 function(
   type:  "",
-  propsorchildren?: Array<Virtualdom | string | number|ReactiveState>,
-...children: Array<Virtualdom | string | number|ReactiveState>
-):  Array<Virtualdom | string | number|ReactiveState>;
+  propsorchildren?:Vdomchildren,
+...children:Vdomchildren
+):  Vdomchildren;
 export default
 function (
   type: "",
   props?: ElementAttrs = {},
-  ...children: Array<Virtualdom | string | number|ReactiveState>
-): Array<Virtualdom | string | number|ReactiveState>;
+  ...children: Vdomchildren
+): Vdomchildren;
 
 export default
 function (
   type: Function | string ,
   props?: ElementAttrs = {},
-  ...children: Array<Virtualdom | string | number|ReactiveState>
+  ...children: Vdomchildren
 ): Virtualdom ;
 
 //如果第二个参数是数组，则 变成
@@ -61,13 +61,14 @@ return createElement(...arguments)
  function createElement<T extends Function | string>(
   type:T,
   props?: ElementAttrs,
-  ...children: any[]
+  ...children: Vdomchildren
 ): Virtualdom<T>;
  function createElement(
   type: Function | string = "",
   props: ElementAttrs= {},
-  ...children: Array<Virtualdom | string |number| ReactiveState>
-): Virtualdom | Array<Virtualdom | string | number|ReactiveState> {
+  ...children: Vdomchildren
+): Virtualdom | Vdomchildren
+ {
   // | Array<Virtualdom | string>
   // if(isarray()){}
   /* add fragment element */
