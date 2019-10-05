@@ -50,3 +50,14 @@ export function isSet(a: any): a is Set<any> {
 }
 import isprimitive from "./isprimitive";
 export { isprimitive };
+
+
+const camelizeRE = /-(\w)/g
+export const camelize = (str: string): string => {
+  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''))
+}
+
+const hyphenateRE = /\B([A-Z])/g
+export const hyphenate = (str: string): string => {
+  return str.replace(hyphenateRE, '-$1').toLowerCase()
+}
