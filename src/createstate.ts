@@ -257,7 +257,8 @@ value=value.valueOf()
     });
   } else {
     console.error(init);
-    throw TypeError(invalid_primitive_or_object_state);
+console.error(invalid_primitive_or_object_state)
+    throw TypeError();
 
     //throw TypeError("invalid State");
   }
