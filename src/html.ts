@@ -26,7 +26,7 @@ export function isvalidvdom(
   }
   let flag = false;
   if (isArray(v)) {
-    flag = v
+    /*flag = v
       .map((ele: any) => {
         return isvalidvdom(ele);
         //isstring(ele) || ele instanceof Virtualdom;
@@ -34,7 +34,9 @@ export function isvalidvdom(
       .includes(false)
       ? false
       : true;
-    return flag;
+    return flag;*/
+//https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+return v.every(e=>isvalidvdom(e))
   } else if (
     isVirtualdom(v)
     // v instanceof Virtualdom
