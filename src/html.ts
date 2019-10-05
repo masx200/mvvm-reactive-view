@@ -62,7 +62,8 @@ function assertvalidvirtualdom(...args: any[]) {
     return vdom;
   } else {
     console.error(vdom);
-    throw new TypeError(invalid_Virtualdom);
+console.error(invalid_Virtualdom)
+    throw new TypeError();
   }
 }
 export default assertvalidvirtualdom;
