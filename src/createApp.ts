@@ -7,7 +7,7 @@ import render from "./rendervdomtoreal";
 import mount from "./mount";
 import { isArray } from "./util";
 import { toArray } from "./toArray";
-export default function createApp(
+export default function createApp<T extends Element>(
   vdom:
     | Node
     | Virtualdom
@@ -15,8 +15,8 @@ export default function createApp(
     | number
     | Array<Virtualdom | string | ReactiveState | Node | number>
     | ReactiveState,
-  container: HTMLElement | Element
-): HTMLElement | Element {
+  container: T
+): T {
   if (isArray(vdom)) {
     vdom = vdom.flat(Infinity);
   }
