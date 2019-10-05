@@ -15,15 +15,17 @@ import Virtualdom from "./virtualdom";
 h(type,...children)
 h(type,children)
 */
-export default (type,propsorchildren,...children)=>{
+export default (type,propsorchildren,...children)=>
+{
 
 
 
-if(isarray(propsorchildren))
+if(isarray(propsorchildren)){
 return createElement(type,undefined,[...propsorchildren,...children].flat(1/0))
 }
 else{
-return createElement(arguments)
+return createElement(...arguments)
+}
 }
 
 
