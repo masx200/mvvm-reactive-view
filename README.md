@@ -490,7 +490,7 @@ document.body.appendChild(
 `class`属性支持的类型有
 
 ```ts
-type classprop = string | Set<string> | Array<string>;
+type classprop = string | Set<string> | Array<string>|ReactiveState<string | Set<string> | Array<string>>;
 ```
 
 ```js
@@ -513,7 +513,7 @@ setTimeout(() => {
 `style`属性支持的类型有
 
 ```ts
-type styleprop = string | object;
+type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
 ```
 
 `style="width:800px"`
