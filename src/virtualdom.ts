@@ -1,3 +1,4 @@
+import {ElementAttrs}from"./createelement"
 export function isVirtualdom(a: any): a is Virtualdom {
   return a instanceof Virtualdom;
 }
@@ -13,14 +14,14 @@ export default class Virtualdom {
   //   options: any |undefined
   element: undefined | Element | Node;
   type: string | Function | Class = "";
-  props: { [key: string]: string | object } = {};
+  props: ElementAttrs = {};
   children: Array<Virtualdom | string | ReactiveState | number> = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
-  bindattr: { [key: string]: ReactiveState } = {};
+  bindattr: { [key: string]: ReactiveState<any> } = {};
   constructor(
     type: Function | string = "",
-    props: object = {},
+    props: ElementAttrs = {},
     children: Array<Virtualdom | string | ReactiveState | number> = []
   ) {
     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
