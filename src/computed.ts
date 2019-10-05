@@ -28,7 +28,7 @@ import { toArray } from "./toArray";
 export default <T>(
   state: ReactiveState <T>| Array<ReactiveState<T>>,
   callback: CallbackReactiveState<T>
-) => {
+): ReactiveState<any>  => {
   if (
     !(
       (isArray(state) || isReactiveState(state)) &&
