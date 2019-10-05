@@ -7,14 +7,32 @@ class?:classprop,
 [key:string]:any
 }
 import ReactiveState from './reactivestate';
-import { isstring, isobject,isplainobject, isfunction } from "./util";
+import {isarray, isstring, isobject,isplainobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
-export default function createElement<T extends Function | string>(
+
+//如果第二个参数是数组，则 变成
+/* 
+h(type,...children)
+h(type,children)
+*/
+export default (type,propsorchildren,...children)=>{
+
+
+
+if(isarray(propsorchildren))
+return createElement(type,undefined,[...propsorchildren,...children].flat(1/0))
+}
+else{
+return createElement(arguments)
+}
+
+
+ function createElement<T extends Function | string>(
   type:T,
   props?: ElementAttrs,
   ...children: any[]
 ): Virtualdom<T>;
-export default function createElement(
+ function createElement(
   type: Function | string = "",
   props: ElementAttrs= {},
   ...children: Array<Virtualdom | string |number| ReactiveState>
