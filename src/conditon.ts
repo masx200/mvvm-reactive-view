@@ -57,12 +57,18 @@ console.error(invalid_Virtualdom)
       // if(){}
       const optionstrue = get(options, "true");
       const optionsfalse = get(options, "false");
-      this[truevdomsymbol] = isarray(optionstrue)
+      this[truevdomsymbol] = 
+/*isarray(optionstrue)
         ? optionstrue.filter(Boolean)
-        : [optionstrue].filter(Boolean);
-      this[falsevdomsymbol] = isarray(optionsfalse)
+        : */
+[optionstrue].flat(1/0).filter(Boolean);
+      this[falsevdomsymbol] =
+
+/* isarray(optionsfalse)
         ? optionsfalse.filter(Boolean)
-        : [optionsfalse].filter(Boolean);
+        : */
+
+[optionsfalse].flat(1/0).filter(Boolean);
       // optionsfalse;
     }
     [falseelesymbol]: any[];
