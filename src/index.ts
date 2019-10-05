@@ -1,3 +1,5 @@
+export const Fragment = "";
+
 // import { isobject, isfunction } from "./util";
 import "./assetbrowser";
 import computed from "./computed";
@@ -22,16 +24,12 @@ export { useMounted, useUnMounted };
 export { createComponent };
 export { html };
 export { createElement, createElement as h };
-export { createApp };
+export { createApp as mountElement };
 export { createRef };
 export { createState };
 export { watch };
 export { directives };
 export { condition };
 
-//export { RandomDefine };
-export const Fragment = "";
-/* function css(text: string) {
-  return text;
-}
-export { css }; */
+
+
