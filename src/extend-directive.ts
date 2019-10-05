@@ -1,13 +1,16 @@
 import { invalid_Function } from "./context-mounted-unmounted-";
 import Virtualdom from "./virtualdom";
-interface Extendfun {
+export interface Extendfun {
   (element: Element, value: any, vdom: Virtualdom): void;
 }
-import directives from "./directives";
-export default function extenddirectives(options: 
-{
+export interface ExtendOptions{
+
   [s: string]: Extendfun;
-}={}
+
+}
+import directives from "./directives";
+export default function extenddirectives(options: ExtendOptions
+={}
 )
 
  {
