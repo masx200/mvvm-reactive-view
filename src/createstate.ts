@@ -1,3 +1,4 @@
+export const set_prototype=Set.prototype
 import { getproperyreadproxy } from "./computed";
 
 import { invalid_primitive_or_object_state } from "./reactivestate";
@@ -178,16 +179,17 @@ reactive
             const myvalue = value;
             if (key === "add") {
               return (add: any) => {
-                if (!Set.prototype.has.call(myvalue, add)) {
-                  const returnvalue = Set.prototype[key].call(myvalue, add);
+                if (!set_prototype.has.call(myvalue, add)) {
+                  const returnvalue = set_prototype[key].call(myvalue, add);
                   target[dispatchsymbol]();
                   return returnvalue;
                 }
               };
             } else if (key === "delete") {
               return (dele: any) => {
-                if (Set.prototype.has.call(myvalue, dele)) {
-                  const returnvalue = Set.prototype[key].call(myvalue, dele);
+                if (
+set_prototype.has.call(myvalue, dele)) {
+                  const returnvalue = set_prototype[key].call(myvalue, dele);
                   target[dispatchsymbol]();
                   return returnvalue;
                 }
@@ -195,7 +197,7 @@ reactive
 else if (key === "clear") {
               return () => {
                 if (myvalue.length) {
-                  const returnvalue = Set.prototype[key].call(myvalue);
+                  const returnvalue = set_prototype[key].call(myvalue);
                   target[dispatchsymbol]();
                   return returnvalue;
                 }
