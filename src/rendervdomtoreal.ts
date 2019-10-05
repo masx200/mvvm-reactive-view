@@ -35,11 +35,11 @@ import Virtualdom,{isVirtualdom} from "./virtualdom";
 export default function render(
   vdom: Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
-): Array<Node>;
+): Array<Node|Element>;
 export default function render(
   vdom: Virtualdom | string | ReactiveState | number,
   namespace?: string
-): Node | any;
+): Node |Element;
 export default function render(
   vdom:
     | Virtualdom
