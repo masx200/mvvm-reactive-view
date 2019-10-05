@@ -23,14 +23,14 @@ function(
 export default
 function (
   type: "",
-  props?: object = {},
+  props?: ElementAttrs = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Array<Virtualdom | string | number|ReactiveState>;
 
 export default
 function (
   type: Function | string ,
-  props?: object = {},
+  props?: ElementAttrs = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 
