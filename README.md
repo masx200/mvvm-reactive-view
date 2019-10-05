@@ -869,9 +869,11 @@ class Virtualdom {
 
 1.不变的列表，没有响应性
 
-```jsx
+```tsx
 const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map(number => <li>{number}</li>);
+const listItems = numbers.map(number => {
+return <li>{number}</li>}
+);
 
 createApp(<ul>{listItems}</ul>, document.getElementById("root"));
 ```
