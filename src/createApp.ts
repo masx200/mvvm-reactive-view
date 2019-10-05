@@ -7,7 +7,7 @@ import render from "./rendervdomtoreal";
 import mount from "./mount";
 import { isArray } from "./util";
 import { toArray } from "./toArray";
-export default function createApp<T extends Element>(
+export default function MountElement<T extends Element>(
   vdom:
     | Node
     | Virtualdom
