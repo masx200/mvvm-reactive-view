@@ -12,11 +12,11 @@ import {isarray, isstring, isobject,isplainobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 
 export default
-function(
-  type: Function | string ,
+function<T extends Function | string>(
+  type: T,
   propsorchildren?: Vdomchildren,
 ...children:Vdomchildren
-): Virtualdom ;
+): Virtualdom<T> ;
 export default
 function(
   type:  "",
@@ -31,11 +31,11 @@ function (
 ): Vdomchildren;
 
 export default
-function (
-  type: Function | string ,
+function <T extends Function | string>(
+  type: T ,
   props?: ElementAttrs = {},
   ...children: Vdomchildren
-): Virtualdom ;
+): Virtualdom<T> ;
 
 //如果第二个参数是数组，则 变成
 /* 
