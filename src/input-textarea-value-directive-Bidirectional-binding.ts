@@ -39,7 +39,8 @@ directives({
     } else {
       console.error(value);
       console.error(vdom);
-      throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+console.error(invalid_ReactiveState + invalid_Virtualdom)
+      throw TypeError();
     }
   }
 });
@@ -75,7 +76,9 @@ directives({
     } else {
       console.error(value);
       console.error(vdom);
-      throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+console.error(invalid_ReactiveState + invalid_Virtualdom)
+      throw TypeError();
+      //throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
     }
   }
 });
