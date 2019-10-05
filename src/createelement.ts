@@ -1,14 +1,22 @@
+type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
+
+type classprop = string | Set<string> | Array<string>|ReactiveState<string | Set<string> | Array<string>>;
+export interface ElementAttrs{
+style?:styleprop,
+class?:classprop,
+[key:string]:any
+}
 import ReactiveState from './reactivestate';
 import { isstring, isobject, isfunction } from "./util";
 import Virtualdom from "./virtualdom";
 export default function createElement(
   type: Function | string,
-  props?: any,
+  props?: ElementAttrs,
   ...children: any[]
 ): Virtualdom;
 export default function createElement(
   type: Function | string = "",
-  props: any = {},
+  props: ElementAttrs= {},
   ...children: Array<Virtualdom | string |number| ReactiveState>
 ): Virtualdom | Array<Virtualdom | string | number|ReactiveState> {
   // | Array<Virtualdom | string>
