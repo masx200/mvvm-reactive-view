@@ -13,24 +13,24 @@ import Virtualdom from "./virtualdom";
 export default
 function(
   type: Function | string ,
-  children: Array<Virtualdom | string | number|ReactiveState>
+  children?: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 export default
 function(
   type:  "",
-  children: Array<Virtualdom | string | number|ReactiveState>
+  children?: Array<Virtualdom | string | number|ReactiveState>
 ):  Array<Virtualdom | string | number|ReactiveState>;
 export default
 function (
   type: "",
-  props: any = {},
+  props?: object = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Array<Virtualdom | string | number|ReactiveState>;
 
 export default
 function (
   type: Function | string ,
-  props: any = {},
+  props?: object = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 
