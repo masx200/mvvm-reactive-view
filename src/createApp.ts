@@ -23,7 +23,8 @@ export default function MountElement<T extends Element>(
   const el = container;
   if (!(el instanceof HTMLElement)) {
     console.error(el);
-    throw TypeError("invalid container HTMLElement!");
+console.error("invalid container HTMLElement!")
+    throw TypeError();
   }
 
   if (
@@ -31,7 +32,9 @@ export default function MountElement<T extends Element>(
     el === document.documentElement ||
     el === document.head
   ) {
-    throw Error("Do not mount  to <html> or <body> <head>.");
+console.error(el);
+console.error("Do not mount  to <html> or <body> <head>.")
+    throw Error();
   }
   /*   if (
     !(
