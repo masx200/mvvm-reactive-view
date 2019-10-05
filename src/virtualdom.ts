@@ -30,6 +30,8 @@ K extends Array<Virtualdom | string | ReactiveState | number>
     props: ElementAttrs = {},
     children: K = []
   ) {
+//对象浅拷贝
+props={...props}
     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
     // console.log(type, props, children);
     //添加支持on开头事件绑定写法
