@@ -69,7 +69,7 @@ value
           //    e[1] instanceof ReactiveState
         )
       ),
-      children: children.flat(),
+      children: children.flat(1/0),
       onevent: Object.fromEntries(
         /* 需要合并entries
         [
