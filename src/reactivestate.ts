@@ -63,15 +63,16 @@ export default class ReactiveState<T extends string | number | boolean | undefin
       // this.value = init;
     } else {
       console.error(init);
-      throw TypeError(invalid_primitive_or_object_state);
+console.error(invalid_primitive_or_object_state)
+      throw TypeError();
     }
     // this[eventtargetsymbol] = new EventTarget();
 
     /*
-    Object.defineProperty(this, Symbol.toStringTag, {
-      value: "ReactiveState",
-      configurable: true
-    });
+  //  Object.defineProperty(this, Symbol.toStringTag, {
+ //     value: "ReactiveState",
+   //   configurable: true
+    //});
 
 */
   }
