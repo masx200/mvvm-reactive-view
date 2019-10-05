@@ -7,8 +7,11 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
-export default class Virtualdom <T extends Class|string|Function,K extends Array<Virtualdom | string | ReactiveState | number>
-   >
+export default class Virtualdom 
+<
+T extends Class|string|Function,
+K extends Array<Virtualdom | string | ReactiveState | number>
+>
 {
   /* get [Symbol.toStringTag]() {
     return "VirtualElement";
