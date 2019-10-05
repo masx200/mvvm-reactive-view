@@ -1,5 +1,6 @@
 export const Fragment = "";
-
+import render from "./rendervdomtoreal";
+export{render}
 // import { isobject, isfunction } from "./util";
 import "./assetbrowser";
 import computed from "./computed";
