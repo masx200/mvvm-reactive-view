@@ -38,7 +38,9 @@ export default <T>(
   ) {
     console.error(state);
     console.error(callback);
-    throw TypeError(invalid_ReactiveState + invalid_Function);
+console.error(invalid_ReactiveState+invalid_Function)
+
+    throw TypeError(  );
   }
   const state1array: ReactiveState[]
   //   if (isReactiveState(state)) {
