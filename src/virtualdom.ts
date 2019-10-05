@@ -7,7 +7,9 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { merge_entries } from "./merge-entries";
 import { Class } from "./customclass";
 
-export default class Virtualdom <T extends Class|string|Function>{
+export default class Virtualdom <T extends Class|string|Function,K extends Array<Virtualdom | string | ReactiveState | number>
+   >
+{
   /* get [Symbol.toStringTag]() {
     return "VirtualElement";
   } */
@@ -15,14 +17,14 @@ export default class Virtualdom <T extends Class|string|Function>{
   element: undefined | Element | Node;
   type: T = "";
   props: ElementAttrs = {};
-  children: Array<Virtualdom | string | ReactiveState | number> = [];
+  children: K = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState<any> } = {};
   constructor(
     type: T= "",
     props: ElementAttrs = {},
-    children: Array<Virtualdom | string | ReactiveState | number> = []
+    children: K = []
   ) {
     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
     // console.log(type, props, children);
