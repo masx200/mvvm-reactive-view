@@ -821,7 +821,7 @@ interface Extendfun {
 ```ts
 
 function createElement(
-  type: Function | string = "",
+  type: Function | string ,
   children: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 
@@ -838,7 +838,7 @@ function createElement(
 
 
 function createElement(
-  type: Function | string = "",
+  type: Function | string ,
   props: any = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
