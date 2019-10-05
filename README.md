@@ -822,24 +822,24 @@ interface Extendfun {
 
 function createElement(
   type: Function | string ,
-  children: Array<Virtualdom | string | number|ReactiveState>
+  children?: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 
 function createElement(
   type:  "",
-  children: Array<Virtualdom | string | number|ReactiveState>
+  children?: Array<Virtualdom | string | number|ReactiveState>
 ):  Array<Virtualdom | string | number|ReactiveState>;
 
 function createElement(
   type: "",
-  props: any = {},
+  props?: object = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Array<Virtualdom | string | number|ReactiveState>;
 
 
 function createElement(
   type: Function | string ,
-  props: any = {},
+  props?: object = {},
   ...children: Array<Virtualdom | string | number|ReactiveState>
 ): Virtualdom ;
 
