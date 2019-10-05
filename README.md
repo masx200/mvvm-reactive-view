@@ -78,7 +78,7 @@ import {
   watch,
   html,
   h,
-  createApp,
+  MountElement,
   createRef,
   createElement,
   createState
@@ -111,7 +111,7 @@ import {
   watch,
   html,
   h,
-  createApp,
+  MountElement,
   createRef,
   createElement,
   createState
@@ -148,7 +148,7 @@ const vdom = html`
 watch(state1, console.log);
 watch(stylestate, console.log);
 console.log(vdom, inputref);
-createApp(vdom, document.getElementById("root"));
+MountElement(vdom, document.getElementById("root"));
 ```
 
 `index.html`
@@ -260,7 +260,7 @@ const vdom = [
   createElement(mycomappclass)
 ];
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
 # 条件渲染
@@ -274,7 +274,7 @@ var vdom = condition(
  createElement( "p",null,["testtrue"]),
   createElement("div", undefined, "testfalese")
 );
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
   mystate.value = false;
 }, 3000);
@@ -301,7 +301,7 @@ const Hellowordclass = createComponent(
   )
 );
 document.body.appendChild(
-  createApp(
+  MountElement(
     <Hellowordclass />,
 
     document.createElement("div")
@@ -402,7 +402,7 @@ const vdom = createElement(
   ["children"]
 );
 console.log(vdom);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
   vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
 }, 5000);
@@ -442,7 +442,7 @@ setTimeout(() => {
     )
   );
   document.body.appendChild(
-    createApp(
+    MountElement(
       createElement(Hellowordclass),
 
       document.createElement("div")
@@ -466,12 +466,12 @@ var vdom = html`
   <${mycom} />
 `;
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
 ```ts
 document.body.appendChild(
-  createApp(
+  MountElement(
     createElement(
       class extends HTMLElement {
         static defaultProps = {
@@ -703,7 +703,7 @@ const mycomapp = createComponent(() => {
 });
 var vdom = createElement((mycomapp));
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
 # API
@@ -817,10 +817,10 @@ function createElement(
 ): Virtualdom | Array<Virtualdom | string | number>;
 ```
 
-## 使用`createApp`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
+## 使用`MountElement`把虚拟 `dom` 渲染到真实 `dom` 上,返回容器元素
 
 ```ts
-function createApp(
+function MountElement(
   vdom:
     | string
     | Virtualdom
@@ -879,7 +879,7 @@ const listItems = numbers.map(number => {
 return <li>{number}</li>}
 );
 
-createApp(<ul>{listItems}</ul>, document.getElementById("root"));
+MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 ```
 
 2.可变的列表，有响应式
