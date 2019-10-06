@@ -3,7 +3,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -462,9 +462,7 @@ var vdom = (
                   </div>
                 </div>
                 <script>
-                  {/*  $('.destroy-user-session').click(function() {
-    $.cookie('access_token', null, { path: '/' });
-  }) */}
+                  
                 </script>
               </div>
             </div>
@@ -475,4 +473,4 @@ var vdom = (
   </>
 );
 console.log(vdom, temp_ref);
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
