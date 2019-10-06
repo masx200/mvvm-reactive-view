@@ -14,7 +14,7 @@ import {
   useUnMounted
 } from "../dist/index.js";
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
-const mycomapp = () => {
+const mycomapp =createComponent( () => {
   const inputpassword = createState("");
   const inputref = createRef();
   const inputref2 = createRef();
@@ -379,7 +379,7 @@ const mycomapp = () => {
   console.log(vdom);
   return vdom;
   // MountElement(vdom, document.getElementById("root"));
-};
+});
 mycomapp.css = modulecss;
-var vdom = createElement(createComponent(mycomapp));
+var vdom = createElement((mycomapp));
 MountElement(vdom, document.getElementById("root"));
