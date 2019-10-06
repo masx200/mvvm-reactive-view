@@ -37,7 +37,7 @@ export default function render(
   namespace?: string
 ): Array<Node|Element>;
 export default function render(
-  vdom: string | ReactiveState | number,
+  vdom: string | ReactiveState | number|"script"|""|"html",
   namespace?: string
 ): Node ;
 export default function render(
