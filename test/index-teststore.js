@@ -4,7 +4,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -40,4 +40,4 @@ const vdom = [
   createElement(mycomappclass)
 ];
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
