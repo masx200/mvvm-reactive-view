@@ -125,6 +125,8 @@ hexnumberlist=Array(16)
       .fill(undefined)
       .map((v, i) => i).map(a=>a.toString(16))
    
+const charactorandnumberlist=[...new Set([...hexnumberlist,...charactorlist])]
+
 function getrandomcharactor() {
   return get(
   //  Array(26)
@@ -138,15 +140,15 @@ charactorlist
 
   
 }
-function getrandomhexnumber() {
+function getrandomhexnumberandcharactor() {
 
   return get(
    // Array(16)
     //  .fill(undefined)
      // .map((v, i) => i)
-hexnumberlist
+charactorandnumberlist
 ,
-    Math.floor(Math.random() * hexnumberlist.length)
+    Math.floor(Math.random() * charactorandnumberlist.length)
   )
 
 //.toString(16);
@@ -163,7 +165,7 @@ function getrandomstringandnumber(length = 1) {
     "-" +
     Array(length)
       .fill(undefined)
-      .map(() => getrandomhexnumber())
+      .map(() => getrandomhexnumberandcharactor())
       .join("")
   );
 }
