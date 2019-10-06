@@ -6,7 +6,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -57,12 +57,12 @@ import {
     ["children"]
   );
   console.log([vdom, myclasscomponent, mycom]);
-  document.body.appendChild(createApp(vdom, document.createElement("div")));
+  document.body.appendChild(MountElement(vdom, document.createElement("div")));
   setTimeout(() => {
     vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
   }, 5000);
   document.body.appendChild(
-    createApp(
+    MountElement(
       createElement(
         myclasscomponent,
         null,
