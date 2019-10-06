@@ -133,19 +133,20 @@ function getrandomcharactor() {
      // .map(n => String.fromCharCode(n))
 charactorlist
 ,
-    Math.floor(Math.random() * 26)
+    Math.floor(Math.random() * charactorlist.length)
   );
 
   
 }
 function getrandomhexnumber() {
+
   return get(
    // Array(16)
     //  .fill(undefined)
      // .map((v, i) => i)
 hexnumberlist
 ,
-    Math.floor(Math.random() * 16)
+    Math.floor(Math.random() * hexnumberlist.length)
   )
 
 //.toString(16);
