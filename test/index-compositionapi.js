@@ -4,7 +4,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -60,5 +60,5 @@ mycomapp.css = `
 p{color:blue !important;}
 `;
 var vdom = createElement(createComponent(mycomapp));
-// createApp(vdom, document.getElementById("root"));
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+// MountElement(vdom, document.getElementById("root"));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
