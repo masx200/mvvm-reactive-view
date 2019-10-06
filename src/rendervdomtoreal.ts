@@ -111,8 +111,14 @@ isVirtualdom(vdom)
         /* 没想到svg的创建方式这么特别?否则显示不出svg */
         element = createmathelement();
       } else if ("" === type || type === "html") {
+
+const fragmentnode=createDocumentFragment();
+
+mount(render(vdom.children),fragmentnode)
+
+return fragmentnode
         //不要创建html元素
-        return render(vdom.children);
+       // return render(vdom.children);
         // element = createDocumentFragment();
       } else {
         element = namespace
@@ -190,7 +196,7 @@ isVirtualdom(vdom)
     }
     return element;
   } else if (isArray(vdom)) {
-    return vdom.map(a => render(a)).flat();
+    return vdom.map(a => render(a)).flat(1/0);
   } else {
     throwinvalideletype(vdom);
     // throw TypeError("invalid element type!");
