@@ -5,7 +5,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -19,7 +19,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -51,7 +51,7 @@ import {
   );
   console.log([vdom, vdom2, vdom3]);
   document.body.appendChild(
-    createApp([vdom, vdom2, vdom3], document.createElement("div"))
+    MountElement([vdom, vdom2, vdom3], document.createElement("div"))
   );
   var timer = setInterval(() => {
     mystate.value = !mystate.value;
@@ -97,10 +97,10 @@ import {
   watch(stylestate, console.log);
   watch(state1, console.log);
   console.log(vdom);
-  createApp(vdom, document.getElementById("app"));
+  MountElement(vdom, document.getElementById("app"));
 })();
 
-// console.log(createApp);
+// console.log(MountElement);
 // console.log(h);
 // console.log([].flat);
 
@@ -112,7 +112,7 @@ import {
     <div *html=${"<a>绑定innerhtml</a>"}></div>
   `;
   console.log(vdom2);
-  document.body.appendChild(createApp(vdom2, document.createElement("div")));
+  document.body.appendChild(MountElement(vdom2, document.createElement("div")));
 
   const state1 = createState("<a>绑定textcontent</a>");
 
@@ -145,7 +145,7 @@ import {
   console.log(vdom3);
   // watch(state1, console.log);
   // watch(state2, console.log);
-  document.body.appendChild(createApp(vdom3, document.createElement("div")));
+  document.body.appendChild(MountElement(vdom3, document.createElement("div")));
   //////////////////////
   const state3 = createState("<a>绑定innerhtml</a>");
   const vdom4 = html`
@@ -162,7 +162,7 @@ import {
   console.log(state3);
   // watch(state3, console.log);
   console.log(vdom4);
-  document.body.appendChild(createApp(vdom4, document.createElement("div")));
+  document.body.appendChild(MountElement(vdom4, document.createElement("div")));
 
   /////////////////////
   const objstate = createState({ a: "w", 6: "xxxxxxx", tttttttt: "true" });
@@ -211,7 +211,7 @@ setTimeout(() => {
     ${objstate}
     <div style=${stylestate} class=${classsetstate} />
   `;
-  document.body.appendChild(createApp(vdomobj, document.createElement("div")));
+  document.body.appendChild(MountElement(vdomobj, document.createElement("div")));
   console.log(vdomobj);
 
   /* requestAnimationFrame(() => {
@@ -264,7 +264,7 @@ setTimeout(() => {
       </mrow>
     </math>
   `;
-  document.body.appendChild(createApp(vdom, document.createElement("div")));
+  document.body.appendChild(MountElement(vdom, document.createElement("div")));
   console.log(vdom);
 })();
 
