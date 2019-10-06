@@ -113,29 +113,44 @@ customElements[Symbol.iterator] = () => {
 
   return entries[Symbol.iterator].call(entries);
 };
-function getrandomcharactor() {
-  return get(
-    Array(26)
+
+const 
+charactorlist=Array(26)
       .fill(undefined)
       .map((v, i) => 97 + i)
-      .map(n => String.fromCharCode(n)),
+      .map(n => String.fromCharCode(n))
+
+const 
+hexnumberlist=Array(16)
+      .fill(undefined)
+      .map((v, i) => i).map(a=>a.toString(16))
+   
+function getrandomcharactor() {
+  return get(
+  //  Array(26)
+    //  .fill(undefined)
+    //  .map((v, i) => 97 + i)
+     // .map(n => String.fromCharCode(n))
+charactorlist
+,
     Math.floor(Math.random() * 26)
   );
 
-  // [Math.floor(Math.random() * 26)];
+  
 }
 function getrandomhexnumber() {
   return get(
-    Array(16)
-      .fill(undefined)
-      .map((v, i) => i),
+   // Array(16)
+    //  .fill(undefined)
+     // .map((v, i) => i)
+hexnumberlist
+,
     Math.floor(Math.random() * 16)
-  ).toString(16);
+  )
 
-  /*  Array(16)
-    .fill(undefined)
-    .map((v, i) => i)
-    [Math.floor(Math.random() * 16)].toString(16); */
+//.toString(16);
+
+  
 }
 function getrandomstringandnumber(length = 1) {
   return (
