@@ -3,7 +3,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -378,8 +378,8 @@ const mycomapp = () => {
   `;
   console.log(vdom);
   return vdom;
-  // createApp(vdom, document.getElementById("root"));
+  // MountElement(vdom, document.getElementById("root"));
 };
 mycomapp.css = modulecss;
 var vdom = createElement(createComponent(mycomapp));
-createApp(vdom, document.getElementById("root"));
+MountElement(vdom, document.getElementById("root"));
