@@ -2,6 +2,10 @@ import { getAttribute, setAttribute, removeAttribute } from "./dom";
 const attributeChangedCallback = "attributeChangedCallback";
 import { isFunction } from "./util";
 export class AttrChange extends HTMLElement {
+set textContent(){}
+set innerHTML(){}
+set innerText(){}
+//禁止设置innerhtml，innertext，textcontent
   /* disconnectedCallback() {
   console.log('Custom square element removed from page.');
 } */
