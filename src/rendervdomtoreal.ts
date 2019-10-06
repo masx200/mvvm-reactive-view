@@ -7,7 +7,7 @@ export const bindstatesymbol = Symbol("bindstate");
 export const reactivestatesymbol = Symbol("reactive");
 import { watch } from "./watch";
 import ReactiveState ,{isReactiveState}/* textnodesymbol */ from "./reactivestate";
-export const virtualdomsymbol = Symbol("virtualdom");
+export const virtualdomsymbol = Symbol("virtualelement");
 import directives from "./directives";
 import onevent /*  eventlistenerssymbol  */ from "./onevent";
 import { createcostumelemet } from "./customelement";
