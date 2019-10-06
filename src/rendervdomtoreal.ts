@@ -53,14 +53,26 @@ export default function render(
     | Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
 ) {
-  if (isnumber(vdom)) {
-    return createtextnode(vdom);
-  } else if (typeof vdom === "string") {
-    return createtextnode(vdom);
+  if (isnumber(vdom)||isstring(vdom)) {
+
+const textnode=createtextnode(vdom);
+textnode[virtualdomsymbol] = vdom
+    return textnode
+
+ 
+ // } else if (typeof vdom === "string") {
+   // return createtextnode(vdom);
   } else if (isReactiveState(vdom )/*instanceof ReactiveState*/) {
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
-    textnode[reactivestatesymbol] = reactive;
+
+
+
+textnode[virtualdomsymbol] = reactive
+
+
+
+    //textnode[reactivestatesymbol] = reactive;
     /*  try {
       reactive[textnodesymbol] = textnode;
     } catch (error) {
