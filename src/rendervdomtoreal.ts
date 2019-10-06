@@ -37,9 +37,13 @@ export default function render(
   namespace?: string
 ): Array<Node|Element>;
 export default function render(
-  vdom: Virtualdom | string | ReactiveState | number,
+  vdom: string | ReactiveState | number,
   namespace?: string
-): Node |Element;
+): Node ;
+export default function render(
+  vdom: Virtualdom ,
+  namespace?: string
+): Element;
 export default function render(
   vdom:
     | Virtualdom
