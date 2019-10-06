@@ -3,7 +3,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -17,7 +17,7 @@ import {
   Fragment,
   createRef,
   html,
-  createApp,
+  MountElement,
   h,
   createElement,
   createState,
@@ -46,10 +46,10 @@ import {
     );
     console.log(myvdom1111111);
     document.body.appendChild(
-      createApp(myvdom1111111, document.createElement("div"))
+      MountElement(myvdom1111111, document.createElement("div"))
     );
     document.body.appendChild(
-      createApp(
+      MountElement(
         createElement(
           (() => {
             var Aaaaaaaaaa = class extends HTMLElement {};
@@ -79,8 +79,8 @@ import {
       }
     );
     console.log(myele1);
-    document.body.appendChild(createApp(myele1, document.createElement("div")));
-    document.body.appendChild(createApp(myele1, document.createElement("div")));
+    document.body.appendChild(MountElement(myele1, document.createElement("div")));
+    document.body.appendChild(MountElement(myele1, document.createElement("div")));
   })();
 })(); /* , 0); */
 /* (async () => {
@@ -118,7 +118,7 @@ const vdom = html`
   />
   <style></style>
 `;
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 console.log("onclick", " @click", vdom);
 (async () => {
   const defaultProps = { cccccc: "bbbbbbb" };
@@ -134,7 +134,7 @@ console.log("onclick", " @click", vdom);
     )
   );
   document.body.appendChild(
-    createApp(
+    MountElement(
       createElement(Hellowordclass),
 
       document.createElement("div")
