@@ -33,15 +33,19 @@ import createeleattr from "dom-element-attribute-agent-proxy";
 import { isobject, isArray, isfunction, isstring, isnumber } from "./util";
 import Virtualdom,{isVirtualdom} from "./virtualdom";
 export default function render(
+  vdom: Virtualdom<"script"|""|"html"> ,
+  namespace?: string
+): Node;
+export default function render(
   vdom: Array<Virtualdom | string | ReactiveState | number>,
   namespace?: string
 ): Array<Node|Element>;
 export default function render(
-  vdom: string | ReactiveState | number|"script"|""|"html",
+  vdom: string | ReactiveState | number,
   namespace?: string
 ): Node ;
 export default function render(
-  vdom: Virtualdom ,
+  vdom: Virtualdom<string|Function> ,
   namespace?: string
 ): Element;
 export default function render(
