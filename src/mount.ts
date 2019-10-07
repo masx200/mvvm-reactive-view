@@ -1,6 +1,8 @@
 import { appendchild, /* setelehtml,  */ seteletext } from "./dom";
 import { toArray } from "./toArray";
-export default function(
+export default function<
+  T extends HTMLElement | SVGSVGElement | SVGElement | Element | Node
+>(
   ele:
     | Node
     | Array<
@@ -18,9 +20,9 @@ export default function(
     | Text
     | SVGSVGElement
     | Element,
-  container: HTMLElement | SVGSVGElement | SVGElement | Element | Node,
+  container: T,
   clear: boolean = true
-) {
+): T {
   if (clear) {
     seteletext(container, "");
   }

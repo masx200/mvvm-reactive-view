@@ -1,19 +1,15 @@
+import { h, createElement } from "../dist/index.js";
+console.log(h, createElement);
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 // import modulecss from "./main.b9c7ffd191cff11a9b96.css";
 import {
   condition,
-  Fragment,
+  //   createElement,
   createRef,
+  createState,
   html,
   MountElement,
-  h,
-  createElement,
-  createState,
-  watch,
- 
-  createComponent,
-  useMounted,
-  useUnMounted
+  watch
 } from "../dist/index.js";
 /* console.log([
   Fragment,
@@ -185,23 +181,22 @@ import {
     "test"
   ]);
   const stylestate = createState({ display: "block", width: "100%" });
- 
-//
- const classsetstate = createState(
+
+  //
+  const classsetstate = createState(
     new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"])
   );
 
-
   console.log("classsetstate", classsetstate);
-  watch(classsetstate, a=>console.log(a));
+  watch(classsetstate, a => console.log(a));
   setTimeout(() => {
     classsetstate.add("vvvvvvvvvvv");
   }, 5000);
-setTimeout(() => {
+  setTimeout(() => {
     classsetstate.delete("eeeeeeee");
   }, 4000);
 
-//
+  //
 
   const vdomobj = html`
     <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>
@@ -211,7 +206,9 @@ setTimeout(() => {
     ${objstate}
     <div style=${stylestate} class=${classsetstate} />
   `;
-  document.body.appendChild(MountElement(vdomobj, document.createElement("div")));
+  document.body.appendChild(
+    MountElement(vdomobj, document.createElement("div"))
+  );
   console.log(vdomobj);
 
   /* requestAnimationFrame(() => {

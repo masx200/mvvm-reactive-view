@@ -1,63 +1,61 @@
 export const innerstatesymbol = Symbol("innerstate");
-import { setimmediate } from "./setimmediate";
-import { readysymbol } from "./readysymbol";
-import render from "./rendervdomtoreal";
-import readonlyproxy from "./readonlyproxy";
-import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
+import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
+import { AttrChange } from "./attrchange";
+import {
+  closectx,
+  getMounted,
+  getstates,
+  getUnMounted,
+  invalid_Function,
+  openctx
+} from "./context-mounted-unmounted-";
+import { /* createApp, */ invalid_Virtualdom } from "./createApp";
 import createstate from "./createstate";
+import { Class, Custom } from "./customclass";
+import { seteletext } from "./dom";
+import { onmounted, onunmounted } from "./elementonmountandunmount";
+import { isvalidvdom } from "./html";
+// import { Promise } from "q";
+// import { inflate } from "zlib";
+import { componentsymbol } from "./iscomponent";
+// import { insertfirst } from "./dom";
+import mount from "./mount";
+import {
+  /* parsecsstext,
+    prefixcssrules,
+    cssrulestocsstext, */
+  //   savestyleblob,
+  componentsstylesheet,
+  //   createlinkstylesheet,
+  //   transformcsstext,
+  registercssprefix,
+  /*  loadlinkstyle,
+    createlinkstylesheet */
+  //   savestyleblob
+  waitloadallstyle
+} from "./parsecss";
+import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
+import readonlyproxy from "./readonlyproxy";
+import { readysymbol } from "./readysymbol";
+import { get, set } from "./reflect";
+import render from "./rendervdomtoreal";
+import { setimmediate } from "./setimmediate";
+import { toArray } from "./toArray";
+import { isArray, isfunction, isobject, isstring } from "./util";
+// import { Class } from "./rendervdomtoreal";
+import Virtualdom from "./virtualdom";
 const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
-import { AttrChange } from "./attrchange";
-import {
-  openctx,
-  closectx,
-  getMounted,
-  getUnMounted,
-  invalid_Function,
-  getstates
-} from "./context-mounted-unmounted-";
-
-// import { Class } from "./rendervdomtoreal";
-
-import Virtualdom from "./virtualdom";
-import createeleattragentreadwrite from "dom-element-attribute-agent-proxy";
-import { isobject, isArray, isfunction, isstring } from "./util";
-import { onunmounted, onmounted } from "./elementonmountandunmount";
-import { isvalidvdom } from "./html";
-import { /* createApp, */ invalid_Virtualdom } from "./createApp";
-import { toArray } from "./toArray";
-import { Custom, Class } from "./customclass";
-import {
-  waitloadallstyle,
-  /* parsecsstext,
-  prefixcssrules,
-  cssrulestocsstext, */
-  //   savestyleblob,
-  componentsstylesheet,
-  //   createlinkstylesheet,
-  //   transformcsstext,
-  registercssprefix
-  /*  loadlinkstyle,
-  createlinkstylesheet */
-  //   savestyleblob
-} from "./parsecss";
-// import { insertfirst } from "./dom";
-import mount from "./mount";
-import { seteletext } from "./dom";
-// import { Promise } from "q";
-// import { inflate } from "zlib";
-import { componentsymbol } from "./iscomponent";
-import { get } from "./reflect";
 export function createComponent(custfun: Custom): Class {
   if (isfunction(custfun)) {
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
     return class Component extends AttrChange {
-      [innerstatesymbol]: Array<ReactiveState>;
+      [innerstatesymbol]: Array<ReactiveState<any>>;
       static [componentsymbol] = true;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
@@ -66,9 +64,11 @@ export function createComponent(custfun: Custom): Class {
       static defaultProps = isobject(defaultProps)
         ? JSON.parse(JSON.stringify(defaultProps))
         : undefined;
-      [attributessymbol]: { [s: string]: ReactiveState } | object = {};
+      [attributessymbol]: { [s: string]: ReactiveState<any> } | object = {};
       [elementsymbol]: Array<Node>;
-      [vdomsymbol]: Array<Virtualdom | ReactiveState | string>;
+      [vdomsymbol]: Array<
+        Virtualdom<any> | ReactiveState<any> | string | number
+      >;
       constructor(
         propsjson: object = {},
         children: any[] = [] /* , options?: any */
@@ -124,9 +124,9 @@ export function createComponent(custfun: Custom): Class {
 
         let possiblyvirtualdom:
           | string
-          | Virtualdom
-          | ReactiveState
-          | (string | Virtualdom | ReactiveState)[]
+          | Virtualdom<any>
+          | ReactiveState<any>
+          | (string | Virtualdom<any> | ReactiveState<any>)[]
           | any;
         try {
           possiblyvirtualdom = custfun.call(
@@ -138,7 +138,7 @@ export function createComponent(custfun: Custom): Class {
           );
         } catch (error) {
           closectx();
-console.error(error)
+          console.error(error);
           throw error;
         }
 
@@ -162,8 +162,8 @@ console.error(error)
         } else {
           closectx();
           console.error(possiblyvirtualdom);
-          console.error(invalid_Virtualdom)
-throw TypeError();
+          console.error(invalid_Virtualdom);
+          throw TypeError();
         }
 
         //   this[mountedsymbol] = getMounted();
@@ -233,18 +233,25 @@ throw TypeError();
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);
-        if (this[attributessymbol][name]) {
+        if (get(this, attributessymbol)[name]) {
           /* 当属性改变时要跟ReactiveState同步状态 */
-          this[attributessymbol][name].value = createeleattragentreadwrite(
+          set(
+            get(this, attributessymbol)[name],
+            "value,",
+            (createeleattragentreadwrite(this) as { [key: string]: any })[
+              name
+            ] as any
+          );
+          /*   this[attributessymbol][name].value = createeleattragentreadwrite(
             this
-          )[name];
+          )[name]; */
           //   this[attributessymbol][name][dispatchsymbol]();
         }
       }
     };
   } else {
     console.error(custfun);
-console.error(invalid_Function)
+    console.error(invalid_Function);
     throw TypeError();
   }
 }

@@ -1,26 +1,33 @@
-import Virtualdom from "./virtualdom";
-import ReactiveState from './reactivestate';
-import { isReactiveState } from './reactivestate';
-import { isstring, isArray, isnumber } from "./util";
-import { isVirtualdom } from "./virtualdom";
-import htm from "htm/dist/htm.module.js";
-import h from "./createelement";
+// declare const htm: (
+//   strings?: TemplateStringsArray,
+//   ...values: any[]
+// ) => Virtualdom<any>;
+/* declare module "htm/dist/htm.module" {
+  const htm: (
+    strings?: TemplateStringsArray,
+    ...values: any[]
+  ) => Virtualdom<any>;
+  export default htm;
+} */
+interface HTM {
+  (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
+}
+import htm from "htm";
+import { VaildVDom } from "./conditon";
+// import htm from "../types/htm";
 import { invalid_Virtualdom } from "./createApp";
+import h from "./createelement";
+import { isReactiveState } from "./reactivestate";
+import { isArray, isnumber, isstring } from "./util";
+import Virtualdom, { isVirtualdom } from "./virtualdom";
 
 // const html = htm.bind(h);
-function html(...inargs) {
-  return htm.call(h, ...inargs);
+function html(...inargs: any[]): Virtualdom<any> {
+  return (htm as HTM).call(h, ...inargs);
 }
 
 /* 如果出现未闭合标签会产生错误的vdom */
-export function isvalidvdom(
-  v: any
-): v is
-  | string
-  | Virtualdom
-  | ReactiveState
-  | number
-  | (string | Virtualdom | ReactiveState | number)[] {
+export function isvalidvdom(v: any): v is VaildVDom {
   if (isnumber(v)) {
     return true;
   }
@@ -35,8 +42,8 @@ export function isvalidvdom(
       ? false
       : true;
     return flag;*/
-//https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-return v.every(e=>isvalidvdom(e))
+    //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+    return v.every(e => isvalidvdom(e));
   } else if (
     isVirtualdom(v)
     // v instanceof Virtualdom
@@ -62,7 +69,7 @@ function assertvalidvirtualdom(...args: any[]) {
     return vdom;
   } else {
     console.error(vdom);
-console.error(invalid_Virtualdom)
+    console.error(invalid_Virtualdom);
     throw new TypeError();
   }
 }

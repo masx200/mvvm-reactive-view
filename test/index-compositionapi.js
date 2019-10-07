@@ -1,18 +1,15 @@
 import {
   computed,
-  condition,
-  Fragment,
-  createRef,
-  html,
-  MountElement,
-  h,
-  createElement,
-  createState,
-  watch,
   createComponent,
+  createElement,
+  //   createElement,
+  createState,
+  h,
+  MountElement,
   useMounted,
   useUnMounted
 } from "../dist/index.js";
+console.log(h, createElement);
 function useMousePosition() {
   const x = createState(0);
   const y = createState(0);
@@ -33,7 +30,7 @@ function useMousePosition() {
   return { x, y };
 }
 
-const mycomapp = () => {
+const mycomapp = createComponent(() => {
   const { x, y } = useMousePosition();
   const plus = computed(x, x => {
     return x + 100;
@@ -44,6 +41,9 @@ const mycomapp = () => {
     return x * y;
   });
   console.log(plus, multi);
+  /* watch([x, y, multi, plus], (...args) => {
+    console.log(args.map(a => a.valueOf()));
+  }); */
   return (
     <div>
       <h3> 鼠标位置</h3>
@@ -54,11 +54,11 @@ const mycomapp = () => {
       <p>x*y 是{multi}</p>
     </div>
   );
-};
+});
 mycomapp.css = `
 *{font-size:80px !important;}
 p{color:blue !important;}
 `;
-var vdom = createElement(createComponent(mycomapp));
+var vdom = createElement(mycomapp);
 // MountElement(vdom, document.getElementById("root"));
 document.body.appendChild(MountElement(vdom, document.createElement("div")));

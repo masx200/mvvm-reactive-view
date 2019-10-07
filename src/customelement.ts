@@ -1,13 +1,15 @@
-import { invalid_custom_element_class } from "./CustomElementRegistry";
-
+import { Class } from "./customclass";
 //import setlikearray from "./setlikearay";
-
 // const customElementsarray = new Set;
-import RandomDefineCustomElement from "./CustomElementRegistry";
+import RandomDefineCustomElement, {
+  invalid_custom_element_class
+} from "./CustomElementRegistry";
+import { construct } from "./reflect";
 /* function getcustomelementname(initclass: any): string {
   return customElements(initclass);
 } */
 import { isfunction } from "./util";
+
 export function isclassextendsHTMLElement(initclass: {
   prototype: any;
 }): initclass is Class {
@@ -18,8 +20,6 @@ export function isclassextendsHTMLElement(initclass: {
   );
 }
 
-import { construct } from "./reflect";
-import { Class } from "./customclass";
 // import Reflect from "./reflect";
 
 // import { Class } from "./rendervdomtoreal";
@@ -27,8 +27,8 @@ import { Class } from "./customclass";
 export function createcostumelemet(
   initclass: Class | Function,
   propsjson?: object,
-  children?: any[],
-  options?: any
+  children?: any[]
+  //   options?: any
 ): HTMLElement {
   if (isclassextendsHTMLElement(initclass)) {
     // customElementsarray.push(initclass);
@@ -39,10 +39,10 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     } */
     RandomDefineCustomElement(initclass);
-    return construct(initclass, [propsjson, children, options]); // (children);
+    return construct(initclass, [propsjson, children /* , options */]); // (children);
   } else {
     console.error(initclass);
-console.error(invalid_custom_element_class)
+    console.error(invalid_custom_element_class);
     throw TypeError();
   }
 }

@@ -1,10 +1,10 @@
 const Reflect = window.Reflect;
-export default Reflect;
+// export default Reflect;
 
 export const {
-  //   apply,
+  apply,
   construct,
-     defineProperty,
+  defineProperty,
   deleteProperty,
   get,
   getOwnPropertyDescriptor,

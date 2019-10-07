@@ -1,17 +1,10 @@
+import { h, createElement } from "../dist/index.js";
+console.log(h, createElement);
 import {
-  computed,
-  condition,
-  Fragment,
-  createRef,
-  html,
-  MountElement,
-  h,
-  createElement,
-  createState,
-  watch,
   createComponent,
-  useMounted,
-  useUnMounted
+  //   createElement,
+  createState,
+  MountElement
 } from "../dist/index.js";
 const number = createState(10);
 function increment() {

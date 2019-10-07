@@ -1,15 +1,12 @@
+import typescript from "typescript";
 // import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
-import typescript from "rollup-plugin-typescript";
+import typescriptplugin from "rollup-plugin-typescript2";
 
-const banner=
-`const {Event,CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,HTMLElement,Set,Math,Error,TypeError,EventTarget,JSON,Map}=window;`;
-
-
-
+const banner = `const {Event,CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map}=window;`;
 
 const myterserplugin = terser({
   sourcemap: true,
@@ -31,17 +28,13 @@ export default [
   {
     input: "./src/index.ts",
     output: [
-      {banner,
-        file: "./dist/index.js",
-        format: "esm",
-        sourcemap: true
-      }
+      { banner, file: "./dist/index.js", format: "esm", sourcemap: true }
     ],
     plugins: [
       json(),
       resolve(),
       commonjs(),
-      typescript(),
+      typescriptplugin({ tsconfig: "tsconfig.json", typescript: typescript }),
       terser({
         sourcemap: true,
         compress: false,
@@ -58,7 +51,6 @@ export default [
     input: "./dist/index.js",
     output: [
       {
-
         file: "./dist/index.min.js",
         format: "esm",
         sourcemap: true

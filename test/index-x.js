@@ -1,17 +1,11 @@
+import { h, createElement } from "../dist/index.js";
+console.log(h, createElement);
 import {
-  condition,
-  Fragment,
+  computed,
   createRef,
-  html,
-  MountElement,
-  h,
-  createElement,
   createState,
-  watch,
-  createComponent,
-  useMounted,
-  useUnMounted,
-  computed
+  MountElement,
+  watch
 } from "../dist/index.js";
 // console.log()
 // export{vdom}
@@ -461,9 +455,7 @@ var vdom = (
                     </a>
                   </div>
                 </div>
-                <script>
-                  
-                </script>
+                <script></script>
               </div>
             </div>
           </div>

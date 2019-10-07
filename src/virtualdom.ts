@@ -1,39 +1,32 @@
-import {defineProperty}from "./reflect"
-import {ElementAttrs}from"./createelement"
-export function isVirtualdom(a: any): a is Virtualdom {
-  return a instanceof Virtualdom;
-}
-import ReactiveState, { isReactiveState } from "./reactivestate";
+import { ElementAttrs } from "./createelement";
+import { Class } from "./customclass";
 // import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
-import { Class } from "./customclass";
+import ReactiveState, { isReactiveState } from "./reactivestate";
+import { defineProperty } from "./reflect";
+export function isVirtualdom(a: any): a is Virtualdom<any> {
+  return a instanceof Virtualdom;
+}
 
-export type Vdomchildren=Array<Virtualdom | string | ReactiveState | number>
+export type Vdomchildren = Array<
+  Virtualdom<any> | string | ReactiveState<any> | number
+>;
 
-export default class Virtualdom 
-<
-T extends Class|string|Function
-
->
-{
+export default class Virtualdom<T extends Class | string | Function> {
   /* get [Symbol.toStringTag]() {
     return "VirtualElement";
   } */
   //   options: any |undefined
   element: undefined | Element | Node;
-  type: T = "";
+  type: T | undefined;
   props: ElementAttrs = {};
   children: Vdomchildren = [];
   directives: object = {};
   onevent: { [key: string]: Array<EventListener> } = {};
   bindattr: { [key: string]: ReactiveState<any> } = {};
-  constructor(
-    type: T= "",
-    props: ElementAttrs = {},
-    children: Vdomchildren = []
-  ) {
-//对象浅拷贝
-props={...props}
+  constructor(type: T, props: ElementAttrs = {}, children: Vdomchildren = []) {
+    //对象浅拷贝
+    props = { ...props };
     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
     // console.log(type, props, children);
     //添加支持on开头事件绑定写法
@@ -71,7 +64,7 @@ value
           //    e[1] instanceof ReactiveState
         )
       ),
-      children: children.flat(1/0),
+      children: children.flat(1 / 0),
       onevent: Object.fromEntries(
         /* 需要合并entries
         [
@@ -104,7 +97,7 @@ value
                 .toLowerCase()
                 .trim(),
               //把事件绑定变成事件数组
-              [value].flat()
+              [value].flat(1 / 0)
             ]),
           ...propsentries
             .filter(([key]) => key.startsWith("on"))
@@ -115,7 +108,7 @@ value
                 .toLowerCase()
                 .trim(),
               //把事件绑定变成事件数组
-              [value].flat()
+              [value].flat(1 / 0)
             ])
         ])
       ),

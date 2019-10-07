@@ -1,0 +1,12 @@
+import ReactiveState from "./reactivestate";
+export declare const invalid_Function = "invalid Function";
+export declare function getstates(): Array<ReactiveState<any>>;
+export declare function usestste(state: ReactiveState<any>): void;
+export declare function getMounted(): Function[];
+export declare function getUnMounted(): Function[];
+export declare function useMounted(fun: Function): void;
+export declare function useUnMounted(fun: Function): void;
+export declare function clearMounted(): void;
+export declare function clearUnMounted(): void;
+export declare function openctx(): void;
+export declare function closectx(): void;

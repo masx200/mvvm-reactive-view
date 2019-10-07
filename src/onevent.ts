@@ -1,8 +1,9 @@
-import { toArray } from "./toArray";
 import { invalid_Function } from "./context-mounted-unmounted-";
 import { domaddlisten, domremovelisten } from "./dom";
-export const eventlistenerssymbol = Symbol("eventlisteners");
+import { toArray } from "./toArray";
 import { /* isArray, */ isfunction } from "./util";
+import { has, set, get } from "./reflect";
+export const eventlistenerssymbol = Symbol("eventlisteners");
 export default function(
   element: Element | Node,
   eventname: string,
@@ -33,15 +34,16 @@ export function firstaddlisteners(
   callarray.forEach((call: EventListener) => {
     if (!isfunction(call)) {
       console.error(call);
-console.error(invalid_Function)
+      console.error(invalid_Function);
       throw TypeError();
     }
 
-    if (!element[eventlistenerssymbol]) {
-      element[eventlistenerssymbol] = [];
+    if (!has(element, eventlistenerssymbol)) {
+      set(element, eventlistenerssymbol, []);
+      //   element[eventlistenerssymbol] = [];
     }
-
-    ele[eventlistenerssymbol].push([event, call]);
+    (get(ele, eventlistenerssymbol) as any[])
+      /* ele[eventlistenerssymbol] */ .push([event, call]);
     domaddlisten(ele, event, call);
   });
 }
@@ -51,11 +53,12 @@ export function removelisteners(
   //   callarray: Array<EventListener>
 ) {
   // const element = ele;
-  if (ele[eventlistenerssymbol]) {
-    ele[eventlistenerssymbol].forEach(([event, call]) => {
-      //   ele[eventlistenerssymbol].push([event, call]);
-      domremovelisten(ele, event, call);
-    });
+  if (has(ele, eventlistenerssymbol)) {
+    (get(ele, eventlistenerssymbol) as any[])
+      /*   ele[eventlistenerssymbol] */ .forEach(([event, call]) => {
+        //   ele[eventlistenerssymbol].push([event, call]);
+        domremovelisten(ele, event, call);
+      });
   }
 }
 export function readdlisteners(
@@ -63,8 +66,8 @@ export function readdlisteners(
   //   event: string,
   //   callarray: Array<EventListener>
 ) {
-  if (ele[eventlistenerssymbol]) {
-    ele[eventlistenerssymbol].forEach(([event, call]) => {
+  if (has(ele, eventlistenerssymbol)) {
+    (get(ele, eventlistenerssymbol) as any[]).forEach(([event, call]) => {
       //   ele[eventlistenerssymbol].push([event, call]);
       domaddlisten(ele, event, call);
     });

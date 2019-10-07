@@ -1,0 +1,17 @@
+export { isplainobject };
+export { isfunction as isFunction, isarray as isArray, isstring as isString };
+export { isprimitive };
+declare const isplainobject: (a: any) => boolean;
+import isprimitive from "./isprimitive";
+export declare function isundefined(a: any): a is void;
+export declare function isnumber(a: any): a is number;
+export declare function isboolean(a: any): a is boolean;
+export declare function isobject(a: any): a is object | Record<string, any>;
+export declare function isstring(a: any): a is string;
+export declare function isfunction(a: any): a is Function;
+export declare function isarray(a: any): a is Array<any>;
+export declare function gettagtype(a: any): string;
+export declare function ispromise(a: any): a is Promise<any>;
+export declare function isSet(a: any): a is Set<any>;
+export declare const camelize: (str: string) => string;
+export declare const hyphenate: (str: string) => string;

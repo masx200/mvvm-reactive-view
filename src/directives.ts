@@ -1,28 +1,35 @@
-export const{ requestAnimationFrame} = window
-import { seteletext, setelehtml } from "./dom";
-
-import { watch } from "./watch";
-import ReactiveState, { isReactiveState } from './reactivestate';
+export const { requestAnimationFrame } = window;
+import { setelehtml, seteletext } from "./dom";
+import { ExtendOptions } from "./extend-directive";
 import { isconnected } from "./isconnected";
-import { isobject,isfunction ,isstring} from "./util";
+import ReactiveState, { isReactiveState } from "./reactivestate";
+import { isfunction, isobject, isstring } from "./util";
+import { watch } from "./watch";
+import { set, apply } from "./reflect";
+import Virtualdom from "./virtualdom";
 
-import {ExtendOptions}from"./extend-directive"
-const directive:ExtendOptions= {
-  ref(ele: Element, ref: { value: any }|Function) {
+const directive: ExtendOptions = {
+  ref(ele: Element, ref: object | Function, _vdom: Virtualdom<any>) {
+    console.log(_vdom);
     if (isobject(ref)) {
-      ref.value = ele;
-    }else if(isfunction(ref)){
-
-ref.call(undefined,ele)
-}
-
- else {
-console.error(ref)
-console.error("invalid ref")
+      set(ref as object, "value", ele);
+      //   ref.value = ele;
+    } else if (isfunction(ref)) {
+      apply(ref as Function, undefined, [ele]);
+      // ref(ele)
+      //   ref.call(undefined, ele);
+    } else {
+      console.error(ref);
+      console.error("invalid ref");
       throw TypeError();
     }
   },
-  html(ele: Element, html: string | ReactiveState) {
+  html(
+    ele: Element,
+    html: string | ReactiveState<any>,
+    _vdom: Virtualdom<any>
+  ) {
+    console.log(_vdom);
     createhtmlandtextdirective(setelehtml, "html")(ele, html);
 
     // ele.innerHTML = html;
@@ -58,7 +65,12 @@ console.error("invalid ref")
 
 */
   },
-  text(ele: Element, text: string | ReactiveState) {
+  text(
+    ele: Element,
+    text: string | ReactiveState<any>,
+    _vdom: Virtualdom<any>
+  ) {
+    console.log(_vdom);
     createhtmlandtextdirective(seteletext, "text")(ele, text);
 
     /*
@@ -95,12 +107,12 @@ console.error("invalid ref")
   }
 };
 function createhtmlandtextdirective(seteletext: Function, errorname: string) {
-  return function(ele: Element, text: string | ReactiveState) {
+  return function(ele: Element, text: string | ReactiveState<any>) {
     const element = ele;
     if (
-isstring(text)
-//typeof text == "string"
-) {
+      isstring(text)
+      //typeof text == "string"
+    ) {
       requestAnimationFrame(() => {
         seteletext(ele, text);
         /*    ele.textContent = text;*/
@@ -127,10 +139,10 @@ isstring(text)
         /*  ele.textContent = String(text);*/
       });
     } else {
-console.error(text)
-console.error("invalid " + errorname)
+      console.error(text);
+      console.error("invalid " + errorname);
       throw TypeError();
     }
   };
 }
-export default directive
+export default directive;

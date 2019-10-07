@@ -1,6 +1,4 @@
-export const Fragment = "";
-import render from "./rendervdomtoreal";
-export{render}
+// export const Fragment = "";
 // import { isobject, isfunction } from "./util";
 import "./assetbrowser";
 import computed from "./computed";
@@ -19,7 +17,9 @@ import html from "./html";
 // import "./setImmediate";
 //import "./array-prototype-flat";
 import "./input-textarea-value-directive-Bidirectional-binding";
+import render from "./rendervdomtoreal";
 import { watch } from "./watch";
+export { render };
 export { computed };
 export { useMounted, useUnMounted };
 export { createComponent };
@@ -31,6 +31,3 @@ export { createState };
 export { watch };
 export { directives };
 export { condition };
-
-
-

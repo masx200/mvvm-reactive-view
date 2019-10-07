@@ -1,17 +1,14 @@
 import {
-  condition,
-  Fragment,
-  createRef,
-  html,
-  MountElement,
-  h,
-  createElement,
-  createState,
   watch,
   createComponent,
-  useMounted,
-  useUnMounted
+  createElement,
+  createState,
+  h,
+  //   createElement,
+  html,
+  MountElement
 } from "../dist/index.js";
+console.log(h, createElement);
 /* console.log([
   condition,
   Fragment,
@@ -79,8 +76,12 @@ import {
       }
     );
     console.log(myele1);
-    document.body.appendChild(MountElement(myele1, document.createElement("div")));
-    document.body.appendChild(MountElement(myele1, document.createElement("div")));
+    document.body.appendChild(
+      MountElement(myele1, document.createElement("div"))
+    );
+    document.body.appendChild(
+      MountElement(myele1, document.createElement("div"))
+    );
   })();
 })(); /* , 0); */
 /* (async () => {
@@ -97,29 +98,31 @@ import {
   );
 })().then(console.log); */
 // ));
-const vdom = html`
-  <html>
-    testhtml
-  </html>
-  <button
-    onclick=${[
-      console.log,
-      () => {
-        console.log("onclick");
-      }
-    ]}
-    *text="clicktest"
-    @click=${[
-      console.log,
-      () => {
-        console.log("@click");
-      }
-    ]}
-  />
-  <style></style>
-`;
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
-console.log("onclick", " @click", vdom);
+{
+  const vdom = html`
+    <html>
+      testhtml
+    </html>
+    <button
+      onclick=${[
+        console.log,
+        () => {
+          console.log("onclick");
+        }
+      ]}
+      *text="clicktest"
+      @click=${[
+        console.log,
+        () => {
+          console.log("@click");
+        }
+      ]}
+    />
+    <style></style>
+  `;
+  document.body.appendChild(MountElement(vdom, document.createElement("div")));
+  console.log("onclick", " @click", vdom);
+}
 (async () => {
   const defaultProps = { cccccc: "bbbbbbb" };
   const css = await (await fetch(
@@ -140,4 +143,27 @@ console.log("onclick", " @click", vdom);
       document.createElement("div")
     )
   );
+})();
+(() => {
+  const colortext = createState("red");
+  const stylestate = createState({
+    display: "block",
+    width: "100%",
+    color: colortext
+  });
+  /* const inputref = createRef();
+  const state1 = createState("hello"); */
+  const vdom = html`
+    <hr />
+    <h1 style=${stylestate}>input color ${colortext}</h1>
+    <input _value=${colortext} />
+    <hr />
+  `;
+  /* watch(stylestate, console.log);
+  watch(state1, console.log); */
+  console.log([vdom, colortext, stylestate]);
+  watch([colortext, stylestate], (a, b) =>
+    console.log([a, b].map(a => a.valueOf()))
+  );
+  document.body.appendChild(MountElement(vdom, document.createElement("div")));
 })();

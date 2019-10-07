@@ -1,81 +1,102 @@
-import{Vdomchildren}from"./virtualdom"
-type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
+import ReactiveState from "./reactivestate";
+import { apply } from "./reflect";
+import { isarray, isfunction, isplainobject, isstring } from "./util";
+import Virtualdom, { Vdomchildren } from "./virtualdom";
+type styleprop =
+  | string
+  | object
+  | ReactiveState<string>
+  | ReactiveState<object>;
 
-type classprop = string | Set<string> | Array<string>|ReactiveState<string | Set<string> | Array<string>>;
-export interface ElementAttrs{
-style?:styleprop,
-class?:classprop,
-[key:string]:any
+type classprop =
+  | string
+  | Set<string>
+  | Array<string>
+  | ReactiveState<string | Set<string> | Array<string>>;
+export interface ElementAttrs {
+  style?: styleprop;
+  class?: classprop;
+  [key: string]: any;
 }
-import ReactiveState from './reactivestate';
-import {isarray, isstring, isobject,isplainobject, isfunction } from "./util";
-import Virtualdom from "./virtualdom";
 
-export default
-function<T extends Function | string>(
+export default function<T extends Function | string>(
   type: T,
   propsorchildren?: Vdomchildren,
-...children:Vdomchildren
-): Virtualdom<T> ;
-export default
-function(
-  type:  "",
-  propsorchildren?:Vdomchildren,
-...children:Vdomchildren
-):  Vdomchildren;
-export default
-function (
+  ...children: Vdomchildren
+): Virtualdom<T>;
+export default function<T extends Vdomchildren>(
   type: "",
-  props?: ElementAttrs = {},
+  propsorchildren?: T,
+  ...children: T
+): T;
+export default function<T extends Vdomchildren>(
+  type: "",
+  props?: ElementAttrs,
+  ...children: T
+): T;
+export default function<T extends Function | string>(
+  type: T,
+  props?: ElementAttrs,
   ...children: Vdomchildren
-): Vdomchildren;
-
-export default
-function <T extends Function | string>(
-  type: T ,
-  props?: ElementAttrs = {},
-  ...children: Vdomchildren
-): Virtualdom<T> ;
-
+): Virtualdom<T>;
 //如果第二个参数是数组，则 变成
 /* 
 h(type,...children)
 h(type,children)
 */
 
-
-export default (type,propsorchildren,...children)=>
-{
-
-
-
-if(isarray(propsorchildren)){
-return createElement(type,undefined,[...propsorchildren,...children].flat(1/0))
+export default function(
+  type?: Function | string | "",
+  propsorchildren?: Vdomchildren | ElementAttrs,
+  ...children: Vdomchildren
+) {
+  if (isarray(propsorchildren)) {
+    return apply(createElement, undefined, [
+      type,
+      undefined,
+      [...propsorchildren, ...children].flat(1 / 0)
+    ]);
+    /*   createElement(
+      type,
+      undefined,
+      [...propsorchildren, ...children].flat(1 / 0)
+    ); */
+  } else {
+    return apply(createElement, undefined, Array.from(arguments)); // createElement(...arguments);
+  }
 }
-else{
-return createElement(...arguments)
-}
-}
-
-
- function createElement<T extends Function | string>(
-  type:T,
+function createElement<T extends Vdomchildren>(
+  type: "",
+  props?: ElementAttrs,
+  ...children: T
+): T;
+function createElement<T extends Function | string>(
+  type: T,
   props?: ElementAttrs,
   ...children: Vdomchildren
 ): Virtualdom<T>;
- function createElement(
-  type: Function | string = "",
-  props: ElementAttrs= {},
+
+/* function createElement<T extends Vdomchildren>(
+  type: "",
+  props?: ElementAttrs,
+  ...children: T
+): T; */
+
+function createElement<T extends Function | string>(
+  type: T,
+  props: ElementAttrs = {},
   ...children: Vdomchildren
-): Virtualdom | Vdomchildren
- {
+): Virtualdom<T> | Vdomchildren {
   // | Array<Virtualdom | string>
   // if(isarray()){}
   /* add fragment element */
   //   console.log(type, props, children);
   let typenormalized = isstring(type) || isfunction(type) ? type : "";
   const propsnormalized = isplainobject(props) ? props : {};
-  const childrennormalized = children.flat(Infinity).map(a=>a===0?"0":a).filter(a=>!!a);
+  const childrennormalized = children
+    .flat(Infinity)
+    .map(a => (a === 0 ? "0" : a))
+    .filter(a => !!a);
   if (
     isstring(typenormalized)
     //   typeof typenormalized === "string"
@@ -89,15 +110,17 @@ return createElement(...arguments)
     "" === typenormalized
   ) {
     return childrennormalized;
-  }else
-
-  /* propsnormalized = Object.fromEntries(
+  } else {
+    /* propsnormalized = Object.fromEntries(
     Object.entries(propsnormalized).map(([key, value]) => [
       key.trim().toLowerCase(),
       value
     ])
   ); */
-{
-  return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
-}
+    return new Virtualdom(
+      typenormalized,
+      propsnormalized,
+      childrennormalized
+    ) as Virtualdom<any>;
+  }
 }

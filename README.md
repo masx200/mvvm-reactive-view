@@ -4,8 +4,6 @@
 
 ## 基于 `Proxy`,基于`虚拟 dom`,支持 `jsx` 和 `hyperscript`,前端 `javascript` 库
 
-
-
 ## 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用`diff`算法，响应式状态直接与元素绑定，高效更新，性能更强
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
@@ -13,9 +11,6 @@
 ## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`
 
 ## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
-
-
-
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -37,6 +32,7 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
   src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
 ></script>
 ```
+
 # `webcomponent` `custom-elements` `polyfill`
 
 ```html
@@ -50,7 +46,6 @@ import "mvvm-reactive-view/polyfill/custom-elements.min.js";
 ```
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
-
 
 # 安装 npm 模块
 
@@ -73,7 +68,6 @@ import {
   useMounted,
   useUnMounted,
   condition,
-  Fragment,
   directives,
   watch,
   html,
@@ -81,8 +75,9 @@ import {
   MountElement,
   createRef,
   createElement,
-  createState
-} from "mvvm-reactive-view";
+  createState,
+  render
+} from "@masx200/mvvm-reactive-view";
 ```
 
 # 从 `cdn` 获取模块
@@ -94,7 +89,6 @@ https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js
 ## 生产模式
 
 https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
-
 
 # 快速上手,可在浏览器中运行而不需要编译工具
 
@@ -183,11 +177,11 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
 
-
 ```js
-import 'core-js/features/array/flat'
+import "core-js/features/array/flat";
 import "core-js/modules/es.object.from-entries";
 ```
+
 https://github.com/zloirock/core-js
 
 https://github.com/tc39/proposal-object-from-entries
@@ -202,7 +196,6 @@ https://tc39.es/proposal-flatMap/
     [
       "@babel/preset-env",
       {
-        
         "corejs": 3
       }
     ]
@@ -220,7 +213,7 @@ https://tc39.es/proposal-flatMap/
       "@babel/plugin-transform-react-jsx",
       {
         "pragma": "createElement",
-        "pragmaFrag": "Fragment"
+        "pragmaFrag": "''"
       }
     ]
   ]
@@ -280,7 +273,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 var mystate = createState(true);
 var vdom = condition(
   mystate,
- createElement( "p",null,["testtrue"]),
+  createElement("p", null, ["testtrue"]),
   createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
@@ -499,16 +492,18 @@ document.body.appendChild(
 `class`属性支持的类型有
 
 ```ts
-type classprop = string | Set<string> | Array<string>|ReactiveState<string | Set<string> | Array<string>>;
+type classprop =
+  | string
+  | Set<string>
+  | Array<string>
+  | ReactiveState<string | Set<string> | Array<string>>;
 ```
 
 ```js
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
 html`
-  <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}>
-    
-  </div>
-  
+  <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}></div>
+
   <div style=${stylestate} class=${classsetstate} />
 `;
 
@@ -521,12 +516,14 @@ setTimeout(() => {
 
 支持驼峰命名法和横杠命名法，自动转换成字符串
 
-
-
 `style`属性支持的类型有
 
 ```ts
-type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
+type styleprop =
+  | string
+  | object
+  | ReactiveState<string>
+  | ReactiveState<object>;
 ```
 
 `style="width:800px"`
@@ -537,7 +534,7 @@ type styleprop = string | object|ReactiveState<string>|ReactiveState<object>;
 const stylestate = createState({ display: "block", width: "700px" });
 
 html`
-<div style=${stylestate} class=${classsetstate} />
+  <div style=${stylestate} class=${classsetstate} />
 
   <div style=${{ display: "block", width: "100%" }}></div>
 `;
@@ -588,11 +585,9 @@ console.log(ref.value);
 ```
 
 ```tsx
-const ref =createRef( );
+const ref = createRef();
 
-var vdom = 
-  <div _ref={ele=>ref.value=ele} />
-
+var vdom = <div _ref={ele => (ref.value = ele)} />;
 
 console.log(ref.value);
 ```
@@ -666,9 +661,9 @@ const vdomobj = html`
 
 ## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
 
-### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!
+### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
 
-例子：跟踪鼠标的位置
+### 例子：跟踪鼠标的位置
 
 ```jsx
 function useMousePosition() {
@@ -699,6 +694,9 @@ const mycomapp = createComponent(() => {
   const multi = computed([x, y], (x, y) => {
     return x * y;
   });
+  watch([x, y, multi, plus], (...args) => {
+    console.log(args.map(a => a.valueOf()));
+  });
   return (
     <div>
       <h3> 鼠标位置</h3>
@@ -710,17 +708,81 @@ const mycomapp = createComponent(() => {
     </div>
   );
 });
-var vdom = createElement((mycomapp));
+var vdom = createElement(mycomapp);
 
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
+## 另一种状态之间有依赖关系的用法,看起来是状态里面嵌套状态,但是实际上只是个语法糖
+
+```js
+/* 第一种用法 */
+const colortext = createState("red");
+const stylestate = createState({
+  display: "block",
+  width: "100%",
+  color: colortext
+});
+
+/* 
+第二种用法
+*/
+watch(colortext, state => (stylestate.color = state.valueOf()));
+
+const vdom = html`
+  <hr />
+  <h1 style=${stylestate}>input color ${colortext}</h1>
+  <input _value=${colortext} />
+  <hr />
+`;
+
+console.log([vdom, colortext, stylestate]);
+watch([colortext, stylestate], (a, b) =>
+  console.log([a, b].map(a => a.valueOf()))
+);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
 # API
 
+## 函数`render`把`虚拟dom`转换成真实`dom`元素
+
+```ts
+function render(
+  vdom: Virtualdom<string | Function>,
+  namespace?: string
+): Element;
+function render(
+  vdom: Virtualdom<"script" | "" | "html">,
+  namespace?: string
+): Node;
+function render(
+  vdom: Array<Virtualdom<any> | string | ReactiveState<any> | number>,
+  namespace?: string
+): Array<Node | Element>;
+function render(
+  vdom: string | ReactiveState<any> | number,
+  namespace?: string
+): Node;
+function render(
+  vdom: Array<Virtualdom<any>>,
+  namespace?: string
+): Array<Element>;
+function render(
+  vdom: Array<string | ReactiveState<any> | number>,
+  namespace?: string
+): Array<Node>;
+```
+
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
 ```ts
-function createState<T extends string | number | boolean | undefined | object|bigint > (init:T): ReactiveState<T>;
+function createState<
+  T extends string | number | boolean | undefined | object | bigint
+>(init: ReactiveState<T>): ReactiveState<T>;
+function createState<
+  T extends string | number | boolean | undefined | object | bigint
+>(init: T): ReactiveState<T>;
 ```
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
@@ -730,9 +792,17 @@ function createState<T extends string | number | boolean | undefined | object|bi
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-class ReactiveState<T extends string | number | boolean | undefined | object|bigint > {
-  value: T
-  constructor(init: T);
+class ReactiveState<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  constructor(init?: T);
+
+  value: T | undefined;
+
+  valueOf: () => T | undefined;
+  toString(): string;
+
+  [Symbol.toPrimitive](): string | undefined;
 }
 ```
 
@@ -741,40 +811,55 @@ class ReactiveState<T extends string | number | boolean | undefined | object|big
 ### 第一个参数是依赖项,或者依赖项数组,第二个参数是回调函数,返回一个响应式状态对象,
 
 ```typescript
-interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint > {
-  
- (...Array<ReactiveState<T>>):any
-}
-function computed<T>(
-  state: ReactiveState<T> | ReactiveState<T>[],
-  callback:CallbackReactiveState<T>
+function computed<
+  T extends string | number | boolean | undefined | object | bigint
+>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
+  callback: CallbackReactiveState2<T>
 ): ReactiveState<any>;
+interface CallbackReactiveState2<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  (...args: T[]): any;
+}
 ```
+
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
 
 ```ts
-function watch<T>(
-state: ReactiveState<T>| ReactiveState<T>[],
- callback: CallbackReactiveState<T>): void;
+function watch<
+  T extends string | number | boolean | undefined | object | bigint
+>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
+  callback: CallbackReactiveState1<T>
+): void;
+interface CallbackReactiveState1<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  (...args: ReactiveState<T>[]): void;
+}
 ```
+
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
 function createComponent(custfun: Custom): Class;
-interface Custom {
-  (props?: { [key: string]: ReactiveState }, children?: Array<any>):
-    | Virtualdom
-    | string
-    | number
-    | ReactiveState
-    | Array<Virtualdom | ReactiveState | string | number>;
-  defaultProps?: object;
-  css?: string;
-}
+type VaildVDom =
+  | Virtualdom<any>
+  | string
+  | number
+  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
+  | ReactiveState<any>;
 interface Class {
   new (propsjson?: object, children?: any[]): HTMLElement;
   prototype: HTMLElement;
-  defaultProps?: object;
+  defaultProps?: { [key: string]: any };
+  css?: string;
+}
+interface Custom {
+  (props?: object, children?: Array<any>): VaildVDom;
+  defaultProps?: { [key: string]: any };
+  css?: string;
 }
 ```
 
@@ -790,28 +875,26 @@ function useUnMounted(fun: Function): void;
 
 ```ts
 function condition(
-  conditon: ReactiveState,
-  iftrue?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState,
-  iffalse?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState
-): Virtualdom;
+  conditon: ReactiveState<any> | boolean,
+  iftrue?: VaildVDom,
+  iffalse?: VaildVDom
+): Virtualdom<any>;
 ```
 
 ## 使用`directives`函数来扩展指令,返回已有的指令合集
 
 ```ts
-function directives(options?: { [s: string]: Extendfun }): object;
-
 interface Extendfun {
-  (element: Element, value: any, vdom: Virtualdom): void;
+  (
+    element: Element,
+    value: any | ReactiveState<any>,
+    vdom: Virtualdom<any>
+  ): void;
 }
+interface ExtendOptions {
+  [s: string]: Extendfun;
+}
+function directives(options?: ExtendOptions): ExtendOptions;
 ```
 
 ## `html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
@@ -819,42 +902,48 @@ interface Extendfun {
 ## `h`等同于`createElement`,用来生成虚拟 `dom`
 
 ```ts
-
-function createElement(
-  type: Function | string ,
-  children?: Array<Virtualdom | string | number|ReactiveState>
-): Virtualdom ;
-
-function createElement(
-  type:  "",
-  children?: Array<Virtualdom | string | number|ReactiveState>
-):  Array<Virtualdom | string | number|ReactiveState>;
-
-function createElement(
+type styleprop =
+  | string
+  | object
+  | ReactiveState<string>
+  | ReactiveState<object>;
+type classprop =
+  | string
+  | Set<string>
+  | Array<string>
+  | ReactiveState<string | Set<string> | Array<string>>;
+interface ElementAttrs {
+  style?: styleprop;
+  class?: classprop;
+  [key: string]: any;
+}
+function createElement<T extends Function | string>(
+  type: T,
+  propsorchildren?: Vdomchildren,
+  ...children: Vdomchildren
+): Virtualdom<T>;
+function createElement<T extends Vdomchildren>(
   type: "",
-  props?: object = {},
-  ...children: Array<Virtualdom | string | number|ReactiveState>
-): Array<Virtualdom | string | number|ReactiveState>;
-
-
-function createElement(
-  type: Function | string ,
-  props?: object = {},
-  ...children: Array<Virtualdom | string | number|ReactiveState>
-): Virtualdom ;
-
+  propsorchildren?: T,
+  ...children: T
+): T;
+function createElement<T extends Vdomchildren>(
+  type: "",
+  props?: ElementAttrs,
+  ...children: T
+): T;
+function createElement<T extends Function | string>(
+  type: T,
+  props?: ElementAttrs,
+  ...children: Vdomchildren
+): Virtualdom<T>;
 ```
 
 ## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
 
 ```ts
 function MountElement<T extends Element>(
-  vdom:Node|Element
-    | string
-    | Virtualdom
-    | number
-    | ReactiveState
-    | (string | number | Virtualdom | ReactiveState|Node|Element)[],
+  vdom: VaildVDom | Node | Element | Array<Node | Element>,
   container: T
 ): T;
 ```
@@ -863,35 +952,29 @@ function MountElement<T extends Element>(
 
 ```ts
 interface Ref<T> {
-  value: T
+  value: T;
 }
-
-function createRef<T>(value: T): Ref<T> {
-  return { value };
-}
-
+export default function createRef<T>(value: T): Ref<T>;
 ```
 
 ## 虚拟 `dom` `Virtualdom`类
 
 ```ts
-class Virtualdom {
-  element: Element | undefined;
-  type: string | Function;
-  props: object = {};
-  children: Array<Virtualdom | number | string | ReactiveState> = [];
-  directives: object = {};
-  onevent: { [key: string]: Array<EventListener> } = {};
-  bindattr: { [key: string]: ReactiveState } = {};
-  constructor(
-    type: Function | string = "",
-    props: object = {},
-    children: Array<Virtualdom | string | ReactiveState> = []
-  );
+class Virtualdom<T extends Class | string | Function> {
+  element: undefined | Element | Node;
+  type: T | undefined;
+  props: ElementAttrs;
+  children: Vdomchildren;
+  directives: object;
+  onevent: {
+    [key: string]: Array<EventListener>;
+  };
+  bindattr: {
+    [key: string]: ReactiveState<any>;
+  };
+  constructor(type: T, props?: ElementAttrs, children?: Vdomchildren);
 }
 ```
-
-
 
 # 懒加载
 
@@ -904,8 +987,8 @@ class Virtualdom {
 ```tsx
 const numbers = [1, 2, 3, 4, 5];
 const listItems = numbers.map(number => {
-return <li>{number}</li>}
-);
+  return <li>{number}</li>;
+});
 
 MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 ```

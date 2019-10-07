@@ -303,16 +303,22 @@ function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance");
 }
 
-var Reflect$1 = window.Reflect;
-
-var construct = Reflect$1.construct, _deleteProperty = Reflect$1.deleteProperty, _get = Reflect$1.get, _getOwnPropertyDescriptor = Reflect$1.getOwnPropertyDescriptor, getPrototypeOf = Reflect$1.getPrototypeOf, _has = Reflect$1.has, _ownKeys = Reflect$1.ownKeys, _set = Reflect$1.set;
+var _window = window, CustomEvent = _window.CustomEvent, requestAnimationFrame$1 = _window.requestAnimationFrame, URL = _window.URL, Blob = _window.Blob, Element = _window.Element, Node = _window.Node, String$1 = _window.String, Array$1 = _window.Array, document$1 = _window.document, Object$1 = _window.Object, Reflect$1 = _window.Reflect, Proxy$1 = _window.Proxy, _Symbol = _window.Symbol, Boolean = _window.Boolean, Promise$1 = _window.Promise, Set$1 = _window.Set, Math$1 = _window.Math, Error = _window.Error, TypeError$1 = _window.TypeError, EventTarget = _window.EventTarget, JSON = _window.JSON;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
 }
 
+var Reflect$1$1 = window.Reflect;
+
+var apply = Reflect$1$1.apply, construct = Reflect$1$1.construct, defineProperty = Reflect$1$1.defineProperty, deleteProperty = Reflect$1$1.deleteProperty, _get = Reflect$1$1.get, getOwnPropertyDescriptor = Reflect$1$1.getOwnPropertyDescriptor, getPrototypeOf = Reflect$1$1.getPrototypeOf, _has = Reflect$1$1.has, _ownKeys = Reflect$1$1.ownKeys, _set = Reflect$1$1.set;
+
+var isplainobject = function isplainobject(a) {
+    return isobject(a) && gettagtype(a) === "object";
+};
+
 function isundefined(a) {
-    return typeof a === "undefined";
+    return typeof a === "undefined" || a === null;
 }
 
 function isnumber(a) {
@@ -336,11 +342,7 @@ function isfunction(a) {
 }
 
 function isarray(a) {
-    return a instanceof Array && Array.isArray(a) && gettagtype(a) === "array";
-}
-
-function getsymbol(a) {
-    return Symbol(a);
+    return a instanceof Array$1 && Array$1.isArray(a) && gettagtype(a) === "array";
 }
 
 function gettagtype(a) {
@@ -348,529 +350,27 @@ function gettagtype(a) {
 }
 
 function isSet(a) {
-    return gettagtype(a) === "set" && a instanceof Set;
+    return gettagtype(a) === "set" && a instanceof Set$1;
 }
 
-if (!isfunction(window.HTMLElement) || !isfunction(window.Proxy) || !isobject(window.customElements) || !isfunction(window.CustomElementRegistry)) {
-    throw new TypeError(" browser not supported !");
+var _window2 = window, HTMLElement$1 = _window2.HTMLElement, customElements$1 = _window2.customElements, Proxy$1$1 = _window2.Proxy;
+
+if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1$1) || !isobject(customElements$1)) {
+    console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
+    throw new TypeError$1;
 }
 
-var _a, _b;
+var hyphenateRE = /\B([A-Z])/g;
 
-var invalid_primitive_or_object_state = "invalid primitive or object state";
-
-function isReactiveState(a) {
-    return a instanceof ReactiveState;
-}
-
-var eventtargetsymbol = Symbol("eventtatget");
-
-var memlisteners = Symbol("memlisteners");
-
-var dispatchsymbol = Symbol("dispatch");
-
-var subscribesymbol = getsymbol("subscribe");
-
-var removeallistenerssymbol = getsymbol("removeallisteners");
-
-var addallistenerssymbol = getsymbol("addallisteners");
-
-var ReactiveState = function() {
-    function ReactiveState(init) {
-        _classCallCheck(this, ReactiveState);
-        this[_a] = new EventTarget;
-        this[_b] = [];
-        if (isprimitive(init) || isobject(init)) {
-            Object.defineProperty(this, "value", {
-                value: init,
-                configurable: true,
-                writable: true
-            });
-        } else {
-            console.error(init);
-            throw TypeError(invalid_primitive_or_object_state);
-        }
-    }
-    _createClass(ReactiveState, [ {
-        key: addallistenerssymbol,
-        value: function value() {
-            var _this2 = this;
-            this[memlisteners].forEach((function(_ref) {
-                var _ref2 = _slicedToArray(_ref, 2), value = _ref2[0], callback = _ref2[1];
-                _this2[eventtargetsymbol].addEventListener(value, callback);
-            }));
-        }
-    }, {
-        key: "valueOf",
-        value: function valueOf() {
-            return this.value;
-        }
-    }, {
-        key: "toString",
-        value: function toString() {
-            var value = this.value;
-            return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify(_toConsumableArray(value)) : isobject(value) ? JSON.stringify(value) : "";
-        }
-    }, {
-        key: (_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol),
-        value: function value(eventname) {
-            var name = eventname ? String(eventname) : "value";
-            if (name !== "value") {
-                this[eventtargetsymbol].dispatchEvent(new CustomEvent(name, {
-                    detail: name
-                }));
-            }
-            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
-                detail: name
-            }));
-        }
-    }, {
-        key: subscribesymbol,
-        value: function value(callback, eventname) {
-            var _this3 = this;
-            var name = eventname ? String(eventname) : "value";
-            this[memlisteners].push([ name, function(event) {
-                return callback.call(undefined, _this3, _get(event, "detail"));
-            } ]);
-        }
-    }, {
-        key: removeallistenerssymbol,
-        value: function value() {
-            var _this4 = this;
-            this[memlisteners].forEach((function(_ref3) {
-                var _ref4 = _slicedToArray(_ref3, 2), value = _ref4[0], callback = _ref4[1];
-                _this4[eventtargetsymbol].removeEventListener(value, callback);
-            }));
-        }
-    }, {
-        key: Symbol.toPrimitive,
-        value: function value() {
-            var value = this.value;
-            return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
-        }
-    } ]);
-    return ReactiveState;
-}();
-
-Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
-    value: "ReactiveState"
-});
-
-var componentsymbol = Symbol("component");
-
-var readysymbol = Symbol("ready");
-
-var document$1 = window.document;
-
-function seteletext(e, v) {
-    e.textContent = v;
-}
-
-function setelehtml(e, v) {
-    e.innerHTML = v;
-}
-
-function appendchild(container, ele) {
-    container.appendChild(ele);
-}
-
-function createsvgelement() {
-    return createElementNS(svgnamespace, "svg");
-}
-
-function createDocumentFragment() {
-    return document$1.createDocumentFragment();
-}
-
-function createnativeelement(type) {
-    return document$1.createElement(type);
-}
-
-function createElementNS(namespace, name) {
-    return document$1.createElementNS(namespace, name);
-}
-
-function createtextnode(data) {
-    return document$1.createTextNode(String(data));
-}
-
-var svgnamespace = "http://www.w3.org/2000/svg";
-
-function changetext(textnode, value) {
-    textnode.nodeValue = String(value);
-}
-
-var mathnamespace = "http://www.w3.org/1998/Math/MathML";
-
-function createmathelement() {
-    return createElementNS(mathnamespace, "math");
-}
-
-function domaddlisten(ele, event, call) {
-    ele.addEventListener(event, call);
-}
-
-function domremovelisten(ele, event, call) {
-    ele.removeEventListener(event, call);
-}
-
-function getdomchildren(ele) {
-    return Array.from(ele.childNodes);
-}
-
-function getAttribute(ele, name) {
-    return HTMLElementprototype.getAttribute.call(ele, name);
-}
-
-function _setAttribute(ele, name, value) {
-    HTMLElementprototype.setAttribute.call(ele, name, value);
-}
-
-function _removeAttribute(ele, name) {
-    HTMLElementprototype.removeAttribute.call(ele, name);
-}
-
-var HTMLElementprototype = HTMLElement.prototype;
-
-function createanotherhtmldocument() {
-    return document$1.implementation.createHTMLDocument("");
-}
-
-function getparentNode(ele) {
-    return ele.parentNode;
-}
-
-function isconnected(element) {
-    return document.documentElement === getancestornode(element);
-}
-
-function getancestornode(node) {
-    while (getparentNode(node) && getparentNode(node) !== document) {
-        node = node.parentNode;
-    }
-    return node;
-}
-
-var requestAnimationFrame$1 = window.requestAnimationFrame;
-
-var directives = {
-    ref: function ref(ele, _ref5) {
-        if (isobject(_ref5)) {
-            _ref5.value = ele;
-        } else {
-            throw TypeError("invalid ref");
-        }
-    },
-    html: function html(ele, _html) {
-        createhtmlandtextdirective(setelehtml, "html")(ele, _html);
-    },
-    text: function text(ele, _text) {
-        createhtmlandtextdirective(seteletext, "text")(ele, _text);
-    }
+var hyphenate = function hyphenate(str) {
+    return str.replace(hyphenateRE, "-$1").toLowerCase();
 };
 
-function createhtmlandtextdirective(seteletext, errorname) {
-    return function(ele, text) {
-        var element = ele;
-        if (typeof text == "string") {
-            requestAnimationFrame$1((function() {
-                seteletext(ele, text);
-            }));
-        } else if (isReactiveState(text)) {
-            watch(text, (function(state) {
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
-            }));
-            requestAnimationFrame$1((function() {
-                seteletext(ele, String(text));
-            }));
-        } else {
-            throw TypeError("invalid " + errorname);
-        }
-    };
-}
-
-var invalid_Function = "invalid Function";
-
-var errormessage = "invalid useMounted or useUnMounted out of createComponent";
-
-var ctxopen = false;
-
-var MountedSet = new Set;
-
-var UnMountedSet = new Set;
-
-var StateSet = new Set;
-
-function getstates() {
-    return _toConsumableArray(StateSet);
-}
-
-function usestste(state) {
-    if (ctxopen) {
-        StateSet.add(state);
-    }
-}
-
-function getMounted() {
-    return _toConsumableArray(MountedSet);
-}
-
-function getUnMounted() {
-    return _toConsumableArray(UnMountedSet);
-}
-
-function useMounted(fun) {
-    if (isfunction(fun)) {
-        if (ctxopen) {
-            MountedSet.add(fun);
-        } else {
-            throw Error(errormessage);
-        }
-    } else {
-        throw TypeError(invalid_Function);
-    }
-}
-
-function useUnMounted(fun) {
-    if (isfunction(fun)) {
-        if (ctxopen) {
-            UnMountedSet.add(fun);
-        } else {
-            throw Error(errormessage);
-        }
-    } else {
-        throw TypeError(invalid_Function);
-    }
-}
-
-function clearMounted() {
-    MountedSet = new Set;
-}
-
-function clearstate() {
-    StateSet = new Set;
-}
-
-function clearUnMounted() {
-    UnMountedSet = new Set;
-}
-
-function openctx() {
-    ctxopen = true;
-    clearall();
-}
-
-function closectx() {
-    ctxopen = false;
-    clearall();
-}
-
-function clearall() {
-    clearMounted();
-    clearUnMounted();
-    clearstate();
-}
-
-function watch(state, callback, statekey) {
-    if (!(isReactiveState(state) && isfunction(callback))) {
-        console.error(state);
-        console.error(callback);
-        throw TypeError(invalid_ReactiveState + invalid_Function);
-    }
-    if (statekey) {
-        state[subscribesymbol](callback, statekey);
-    } else {
-        state[subscribesymbol](callback);
-    }
-    requestAnimationFrame$1((function() {
-        state[addallistenerssymbol]();
-    }));
-}
-
-function unwatch(state) {
-    state[removeallistenerssymbol]();
-}
-
-function rewatch(state) {
-    state[addallistenerssymbol]();
-}
-
-function toArray(a) {
-    return (isarray(a) ? a : [ a ]).flat();
-}
-
-var eventlistenerssymbol = Symbol("eventlisteners");
-
-function onevent(element, eventname, callback) {
-    firstaddlisteners(element, eventname, toArray(callback));
-}
-
-function firstaddlisteners(ele, event, callarray) {
-    var element = ele;
-    callarray.forEach((function(call) {
-        if (!isfunction(call)) {
-            console.error(call);
-            throw TypeError(invalid_Function);
-        }
-        if (!element[eventlistenerssymbol]) {
-            element[eventlistenerssymbol] = [];
-        }
-        ele[eventlistenerssymbol].push([ event, call ]);
-        domaddlisten(ele, event, call);
-    }));
-}
-
-function removelisteners(ele) {
-    if (ele[eventlistenerssymbol]) {
-        ele[eventlistenerssymbol].forEach((function(_ref6) {
-            var _ref7 = _slicedToArray(_ref6, 2), event = _ref7[0], call = _ref7[1];
-            domremovelisten(ele, event, call);
-        }));
-    }
-}
-
-function readdlisteners(ele) {
-    if (ele[eventlistenerssymbol]) {
-        ele[eventlistenerssymbol].forEach((function(_ref8) {
-            var _ref9 = _slicedToArray(_ref8, 2), event = _ref9[0], call = _ref9[1];
-            domaddlisten(ele, event, call);
-        }));
-    }
-}
-
-var invalid_custom_element_class = "invalid custom element class !";
-
-if (!isobject(window.customElements)) {
-    throw new TypeError(" customElements  not supported !");
-}
-
-function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
-    return Object.entries(\u8868).find((function(v) {
-        return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
-    }))[0];
-}
-
-window.CustomElementRegistry = _get(getPrototypeOf(window.customElements), "constructor");
-
-var _window = window, customElements$1 = _window.customElements, CustomElementRegistry = _window.CustomElementRegistry;
-
-var elementset = Symbol["for"]("elementset");
-
-var elementmap = Symbol["for"]("elementmap");
-
-var RandomDefineCustomElement = function RandomDefineCustomElement(initclass, extendsname) {
-    return RandomDefineCustomElement$1(initclass, extendsname);
-};
-
-function RandomDefineCustomElement$1(initclass, extendsname) {
-    var length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-    if (!isclassextendsHTMLElement(initclass)) {
-        throw TypeError(invalid_custom_element_class);
-    }
-    if (!customElements$1[elementset].has(initclass)) {
-        var elementname = getrandomstringandnumber(length);
-        if (customElements$1.get(elementname)) {
-            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
-        } else {
-            if (extendsname) {
-                customElements$1.define(elementname, initclass, {
-                    extends: extendsname
-                });
-            } else {
-                customElements$1.define(elementname, initclass);
-            }
-        }
-        return elementname;
-    } else {
-        return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(customElements$1[elementmap], initclass);
-    }
-}
-
-if (!customElements$1[elementset]) {
-    customElements$1[elementset] = new Set;
-}
-
-if (!customElements$1[elementmap]) {
-    customElements$1[elementmap] = {};
-}
-
-customElements$1.define = function(name, constructor, options) {
-    if (!isclassextendsHTMLElement(constructor)) {
-        console.error(constructor);
-        throw TypeError(invalid_custom_element_class);
-    }
-    if (!customElements$1[elementset].has(constructor)) {
-        if (_has(customElements$1[elementmap], name)) {
-            RandomDefineCustomElement$1(constructor, options ? options["extends"] : undefined);
-        } else {
-            CustomElementRegistry.prototype.define.call(customElements$1, name, constructor, options);
-            customElements$1[elementset].add(constructor);
-            customElements$1[elementmap][name] = constructor;
-        }
-    }
-};
-
-customElements$1[Symbol.iterator] = function() {
-    var entries = Object.entries(customElements$1[elementmap]);
-    return entries[Symbol.iterator].call(entries);
-};
-
-function getrandomcharactor() {
-    return _get(Array(26).fill(undefined).map((function(v, i) {
-        return 97 + i;
-    })).map((function(n) {
-        return String.fromCharCode(n);
-    })), Math.floor(Math.random() * 26));
-}
-
-function getrandomhexnumber() {
-    return _get(Array(16).fill(undefined).map((function(v, i) {
-        return i;
-    })), Math.floor(Math.random() * 16)).toString(16);
-}
-
-function getrandomstringandnumber() {
-    var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 4;
-    return Array(length).fill(undefined).map((function() {
-        return getrandomcharactor();
-    })).join("") + "-" + Array(length).fill(undefined).map((function() {
-        return getrandomhexnumber();
-    })).join("");
-}
-
-function isclassextendsHTMLElement(initclass) {
-    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-}
-
-function createcostumelemet(initclass, propsjson, children, options) {
-    if (isclassextendsHTMLElement(initclass)) {
-        RandomDefineCustomElement(initclass);
-        return construct(initclass, [ propsjson, children, options ]);
-    } else {
-        console.error(initclass);
-        throw TypeError(invalid_custom_element_class);
-    }
-}
-
-function mount(ele, container) {
-    var clear = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-    if (clear) {
-        seteletext(container, "");
-    }
-    var eles = toArray(ele).flat(Infinity);
-    eles.forEach((function(e) {
-        return appendchild(container, e);
-    }));
-    return container;
-}
-
-var String$1 = window.String;
+var String$1$1 = window.String;
 
 var Reflect$2 = window.Reflect;
 
-var get$1 = Reflect$2.get, set$1 = Reflect$2.set;
+var get$1 = Reflect$2.get, set$1 = Reflect$2.set, ownKeys$1 = Reflect$2.ownKeys;
 
 var valuestring = "value";
 
@@ -883,46 +383,57 @@ function isstring$1(a) {
 }
 
 function isArray(a) {
-    return Array.isArray(a);
+    return Array$1.isArray(a);
 }
 
 function isSet$1(a) {
-    return a instanceof Set;
+    return a instanceof Set$1;
 }
 
-function objtostylestring(o) {
-    return Object.entries(o).map((function(_ref10) {
-        var _ref11 = _slicedToArray(_ref10, 2), key = _ref11[0], value = _ref11[1];
+var isinputcheckbox = function isinputcheckbox(ele) {
+    return "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
+};
+
+function objtostylestring(obj) {
+    obj = JSON.parse(JSON.stringify(obj));
+    obj = Object$1.fromEntries(Object$1.entries(obj).map((function(_ref) {
+        var _ref2 = _slicedToArray(_ref, 2), key = _ref2[0], value = _ref2[1];
+        return [ hyphenate(key).trim(), value ];
+    })));
+    return Object$1.entries(obj).map((function(_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2), key = _ref4[0], value = _ref4[1];
         return key + ":" + value;
     })).join(";");
 }
 
 function asserthtmlelement(ele) {
     if (!(ele instanceof Element)) {
-        throw TypeError("invalid HTMLElement!");
-    } else return true;
+        console.error(ele);
+        console.error("invalid HTMLElement!");
+        throw TypeError$1();
+    }
 }
 
 function createeleattragentreadwrite(ele) {
     asserthtmlelement(ele);
-    var isinputtextortextareaflag = isinputtextortextarea(ele);
-    var isinputcheckbox = "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
-    var temp = Object.create(null);
-    var outputattrs = new Proxy(temp, {
+    var temp = Object$1.create(null);
+    var outputattrs = new Proxy$1(temp, {
         ownKeys: function ownKeys() {
+            var isinputtextortextareaflag = isinputtextortextarea(ele);
             var keys = attributesownkeys(ele);
-            return Array.from(new Set([ isinputcheckbox ? "checked" : undefined, isinputtextortextareaflag ? Array.from(new Set([].concat(_toConsumableArray(keys), [ valuestring ]))) : keys ].flat(Infinity).filter((function(a) {
+            return Array$1.from(new Set$1([].concat(_toConsumableArray(keys), [ isinputcheckbox(ele) ? "checked" : undefined, isinputtextortextareaflag ? valuestring : undefined ]).flat(Infinity).filter((function(a) {
                 return !!a;
             }))));
         },
         get: function get(target, key) {
-            if (isinputcheckbox && key === "checked") {
+            var isinputtextortextareaflag = isinputtextortextarea(ele);
+            if (isinputcheckbox(ele) && key === "checked") {
                 return get$1(ele, "checked");
             }
             if (isinputtextortextareaflag && key === valuestring) {
                 return get$1(ele, valuestring);
             } else {
-                var v = getattribute(ele, String$1(key));
+                var v = getattribute(ele, String$1$1(key));
                 if (v === "") {
                     return true;
                 }
@@ -931,7 +442,7 @@ function createeleattragentreadwrite(ele) {
                 }
                 if (isstring$1(v)) {
                     try {
-                        return JSON.parse(String$1(v));
+                        return JSON.parse(String$1$1(v));
                     } catch (error) {
                         return v;
                     }
@@ -939,9 +450,11 @@ function createeleattragentreadwrite(ele) {
             }
         },
         set: function set(t, key, v) {
+            var isinputtextortextareaflag = isinputtextortextarea(ele);
             if ("function" === typeof v) {
                 console.error(v);
-                throw TypeError("Setting properties as functions is not allowed");
+                console.error("Setting properties as functions is not allowed");
+                throw TypeError$1();
             }
             if (geteletagname(ele) === "input" && key === "checked") {
                 set$1(ele, key, v);
@@ -950,39 +463,31 @@ function createeleattragentreadwrite(ele) {
             if (isinputtextortextareaflag && key === valuestring) {
                 return set$1(ele, valuestring, v);
             } else if (key === "style") {
-                setattribute(ele, String$1(key), isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v));
+                var csstext = isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1$1(v);
+                set$1(get$1(ele, "style"), "cssText", csstext.trim());
                 return true;
             } else if (key === "class" && isobject$1(v)) {
-                if (isArray(v)) {
-                    setattribute(ele, String$1(key), v.join(" "));
-                } else if (isSet$1(v)) {
-                    setattribute(ele, String$1(key), _toConsumableArray(v).join(" "));
-                } else {
-                    setattribute(ele, String$1(key), JSON.stringify(v));
-                }
+                var classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? _toConsumableArray(v).join(" ") : String$1$1(v);
+                setattribute(ele, String$1$1(key), classtext);
             } else {
                 if (isSet$1(v)) {
-                    setattribute(ele, String$1(key), JSON.stringify(_toConsumableArray(v)));
+                    setattribute(ele, String$1$1(key), JSON.stringify(_toConsumableArray(v)));
                 } else {
                     if (v === true) {
                         v = "";
                     }
-                    setattribute(ele, String$1(key), isobject$1(v) ? JSON.stringify(v) : String$1(v));
+                    setattribute(ele, String$1$1(key), isobject$1(v) ? JSON.stringify(v) : String$1$1(v));
                     return true;
                 }
             }
             return true;
         },
         deleteProperty: function deleteProperty(t, k) {
-            removeAttribute$1(ele, String$1(k));
+            removeAttribute(ele, String$1$1(k));
             return true;
         },
         has: function has(target, key) {
-            if (isinputtextortextareaflag && key === valuestring) {
-                return true;
-            } else {
-                return hasAttribute(ele, String$1(key));
-            }
+            return ownKeys$1(outputattrs).includes(key);
         },
         defineProperty: function defineProperty() {
             return false;
@@ -1025,12 +530,8 @@ function setattribute(ele, key, value) {
     return ele.setAttribute(key, value);
 }
 
-function removeAttribute$1(ele, key) {
+function removeAttribute(ele, key) {
     return ele.removeAttribute(key);
-}
-
-function hasAttribute(ele, key) {
-    return ele.hasAttribute(key);
 }
 
 function isinputtextortextarea(ele) {
@@ -1038,202 +539,80 @@ function isinputtextortextarea(ele) {
     return tagname === "input" && get$1(ele, "type") === "text" || tagname === "textarea";
 }
 
-function merge_entries(a) {
-    var m = {};
-    a.forEach((function(_ref12) {
-        var _ref13 = _slicedToArray(_ref12, 2), key = _ref13[0], value = _ref13[1];
-        if (!m[key]) {
-            m[key] = new Set;
-        }
-        value.forEach((function(v) {
-            m[key].add(v);
-        }));
-    }));
-    return Object.entries(m).map((function(_ref14) {
-        var _ref15 = _slicedToArray(_ref14, 2), k = _ref15[0], v = _ref15[1];
-        return [ k, Array.from(v) ];
-    }));
+var document$1$1 = window.document;
+
+function seteletext(e, v) {
+    e.textContent = v;
 }
 
-function isVirtualdom(a) {
-    return a instanceof Virtualdom;
+function setelehtml(e, v) {
+    e.innerHTML = v;
 }
 
-var Virtualdom = function Virtualdom() {
-    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-    _classCallCheck(this, Virtualdom);
-    this.type = "";
-    this.props = {};
-    this.children = [];
-    this.directives = {};
-    this.onevent = {};
-    this.bindattr = {};
-    var \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z]/;
-    var propsentries = Object.entries(props);
-    var propsentriesNOTevents = propsentries.filter((function(_ref16) {
-        var _ref17 = _slicedToArray(_ref16, 1), key = _ref17[0];
-        return !(key.startsWith("@") || key.startsWith("on"));
-    }));
-    var \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter((function(_ref18) {
-        var _ref19 = _slicedToArray(_ref18, 1), key = _ref19[0];
-        return \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]);
-    }));
-    Object.assign(this, {
-        type: type,
-        bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
-            return isReactiveState(e[1]);
-        }))),
-        props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
-            return !isReactiveState(e[1]);
-        }))),
-        children: children.flat(),
-        onevent: Object.fromEntries(merge_entries([].concat(_toConsumableArray(propsentries.filter((function(_ref20) {
-            var _ref21 = _slicedToArray(_ref20, 1), key = _ref21[0];
-            return /\@/.test(key[0]);
-        })).map((function(_ref22) {
-            var _ref23 = _slicedToArray(_ref22, 2), key = _ref23[0], value = _ref23[1];
-            return [ key.slice(1).toLowerCase().trim(), [ value ].flat() ];
-        }))), _toConsumableArray(propsentries.filter((function(_ref24) {
-            var _ref25 = _slicedToArray(_ref24, 1), key = _ref25[0];
-            return key.startsWith("on");
-        })).map((function(_ref26) {
-            var _ref27 = _slicedToArray(_ref26, 2), key = _ref27[0], value = _ref27[1];
-            return [ key.slice(2).toLowerCase().trim(), [ value ].flat() ];
-        })))))),
-        directives: Object.fromEntries(propsentriesNOTevents.filter((function(_ref28) {
-            var _ref29 = _slicedToArray(_ref28, 1), key = _ref29[0];
-            return /\*/.test(key[0]) || key[0].startsWith("_");
-        })).map((function(_ref30) {
-            var _ref31 = _slicedToArray(_ref30, 2), key = _ref31[0], value = _ref31[1];
-            return [ key.slice(1).toLowerCase().trim(), value ];
-        })))
-    });
-};
-
-Reflect.defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
-    value: "VirtualElement"
-});
-
-var bindstatesymbol = Symbol("bindstate");
-
-var reactivestatesymbol = Symbol("reactive");
-
-var virtualdomsymbol = Symbol("virtualdom");
-
-function throwinvalideletype(type) {
-    console.error(type);
-    throw TypeError("invalid element type!");
+function appendchild(container, ele) {
+    container.appendChild(ele);
 }
 
-function render(vdom, namespace) {
-    if (isnumber(vdom)) {
-        return createtextnode(vdom);
-    } else if (typeof vdom === "string") {
-        return createtextnode(vdom);
-    } else if (vdom instanceof ReactiveState) {
-        var reactive = vdom;
-        var textnode = createtextnode(String(reactive));
-        textnode[reactivestatesymbol] = reactive;
-        watch(reactive, (function(state) {
-            if (isconnected(element)) {
-                changetext(textnode, String(state));
-            }
-        }));
-        var element = textnode;
-        element[bindstatesymbol] = new Set;
-        element[bindstatesymbol].add(reactive);
-        return textnode;
-    } else if (vdom instanceof Virtualdom && "type" in vdom) {
-        var type = vdom.type;
-        var _element;
-        if (typeof type === "string") {
-            if (type === "script") {
-                return createDocumentFragment();
-            } else if (type === "svg") {
-                _element = createsvgelement();
-            } else if (type === "math") {
-                _element = createmathelement();
-            } else if ("" === type || type === "html") {
-                return render(vdom.children);
-            } else {
-                _element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
-            }
-        } else if (typeof type == "function") {
-            if (isobject(type["defaultProps"])) {
-                vdom.props = JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props)));
-            }
-            var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object.fromEntries(Object.entries(vdom.bindattr).map((function(_ref32) {
-                var _ref33 = _slicedToArray(_ref32, 2), key = _ref33[0], value = _ref33[1];
-                return [ key, value.value ];
-            }))))));
-            _element = createcostumelemet(type, propsjson, vdom.children);
-        } else {
-            throwinvalideletype(vdom);
-        }
-        handleprops(_element, vdom);
-        if (type && (isfunction(type) || isstring(type))) {
-            if (!type[componentsymbol]) {
-                mount(vdom.children.map((function(e) {
-                    if (type === "svg") {
-                        return render(e, svgnamespace);
-                    } else if (type === "math") {
-                        return render(e, mathnamespace);
-                    } else if (namespace) {
-                        return render(e, namespace);
-                    } else {
-                        return render(e);
-                    }
-                })), _element);
-            }
-        }
-        return _element;
-    } else if (isarray(vdom)) {
-        return vdom.map((function(a) {
-            return render(a);
-        })).flat();
-    } else {
-        throwinvalideletype(vdom);
-    }
+function createsvgelement() {
+    return createElementNS(svgnamespace, "svg");
 }
 
-function handleprops(element, vdom) {
-    (function(element, vdom) {
-        Object.entries(vdom.directives).forEach((function(_ref34) {
-            var _ref35 = _slicedToArray(_ref34, 2), name = _ref35[0], value = _ref35[1];
-            if (name in directives && typeof directives[name] === "function") {
-                directives[name](element, value, vdom);
-            } else {
-                throw new Error("invalid directives " + name);
-            }
-        }));
-        var attribute1 = createeleattragentreadwrite(element);
-        Object.assign(attribute1, vdom.props);
-        element[virtualdomsymbol] = vdom;
-        vdom.element = element;
-        Object.entries(vdom.bindattr).forEach((function(_ref36) {
-            var _ref37 = _slicedToArray(_ref36, 2), key = _ref37[0], primitivestate = _ref37[1];
-            attribute1[key] = primitivestate.value;
-            watch(primitivestate, (function(state) {
-                if (isconnected(element)) {
-                    attribute1[key] = state.value;
-                }
-            }));
-        }));
-        Object.entries(vdom.onevent).forEach((function(_ref38) {
-            var _ref39 = _slicedToArray(_ref38, 2), event = _ref39[0], callbacks = _ref39[1];
-            onevent(element, event, callbacks);
-        }));
-    })(element, vdom);
-    [].concat(_toConsumableArray(Object.values(vdom.bindattr)), _toConsumableArray(Object.values(vdom.directives))).flat().filter((function(e) {
-        return isReactiveState(e);
-    })).forEach((function(e) {
-        if (!element[bindstatesymbol]) {
-            element[bindstatesymbol] = new Set;
-        }
-        element[bindstatesymbol].add(e);
-    }));
+function createDocumentFragment() {
+    return document$1$1.createDocumentFragment();
+}
+
+function createnativeelement(type) {
+    return document$1$1.createElement(type);
+}
+
+function createElementNS(namespace, name) {
+    return document$1$1.createElementNS(namespace, name);
+}
+
+function createtextnode(data) {
+    return document$1$1.createTextNode(String$1(data));
+}
+
+var svgnamespace = "http://www.w3.org/2000/svg";
+
+function changetext(textnode, value) {
+    textnode.nodeValue = String$1(value);
+}
+
+var mathnamespace = "http://www.w3.org/1998/Math/MathML";
+
+function createmathelement() {
+    return createElementNS(mathnamespace, "math");
+}
+
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
+function domremovelisten(ele, event, call) {
+    ele.removeEventListener(event, call);
+}
+
+function getdomchildren(ele) {
+    return Array$1.from(ele.childNodes);
+}
+
+function getAttribute(ele, name) {
+    return HTMLElementprototype.getAttribute.call(ele, name);
+}
+
+function _setAttribute(ele, name, value) {
+    HTMLElementprototype.setAttribute.call(ele, name, value);
+}
+
+function removeAttribute$1(ele, name) {
+    HTMLElementprototype.removeAttribute.call(ele, name);
+}
+
+var HTMLElementprototype = HTMLElement.prototype;
+
+function createanotherhtmldocument() {
+    return document$1$1.implementation.createHTMLDocument("");
 }
 
 var attributeChangedCallback = "attributeChangedCallback";
@@ -1242,64 +621,834 @@ var AttrChange = function(_HTMLElement) {
     _inherits(AttrChange, _HTMLElement);
     function AttrChange() {
         _classCallCheck(this, AttrChange);
-        return _possibleConstructorReturn(this, _getPrototypeOf(AttrChange).apply(this, arguments));
+        return _possibleConstructorReturn(this, _getPrototypeOf(AttrChange).call(this));
     }
     _createClass(AttrChange, [ {
         key: "setAttribute",
         value: function setAttribute(qualifiedName, value) {
+            var callback = _get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
             if (oldValue !== value) {
                 _setAttribute(this, qualifiedName, value);
-                if (isfunction(this[attributeChangedCallback])) {
-                    this[attributeChangedCallback](qualifiedName, oldValue, value);
+                if (isfunction(callback)) {
+                    callback.call(this, qualifiedName, oldValue, value);
                 }
             }
         }
     }, {
         key: "removeAttribute",
         value: function removeAttribute(qualifiedName) {
+            var callback = _get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
             if (null !== oldValue) {
-                _removeAttribute(this, qualifiedName);
-                if (isfunction(this[attributeChangedCallback])) {
-                    this[attributeChangedCallback](qualifiedName, oldValue, undefined);
+                removeAttribute$1(this, qualifiedName);
+                if (isfunction(callback)) {
+                    callback.call(this, qualifiedName, oldValue, undefined);
                 }
             }
+        }
+    }, {
+        key: "textContent",
+        set: function set(a) {
+            return;
+        }
+    }, {
+        key: "innerHTML",
+        set: function set(a) {
+            return;
+        }
+    }, {
+        key: "innerText",
+        set: function set(a) {
+            return;
         }
     } ]);
     return AttrChange;
 }(_wrapNativeSuper(HTMLElement));
 
-function setimmediate(fun) {
-    return Promise.resolve().then((function() {
-        return fun();
+function merge_entries(a) {
+    var m = {};
+    a.forEach((function(_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2), key = _ref6[0], value = _ref6[1];
+        if (!m[key]) {
+            m[key] = new Set$1;
+        }
+        value.forEach((function(v) {
+            m[key].add(v);
+        }));
+    }));
+    return Object$1.entries(m).map((function(_ref7) {
+        var _ref8 = _slicedToArray(_ref7, 2), k = _ref8[0], v = _ref8[1];
+        return [ k, Array$1.from(v) ];
     }));
 }
 
-function readonlyproxy(target) {
-    return new Proxy(target, {
-        set: function set() {
-            return true;
-        },
-        defineProperty: function defineProperty() {
-            return false;
-        },
-        deleteProperty: function deleteProperty() {
-            return false;
-        },
-        setPrototypeOf: function setPrototypeOf() {
-            return false;
+var _a, _b;
+
+var invalid_primitive_or_object_state = "invalid primitive or object state";
+
+function isReactiveState(a) {
+    return a instanceof ReactiveState;
+}
+
+var eventtargetsymbol = _Symbol("eventtatget");
+
+var memlisteners = _Symbol("memlisteners");
+
+var dispatchsymbol = _Symbol("dispatch");
+
+var subscribesymbol = _Symbol("subscribe");
+
+var removeallistenerssymbol = _Symbol("removeallisteners");
+
+var addallistenerssymbol = _Symbol("addallisteners");
+
+var ReactiveState = function() {
+    function ReactiveState(init) {
+        var _this2 = this;
+        _classCallCheck(this, ReactiveState);
+        this[_a] = new EventTarget;
+        this[_b] = [];
+        this.valueOf = function() {
+            return _this2.value;
+        };
+        if (isprimitive(init) || isobject(init)) {
+            Object$1.defineProperty(this, "value", {
+                value: init,
+                configurable: true,
+                writable: true
+            });
+        } else {
+            console.error(init);
+            console.error(invalid_primitive_or_object_state);
+            throw TypeError$1();
         }
+    }
+    _createClass(ReactiveState, [ {
+        key: addallistenerssymbol,
+        value: function value() {
+            var _this3 = this;
+            this[memlisteners].forEach((function(_ref9) {
+                var _ref10 = _slicedToArray(_ref9, 2), value = _ref10[0], callback = _ref10[1];
+                _this3[eventtargetsymbol].addEventListener(value, callback);
+            }));
+        }
+    }, {
+        key: "toString",
+        value: function toString() {
+            var value = this.valueOf();
+            return isprimitive(value) ? String$1(value) : isSet(value) ? JSON.stringify(_toConsumableArray(value)) : isobject(value) ? JSON.stringify(value) : "";
+        }
+    }, {
+        key: (_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol),
+        value: function value(eventname) {
+            var name = eventname ? String$1(eventname) : "value";
+            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
+                detail: name
+            }));
+        }
+    }, {
+        key: subscribesymbol,
+        value: function value(callback) {
+            var _this4 = this;
+            var name = "value";
+            this[memlisteners].push([ name, function(event) {
+                return callback.call(undefined, _this4, _get(event, "detail"));
+            } ]);
+        }
+    }, {
+        key: removeallistenerssymbol,
+        value: function value() {
+            var _this5 = this;
+            this[memlisteners].forEach((function(_ref11) {
+                var _ref12 = _slicedToArray(_ref11, 2), value = _ref12[0], callback = _ref12[1];
+                _this5[eventtargetsymbol].removeEventListener(value, callback);
+            }));
+        }
+    }, {
+        key: _Symbol.toPrimitive,
+        value: function value() {
+            var value = this.valueOf();
+            return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
+        }
+    } ]);
+    return ReactiveState;
+}();
+
+Reflect$1.defineProperty(ReactiveState.prototype, _Symbol.toStringTag, {
+    value: "ReactiveState"
+});
+
+function isVirtualdom(a) {
+    return a instanceof Virtualdom;
+}
+
+var Virtualdom = function Virtualdom(type) {
+    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    _classCallCheck(this, Virtualdom);
+    this.props = {};
+    this.children = [];
+    this.directives = {};
+    this.onevent = {};
+    this.bindattr = {};
+    props = _objectSpread2({}, props);
+    var \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z\u4e00-\u9fa5]/;
+    var propsentries = Object$1.entries(props);
+    var propsentriesNOTevents = propsentries.filter((function(_ref13) {
+        var _ref14 = _slicedToArray(_ref13, 1), key = _ref14[0];
+        return !(key.startsWith("@") || key.startsWith("on"));
+    }));
+    var \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter((function(_ref15) {
+        var _ref16 = _slicedToArray(_ref15, 1), key = _ref16[0];
+        return \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]);
+    }));
+    Object$1.assign(this, {
+        type: type,
+        bindattr: Object$1.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
+            return isReactiveState(e[1]);
+        }))),
+        props: Object$1.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter((function(e) {
+            return !isReactiveState(e[1]);
+        }))),
+        children: children.flat(1 / 0),
+        onevent: Object$1.fromEntries(merge_entries([].concat(_toConsumableArray(propsentries.filter((function(_ref17) {
+            var _ref18 = _slicedToArray(_ref17, 1), key = _ref18[0];
+            return /\@/.test(key[0]);
+        })).map((function(_ref19) {
+            var _ref20 = _slicedToArray(_ref19, 2), key = _ref20[0], value = _ref20[1];
+            return [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ];
+        }))), _toConsumableArray(propsentries.filter((function(_ref21) {
+            var _ref22 = _slicedToArray(_ref21, 1), key = _ref22[0];
+            return key.startsWith("on");
+        })).map((function(_ref23) {
+            var _ref24 = _slicedToArray(_ref23, 2), key = _ref24[0], value = _ref24[1];
+            return [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ];
+        })))))),
+        directives: Object$1.fromEntries(propsentriesNOTevents.filter((function(_ref25) {
+            var _ref26 = _slicedToArray(_ref25, 1), key = _ref26[0];
+            return /\*/.test(key[0]) || key[0].startsWith("_");
+        })).map((function(_ref27) {
+            var _ref28 = _slicedToArray(_ref27, 2), key = _ref28[0], value = _ref28[1];
+            return [ key.slice(1).toLowerCase().trim(), value ];
+        })))
     });
+};
+
+defineProperty(Virtualdom.prototype, _Symbol.toStringTag, {
+    value: "VirtualElement"
+});
+
+function createElement(type, propsorchildren) {
+    for (var _len = arguments.length, children = new Array$1(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        children[_key - 2] = arguments[_key];
+    }
+    if (isarray(propsorchildren)) {
+        return apply(createElement$1, undefined, [ type, undefined, [].concat(_toConsumableArray(propsorchildren), children).flat(1 / 0) ]);
+    } else {
+        return apply(createElement$1, undefined, Array$1.from(arguments));
+    }
+}
+
+function createElement$1(type) {
+    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var typenormalized = isstring(type) || isfunction(type) ? type : "";
+    var propsnormalized = isplainobject(props) ? props : {};
+    for (var _len2 = arguments.length, children = new Array$1(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        children[_key2 - 2] = arguments[_key2];
+    }
+    var childrennormalized = children.flat(Infinity).map((function(a) {
+        return a === 0 ? "0" : a;
+    })).filter((function(a) {
+        return !!a;
+    }));
+    if (isstring(typenormalized)) {
+        typenormalized = typenormalized.trim().toLowerCase();
+    }
+    if ("" === typenormalized) {
+        return childrennormalized;
+    } else {
+        return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
+    }
+}
+
+function isvalidvdom(v) {
+    if (isnumber(v)) {
+        return true;
+    }
+    var flag = false;
+    if (isarray(v)) {
+        return v.every((function(e) {
+            return isvalidvdom(e);
+        }));
+    } else if (isVirtualdom(v)) {
+        if (isvalidvdom(v.children)) {
+            return true;
+        }
+    } else if (isReactiveState(v)) {
+        return true;
+    } else {
+        if (isstring(v)) {
+            return true;
+        }
+    }
+    return flag;
+}
+
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter((function(a) {
+        return !isundefined(a);
+    }));
+}
+
+function mount(ele, container) {
+    var clear = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    if (clear) {
+        seteletext(container, "");
+    }
+    var eles = toArray(ele).flat(Infinity);
+    eles.forEach((function(e) {
+        return appendchild(container, e);
+    }));
+    return container;
+}
+
+var invalid_custom_element_class = "invalid custom element class !";
+
+if (!isobject(window.customElements)) {
+    console.error(" customElements  not supported !");
+    throw new TypeError$1;
+}
+
+function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
+    var outputentrie = Object$1.entries(\u8868).find((function(v) {
+        return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
+    }));
+    return outputentrie ? outputentrie[0] : undefined;
+}
+
+window.CustomElementRegistry = _get(getPrototypeOf(window.customElements), "constructor");
+
+var elementset = _Symbol["for"]("elementset");
+
+var elementmap = _Symbol["for"]("elementmap");
+
+var _window3 = window, CustomElementRegistry = _window3.CustomElementRegistry;
+
+var customElements$1$1 = window.customElements;
+
+if (!_has(customElements$1$1, elementset)) {
+    _set(customElements$1$1, elementset, new Set$1);
+}
+
+if (!_has(customElements$1$1, elementmap)) {
+    _set(customElements$1$1, elementmap, {});
+}
+
+var RandomDefineCustomElement = function RandomDefineCustomElement(initclass, extendsname) {
+    return RandomDefineCustomElement$1(initclass, extendsname);
+};
+
+function RandomDefineCustomElement$1(initclass, extendsname) {
+    var length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+    if (!isclassextendsHTMLElement(initclass)) {
+        console.error(initclass);
+        console.error(invalid_custom_element_class);
+        throw TypeError$1();
+    }
+    if (!_get(customElements$1$1, elementset).has(initclass)) {
+        var elementname = getrandomstringandnumber(length);
+        if (customElements$1$1.get(elementname)) {
+            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
+        } else {
+            if (extendsname) {
+                customElements$1$1.define(elementname, initclass, {
+                    extends: extendsname
+                });
+            } else {
+                customElements$1$1.define(elementname, initclass);
+            }
+        }
+        return elementname;
+    } else {
+        return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(_get(customElements$1$1, elementmap), initclass);
+    }
+}
+
+customElements$1$1.define = function(name, constructor, options) {
+    if (!isclassextendsHTMLElement(constructor)) {
+        console.error(constructor);
+        console.error(invalid_custom_element_class);
+        throw TypeError$1();
+    }
+    if (!_get(customElements$1$1, elementset).has(constructor)) {
+        if (_has(customElements$1$1[elementmap], name)) {
+            RandomDefineCustomElement$1(constructor, options ? options["extends"] : undefined);
+        } else {
+            CustomElementRegistry.prototype.define.call(customElements$1$1, name, constructor, options);
+            customElements$1$1[elementset].add(constructor);
+            customElements$1$1[elementmap][name] = constructor;
+        }
+    }
+};
+
+_set(customElements$1$1, _Symbol.iterator, (function() {
+    var entries = Object$1.entries(customElements$1$1[elementmap]);
+    return entries[_Symbol.iterator].call(entries);
+}));
+
+var charactorlist = Array$1(26).fill(undefined).map((function(v, i) {
+    return 97 + i;
+})).map((function(n) {
+    return String$1.fromCharCode(n);
+}));
+
+var hexnumberlist = Array$1(16).fill(undefined).map((function(v, i) {
+    return i;
+})).map((function(a) {
+    return a.toString(16);
+}));
+
+var charactorandnumberlist = _toConsumableArray(new Set$1([].concat(_toConsumableArray(hexnumberlist), _toConsumableArray(charactorlist))));
+
+function getrandomcharactor() {
+    return _get(charactorlist, Math$1.floor(Math$1.random() * charactorlist.length));
+}
+
+function getrandomhexnumberandcharactor() {
+    return _get(charactorandnumberlist, Math$1.floor(Math$1.random() * charactorandnumberlist.length));
+}
+
+function getrandomstringandnumber() {
+    var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    return Array$1(length).fill(undefined).map((function() {
+        return getrandomcharactor();
+    })).join("") + "-" + Array$1(length).fill(undefined).map((function() {
+        return getrandomhexnumberandcharactor();
+    })).join("");
+}
+
+function isclassextendsHTMLElement(initclass) {
+    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
+}
+
+function createcostumelemet(initclass, propsjson, children) {
+    if (isclassextendsHTMLElement(initclass)) {
+        RandomDefineCustomElement(initclass);
+        return construct(initclass, [ propsjson, children ]);
+    } else {
+        console.error(initclass);
+        console.error(invalid_custom_element_class);
+        throw TypeError$1();
+    }
+}
+
+function isconnected(element) {
+    return document$1.documentElement === getancestornode(element);
+}
+
+function getancestornode(node) {
+    while (node && node.parentNode && node.parentNode !== document$1) {
+        node = node.parentNode;
+    }
+    return node;
+}
+
+var invalid_Function = "invalid Function";
+
+var errormessage = "invalid useMounted or useUnMounted out of createComponent";
+
+var ctxopen = false;
+
+var MountedSet = new Set$1;
+
+var UnMountedSet = new Set$1;
+
+var StateSet = new Set$1;
+
+function getstates() {
+    return _toConsumableArray(StateSet);
+}
+
+function usestste(state) {
+    if (ctxopen) {
+        StateSet.add(state);
+    }
+}
+
+function getMounted() {
+    return _toConsumableArray(MountedSet);
+}
+
+function getUnMounted() {
+    return _toConsumableArray(UnMountedSet);
+}
+
+function useMounted(fun) {
+    if (isfunction(fun)) {
+        if (ctxopen) {
+            MountedSet.add(fun);
+        } else {
+            console.error(errormessage);
+            throw Error();
+        }
+    } else {
+        console.error(fun);
+        console.error(invalid_Function);
+        throw TypeError$1();
+    }
+}
+
+function useUnMounted(fun) {
+    if (isfunction(fun)) {
+        if (ctxopen) {
+            UnMountedSet.add(fun);
+        } else {
+            console.error(errormessage);
+            throw Error();
+        }
+    } else {
+        console.error(fun);
+        console.error(invalid_Function);
+        throw TypeError$1();
+    }
+}
+
+function clearMounted() {
+    MountedSet = new Set$1;
+}
+
+function clearstate() {
+    StateSet = new Set$1;
+}
+
+function clearUnMounted() {
+    UnMountedSet = new Set$1;
+}
+
+function openctx() {
+    ctxopen = true;
+    clearall();
+}
+
+function closectx() {
+    ctxopen = false;
+    clearall();
+}
+
+function clearall() {
+    clearMounted();
+    clearUnMounted();
+    clearstate();
+}
+
+function watch(state, callback) {
+    if (isarray(state)) {
+        state.forEach((function(state1) {
+            watchsingle(state1, (function() {
+                callback.apply(void 0, _toConsumableArray(state));
+            }));
+        }));
+    } else if (isReactiveState(state)) {
+        watchsingle(state, callback);
+    } else {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw new TypeError$1;
+    }
+}
+
+function watchsingle(state, callback) {
+    if (!(isReactiveState(state) && isfunction(callback))) {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError$1();
+    }
+    state[subscribesymbol](callback);
+    requestAnimationFrame$1((function() {
+        rewatch(state);
+    }));
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
+}
+
+function rewatch(state) {
+    state[addallistenerssymbol]();
+}
+
+var _window4 = window, requestAnimationFrame$1$1 = _window4.requestAnimationFrame;
+
+var directive = {
+    ref: function ref(ele, _ref29, _vdom) {
+        console.log(_vdom);
+        if (isobject(_ref29)) {
+            _set(_ref29, "value", ele);
+        } else if (isfunction(_ref29)) {
+            apply(_ref29, undefined, [ ele ]);
+        } else {
+            console.error(_ref29);
+            console.error("invalid ref");
+            throw TypeError$1();
+        }
+    },
+    html: function html(ele, _html, _vdom) {
+        console.log(_vdom);
+        createhtmlandtextdirective(setelehtml, "html")(ele, _html);
+    },
+    text: function text(ele, _text, _vdom) {
+        console.log(_vdom);
+        createhtmlandtextdirective(seteletext, "text")(ele, _text);
+    }
+};
+
+function createhtmlandtextdirective(seteletext, errorname) {
+    return function(ele, text) {
+        var element = ele;
+        if (isstring(text)) {
+            requestAnimationFrame$1$1((function() {
+                seteletext(ele, text);
+            }));
+        } else if (isReactiveState(text)) {
+            watch(text, (function(state) {
+                if (isconnected(element)) {
+                    seteletext(ele, String$1(state));
+                }
+            }));
+            requestAnimationFrame$1$1((function() {
+                seteletext(ele, String$1(text));
+            }));
+        } else {
+            console.error(text);
+            console.error("invalid " + errorname);
+            throw TypeError$1();
+        }
+    };
+}
+
+var componentsymbol = _Symbol("component");
+
+var eventlistenerssymbol = _Symbol("eventlisteners");
+
+function onevent(element, eventname, callback) {
+    firstaddlisteners(element, eventname, toArray(callback));
+}
+
+function firstaddlisteners(ele, event, callarray) {
+    var element = ele;
+    callarray.forEach((function(call) {
+        if (!isfunction(call)) {
+            console.error(call);
+            console.error(invalid_Function);
+            throw TypeError$1();
+        }
+        if (!_has(element, eventlistenerssymbol)) {
+            _set(element, eventlistenerssymbol, []);
+        }
+        _get(ele, eventlistenerssymbol).push([ event, call ]);
+        domaddlisten(ele, event, call);
+    }));
+}
+
+function removelisteners(ele) {
+    if (_has(ele, eventlistenerssymbol)) {
+        _get(ele, eventlistenerssymbol).forEach((function(_ref30) {
+            var _ref31 = _slicedToArray(_ref30, 2), event = _ref31[0], call = _ref31[1];
+            domremovelisten(ele, event, call);
+        }));
+    }
+}
+
+function readdlisteners(ele) {
+    if (_has(ele, eventlistenerssymbol)) {
+        _get(ele, eventlistenerssymbol).forEach((function(_ref32) {
+            var _ref33 = _slicedToArray(_ref32, 2), event = _ref33[0], call = _ref33[1];
+            domaddlisten(ele, event, call);
+        }));
+    }
+}
+
+var bindstatesymbol = _Symbol("bindstate");
+
+var virtualdomsymbol = _Symbol("virtualelement");
+
+function throwinvalideletype(type) {
+    console.error(type);
+    console.error("invalid element type!");
+    throw TypeError$1();
+}
+
+function render(vdom, namespace) {
+    if (isarray(vdom)) {
+        return vdom.map((function(a) {
+            return render(a);
+        })).flat(1 / 0);
+    }
+    if (isnumber(vdom) || isstring(vdom)) {
+        var textnode = createtextnode(vdom);
+        _set(textnode, virtualdomsymbol, vdom);
+        return textnode;
+    } else if (isReactiveState(vdom)) {
+        var reactive = vdom;
+        var _textnode = createtextnode(String$1(reactive));
+        _set(_textnode, virtualdomsymbol, vdom);
+        watch(reactive, (function(state) {
+            if (isconnected(element)) {
+                changetext(_textnode, String$1(state));
+            }
+        }));
+        var element = _textnode;
+        _set(element, bindstatesymbol, new Set$1);
+        _get(element, bindstatesymbol).add(reactive);
+        return _textnode;
+    } else if (isVirtualdom(vdom)) {
+        var type = vdom.type;
+        var _element2 = undefined;
+        if (typeof type === "string") {
+            if (type === "script") {
+                return createDocumentFragment();
+            } else if (type === "svg") {
+                _element2 = createsvgelement();
+            } else if (type === "math") {
+                _element2 = createmathelement();
+            } else if ("" === type || type === "html") {
+                var fragmentnode = createDocumentFragment();
+                mount(render(vdom.children), fragmentnode);
+                return fragmentnode;
+            } else {
+                _element2 = namespace ? createElementNS(namespace, type) : createnativeelement(type);
+            }
+        } else if (typeof type == "function") {
+            if (isobject(type["defaultProps"])) {
+                vdom.props = JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props)));
+            }
+            var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map((function(_ref34) {
+                var _ref35 = _slicedToArray(_ref34, 2), key = _ref35[0], value = _ref35[1];
+                return [ key, value.value ];
+            }))))));
+            _element2 = createcostumelemet(type, propsjson, vdom.children);
+        } else {
+            throwinvalideletype(vdom);
+        }
+        if (_element2) {
+            handleprops(_element2, vdom);
+        }
+        if (type && (isfunction(type) || isstring(type))) {
+            if (!type[componentsymbol]) {
+                if (_element2) {
+                    mount(vdom.children.map((function(e) {
+                        if (type === "svg" && isVirtualdom(e)) {
+                            return render(e, svgnamespace);
+                        } else if (type === "math" && isVirtualdom(e)) {
+                            return render(e, mathnamespace);
+                        } else if (namespace && isVirtualdom(e)) {
+                            return render(e, namespace);
+                        } else {
+                            return render(e);
+                        }
+                    })), _element2);
+                    return _element2;
+                }
+            }
+        }
+        return _element2;
+    } else {
+        throwinvalideletype(vdom);
+    }
+    console.error(vdom);
+    throw new Error;
+}
+
+function handleprops(element, vdom) {
+    (function(element, vdom) {
+        Object$1.entries(vdom.directives).forEach((function(_ref36) {
+            var _ref37 = _slicedToArray(_ref36, 2), name = _ref37[0], value = _ref37[1];
+            if (typeof directive[name] === "function") {
+                directive[name](element, value, vdom);
+            } else {
+                console.error(vdom.directives);
+                console.error("invalid directives " + name);
+                throw new Error;
+            }
+        }));
+        var attribute1 = createeleattragentreadwrite(element);
+        Object$1.assign(attribute1, vdom.props);
+        _set(element, virtualdomsymbol, vdom);
+        vdom.element = element;
+        Object$1.entries(vdom.bindattr).forEach((function(_ref38) {
+            var _ref39 = _slicedToArray(_ref38, 2), key = _ref39[0], primitivestate = _ref39[1];
+            attribute1[key] = primitivestate.valueOf();
+            watch(primitivestate, (function(state) {
+                if (isconnected(element)) {
+                    attribute1[key] = state.valueOf();
+                }
+            }));
+        }));
+        Object$1.entries(vdom.onevent).forEach((function(_ref40) {
+            var _ref41 = _slicedToArray(_ref40, 2), event = _ref41[0], callbacks = _ref41[1];
+            onevent(element, event, callbacks);
+        }));
+    })(element, vdom);
+    [].concat(_toConsumableArray(Object$1.values(vdom.bindattr)), _toConsumableArray(Object$1.values(vdom.directives))).flat(1 / 0).filter((function(e) {
+        return isReactiveState(e);
+    })).forEach((function(e) {
+        if (!_has(element, bindstatesymbol)) {
+            _set(element, bindstatesymbol, new Set$1);
+        }
+        _get(element, bindstatesymbol).add(e);
+    }));
+}
+
+var invalid_Virtualdom = "invalid Virtualdom ";
+
+function MountElement(vdom, container) {
+    if (isarray(vdom)) {
+        vdom = vdom.flat(Infinity);
+    }
+    var el = container;
+    if (!(el instanceof HTMLElement)) {
+        console.error(el);
+        console.error("invalid container HTMLElement!");
+        throw TypeError$1();
+    }
+    if (el === document$1$1.body || el === document$1$1.documentElement || el === document$1$1.head) {
+        console.error(el);
+        console.error("Do not mount  to <html> or <body> <head>.");
+        throw Error();
+    }
+    var elesarray = toArray(vdom);
+    if (isvalidvdom(vdom)) {
+        mount(render(elesarray), container);
+    } else if (isNode(vdom) || isNodeArray(vdom)) {
+        mount(elesarray, container);
+    } else {
+        console.error(vdom);
+        console.error(invalid_Virtualdom);
+        throw TypeError$1();
+    }
+    return container;
+}
+
+function isNodeArray(array) {
+    return isarray(array) && array.every((function(a) {
+        return a instanceof Node;
+    }));
+}
+
+function isNode(a) {
+    return a instanceof Node;
 }
 
 function isArray$1(a) {
-    return Array.isArray(a);
+    return Array$1.isArray(a);
 }
 
 var Reflect$3 = window.Reflect;
 
-var ownKeys$1 = Reflect$3.ownKeys, deleteProperty$1 = Reflect$3.deleteProperty, _apply = Reflect$3.apply, construct$1 = Reflect$3.construct, _defineProperty$1 = Reflect$3.defineProperty, get$2 = Reflect$3.get, getOwnPropertyDescriptor$1 = Reflect$3.getOwnPropertyDescriptor, getPrototypeOf$1 = Reflect$3.getPrototypeOf, has$1 = Reflect$3.has, set$2 = Reflect$3.set, _setPrototypeOf$1 = Reflect$3.setPrototypeOf;
+var ownKeys$2 = Reflect$3.ownKeys, deleteProperty$1 = Reflect$3.deleteProperty, apply$1 = Reflect$3.apply, construct$1 = Reflect$3.construct, defineProperty$1 = Reflect$3.defineProperty, get$2 = Reflect$3.get, getOwnPropertyDescriptor$1 = Reflect$3.getOwnPropertyDescriptor, getPrototypeOf$1 = Reflect$3.getPrototypeOf, has$1 = Reflect$3.has, set$2 = Reflect$3.set, _setPrototypeOf$1 = Reflect$3.setPrototypeOf;
 
 function isobject$2(a) {
     return _typeof(a) === "object" && a !== null;
@@ -1312,8 +1461,10 @@ function isfunction$1(a) {
 function deepobserveaddpath(target, callback) {
     var patharray = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
     var ancestor = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : target;
-    if (typeof callback !== "function") {
-        throw Error("observe callback invalid !");
+    if (!isfunction$1(callback)) {
+        console.error(callback);
+        console.error("observe callback invalid !");
+        throw Error();
     }
     if (isfunction$1(target) || isobject$2(target)) {
         var fakeobj;
@@ -1325,94 +1476,239 @@ function deepobserveaddpath(target, callback) {
             fakeobj = {};
         }
         _setPrototypeOf$1(fakeobj, null);
-        return function(fakeobj) {
-            return new Proxy(fakeobj, {
-                defineProperty: function defineProperty(t, p, a) {
-                    return _defineProperty$1(target, p, a);
-                },
-                deleteProperty: function deleteProperty(t, p) {
-                    callback(ancestor, [].concat(_toConsumableArray(patharray), [ p ]), undefined, get$2(target, p));
-                    return deleteProperty$1(target, p);
-                },
-                ownKeys: function ownKeys() {
-                    return ownKeys$1(target);
-                },
-                has: function has(t, p) {
-                    return has$1(target, p);
-                },
-                getPrototypeOf: function getPrototypeOf() {
-                    return getPrototypeOf$1(target);
-                },
-                setPrototypeOf: function setPrototypeOf(t, v) {
-                    return _setPrototypeOf$1(target, v);
-                },
-                construct: function construct(t, argumentslist) {
-                    if (typeof target === "function") {
-                        return construct$1(target, argumentslist);
-                    }
-                },
-                apply: function apply(t, thisarg, argarray) {
-                    if (typeof target === "function") {
-                        return _apply(target, thisarg, argarray);
-                    }
-                },
-                getOwnPropertyDescriptor: function getOwnPropertyDescriptor(t, k) {
-                    var descripter = getOwnPropertyDescriptor$1(target, k);
-                    if (isArray$1(target) && k === "length") {
+        return new Proxy$1(fakeobj, {
+            defineProperty: function defineProperty(t, p, a) {
+                callback(ancestor, [].concat(_toConsumableArray(patharray), [ String$1(p) ]), has$1(a, "value") ? a.value : isfunction$1(a.get) ? a.get() : undefined, get$2(target, p));
+                return defineProperty$1(target, p, a);
+            },
+            deleteProperty: function deleteProperty(t, p) {
+                callback(ancestor, [].concat(_toConsumableArray(patharray), [ String$1(p) ]), undefined, get$2(target, p));
+                return deleteProperty$1(target, p);
+            },
+            ownKeys: function ownKeys() {
+                return ownKeys$2(target);
+            },
+            has: function has(t, p) {
+                return has$1(target, p);
+            },
+            getPrototypeOf: function getPrototypeOf() {
+                return getPrototypeOf$1(target);
+            },
+            setPrototypeOf: function setPrototypeOf(t, v) {
+                return _setPrototypeOf$1(target, v);
+            },
+            construct: function construct(t, argumentslist) {
+                if (isfunction$1(target)) {
+                    return construct$1(target, argumentslist);
+                }
+            },
+            apply: function apply(t, thisarg, argarray) {
+                if (isfunction$1(target)) {
+                    return apply$1(target, thisarg, argarray);
+                }
+            },
+            getOwnPropertyDescriptor: function getOwnPropertyDescriptor(t, k) {
+                var descripter = getOwnPropertyDescriptor$1(target, k);
+                if (isArray$1(target) && k === "length") {
+                    return descripter;
+                } else {
+                    if (descripter) {
+                        descripter.configurable = true;
                         return descripter;
                     } else {
-                        if (descripter) {
-                            descripter.configurable = true;
-                            return descripter;
-                        } else {
-                            return;
-                        }
-                    }
-                },
-                set: function set(t, k, v) {
-                    if (typeof callback === "function") {
-                        callback(ancestor, [].concat(_toConsumableArray(patharray), [ k ]), v, get$2(target, k));
-                    }
-                    return set$2(target, k, v);
-                },
-                get: function get(t, k) {
-                    var value = get$2(target, k);
-                    if (isfunction$1(value) || isobject$2(value)) {
-                        return deepobserveaddpath(value, callback, [].concat(_toConsumableArray(patharray), [ k ]), target);
-                    } else {
-                        return value;
+                        return;
                     }
                 }
-            });
-        }(fakeobj);
+            },
+            set: function set(t, k, v) {
+                if (isfunction$1(callback)) {
+                    callback(ancestor, [].concat(_toConsumableArray(patharray), [ String$1(k) ]), v, get$2(target, k));
+                }
+                return set$2(target, k, v);
+            },
+            get: function get(t, k) {
+                var value = get$2(target, k);
+                if (isfunction$1(value) || isobject$2(value)) {
+                    return deepobserveaddpath(value, callback, [].concat(_toConsumableArray(patharray), [ String$1(k) ]), target);
+                } else {
+                    return value;
+                }
+            }
+        });
     } else {
         return target;
     }
 }
 
 function observedeepagent(target, callback) {
-    if (typeof callback !== "function") {
-        throw Error("observe callback  invalid function ");
+    if (!isfunction$1(callback)) {
+        console.error(callback);
+        console.error("observe callback  invalid function !");
+        throw Error();
     }
-    if (typeof Proxy !== "function") {
-        throw Error("Proxy unsupported!");
+    if (!isfunction$1(Proxy$1)) {
+        console.error("Proxy unsupported!");
+        throw Error();
     }
     if (isfunction$1(target) || isobject$2(target)) {
-        return deepobserveaddpath(target, callback, [], target);
+        return deepobserveaddpath(target, callback);
     } else {
         return target;
     }
 }
 
-var createstate = function createstate(init) {
+function handleobjectstate(init) {
+    var initobj = init;
+    var containReactiveState = isplainobject(init) && Object$1.values(init).some((function(a) {
+        return isReactiveState(a);
+    }));
+    var state_entries = Object$1.entries(init).filter((function(e) {
+        var a = e[1];
+        return isReactiveState(a);
+    }));
+    if (containReactiveState) {
+        initobj = _objectSpread2({}, init);
+        state_entries.forEach((function(_ref42) {
+            var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], state = _ref43[1];
+            defineProperty(initobj, key, {
+                enumerable: true,
+                get: function get() {
+                    return state.valueOf();
+                },
+                configurable: true
+            });
+        }));
+    }
+    var reactive = new ReactiveState(initobj);
+    if (containReactiveState) {
+        state_entries.forEach((function(_ref44) {
+            var _ref45 = _slicedToArray(_ref44, 2), key = _ref45[0], state = _ref45[1];
+            watch(state, (function() {
+                reactive[dispatchsymbol](String$1(key));
+            }));
+        }));
+    }
+    var objproxyhandler = {};
+    objproxyhandler.ownKeys = function(target) {
+        return Array$1.from(new Set$1([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(_get(target, "value"))))));
+    };
+    objproxyhandler.setPrototypeOf = function() {
+        return false;
+    };
+    objproxyhandler.defineProperty = function() {
+        return false;
+    };
+    objproxyhandler.getOwnPropertyDescriptor = function(target, key) {
+        var myvalue = _get(target, "value");
+        var descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
+        if (descripter) {
+            descripter.configurable = true;
+        }
+        return descripter;
+    };
+    objproxyhandler.deleteProperty = function(target, key) {
+        var myvalue = _get(target, "value");
+        if (_has(myvalue, key)) {
+            deleteProperty(myvalue, key);
+            target[dispatchsymbol](String$1(key));
+            return true;
+        } else {
+            return true;
+        }
+    };
+    objproxyhandler.has = function(target, key) {
+        var myvalue = _get(target, "value");
+        return _has(target, key) || _has(myvalue, key);
+    };
+    objproxyhandler.get = function(target, key) {
+        var value = _get(target, "value");
+        if (key === "value" && (isarray(value) || isplainobject(value))) {
+            return observedeepagent(_get(target, key), (function(_target_, patharray) {
+                target[dispatchsymbol](patharray[0]);
+            }));
+        } else if (_has(target, key)) {
+            return _get(target, key);
+        } else if (_has(value, key)) {
+            if (isSet(value) && (key === "add" || key === "clear" || key === "delete")) {
+                switch (key) {
+                  case "add":
+                    {
+                        return function(add) {
+                            if (!set_prototype.has.call(value, add)) {
+                                var returnvalue = set_prototype[key].call(value, add);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        };
+                    }
+
+                  case "delete":
+                    {
+                        return function(dele) {
+                            if (set_prototype.has.call(value, dele)) {
+                                var returnvalue = set_prototype[key].call(value, dele);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        };
+                    }
+
+                  case "clear":
+                    {
+                        return function() {
+                            if (value.size) {
+                                var returnvalue = set_prototype[key].call(value);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        };
+                    }
+                }
+            } else if (isarray(value) || isplainobject(value)) {
+                return observedeepagent(_get(value, key), (function() {
+                    target[dispatchsymbol](String$1(key));
+                }));
+            } else {
+                return _get(value, key);
+            }
+        }
+    };
+    objproxyhandler.set = function(target, key, value) {
+        if (isReactiveState(value)) {
+            value = value.valueOf();
+        }
+        var myvalue = _get(target, "value");
+        if (key === "value" && isobject(value)) {
+            _set(target, key, value);
+            target[dispatchsymbol]();
+        } else if (!_has(target, key)) {
+            _set(myvalue, key, value);
+            target[dispatchsymbol](String$1(key));
+        }
+        return true;
+    };
+    return new Proxy$1(reactive, objproxyhandler);
+}
+
+var set_prototype = Set$1.prototype;
+
+function createstate(init) {
     var state = createstate$1(init);
     usestste(state);
     return state;
-};
+}
 
 function createstate$1(init) {
+    if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
+        console.error(init);
+        console.error(invalid_primitive_or_object_state);
+        throw TypeError$1();
+    }
     if (isprimitive(init)) {
-        return getproperyreadproxy(new Proxy(new ReactiveState(init), {
+        return getproperyreadproxy(new Proxy$1(new ReactiveState(init), {
             defineProperty: function defineProperty() {
                 return false;
             },
@@ -1427,7 +1723,7 @@ function createstate$1(init) {
                     }
                     return true;
                 } else {
-                    return true;
+                    return false;
                 }
             },
             setPrototypeOf: function setPrototypeOf() {
@@ -1435,175 +1731,12 @@ function createstate$1(init) {
             }
         }));
     } else if (isReactiveState(init)) {
-        return createstate$1(init.value);
+        return createstate$1(init.valueOf());
     } else if (isobject(init)) {
-        return new Proxy(new ReactiveState(init), {
-            defineProperty: function defineProperty() {
-                return false;
-            },
-            getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, key) {
-                var myvalue = _get(target, "value");
-                var descripter = _getOwnPropertyDescriptor(target, key) || _getOwnPropertyDescriptor(myvalue, key);
-                if (descripter) {
-                    descripter.configurable = true;
-                }
-                return descripter;
-            },
-            deleteProperty: function deleteProperty(target, key) {
-                var myvalue = _get(target, "value");
-                if (_has(myvalue, key)) {
-                    _deleteProperty(myvalue, key);
-                    target[dispatchsymbol](String(key));
-                    return true;
-                } else {
-                    return true;
-                }
-            },
-            has: function has(target, key) {
-                var myvalue = _get(target, "value");
-                return _has(target, key) || _has(myvalue, key);
-            },
-            get: function get(target, key) {
-                var value = _get(target, "value");
-                if (key === "value" && (gettagtype(value) === "array" || gettagtype(value) === "object")) {
-                    return observedeepagent(_get(target, key), (function(_target, patharray) {
-                        target[dispatchsymbol](patharray[0]);
-                    }));
-                } else if (_has(target, key)) {
-                    return _get(target, key);
-                } else if (_has(value, key)) {
-                    if (isSet(value) && (key === "add" || key === "delete")) {
-                        var myvalue = value;
-                        if (key === "add") {
-                            return function(add) {
-                                if (!Set.prototype.has.call(myvalue, add)) {
-                                    var returnvalue = Set.prototype[key].call(myvalue, add);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                            };
-                        } else if (key === "delete") {
-                            return function(dele) {
-                                if (Set.prototype.has.call(myvalue, dele)) {
-                                    var returnvalue = Set.prototype[key].call(myvalue, dele);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                            };
-                        }
-                    } else {
-                        return observedeepagent(_get(value, key), (function() {
-                            target[dispatchsymbol](String(key));
-                        }));
-                    }
-                }
-            },
-            ownKeys: function ownKeys(target) {
-                return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(_get(target, "value"))))));
-            },
-            set: function set(target, key, value) {
-                var myvalue = _get(target, "value");
-                if (key === "value" && isobject(value)) {
-                    _set(target, key, value);
-                    target[dispatchsymbol]();
-                    return true;
-                } else if (!_has(target, key)) {
-                    _set(myvalue, key, value);
-                    target[dispatchsymbol](String(key));
-                } else if (key === "length") {
-                    _set(myvalue, key, value);
-                    target[dispatchsymbol](key);
-                } else {
-                    return false;
-                }
-                return true;
-            },
-            setPrototypeOf: function setPrototypeOf() {
-                return false;
-            }
-        });
+        return handleobjectstate(init);
     } else {
-        console.error(init);
-        throw TypeError(invalid_primitive_or_object_state);
+        throw Error();
     }
-}
-
-function createElement() {
-    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var typenormalized = isstring(type) || isfunction(type) ? type : "";
-    var propsnormalized = isobject(props) ? props : {};
-    for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-        children[_key - 2] = arguments[_key];
-    }
-    var childrennormalized = children.flat(Infinity).map((function(a) {
-        return a === 0 ? "0" : a;
-    })).filter((function(a) {
-        return !!a;
-    }));
-    if (isstring(typenormalized)) {
-        typenormalized = typenormalized.trim().toLowerCase();
-    }
-    if ("" === typenormalized) {
-        return childrennormalized;
-    }
-    return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
-}
-
-var invalid_Virtualdom = "invalid Virtualdom ";
-
-function createApp(vdom, container) {
-    if (isarray(vdom)) {
-        vdom = vdom.flat(Infinity);
-    }
-    var el = container;
-    if (!(el instanceof HTMLElement)) {
-        console.error(el);
-        throw TypeError("invalid container HTMLElement!");
-    }
-    if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
-        throw Error("Do not mount  to <html> or <body> <head>.");
-    }
-    var elesarray = toArray(vdom);
-    if (isvalidvdom(vdom)) {
-        mount(render(elesarray), container);
-    } else if (vdom instanceof Node || isNodeArray(vdom)) {
-        mount(elesarray, container);
-    } else {
-        console.error(vdom);
-        throw TypeError(invalid_Virtualdom);
-    }
-    return container;
-}
-
-function isNodeArray(array) {
-    return isarray(array) && !array.map((function(e) {
-        return e instanceof Node;
-    })).includes(false);
-}
-
-function isvalidvdom(v) {
-    if (isnumber(v)) {
-        return true;
-    }
-    var flag = false;
-    if (isarray(v)) {
-        flag = v.map((function(ele) {
-            return isvalidvdom(ele);
-        })).includes(false) ? false : true;
-        return flag;
-    } else if (isVirtualdom(v)) {
-        if (isvalidvdom(v.children)) {
-            return true;
-        }
-    } else if (isReactiveState(v)) {
-        return true;
-    } else {
-        if (isstring(v)) {
-            return true;
-        }
-    }
-    return flag;
 }
 
 function createcssBlob(source) {
@@ -1621,10 +1754,10 @@ function isCSSImportRule(a) {
 }
 
 function parsecsstext(text) {
-    var styleelement = render(createElement("style", undefined, text));
+    var styleelement = render(createElement("style", [ text ]));
     var otherdocument = createanotherhtmldocument();
-    appendchild(otherdocument.firstElementChild, styleelement);
-    return Array.from(styleelement.sheet.cssRules);
+    appendchild(otherdocument.documentElement, styleelement);
+    return Array$1.from(_get(_get(styleelement, "sheet"), "cssRules"));
 }
 
 function isCSSStyleRule(a) {
@@ -1649,7 +1782,7 @@ function prefixcssrules(cssRulesarray, prefix) {
         if (isCSSStyleRule(cssrule)) {
             return selectoraddprefix(cssrule, prefix);
         } else if (isCSSMediaRule(cssrule)) {
-            prefixcssrules(Array.from(cssrule.cssRules), prefix);
+            prefixcssrules(Array$1.from(cssrule.cssRules), prefix);
             return cssrule;
         } else if (isCSSImportRule(cssrule)) {
             savestyleblob(prefix, undefined, cssrule.href);
@@ -1665,7 +1798,7 @@ var componentsstylesheet = {};
 function savestyleblob(tagname, csstext, urltext) {
     tagname = tagname.toLowerCase();
     if (!componentsstylesheet[tagname]) {
-        componentsstylesheet[tagname] = new Set;
+        componentsstylesheet[tagname] = new Set$1;
     }
     if (csstext) {
         componentsstylesheet[tagname].add(createcssBlob(csstext));
@@ -1702,9 +1835,9 @@ function registercssprefix(text, prefix) {
 }
 
 function loadlinkstyle(stylelinkelement, container) {
-    return new Promise((function(rs) {
+    return new Promise$1((function(rs) {
         var loaderrorfun = function loaderrorfun() {
-            stylelinkelement.onload = stylelinkelement.onerror = undefined;
+            stylelinkelement.onload = stylelinkelement.onerror = null;
             rs();
         };
         stylelinkelement.onload = loaderrorfun;
@@ -1714,22 +1847,47 @@ function loadlinkstyle(stylelinkelement, container) {
 }
 
 function waitloadallstyle(prefix, _this) {
-    return Promise.all(_toConsumableArray(componentsstylesheet[prefix]).map((function(styleurl) {
+    return Promise$1.all(_toConsumableArray(componentsstylesheet[prefix]).map((function(styleurl) {
         return loadlinkstyle(createlinkstylesheet(styleurl), _this);
     })));
 }
 
-var innerstatesymbol = Symbol("innerstate");
+function readonlyproxy(target) {
+    return new Proxy$1(target, {
+        set: function set() {
+            return true;
+        },
+        defineProperty: function defineProperty() {
+            return false;
+        },
+        deleteProperty: function deleteProperty() {
+            return false;
+        },
+        setPrototypeOf: function setPrototypeOf() {
+            return false;
+        }
+    });
+}
 
-var attributessymbol = Symbol("attributes");
+var readysymbol = _Symbol("ready");
 
-var elementsymbol = Symbol("innerelement");
+function setimmediate(fun) {
+    return Promise$1.resolve().then((function() {
+        return fun();
+    }));
+}
 
-var vdomsymbol = Symbol("innervdom");
+var innerstatesymbol = _Symbol("innerstate");
 
-var mountedsymbol = Symbol("mounted");
+var attributessymbol = _Symbol("attributes");
 
-var unmountedsymbol = Symbol("unmounted");
+var elementsymbol = _Symbol("innerelement");
+
+var vdomsymbol = _Symbol("innervdom");
+
+var mountedsymbol = _Symbol("mounted");
+
+var unmountedsymbol = _Symbol("unmounted");
 
 function createComponent(custfun) {
     var _a, _b, _c, _d;
@@ -1739,37 +1897,37 @@ function createComponent(custfun) {
         return _d = function(_AttrChange) {
             _inherits(Component, _AttrChange);
             function Component() {
-                var _this5;
+                var _this6;
                 var propsjson = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                 var children = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
                 _classCallCheck(this, Component);
-                _this5 = _possibleConstructorReturn(this, _getPrototypeOf(Component).call(this));
-                _this5[_b] = false;
-                _this5[_c] = {};
-                var css = _get(_this5.constructor, "css");
+                _this6 = _possibleConstructorReturn(this, _getPrototypeOf(Component).call(this));
+                _this6[_b] = false;
+                _this6[_c] = {};
+                var css = _get(_this6.constructor, "css");
                 if (css) {
-                    var prefix = _this5.tagName.toLowerCase();
+                    var prefix = _this6.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
                 }
-                var defaultProps = _get(_this5.constructor, "defaultProps");
-                var attrs = createeleattragentreadwrite(_assertThisInitialized(_this5));
+                var defaultProps = _get(_this6.constructor, "defaultProps");
+                var attrs = createeleattragentreadwrite(_assertThisInitialized(_this6));
                 if (isobject(defaultProps)) {
-                    Object.assign(attrs, defaultProps);
+                    Object$1.assign(attrs, defaultProps);
                 }
                 if (isobject(propsjson)) {
-                    Object.assign(attrs, propsjson);
+                    Object$1.assign(attrs, propsjson);
                 }
                 openctx();
                 var props = attrs;
-                var thisattributess = Object.fromEntries(Object.entries(props).map((function(_ref40) {
-                    var _ref41 = _slicedToArray(_ref40, 2), key = _ref41[0], value = _ref41[1];
+                var thisattributess = Object$1.fromEntries(Object$1.entries(props).map((function(_ref46) {
+                    var _ref47 = _slicedToArray(_ref46, 2), key = _ref47[0], value = _ref47[1];
                     return [ key, createstate(value) ];
                 })));
-                _this5[attributessymbol] = readonlyproxy(thisattributess);
-                var readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map((function(_ref42) {
-                    var _ref43 = _slicedToArray(_ref42, 2), key = _ref43[0], value = _ref43[1];
+                _this6[attributessymbol] = readonlyproxy(thisattributess);
+                var readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map((function(_ref48) {
+                    var _ref49 = _slicedToArray(_ref48, 2), key = _ref49[0], value = _ref49[1];
                     return [ key, readonlyproxy(value) ];
                 }))));
                 var possiblyvirtualdom;
@@ -1777,6 +1935,7 @@ function createComponent(custfun) {
                     possiblyvirtualdom = custfun.call(undefined, readonlyprop, children);
                 } catch (error) {
                     closectx();
+                    console.error(error);
                     throw error;
                 }
                 if (isarray(possiblyvirtualdom)) {
@@ -1784,22 +1943,23 @@ function createComponent(custfun) {
                 }
                 if (isvalidvdom(possiblyvirtualdom)) {
                     var thisvdomsymbol = toArray(possiblyvirtualdom);
-                    _this5[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
-                    _this5[mountedsymbol] = getMounted();
-                    _this5[unmountedsymbol] = getUnMounted();
-                    _this5[innerstatesymbol] = getstates();
+                    _this6[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+                    _this6[mountedsymbol] = getMounted();
+                    _this6[unmountedsymbol] = getUnMounted();
+                    _this6[innerstatesymbol] = getstates();
                     closectx();
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);
-                    throw Error(invalid_Virtualdom);
+                    console.error(invalid_Virtualdom);
+                    throw TypeError$1();
                 }
-                return _this5;
+                return _this6;
             }
             _createClass(Component, [ {
                 key: "connectedCallback",
                 value: function connectedCallback() {
-                    var _this6 = this;
+                    var _this7 = this;
                     if (!this[elementsymbol]) {
                         this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
                     }
@@ -1810,7 +1970,7 @@ function createComponent(custfun) {
                         if (_css && componentsstylesheet[prefix]) {
                             seteletext(this, "");
                             waitloadallstyle(prefix, this).then((function() {
-                                mount(_this6[elementsymbol], _this6, false);
+                                mount(_this7[elementsymbol], _this7, false);
                             }));
                         } else {
                             mount(this[elementsymbol], this);
@@ -1832,8 +1992,8 @@ function createComponent(custfun) {
             }, {
                 key: "attributeChangedCallback",
                 value: function attributeChangedCallback(name) {
-                    if (this[attributessymbol][name]) {
-                        this[attributessymbol][name].value = createeleattragentreadwrite(this)[name];
+                    if (_get(this, attributessymbol)[name]) {
+                        _set(_get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                     }
                 }
             } ]);
@@ -1843,7 +2003,8 @@ function createComponent(custfun) {
         _d;
     } else {
         console.error(custfun);
-        throw TypeError(invalid_Function);
+        console.error(invalid_Function);
+        throw TypeError$1();
     }
 }
 
@@ -1852,16 +2013,16 @@ function onmounted(ele) {
         ele.forEach((function(e) {
             onmounted(e);
         }));
-    } else if (ele instanceof Node) {
-        if (ele[eventlistenerssymbol]) {
+    } else if (isNode(ele)) {
+        if (_has(ele, eventlistenerssymbol)) {
             readdlisteners(ele);
         }
-        if (ele[bindstatesymbol]) {
-            ele[bindstatesymbol].forEach((function(state) {
+        if (_has(ele, bindstatesymbol)) {
+            _get(ele, bindstatesymbol).forEach((function(state) {
                 rewatch(state);
             }));
-            if (ele[innerstatesymbol]) {
-                ele[innerstatesymbol].forEach((function(state) {
+            if (_has(ele, innerstatesymbol)) {
+                _get(ele, innerstatesymbol).forEach((function(state) {
                     rewatch(state);
                 }));
             }
@@ -1875,12 +2036,12 @@ function onunmounted(ele) {
         ele.forEach((function(e) {
             onunmounted(e);
         }));
-    } else if (ele instanceof Node) {
-        if (ele[eventlistenerssymbol]) {
+    } else if (isNode(ele)) {
+        if (_has(ele, eventlistenerssymbol)) {
             removelisteners(ele);
         }
-        if (ele[innerstatesymbol]) {
-            ele[innerstatesymbol].forEach((function(state) {
+        if (_has(ele, innerstatesymbol)) {
+            _get(ele, innerstatesymbol).forEach((function(state) {
                 unwatch(state);
             }));
         }
@@ -1890,26 +2051,30 @@ function onunmounted(ele) {
 
 var invalid_ReactiveState = "invalid ReactiveState";
 
-var truevdomsymbol = Symbol("truevdom");
+var truevdomsymbol = _Symbol("truevdom");
 
-var falsevdomsymbol = Symbol("falsevdom");
+var falsevdomsymbol = _Symbol("falsevdom");
 
-var trueelesymbol = Symbol("trueele");
+var trueelesymbol = _Symbol("trueele");
 
-var falseelesymbol = Symbol("falseele");
+var falseelesymbol = _Symbol("falseele");
 
-var handletrue = getsymbol("handletrue");
+var handletrue = _Symbol("handletrue");
 
-var handlefalse = getsymbol("handlefalse");
+var handlefalse = _Symbol("handlefalse");
 
 function conditon(conditon, iftrue, iffalse) {
     var _a, _b;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
-        throw TypeError(invalid_ReactiveState);
+        console.error(conditon);
+        console.error(invalid_ReactiveState);
+        throw TypeError$1();
     }
     [ iftrue, iffalse ].forEach((function(a) {
         if (!(isundefined(a) || isvalidvdom(a))) {
-            throw new TypeError(invalid_Virtualdom);
+            console.error(a);
+            console.error(invalid_Virtualdom);
+            throw new TypeError$1;
         }
     }));
     var options = {
@@ -1919,15 +2084,15 @@ function conditon(conditon, iftrue, iffalse) {
     var Condition = function(_AttrChange2) {
         _inherits(Condition, _AttrChange2);
         function Condition() {
-            var _this7;
+            var _this8;
             _classCallCheck(this, Condition);
-            _this7 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
-            _this7[_b] = false;
+            _this8 = _possibleConstructorReturn(this, _getPrototypeOf(Condition).call(this));
+            _this8[_b] = false;
             var optionstrue = _get(options, "true");
             var optionsfalse = _get(options, "false");
-            _this7[truevdomsymbol] = isarray(optionstrue) ? optionstrue.filter(Boolean) : [ optionstrue ].filter(Boolean);
-            _this7[falsevdomsymbol] = isarray(optionsfalse) ? optionsfalse.filter(Boolean) : [ optionsfalse ].filter(Boolean);
-            return _this7;
+            _this8[truevdomsymbol] = [ optionstrue ].flat(1 / 0).filter(Boolean);
+            _this8[falsevdomsymbol] = [ optionsfalse ].flat(1 / 0).filter(Boolean);
+            return _this8;
         }
         _createClass(Condition, [ {
             key: (_a = componentsymbol, _b = readysymbol, handlefalse),
@@ -1938,7 +2103,7 @@ function conditon(conditon, iftrue, iffalse) {
                         this[falseelesymbol] = render(this[falsevdomsymbol]);
                     }
                     var elementtomount = this[falseelesymbol];
-                    createApp(elementtomount, this);
+                    MountElement(elementtomount, this);
                     elementtomount.forEach((function(e) {
                         return onmounted(e);
                     }));
@@ -1958,7 +2123,7 @@ function conditon(conditon, iftrue, iffalse) {
                         this[trueelesymbol] = render(this[truevdomsymbol]);
                     }
                     var elementtomount = this[trueelesymbol];
-                    createApp(elementtomount, this);
+                    MountElement(elementtomount, this);
                     elementtomount.forEach((function(e) {
                         return onmounted(e);
                     }));
@@ -1976,10 +2141,10 @@ function conditon(conditon, iftrue, iffalse) {
                     this[readysymbol] = true;
                     var attrs = createeleattragentreadwrite(this);
                     if (true === attrs["value"]) {
-                        this[handletrue]();
+                        _get(this, handletrue).call(this);
                     }
                     if (false === attrs["value"]) {
-                        this[handlefalse]();
+                        _get(this, handlefalse).call(this);
                     }
                 }
                 onmounted(this);
@@ -2008,40 +2173,42 @@ function conditon(conditon, iftrue, iffalse) {
         return Condition;
     }(AttrChange);
     Condition[_a] = true;
-    var vdom = new Virtualdom(Condition, {
+    var vdom = createElement(Condition, {
         value: conditon
     });
     return vdom;
 }
 
-var defineProperty$1 = Object.defineProperty;
-
-var computed = function computed(state, callback) {
+function computed(state, callback) {
     if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
-        throw TypeError(invalid_ReactiveState + invalid_Function);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError$1();
     }
-    var state1array;
-    state1array = toArray(state);
+    var state1array = toArray(state);
     var state1 = Arraycomputed(state1array, callback);
     usestste(state1);
     return state1;
-};
+}
 
 function Arraycomputed(state, callback) {
     var reactivestate = new ReactiveState;
     var getter = function getter() {
-        var value = callback.call.apply(callback, [ undefined ].concat(_toConsumableArray(state.map((function(st) {
-            return st.value;
-        })))));
+        var value = apply(callback, undefined, state.map((function(st) {
+            return st.valueOf();
+        })));
         return isReactiveState(value) ? value.value : value;
     };
-    defineProperty$1(reactivestate, "value", {
+    var memorized = getter();
+    if (isfunction(memorized)) {
+        console.error(memorized);
+        throw new TypeError$1;
+    }
+    defineProperty(reactivestate, "value", {
         get: getter,
         configurable: true
     });
-    var memorized = getter();
     state.forEach((function(state) {
         watch(state, (function() {
             var newvalue = getter();
@@ -2058,11 +2225,11 @@ var __proto__ = "__proto__";
 
 function getproperyreadproxy(a) {
     var target = a;
-    return new Proxy(target, {
+    return new Proxy$1(target, {
         ownKeys: function ownKeys(target) {
             var myvalue = _get(target, "value");
             var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(myvalueobj)))));
+            return Array$1.from(new Set$1([].concat(_toConsumableArray(_ownKeys(target)), _toConsumableArray(_ownKeys(myvalueobj)))));
         },
         has: function has(target, key) {
             var myvalue = _get(target, "value");
@@ -2070,73 +2237,89 @@ function getproperyreadproxy(a) {
             return _has(target, key) || _has(myvalueobj, key);
         },
         get: function get(target, key) {
-            var myvalue = _get(target, "value");
-            var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
             if (_has(target, key)) {
                 return _get(target, key);
-            } else if (_has(myvalueobj, key)) {
-                return _get(myvalueobj, key);
+            } else {
+                var myvalue = _get(target, "value");
+                var myvalueobj = isobject(myvalue) ? myvalue : Object$1(myvalue);
+                if (_has(myvalueobj, key)) {
+                    return _get(myvalueobj, key);
+                }
             }
         }
     });
 }
 
-function createRef(init) {
+function createRef(value) {
     return {
-        value: init
+        value: value
     };
 }
 
-function extenddirectives(options) {
-    Object.entries(options).forEach((function(_ref44) {
-        var _ref45 = _slicedToArray(_ref44, 2), key = _ref45[0], value = _ref45[1];
+function extenddirectives() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    Object$1.entries(options).forEach((function(_ref50) {
+        var _ref51 = _slicedToArray(_ref50, 2), key = _ref51[0], value = _ref51[1];
         if (typeof value !== "function") {
-            throw TypeError(invalid_Function);
+            console.error(value);
+            console.error(invalid_Function);
+            throw TypeError$1();
         } else {
-            directives[key] = value;
+            if (!directive[key]) {
+                Reflect$1.set(directive, key, value);
+            } else {
+                console.error(directive);
+                console.error("do not extend existing directive");
+                throw new Error;
+            }
         }
     }));
+    return directive;
 }
 
 extenddirectives({
-    value: function value(element, _value, vdom) {
+    value: function value(_element, _value, vdom) {
+        console.log(vdom);
         if (isReactiveState(_value) && (vdom.type === "input" || vdom.type === "textarea")) {
             vdom.bindattr["value"] = _value;
             [ "change", "input" ].forEach((function(eventname) {
                 var origin = vdom.onevent[eventname];
-                var eventsarray = [ origin ].flat(Infinity);
-                Reflect.set(vdom.onevent, eventname, [].concat(_toConsumableArray(eventsarray), [ function(e) {
+                var eventsarray = toArray(origin);
+                _set(vdom.onevent, eventname, [].concat(_toConsumableArray(eventsarray), [ function(e) {
                     return _value.value = e.target.value;
                 } ]).filter(Boolean));
             }));
         } else {
             console.error(_value);
             console.error(vdom);
-            throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+            console.error(invalid_ReactiveState + invalid_Virtualdom);
+            throw TypeError$1();
         }
     }
 });
 
 extenddirectives({
-    checked: function checked(element, value, vdom) {
+    checked: function checked(_element, value, vdom) {
+        console.log(vdom);
         if (isReactiveState(value) && vdom.type === "input") {
             vdom.bindattr["checked"] = value;
             [ "change", "input" ].forEach((function(eventname) {
                 var origin = vdom.onevent[eventname];
-                var eventsarray = [ origin ].flat(Infinity);
-                Reflect.set(vdom.onevent, eventname, [].concat(_toConsumableArray(eventsarray), [ function(e) {
+                var eventsarray = toArray(origin);
+                _set(vdom.onevent, eventname, [].concat(_toConsumableArray(eventsarray), [ function(e) {
                     return value.value = e.target.checked;
                 } ]).filter(Boolean));
             }));
         } else {
             console.error(value);
             console.error(vdom);
-            throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+            console.error(invalid_ReactiveState + invalid_Virtualdom);
+            throw TypeError$1();
         }
     }
 });
 
-var Fragment = "";
+console.log(createElement, createElement);
 
 (function() {
     var mystate = createstate(true);
@@ -2145,7 +2328,7 @@ var Fragment = "";
     var vdom2 = conditon(mystate, undefined, createElement("div", undefined, "testwwwwwwwwwfalese"));
     var vdom3 = conditon(mystate, createElement("div", undefined, "testwwwwwwwtrueeeeeeeeee"), undefined);
     console.log([ vdom, vdom2, vdom3 ]);
-    document.body.appendChild(createApp([ vdom, vdom2, vdom3 ], document.createElement("div")));
+    document.body.appendChild(MountElement([ vdom, vdom2, vdom3 ], document.createElement("div")));
     var timer = setInterval((function() {
         mystate.value = !mystate.value;
     }), 1e3);
@@ -2192,7 +2375,7 @@ var Fragment = "";
     watch(stylestate, console.log);
     watch(state1, console.log);
     console.log(vdom);
-    createApp(vdom, document.getElementById("app"));
+    MountElement(vdom, document.getElementById("app"));
 })();
 
 (function() {
@@ -2202,7 +2385,7 @@ var Fragment = "";
         "*html": "<a>\u7ed1\u5b9ainnerhtml</a>"
     }) ];
     console.log(vdom2);
-    document.body.appendChild(createApp(vdom2, document.createElement("div")));
+    document.body.appendChild(MountElement(vdom2, document.createElement("div")));
     var state1 = createstate("<a>\u7ed1\u5b9atextcontent</a>");
     var state2 = createstate("<a>\u7ed1\u5b9ainnerhtml</a>");
     var vdom3 = [ createElement("textarea", {
@@ -2221,7 +2404,7 @@ var Fragment = "";
         } ]
     }) ];
     console.log(vdom3);
-    document.body.appendChild(createApp(vdom3, document.createElement("div")));
+    document.body.appendChild(MountElement(vdom3, document.createElement("div")));
     var state3 = createstate("<a>\u7ed1\u5b9ainnerhtml</a>");
     var vdom4 = [ createElement("div", {
         "*text": state3
@@ -2236,7 +2419,7 @@ var Fragment = "";
     }));
     console.log(state3);
     console.log(vdom4);
-    document.body.appendChild(createApp(vdom4, document.createElement("div")));
+    document.body.appendChild(MountElement(vdom4, document.createElement("div")));
     var objstate = createstate({
         a: "w",
         6: "xxxxxxx",
@@ -2259,10 +2442,15 @@ var Fragment = "";
     });
     var classsetstate = createstate(new Set([ "xxxxxxx", "wwwwwww", "eeeeeeee" ]));
     console.log("classsetstate", classsetstate);
-    watch(classsetstate, console.log);
+    watch(classsetstate, (function(a) {
+        return console.log(a);
+    }));
     setTimeout((function() {
         classsetstate.add("vvvvvvvvvvv");
     }), 5e3);
+    setTimeout((function() {
+        classsetstate["delete"]("eeeeeeee");
+    }), 4e3);
     var vdomobj = [ createElement("div", {
         style: {
             display: "block",
@@ -2275,7 +2463,7 @@ var Fragment = "";
         style: stylestate,
         class: classsetstate
     }) ];
-    document.body.appendChild(createApp(vdomobj, document.createElement("div")));
+    document.body.appendChild(MountElement(vdomobj, document.createElement("div")));
     console.log(vdomobj);
     requestAnimationFrame((function() {
         objstatearray.unshift(Math.random());
@@ -2298,7 +2486,7 @@ var Fragment = "";
 
 (function() {
     var vdom = createElement("math", null, createElement("mrow", null, createElement("mrow", null, createElement("msup", null, createElement("mi", null, "a"), createElement("mn", null, "2")), createElement("mo", null, "+"), createElement("msup", null, createElement("mi", null, "b"), createElement("mn", null, "2"))), createElement("mo", null, "="), createElement("msup", null, createElement("mi", null, "c"), createElement("mn", null, "2"))));
-    document.body.appendChild(createApp(vdom, document.createElement("div")));
+    document.body.appendChild(MountElement(vdom, document.createElement("div")));
     console.log(vdom);
 })();
 
@@ -2322,6 +2510,8 @@ customElements.define("qqqqqqqqqq-----a", function(_HTMLElement2) {
     return Aqqqqqqqqq;
 }(_wrapNativeSuper(HTMLElement)));
 
+console.log(createElement, createElement);
+
 function useMousePosition() {
     var x = createstate(0);
     var y = createstate(0);
@@ -2341,7 +2531,7 @@ function useMousePosition() {
     };
 }
 
-var mycomapp = function mycomapp() {
+var mycomapp = createComponent((function() {
     var _useMousePosition = useMousePosition(), x = _useMousePosition.x, y = _useMousePosition.y;
     var plus = computed(x, (function(x) {
         return x + 100;
@@ -2351,15 +2541,17 @@ var mycomapp = function mycomapp() {
     }));
     console.log(plus, multi);
     return createElement("div", null, createElement("h3", null, " \u9f20\u6807\u4f4d\u7f6e"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 \u662f", plus), createElement("p", null, "x*y \u662f", multi));
-};
+}));
 
 mycomapp.css = "\n*{font-size:80px !important;}\np{color:blue !important;}\n";
 
-var vdom = createElement(createComponent(mycomapp));
+var vdom = createElement(mycomapp);
 
-document.body.appendChild(createApp(vdom, document.createElement("div")));
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);html{color:#444333;background:#fff;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-rendering:optimizelegibility}article,aside,blockquote,body,button,code,dd,details,dl,dt,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,input,legend,li,menu,nav,ol,p,pre,section,td,textarea,th,ul{margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}audio,canvas,video{display:inline-block;*display:inline;*zoom:1}body,button,input,select,textarea{font:500 .875em/1.8 Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif}button,input{*width:auto;*overflow:visible;line-height:22px}table{border-collapse:collapse;border-spacing:0}th{text-align:inherit}fieldset,img{border:0}img{-ms-interpolation-mode:bicubic}iframe{display:block}blockquote{font-family:Optima,Georgia,STSong,serif;margin:1em 0;color:#999;padding:.6em 1em;background:#f8f8f8;border-left:.4em solid #ddd}blockquote blockquote{padding:0 0 0 1em;margin-left:2em}abbr,acronym{border-bottom:1px dotted;font-variant:normal}abbr{cursor:help}del{text-decoration:line-through}address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:400}ol,ul{list-style:none}caption,th{text-align:left}q:after,q:before{content:""}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:text-top\\9}:root sub,:root sup{vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}a:hover{text-decoration:underline}a,ins{text-decoration:none}.typo-u,u{text-decoration:underline}mark{background:#fffdd1}code,pre{font-family:Courier New,Courier,monospace;white-space:pre-wrap;word-wrap:break-word}pre{background:#f8f8f8;border:1px solid #ddd;padding:1em 1.5em}hr{border:none;border-bottom:1px solid #cfcfcf;margin-bottom:10px;*color:pink;*filter:chroma(color=pink);height:10px;*margin:-7px 0 2px}.typo-small,figcaption,small{font-size:.9em;color:#888}[draggable]{cursor:move}.clearfix:after,.clearfix:before{content:"";display:table}.clearfix:after{clear:both}.clearfix{zoom:1}.textwrap,.textwrap td,.textwrap th{word-wrap:break-word;word-break:break-all}.textwrap-table{table-layout:fixed}.typo-dl,.typo-form,.typo-hr,.typo-ol,.typo-p,.typo-pre,.typo-table,.typo-ul,.typo dl,.typo form,.typo hr,.typo ol,.typo p,.typo pre,.typo table,.typo ul{margin-bottom:1.2em}h1,h2,h3,h4,h5,h6{font-weight:500;*font-weight:800;font-family:Helvetica Neue,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif;color:#333}.typo-h1,.typo-h2,.typo-h3,.typo-h4,.typo-h5,.typo-h6,.typo h1,.typo h2,.typo h3,.typo h4,.typo h5,.typo h6{margin-bottom:.4em;line-height:1.5}.typo-h1,.typo h1{font-size:1.8em}.typo-h2,.typo h2{font-size:1.6em}.typo-h3,.typo h3{font-size:1.4em}.typo-h4,.typo h4{font-size:1.2em}.typo-h5,.typo-h6,.typo h5,.typo h6{font-size:1em}.typo-ul,.typo ul{margin-left:1.3em;list-style:disc}.typo-ol,.typo ol{list-style:decimal;margin-left:1.9em}.typo-ol ol,.typo-ol ul,.typo-ul ol,.typo-ul ul,.typo li ol,.typo li ul{margin-top:0;margin-bottom:0;margin-left:2em}.typo-ol ul,.typo-ul ul,.typo li ul{list-style:circle}.typo-table td .typo table caption,.typo-table th,.typo table td,.typo table th{border:1px solid #ddd;padding:.5em 1em;color:#666}.typo-table th,.typo table th{background:#fbfbfb}.typo-table thead th,.typo table thead th{background:#f1f1f1}.typo table .caption{border-bottom:none}.typo-input,.typo-textarea{-webkit-appearance:none;border-radius:0}::-moz-selection{background:#08c;color:#fff}::selection{background:#08c;color:#fff}.typo-em,.typo em,caption,legend{font-weight:700}p{color:#0f0!important}@font-face{font-family:octicons-anchor;src:url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format("woff")}*{color:purple!important;font-size:50px}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}@media (max-width:500px){hr#hidewidthless500{display:none}}.recommend-container .recommend-user .item{margin-bottom:16px}.recommend-container .recommend-user .ui.button{padding:3px 5px;margin-right:0}.recommend-container .recommend-user .header .pull-right{color:#005980;cursor:pointer}.recommend-container .recommend-user .header .pull-right.disabled{opacity:.7;cursor:default}.recommend-container .recommend-user .icon-reset{margin-top:-1px;height:16px;font-size:16px;margin-right:2px}.recommend-container .recommend-user__content{position:relative}.recommend-container .dimmer.active{z-index:1}.recommend-container .recommend-list__user{-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;margin-right:4px}.recommend-container .recommend-list__user strong{color:#005980}.recommend-container .recommend-list__user .recommend-list__user-info{margin:0 4px 0 8px;max-width:155px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__user .recommend-list__user-info.is-follow{max-width:125px}.recommend-container .recommend-list__user .recommend-list__user-info>div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.recommend-container .recommend-list__flollow .disable{opacity:.5}.recommend-container .recommend-project .icon-recommended{color:#fe7300}.recommend-container .recommend-project .project-label{display:inline-block}.recommend-container .recommend-project .recommend-list{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.recommend-container .recommend-project .recommend-list>*{word-break:break-all}.recommend-container .recommend-project .recommend-list .recommend-project__describe{overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical}.recommend-container .recommend-project .item{margin-bottom:16px}.recommend-container .recommend-project .recommend-project__name{margin-bottom:4px;color:#005980}.recommend-container .recent_visits .ui.items{margin-right:0;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recent_visits .avatar-item{margin-right:-22px!important}.recommend-container .recent_visits .item{width:20%;min-width:0;font-size:16px}.recommend-container .recent_visits .empty-visitor.item{font-size:14px;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1}.dashboard-content.twelve{padding-right:0!important}.dashboard-content .gitee-headbread .git-user-selection-dropdown{margin-right:0!important}.dashboard-content .dashboard-team .git-user-content-header{display:none}.dashboard-content .gitee-headbread{margin-bottom:24px}.dashboard-content .git-dashboard-projects-menu{margin-bottom:24px!important}.dashboard-content .git-dashboard-projects-menu .f-bold{color:#fe7300;border-bottom:2px solid #fe7300!important}.dashboard-content .git-dashboard-projects-menu>a.item{font-size:16px;padding:8px 18px!important}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input{width:150px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input input{margin-top:-6px;font-size:12px;margin-right:10px}.dashboard-content .git-dashboard-projects-menu #search-form .ui.search .ui.input .icon-search{margin-top:-4px}.dashboard-content #event-timeline-panel h3.event-timeline-title{font-size:16px;margin-top:0;margin-bottom:16px;display:inline-block}.dashboard-content #event-timeline-panel .event-timeline.content{padding:0 0 18px 12px}.dashboard-content #event-timeline-panel .event-actionbar .dropdown.icon{margin-left:4px}.dashboard-content #event-timeline-panel .message-container .message{margin:0 0 1em}.dashboard-content .issues-filter__item{display:block;padding:0!important;color:initial!important;font-weight:500!important}.dashboard-content .issues-dropdown{margin-top:-6px!important}.dashboard-content .issues-dropdown .pl-0.f-bold{padding-left:0!important}.dashboard-content .dashboard-team .dashboard-team_info{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .ui.image{width:40px;height:40px;min-width:40px}.dashboard-content .dashboard-team .dashboard-team__contaniner .dashboard-team__name{font-size:16px;font-weight:700;overflow:hidden;word-break:keep-all;text-overflow:ellipsis;display:block}.dashboard-content .dashboard-team .dashboard-team__contaniner a{color:#005980!important}.dashboard-content .dashboard-team .dashboard-team__contaniner>.item:first-child{padding-top:0!important}.dashboard-content .dashboard-team .dashboard-team__contaniner .item{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.dashboard-content .dashboard-team .dashboard-team__contaniner .content{display:-webkit-box!important;display:-webkit-flex!important;display:-moz-box!important;display:-ms-flexbox!important;display:flex!important;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;overflow:hidden}.dashboard-content .dashboard-team .dashboard-team__contaniner .content:after{content:none}.dashboard-content .dashboard-team .dashboard-team__contaniner .content i{font-size:16px}.dashboard-content .dashboard-team .icon-enterprise-badge{margin-left:4px}.dashboard-content .dashboard-team .dashboard-team__operate{min-width:75px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;-webkit-box-flex:1;-webkit-flex:1;-moz-box-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.dashboard-content .dashboard-team .dashboard-team__operate.has-exit{min-width:150px}.recommend-project .icon-help-circle{vertical-align:baseline}.dashboard-content__show{width:608px!important;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}.ui.container.user_page{width:1240px}#rc-users__container{position:relative}#rc-users__container .secondary-navigation .active{color:#fe7300!important}#rc-users__container .dashboard-content{padding-right:32px;padding-left:32px;padding-top:24px}#rc-users__container .dashboard-sidebar{padding:16px 0 0;width:280px!important;margin-left:10px}#rc-users__container .dashboard-sidebar .dashboard-group .item{margin:8px 0}#rc-users__container .dashboard-sidebar .dashboard-group:last-child{margin-bottom:0!important}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar{padding-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card{width:100%;margin-top:32px;margin-bottom:0;padding-bottom:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .ui.card .header{font-size:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name h4{font-size:14px;display:inline-block}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .description{margin-top:0}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex{margin-top:16px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .item.flex:first-child{margin-top:12px}#rc-users__container .dashboard-sidebar .user-dashboard-sidebar .enterprise-name .quit i{margin-top:0}#rc-users__container .has-active .content{padding-left:0 2px 0 8px}#rc-users__container .navigation .header{padding-right:8px;border-bottom:1px solid #e3e9ed;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;padding-bottom:4px}#rc-users__container .navigation .header,#rc-users__container .navigation .header .title{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}#rc-users__container .navigation .header .title{font-size:16px}#rc-users__container .navigation .header .avatar.image{margin-right:0}#rc-users__container .navigation .header strong{font-size:16px;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center;max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#rc-users__container .navigation .header strong a{color:unset}#rc-users__container .navigation .header .actions{margin-top:4px}#rc-users__container .navigation .header .actions i{color:#005980}#rc-users__container .navigation.user i{color:#989dad}#rc-users__container .navigation.user .content{padding:0 8px}#rc-users__container .navigation .items>a{color:#40485b}#rc-users__container .navigation .items>a:hover{color:#095eab}#rc-users__container .navigation .items>a:active{color:#064177}#rc-users__container .navigation .items>a:hover{color:#40485b}#rc-users__container .navigation .item:hover .content{background:#f8f8f8}#rc-users__container .navigation .item .active{color:#fe7300;background:#f8f8f8}#rc-users__container .navigation .item .active .num{color:inherit}#rc-users__container .navigation .item:hover .exit{display:inline-block}#rc-users__container .navigation .icon-add,#rc-users__container .navigation .icon-search{color:#8c92a4!important}#rc-users__container .navigation .num{font-size:12px;font-weight:500;color:#8c92a4}#rc-users__container .navigation .gray{color:#8c92a4}#rc-users__container .navigation .avatar.image{width:32px;height:32px}#rc-users__container .twitter-typeahead{width:100%}#rc-users__container .gray{color:#8c92a4}#rc-users__container .ui.container{width:1240px}#rc-users__container .contribution-events{padding-top:32px}#rc-users__container #git-footer-main{min-width:1240px}#rc-users__container .gitee-headbread .gitee-divider{display:inline-block;opacity:.5;margin:0 .2rem;color:rgba(0,0,0,.4);vertical-align:baseline}#rc-users__container .git-user-content .git-user-content-header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:16px}#rc-users__container .ui.button.js-project-watch{background:#fff;border:1px solid rgba(140,146,164,.5);padding:2px 5px;margin:0}#rc-users__container .recommend-container{width:248px!important}.users__personal-avatar{position:relative;margin:0 auto 10px;width:160px;height:160px}.users__personal-avatar .over-avatar{position:absolute;top:0;left:0;width:100%;height:100%;color:#fff;font-size:14px;text-align:center;line-height:200px;border:4px solid #eee;border-radius:50%;background:rgba(0,0,0,.5);cursor:pointer;display:none}.users__personal-avatar .over-avatar:hover{display:block}.users__personal-avatar .ui.image.avatar{margin:0;width:100%;height:100%;border:4px solid #eee}.users__personal-avatar .ui.image.avatar:hover+.over-avatar{display:block}.users__personal-avatar .avatar-gender{position:absolute;bottom:2px;right:27px;width:32px;height:32px;border-radius:50%;color:#fff;font-size:21px;text-align:center;line-height:30px;border:2px solid #fff}.users__personal-avatar .avatar-gender.mars{background:#3eb4ff}.users__personal-avatar .avatar-gender.venus{background:#ff5bc6}.users__personal-name{text-align:center}.users__personal-name h2,.users__personal-name p{margin:8px 0 0;word-break:break-all}.users__personal-name h2 span,.users__personal-name p span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__personal-name .remark-name{color:#8c92a4;font-size:14px;font-weight:400;display:inline}.users__personal-name .ui.small.label{margin-bottom:.5em;padding:.4em .7em;font-weight:400}.users__personal-setting{margin:15px auto;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__personal-setting .ui.button{margin:0;width:45%;font-size:14px}.users__personal-setting .ui.button.basic{border:1px solid #ccc}.users__personal-socials .ui.grid{padding:0 1rem}.users__personal-socials .ui.grid .column{padding:1rem 0;text-align:center}.users__personal-socials .social-count{font-size:18px;font-weight:700}.users__personal-socials .social-name{padding-top:5px;color:#40485b;font-size:12px;display:block}.users__personal-info{padding:15px 0;color:#8c92a4}.users__personal-info .info-item{padding:3px 0;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-info .info-item i.iconfont{width:20px;text-align:center}.users__personal-info .info-item i.iconfont.icon-time{font-size:12px}.users__personal-achievement{padding:10px 0}.users__personal-achievement h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-achievement .ui.list .item .content{line-height:1.8}.users__personal-achievement .ui.list .item .content .description{color:#7687ab}.users__personal-groups{padding:10px 0}.users__personal-groups h3{margin:0;padding-bottom:4px;border-bottom:1px solid #dce3e8}.users__personal-groups .ui.list{margin:0}.users__personal-groups .ui.list:not(.more-groups){margin-top:1em}.users__personal-groups .ui.list .item{padding:.3em 0}.users__personal-groups .ui.list .item a{color:#005980!important}.users__personal-groups .ui.list .item a:hover{color:#4c8aa6!important}.users__personal-groups .ui.list .item a:active{color:#003e59!important}.users__personal-groups .ui.list .item .content{line-height:1.8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__personal-groups .ui.list .item .right.floated.content{color:#7687ab}.users__personal-groups .ui.list .item .right.floated.content .mr-1{width:24px;display:inline-block}.users__personal-groups .load-more-groups{margin-top:8px;display:block;color:#7687ab}.users__personal-groups .load-more-groups:hover{color:#9fabc4}.users__personal-groups .load-more-groups:active{color:#525e77}.users__navbar .ui.secondary.pointing.menu{border-bottom:2px solid #dededf}.users__navbar .ui.secondary.pointing.menu>.item{margin-bottom:-2px;padding:10px 30px;min-width:100px;text-align:center;border-width:2px}.users__navbar .ui.secondary.pointing.menu>.item.active{color:#fe7300;border-color:#fe7300}.users__navbar .ui.secondary.pointing.menu>.item.active .ui.label{color:#fe7300;background:rgba(254,115,0,.2)}.users__header{margin-top:2em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__header h3{margin:0}.users__header .ui.dropdown{padding:.5em .92857em}.users__popular-projects .ui.cards{margin:0 -.5em -.5em}.users__popular-projects .ui.cards .ui.card{margin:.5em!important;padding:1em;width:calc(50% - 1em)!important;border:1px solid #dce3e8;-webkit-box-shadow:none;box-shadow:none}.users__popular-projects .ui.cards .ui.card .content{padding:0}.users__popular-projects .ui.cards .ui.card .content .popular-project-title{font-size:16px;word-break:break-all;vertical-align:middle}.users__popular-projects .ui.cards .ui.card .content .git-project-gvp-badge{margin-top:-3px}.users__popular-projects .ui.cards .ui.card .content i.iconfont{font-size:14px}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-mode-table{margin-top:1px;color:#d0d0d0;cursor:move}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-recommended{color:#fe7300;font-weight:400}.users__popular-projects .ui.cards .ui.card .content i.iconfont.icon-watch{font-size:12px;vertical-align:baseline}.users__popular-projects .ui.cards .ui.card .content .description{color:#8c92a4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.users__popular-projects .ui.cards .ui.card .extra.content{padding-top:1em;border:none!important;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__popular-projects .ui.cards .ui.card .extra.content:after{content:none}.users__popular-projects .ui.cards .ui.card .extra.content .left .ui.small.label{padding:.4em .7em}.users__popular-projects .ui.cards .ui.card .extra.content .right a{padding:0 .2em;color:#8c92a4}.users__popular-projects .ui.cards .ui.card .extra.content .right a:hover{color:#aeb2bf}.users__popular-projects .ui.cards .ui.card .extra.content .right a:active{color:#626672}.users__popular-projects .ui.cards .ui.card.sortable-chosen{background:#fed!important}.users__contribution-panel .less{background-color:#eee}.users__contribution-panel .little{background-color:#d6e685}.users__contribution-panel .some{background-color:#8cc665}.users__contribution-panel .many{background-color:#44a340}.users__contribution-panel .much{background-color:#1e6823}.users__contribution-panel .contribution-box{padding-top:20px;height:125px;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.users__contribution-panel .contribution-box .left-side{width:32px;font-size:12px;text-align:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}.users__contribution-panel .contribution-box .left-side,.users__contribution-panel .contribution-box .right-side{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.users__contribution-panel .contribution-box .right-side{position:relative;width:100%;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.users__contribution-panel .contribution-box .right-side .box{width:1.88679%;height:15px;border:1px solid #fff}.users__contribution-panel .contribution-box .right-side .box[data-content]:hover{border:1px solid #000}.users__contribution-panel .contribution-box .right-side .month{position:absolute;top:0;margin-top:-15px;margin-left:-15px;min-width:45px;font-size:12px;text-align:center}.users__contribution-panel .contribution-tip{margin-top:10px;padding-right:10px;font-size:12px;text-align:right}.users__contribution-panel .contribution-tip .word{font-size:12px;vertical-align:top;display:inline-block}.users__contribution-panel .contribution-tip .ui.horizontal.list>.item{margin:0 1px;width:12px;height:12px;vertical-align:text-bottom}.users__contribution-panel .contribution-describ p{margin:0 20px 0 0;display:inline-block}.users__contribution-panel .contribution-describ p.text-muted{margin-top:10px;display:block}.users__customize-modal .ui.form{min-height:180px}.users__customize-modal .grouped.fields{margin:.2em 0 1em!important;padding:10px 0;max-height:20em;overflow-y:auto}.users__customize-modal .grouped.fields .field{padding:5px!important}.users__customize-modal .grouped.fields .field .ui.checkbox{width:100%}.users__customize-modal .grouped.fields .field label{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}.users__customize-modal .grouped.fields .field label span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__customize-modal .grouped.fields .field label .star-count{min-width:4em;text-align:right}.users__customize-modal .grouped.fields .field.active{background:rgba(254,115,0,.2)}.users__report-modal .appeal-success-tip{text-align:center}.users__report-modal .appeal-success-tip i.iconfont{font-size:7rem;color:#4baf50}.users__report-modal .ui.items{padding:20px;background:#f4f5f6}.users__report-modal .ui.items .ui.image{width:50px}.users__report-modal .ui.items .content .header{color:#40485b}.users__report-modal .ui.items .content .description{color:#8c92a4;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.users__report-modal .ui.segment.loader-block{border:0;min-height:100px}.users__report-modal .action-types .item{margin:5px;padding:10px 20px;min-width:120px;text-align:center;display:inline-block;background:#f2f2f2;border-radius:5px;cursor:pointer}.users__report-modal .action-types .item.active,.users__report-modal .action-types .item:active,.users__report-modal .action-types .item:hover{color:#fe7300}.users__report-modal .extra-content textarea{width:100%;height:5em}#user-show-detail .git-dashboard-projects-menu>.f-bold{color:#fe7300}#user-show-detail .git-codes-tags{margin-bottom:16px}#user-show-detail .git-user-twl-col>.gitee-headbread{margin-bottom:16px;margin-top:10px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu{margin-bottom:14px}#user-show-detail .git-profile-content-header .git-dashboard-projects-menu>a{font-size:14px}.recommend-container{padding:24px 0 0!important}.recommend-container .recommend-notice{background-color:#fffeed!important;margin-bottom:24px}.recommend-container .recommend-notice>.header{margin-right:8px!important}.recommend-container .ui.message{color:#40485b;padding:12px 16px;-webkit-box-shadow:0 0 0 1px #e2d8bf inset,0 0 0 0 transparent;box-shadow:inset 0 0 0 1px #e2d8bf,0 0 0 0 transparent}.recommend-container .ui.message i{position:absolute;top:0;right:0;font-size:.8em;margin-top:8px;margin-right:8px;cursor:pointer;color:#005980}.recommend-container .ui.message .header{color:#40485b;font-size:14px}.recommend-container .ui.message .content{margin-top:4px}.recommend-container .recommend-block{margin-bottom:32px}.recommend-container .recommend-block>.items{margin-top:0}.recommend-container .recommend-block .header{margin-bottom:16px}.recommend-container .recommend-block .header strong{font-size:16px}.recommend-container .recommend-block .recommend-list{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.recommend-container .recommend-block .item{margin:0}.recommend-container .recommend-user .header{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;-moz-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:end;-webkit-align-items:flex-end;-moz-box-align:end;-ms-flex-align:end;align-items:flex-end}.recommend-container .recommend-user .recommend-list{-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center}';
+
+console.log(createElement, createElement);
 
 (function() {
     var mycom = function mycom(props, children) {
@@ -2390,11 +2582,11 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
         tttttt: "dddddddddd"
     }, [ "children" ]);
     console.log([ vdom, myclasscomponent, mycom ]);
-    document.body.appendChild(createApp(vdom, document.createElement("div")));
+    document.body.appendChild(MountElement(vdom, document.createElement("div")));
     setTimeout((function() {
         vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
     }), 5e3);
-    document.body.appendChild(createApp(createElement(myclasscomponent, null, createElement("form", {
+    document.body.appendChild(MountElement(createElement(myclasscomponent, null, createElement("form", {
         id: "newsletterForm",
         class: "newsletter-form nodisable",
         name: "newsletter-form",
@@ -2470,7 +2662,9 @@ var css = '@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/boots
 
 var css$1 = '@charset "UTF-8";@import url(https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css);@import url(https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-frameworks-a2fba223d5af91496cac70d4ec3624df.min.css);@import url(https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css);pre{text-align:left!important}button,div,h1,h2,h3,h4,h5,h6,input{text-align:center}p{color:#000!important}@-webkit-keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}.flowerpassword a{color:#42b983}.App-header{background-color:#fff}nav{width:100%}#\u56fe\u7247\u5217\u8868200 img{min-height:150px;min-width:150px;height:auto;width:auto;max-width:100%;max-height:200px}#my\u5bfc\u822a\u680f .navbar-nav li a{margin-left:2px;margin-right:2px}h1,h2{font-weight:400}ul{list-style-type:none;padding:0}li{display:inline-block;margin:0 10px}*{-webkit-user-select:text;-ms-user-select:text;user-select:text}.example{color:red}body{padding:0}*{font-family:"Microsoft Yahei,PingFangSC-Regular,arial, verdana, sans-serif"}#my\u5bfc\u822a\u680f{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.App{text-align:center}.App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}.App-header{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:calc(10px + 2vmin)}.App-link{color:#61dafb}.flowerpassword body,.flowerpassword html{background-color:#fff}.flowerpassword body{font:14px/1.5 Tahoma,Helvetica,Arial,\\5b8b\\4f53;color:#000}.flowerpassword a,.flowerpassword a:hover{color:#09c;text-decoration:none}.flowerpassword .left{float:left}.flowerpassword .right{float:right}.flowerpassword .clear{clear:both}.flowerpassword header{text-align:left;padding:0;margin:15px auto}.flowerpassword #logo{height:39px}.flowerpassword #shortcuts{margin:15px 0 0 15px}.flowerpassword #nav{float:center;margin-top:10px}.flowerpassword #nav li{margin:0 7px}.flowerpassword #nav li a{font-size:22px;color:#09c}.flowerpassword #nav li.active a,.flowerpassword #nav li.active a:hover{background-color:#09c;color:#fff}.flowerpassword #nav li a:hover{background-color:#79c6df;color:#fff}.flowerpassword #index-box{background-color:#fff;width:940px;clear:both;box-shadow:0 0 4px 2px #ddd;border:1px solid #ddd}.flowerpassword #index-box .float-box{margin:20px 0 20px 20px;display:inline}.flowerpassword #index-box #content-nav{margin:0;width:200px}.flowerpassword #index-box #content-nav li a{background-color:#e5ecdc}.flowerpassword #index-slider{width:940px;height:200px;overflow:hidden;position:relative}.flowerpassword #index-slider ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-slider li{width:940px;height:200px;float:left}.flowerpassword #index-slider #pagination{top:160px;left:800px}.flowerpassword #index-slider ul#pagination li{width:16px;height:16px;border-radius:1em;background-color:#fff;box-shadow:0 0 1px 2px #ccc;margin-right:18px;margin-top:4px}.flowerpassword #index-slider ul#pagination li.active{width:24px;height:24px;margin-top:0}.flowerpassword #index-slider ul#pagination li:hover{background-color:#ddd;cursor:pointer}.flowerpassword #index-report{width:680px;height:70px;margin-top:20px;overflow:hidden;position:relative;background-color:#e5ecdc}.flowerpassword #index-report ul{list-style:none;margin:0;position:absolute;top:0;left:0}.flowerpassword #index-report li{width:680px;height:70px;text-align:center;float:left;font-size:32px;color:#666;font-family:\xe5\xbe\xae\xe8\xbd\xaf\xe9\u203a\u2026\xe9\xbb\u2018,\xe9\xbb\u2018\xe4\xbd\u201c;line-height:70px}.flowerpassword #index-report-pagination{list-style:none;margin-left:35px;text-align:center}.flowerpassword #index-report-pagination li{height:65px;float:left;margin-right:45px;cursor:pointer}.flowerpassword #index-report-pagination li img{margin-top:30px}.flowerpassword #index-button{margin:40px 0 30px;text-align:center}.flowerpassword #index-button a{margin:0 50px}.flowerpassword #tab{margin-top:30px}.flowerpassword #tab li a{margin-right:10px;border-bottom-color:#ddd;color:#666}.flowerpassword #tab li a:hover{background-color:#f2f2f2;color:#333;border-color:#ddd #ddd transparent}.flowerpassword #tab li.active a{background-color:#f2f2f2;color:#666;border-bottom-color:transparent}.flowerpassword #content-nav{list-style:none;margin:20px 0 0}.flowerpassword #content-nav li a{color:#666;padding:11px 0 11px 60px;display:block;margin-bottom:1px;font-size:22px}.flowerpassword #content-nav li a.active,.flowerpassword #content-nav li a:hover{background-color:#09c!important;color:#fff!important}.flowerpassword h1,.flowerpassword h2{color:#09c;margin:30px 0 12px}.flowerpassword h2{font-size:22px}.flowerpassword h2 span{font-size:22px;color:#fff;margin-right:7px;background-color:#09c;width:33px;height:33px;display:inline-block;text-align:center}.flowerpassword h3{font-size:16px;color:#09c;margin:20px 0}.flowerpassword h3 span{font-size:16px;color:#fff;margin-right:6px;background-color:#09c;width:26px;display:inline-block;text-align:center}.flowerpassword #input span{color:#09c;font-weight:700;font-size:22px;margin:0 20px}.flowerpassword #input input{font-size:14px;padding:5px;margin-left:5px}.flowerpassword #input label{float:none;display:inline;padding-right:5px}.flowerpassword #input p{margin-top:16px}.flowerpassword #input p,.flowerpassword .other{font-size:12px;color:#999}.flowerpassword #code16{display:inline-block;text-align:center}.flowerpassword .code16d{border:2px solid #09c}.flowerpassword .code16d:hover{border:2px solid #ff881c}.flowerpassword #copycode16{color:#000;display:inline-block;padding:0 3px;cursor:pointer}.flowerpassword .copycode16d{background-color:#09c;border:2px solid #09c}.flowerpassword .copycode16d:hover{background-color:#ff881c;border:2px solid #ff881c}.flowerpassword p{font-size:12px;color:#666;margin:20px 0}.flowerpassword #copyOK{color:#f2f2f2;border:2px solid #f2f2f2;display:inline-block;margin-left:16px;padding:0 3px}.flowerpassword .down-button{margin:10px 20px 10px 0}.flowerpassword #get{margin-bottom:100px}.flowerpassword footer{margin:50px 0 30px}.flowerpassword footer p{margin:0 0 5px;color:#999}.flowerpassword footer p span{margin:0 10px}.flowerpassword footer p a{color:#999}.flowerpassword footer p a:hover{color:#333}.jdahd button{border-color:#000}.jdahd *{text-align:center;margin:0;box-sizing:border-box;background-color:transparent}.jdahd body{position:relative;height:100vh;text-align:center}.jdahd h1{text-align:center;margin:20px 0}.jdahd textarea{width:100%;clear:both;margin-bottom:10px;border-radius:7px;padding:15px 10px;font-size:14px;outline:none;-webkit-transition:all .2s ease-in;transition:all .2s ease-in}.jdahd input[type=button]{margin:0 auto;position:relative;vertical-align:top;width:150px;height:60px;padding:0;font-size:22px;font-weight:300;color:#fff;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.25);background:#2980b9;border:0;border-bottom:2px solid #2475ab;cursor:pointer;box-shadow:inset 0 -2px #2475ab}.jdahd input:active{top:1px;outline:none;box-shadow:none}.jdahd input:-ms-input-placeholder,.jdahd textarea:-ms-input-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-moz-placeholder,.jdahd textarea::-moz-placeholder{color:#fff;font-size:20px;font-weight:300}.jdahd input::-webkit-input-placeholder,.jdahd textarea::-webkit-input-placeholder{color:#fff;font-size:20px;font-weight:300;box-shadow:none;-webkit-appearance:none}.jdahd footer{width:calc(100% - 40px);position:absolute;bottom:20px}.jdahd footer>p a{color:#2980b9;text-decoration:none}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.jdahd #my\u5bfc\u822a\u680f{overflow:auto;max-height:100%;padding-right:0;padding-left:0}.jdahd *,.jdahd body{text-align:center}.jdahd h1{font-weight:300;font-size:40px}.jdahd h3{font-weight:700}.jdahd .actions,.jdahd li,.jdahd p,.jdahd textarea{width:100%}.jdahd textarea{border-color:#000;display:block;min-height:250px;margin:1em 0}.jdahd ul.pre li{white-space:pre}.jdahd .checkbox{display:inline-block}.jdahd .actions a{float:right}.jdahd .actions{clear:both}*{font-family:Microsoft Yahei}#nav{float:center}#app{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-align:center;margin-top:0}#App-logo{-webkit-animation:App-logo-spin 20s linear infinite;animation:App-logo-spin 20s linear infinite;height:40vmin;pointer-events:none}@keyframes App-logo-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}*{-webkit-user-select:text!important;-moz-user-select:text;-o-user-select:text;-ms-user-select:text!important;user-select:text!important}body,html{scroll-behavior:smooth}*{font-family:Microsoft Yahei,Helvetica,Tahoma,Arial,PingFang SC,Hiragino Sans GB,Heiti SC,MicrosoftYaHei,WenQuanYi Micro Hei,sans-serif!important}.hljs{display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none}.diff .hljs-header,.hljs-comment{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-doctag,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}#padding0{padding:0!important}@media (max-width:500px){hr#hidewidthless500{display:none}}.article-content{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden}.article-content h1{margin:1.3rem 0;line-height:1.2}.article-content p{line-height:2.27rem}.article-content hr{border:none;border-top:1px solid #ddd;margin-top:2.7rem;margin-bottom:2.7rem}.article-content embed,.article-content iframe,.article-content img:not(.equation),.article-content video{max-width:100%!important;margin:0}.article-content img.lazyload{visibility:hidden}.article-content img.inited{background-color:#f8f9fa;background-position:50%;background-repeat:no-repeat;visibility:visible}.article-content img.loaded{background-image:none;background-color:transparent}.article-content img.equation{margin:0 .1em;max-width:100%!important;vertical-align:text-bottom}.article-content img:not(.equation){cursor:-webkit-zoom-in;cursor:zoom-in}.article-content figure{margin:2.7rem auto;text-align:center}.article-content figure figcaption{text-align:center;font-size:1rem;line-height:2.7rem;color:#909090}.article-content pre{line-height:1.93rem;overflow:auto}.article-content code,.article-content pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.article-content code{font-size:1rem;padding:.26rem .53em;word-break:break-word;color:#4e5980;background-color:#f8f8f8;border-radius:2px;overflow-x:auto}.article-content pre>code{font-size:1rem;padding:.67rem 1.3rem;margin:0;word-break:normal;display:block}.article-content a{color:#259}.article-content a:active,.article-content a:hover{color:#275b8c}.article-content table{display:inline-block!important;font-size:1rem;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.article-content thead{background:#f6f6f6;color:#000;text-align:left}.article-content tr:nth-child(2n){background-color:#fcfcfc}.article-content td,.article-content th{padding:1rem .6rem;line-height:2rem}.article-content td{min-width:10rem}.article-content blockquote{margin:1em 0;border-left:4px solid #ddd;padding:0 1.3rem}.article-content blockquote>p{margin:.6rem 0}.article-content ol,.article-content ul{padding-left:2.7rem}.article-content ol li,.article-content ul li{margin-bottom:.6rem}.article-content ol ol,.article-content ol ul,.article-content ul ol,.article-content ul ul{margin-top:.27rem}.article-content pre>code{overflow-x:auto;-webkit-overflow-scrolling:touch;color:#333;background:#f8f8f8}.article-content .hljs-comment,.article-content .hljs-quote{color:#998}.article-content .hljs-keyword,.article-content .hljs-selector-tag,.article-content .hljs-subst{color:#333;font-weight:700}.article-content .hljs-literal,.article-content .hljs-number,.article-content .hljs-tag .hljs-attr,.article-content .hljs-template-variable,.article-content .hljs-variable{color:teal}.article-content .hljs-doctag,.article-content .hljs-string{color:#d14}.article-content .hljs-section,.article-content .hljs-selector-id,.article-content .hljs-title{color:#900;font-weight:700}.article-content .hljs-subst{font-weight:400}.article-content .hljs-class .hljs-title,.article-content .hljs-type{color:#458;font-weight:700}.article-content .hljs-attribute,.article-content .hljs-name,.article-content .hljs-tag{color:navy;font-weight:400}.article-content .hljs-link,.article-content .hljs-regexp{color:#009926}.article-content .hljs-bullet,.article-content .hljs-symbol{color:#990073}.article-content .hljs-built_in,.article-content .hljs-builtin-name{color:#0086b3}.article-content .hljs-meta{color:#999;font-weight:700}.article-content .hljs-deletion{background:#fdd}.article-content .hljs-addition{background:#dfd}.article-content .hljs-emphasis{font-style:italic}.article-content .hljs-strong{font-weight:700}.article-content p{line-height:inherit;margin-top:22px;margin-bottom:22px}.article-content img{max-height:none}.article-content a{color:#0269c8;border-bottom:1px solid #d1e9ff}.article-content code{background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.article-content figure{margin:22px auto}.article-content figure figcaption{margin-top:2px;line-height:1.6}.article-content blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.article-content blockquote:after{display:block;content:""}.article-content blockquote>p{margin:10px 0}.article-content blockquote.warning{position:relative;border-left-color:#f75151;margin-left:8px}.article-content blockquote.warning:before{position:absolute;top:14px;left:-12px;background:#f75151;border-radius:50%;content:"!";width:20px;height:20px;color:#fff;display:flex;align-items:center;justify-content:center}.article-content ol,.article-content ul{padding-left:28px}.article-content ol li,.article-content ul li{margin-bottom:0;list-style:inherit}.article-content ol li.task-list-item,.article-content ul li.task-list-item{list-style:none}.article-content ol li.task-list-item ol,.article-content ol li.task-list-item ul,.article-content ul li.task-list-item ol,.article-content ul li.task-list-item ul{margin-top:0}.article-content ol li{padding-left:6px}.article-content pre{position:relative;line-height:1.75}.article-content pre>code{padding:15px 12px}.article-content pre>code.hljs[lang]{padding:18px 15px 12px}.article-content pre>code.hljs[lang]:before{content:attr(lang);position:absolute;right:15px;top:2px;color:hsla(0,0%,54.9%,.8)}.article-content pre>code.hljs[lang][lang=bash]:before{content:""}.article-content pre>code.copyable .copy-code-btn{position:absolute;top:6px;right:15px;font-size:12px;line-height:1;cursor:pointer;color:hsla(0,0%,54.9%,.8);-webkit-transition:color .1s;transition:color .1s}.article-content pre>code.copyable .copy-code-btn:hover{color:#8c8c8c}.article-content pre>code.copyable.hljs[lang]:before{right:70px}.article-content h1,.article-content h2,.article-content h3,.article-content h4,.article-content h5,.article-content h6{color:#333;line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.article-content h1{font-size:30px;margin-bottom:5px}.article-content h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.article-content h3{font-size:18px;padding-bottom:0}.article-content h4{font-size:16px}.article-content h5{font-size:15px}.article-content h6{margin-top:5px}.article-content h1.heading+h2.heading{margin-top:20px}.article-content h1.heading+h3.heading{margin-top:15px}.article-content .heading+.heading{margin-top:0}.article-content h1+:not(.heading){margin-top:25px}@media (max-width:720px){.article-content h1{font-size:24px}.article-content h2{font-size:20px}.article-content h3{font-size:18px}.article-content pre>code .copy-code-btn{display:none}.article-content pre>code.hljs[lang]:before{top:2px;right:15px}}@media (max-width:720px){.article-content pre>code.copyable.hljs[lang]:before{right:1rem}}';
 
-var mycomapp$1 = function mycomapp() {
+console.log(createElement, createElement);
+
+var mycomapp$1 = createComponent((function() {
     var inputpassword = createstate("");
     var inputref = createRef();
     var inputref2 = createRef();
@@ -2722,13 +2916,15 @@ var mycomapp$1 = function mycomapp() {
     }))) ];
     console.log(vdom);
     return vdom;
-};
+}));
 
 mycomapp$1.css = css$1;
 
-var vdom$1 = createElement(createComponent(mycomapp$1));
+var vdom$1 = createElement(mycomapp$1);
 
-createApp(vdom$1, document.getElementById("root"));
+MountElement(vdom$1, document.getElementById("root"));
+
+console.log(createElement, createElement);
 
 var temp_ref = createRef();
 
@@ -2750,13 +2946,13 @@ watch(notcheck, (function(a) {
     return console.log(a);
 }));
 
-var vdom$2 = createElement(Fragment, null, [ createElement("input", {
+var vdom$2 = createElement("", null, [ createElement("input", {
     type: "checkbox",
     _checked: check
 }), createElement("input", {
     type: "checkbox",
     _checked: notcheck
-}), createElement(Fragment, null, createElement("ul", null, list.map((function(a) {
+}), createElement("", null, createElement("ul", null, list.map((function(a) {
     return createElement("li", null, "item", a);
 }))), createElement("header", {
     class: "common-header fixed noborder floating",
@@ -3183,7 +3379,9 @@ var vdom$2 = createElement(Fragment, null, [ createElement("input", {
 
 console.log(vdom$2, temp_ref);
 
-document.body.appendChild(createApp(vdom$2, document.createElement("div")));
+document.body.appendChild(MountElement(vdom$2, document.createElement("div")));
+
+console.log(createElement, createElement);
 
 (function() {
     (function() {
@@ -3207,8 +3405,8 @@ document.body.appendChild(createApp(vdom$2, document.createElement("div")));
             }
         }, "hhhhhhhhhhhhtests");
         console.log(myvdom1111111);
-        document.body.appendChild(createApp(myvdom1111111, document.createElement("div")));
-        document.body.appendChild(createApp(createElement(function() {
+        document.body.appendChild(MountElement(myvdom1111111, document.createElement("div")));
+        document.body.appendChild(MountElement(createElement(function() {
             var Aaaaaaaaaa = function(_HTMLElement2) {
                 _inherits(Aaaaaaaaaa, _HTMLElement2);
                 function Aaaaaaaaaa() {
@@ -3235,24 +3433,24 @@ document.body.appendChild(createApp(vdom$2, document.createElement("div")));
             myAge: 0x71afd498cfffe
         }), _temp));
         console.log(myele1);
-        document.body.appendChild(createApp(myele1, document.createElement("div")));
-        document.body.appendChild(createApp(myele1, document.createElement("div")));
+        document.body.appendChild(MountElement(myele1, document.createElement("div")));
+        document.body.appendChild(MountElement(myele1, document.createElement("div")));
     })();
 })();
 
-var vdom$3 = [ createElement("html", null, "testhtml"), createElement("button", {
-    onclick: [ console.log, function() {
-        console.log("onclick");
-    } ],
-    "*text": "clicktest",
-    "@click": [ console.log, function() {
-        console.log("@click");
-    } ]
-}), createElement("style", null) ];
-
-document.body.appendChild(createApp(vdom$3, document.createElement("div")));
-
-console.log("onclick", " @click", vdom$3);
+{
+    var vdom$3 = [ createElement("html", null, "testhtml"), createElement("button", {
+        onclick: [ console.log, function() {
+            console.log("onclick");
+        } ],
+        "*text": "clicktest",
+        "@click": [ console.log, function() {
+            console.log("@click");
+        } ]
+    }), createElement("style", null) ];
+    document.body.appendChild(MountElement(vdom$3, document.createElement("div")));
+    console.log("onclick", " @click", vdom$3);
+}
 
 _asyncToGenerator(regeneratorRuntime.mark((function _callee() {
     var defaultProps, css, Hellowordclass;
@@ -3278,7 +3476,7 @@ _asyncToGenerator(regeneratorRuntime.mark((function _callee() {
                     css: css,
                     defaultProps: defaultProps
                 }));
-                document.body.appendChild(createApp(createElement(Hellowordclass), document.createElement("div")));
+                document.body.appendChild(MountElement(createElement(Hellowordclass), document.createElement("div")));
 
               case 8:
               case "end":
@@ -3287,6 +3485,29 @@ _asyncToGenerator(regeneratorRuntime.mark((function _callee() {
         }
     }), _callee);
 })))();
+
+(function() {
+    var colortext = createstate("red");
+    var stylestate = createstate({
+        display: "block",
+        width: "100%",
+        color: colortext
+    });
+    var vdom = [ createElement("hr", null), createElement("h1", {
+        style: stylestate
+    }, "input color ", colortext), createElement("input", {
+        _value: colortext
+    }), createElement("hr", null) ];
+    console.log([ vdom, colortext, stylestate ]);
+    watch([ colortext, stylestate ], (function(a, b) {
+        return console.log([ a, b ].map((function(a) {
+            return a.valueOf();
+        })));
+    }));
+    document.body.appendChild(MountElement(vdom, document.createElement("div")));
+})();
+
+console.log(createElement, createElement);
 
 var number = createstate(10);
 
@@ -3315,5 +3536,5 @@ var mycomappclass = createComponent((function() {
 
 var vdom$4 = [ createElement(mycomappclass), createElement(mycomappclass), createElement(mycomappclass) ];
 
-document.body.appendChild(createApp(vdom$4, document.createElement("div")));
+document.body.appendChild(MountElement(vdom$4, document.createElement("div")));
 //# sourceMappingURL=output-es2015.js.map

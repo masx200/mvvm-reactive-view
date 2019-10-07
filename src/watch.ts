@@ -1,48 +1,47 @@
-import {CallbackReactiveState}from"./computed"
-
-
-//import { requestAnimationFrame } from "./directives";
-import { isFunction ,isarray} from "./util";
-import ReactiveState, {
-  isReactiveState,
-  subscribesymbol,
-  removeallistenerssymbol,
-  addallistenerssymbol
-} from './reactivestate';
+interface CallbackReactiveState1<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  (...args: ReactiveState<T>[]): void;
+}
+// import { CallbackReactiveState } from "./computed";
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
-export function watch<T>(state:ReactiveState <T>| Array<ReactiveState<T>>,
+import ReactiveState, {
+  addallistenerssymbol,
+  isReactiveState,
+  removeallistenerssymbol,
+  subscribesymbol
+} from "./reactivestate";
+//import { requestAnimationFrame } from "./directives";
+import { isarray, isFunction } from "./util";
 
-callback:CallbackReactiveState<T>){
-if(isarray(state))
-{
-state.forEach(state=>{
+export function watch<
+  T extends string | number | boolean | undefined | object | bigint
+>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
 
-watchsingle(state,()=>{
-
-callback(...state)
-})
-
-})
-}
-else if(isReactiveState(state)){
-
-watchsingle(state ,callback)
-}else{
-console.error(state);
+  callback: CallbackReactiveState1<T>
+) {
+  if (isarray(state)) {
+    state.forEach(state1 => {
+      watchsingle(state1, () => {
+        callback(...state);
+      });
+    });
+  } else if (isReactiveState(state)) {
+    watchsingle(state, callback);
+  } else {
+    console.error(state);
     console.error(callback);
-console.error(invalid_ReactiveState + invalid_Function)
-throw new TypeError()
+    console.error(invalid_ReactiveState + invalid_Function);
+    throw new TypeError();
+  }
 }
-
-}
-
-
 
 function watchsingle(
-  state: ReactiveState,
-  callback: Function,
-//  statekey?: string
+  state: ReactiveState<any>,
+  callback: Function
+  //  statekey?: string
 ): void {
   if (
     !(
@@ -51,33 +50,31 @@ function watchsingle(
       isFunction(callback)
     )
   ) {
-console.error(state);
+    console.error(state);
     console.error(callback);
-    console.error(invalid_ReactiveState + invalid_Function)
+    console.error(invalid_ReactiveState + invalid_Function);
 
     throw TypeError();
   }
 
+  state[subscribesymbol](callback);
 
+  //  if (statekey) {
 
-state[subscribesymbol](callback);
+  //   state[subscribesymbol](callback, statekey);
+  // } else {
 
-//  if (statekey) {
- 
-//   state[subscribesymbol](callback, statekey);
- // } else {
-    
-//  }
+  //  }
 
   requestAnimationFrame(() => {
-rewatch(state)
-   // state[addallistenerssymbol]();
+    rewatch(state);
+    // state[addallistenerssymbol]();
   });
 }
-export function unwatch(state: ReactiveState): void {
+export function unwatch(state: ReactiveState<any>): void {
   state[removeallistenerssymbol]();
 }
 
-export function rewatch(state: ReactiveState): void {
+export function rewatch(state: ReactiveState<any>): void {
   state[addallistenerssymbol]();
 }

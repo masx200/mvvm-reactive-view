@@ -1,17 +1,17 @@
+import ReactiveState from "./reactivestate";
 import { isFunction } from "./util";
-import ReactiveState from './reactivestate';
 export const invalid_Function = "invalid Function";
 const errormessage =
   "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
 let MountedSet: Set<Function> = new Set();
 let UnMountedSet: Set<Function> = new Set();
-let StateSet: Set<ReactiveState> = new Set();
+let StateSet: Set<ReactiveState<any>> = new Set();
 /* 收集组件内部创建的 ReactiveState*/
-export function getstates() {
+export function getstates(): Array<ReactiveState<any>> {
   return [...StateSet];
 }
-export function usestste(state: ReactiveState) {
+export function usestste(state: ReactiveState<any>) {
   if (ctxopen) {
     StateSet.add(state);
   }
@@ -27,13 +27,13 @@ export function useMounted(fun: Function) {
     if (ctxopen) {
       MountedSet.add(fun);
     } else {
-//console.error()
-console.error(errormessage)
+      //console.error()
+      console.error(errormessage);
       throw Error();
     }
   } else {
-console.error(fun)
-console.error(invalid_Function)
+    console.error(fun);
+    console.error(invalid_Function);
     throw TypeError();
   }
 }
@@ -43,13 +43,13 @@ export function useUnMounted(fun: Function) {
     if (ctxopen) {
       UnMountedSet.add(fun);
     } else {
-console.error(errormessage)
+      console.error(errormessage);
       throw Error();
       //throw Error(errormessage);
     }
   } else {
-console.error(fun)
-console.error(invalid_Function)
+    console.error(fun);
+    console.error(invalid_Function);
     throw TypeError();
     //throw TypeError(invalid_Function);
   }

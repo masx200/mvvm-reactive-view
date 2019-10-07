@@ -1,12 +1,13 @@
-import render from "./rendervdomtoreal";
 import createElement from "./createelement";
-import { gettagtype } from "./util";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
 import {
   appendchild,
   createanotherhtmldocument /* , insertfirst */
 } from "./dom";
+import { get } from "./reflect";
+import render from "./rendervdomtoreal";
+import { gettagtype } from "./util";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "cssmediarule";
 }
@@ -15,14 +16,22 @@ export function isCSSImportRule(a: any): a is CSSImportRule {
 }
 
 export function parsecsstext(text: string): Array<CSSRule> {
-  const styleelement = render(createElement("style", undefined, text));
+  const styleelement = render(
+    createElement("style", [text])
+  ) as HTMLStyleElement;
   //   console.dir(styleelement);
   /* 只有添加到document之后才会有sheet */
   //const otherdocument = document.implementation.createHTMLDocument("");
   const otherdocument = createanotherhtmldocument();
-  appendchild(otherdocument.firstElementChild, styleelement);
+  appendchild(otherdocument.documentElement, styleelement);
   //otherdocument.firstElementChild.appendChild(styleelement);
-  return Array.from(styleelement.sheet.cssRules);
+  return Array.from(
+    get(
+      get(styleelement, "sheet"),
+
+      "cssRules"
+    )
+  );
 }
 
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
@@ -89,7 +98,7 @@ export function prefixcssrules(
         return cssrule;
       }
     })
-    .filter(Boolean);
+    .filter(Boolean) as Array<CSSRule>;
 }
 
 const componentsstylesheet: { [key: string]: Set<string> } = {};
@@ -113,8 +122,10 @@ export function cssrulestocsstext(cssrules: Array<CSSRule>): string {
   return cssrules.map(c => c.cssText).join("\n");
   // .replace(/\n/g, "");
 }
-export function createlinkstylesheet(url: string): HTMLElement {
-  return render(createElement("link", { href: url, rel: "stylesheet" }));
+export function createlinkstylesheet(url: string): HTMLLinkElement {
+  return render(
+    createElement("link", { href: url, rel: "stylesheet" })
+  ) as HTMLLinkElement;
 }
 export function transformcsstext(text: string, prefix: string): string {
   const css = text;
@@ -139,7 +150,7 @@ export function loadlinkstyle(
 ) {
   return new Promise(rs => {
     const loaderrorfun = () => {
-      stylelinkelement.onload = stylelinkelement.onerror = undefined;
+      stylelinkelement.onload = stylelinkelement.onerror = null;
       rs();
       //   console.log(stylelinkelement.href);
     };

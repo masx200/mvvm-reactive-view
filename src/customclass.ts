@@ -1,19 +1,13 @@
-import Virtualdom from "./virtualdom";
-import ReactiveState from './reactivestate';
+import { VaildVDom } from "./conditon";
 
 export interface Class {
   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
   prototype: HTMLElement;
-  defaultProps?: object;
+  defaultProps?: { [key: string]: any };
   css?: string;
 }
 export interface Custom {
-  (props?: object, children?: Array<any>):
-    | Virtualdom
-    | string
-    | ReactiveState
-    | number
-    | Array<Virtualdom | ReactiveState | string | number>;
-  defaultProps?: object;
+  (props?: object, children?: Array<any>): VaildVDom;
+  defaultProps?: { [key: string]: any };
   css?: string;
 }

@@ -1,20 +1,16 @@
+import { h, createElement } from "../dist/index.js";
+console.log(h, createElement);
 import {
-  condition,
-  Fragment,
+  createComponent,
+  //   createElement,
   createRef,
+  createState,
   html,
   MountElement,
-  h,
-  createElement,
-  createState,
-  watch,
-  
-  createComponent,
-  useMounted,
-  useUnMounted
+  watch
 } from "../dist/index.js";
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
-const mycomapp =createComponent( () => {
+const mycomapp = createComponent(() => {
   const inputpassword = createState("");
   const inputref = createRef();
   const inputref2 = createRef();
@@ -381,5 +377,5 @@ const mycomapp =createComponent( () => {
   // MountElement(vdom, document.getElementById("root"));
 });
 mycomapp.css = modulecss;
-var vdom = createElement((mycomapp));
+var vdom = createElement(mycomapp);
 MountElement(vdom, document.getElementById("root"));

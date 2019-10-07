@@ -1,20 +1,18 @@
 {
-    "version": "1.2.21",
-    "type": "module",
+    "version": "1.2.22",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/@masx200"
     },
     "main": "dist/index.js",
-    "types": "src/index.ts",
+    "types": "dist/index.d.ts",
     "module": "dist/index.js",
-    "name": "mvvm-reactive-view",
+    "name": "@masx200/mvvm-reactive-view",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "scripts": {
         "build": "rollup -c rollup.config.js",
         "test": "rollup -c ./test/rollup.config.js",
         "serve": "live-server",
-"prettier":"prettier --parser=typescript --write *.ts"
-
+        "prettier": "prettier --parser=typescript --write ./src/*.ts"
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
@@ -24,16 +22,14 @@
         "url": "https://github.com/masx200/mvvm-reactive-view/issues"
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
-    "dependencies": {
-          },
+    "dependencies": {},
     "devDependencies": {
-"deep-observe-agent-proxy": "https://gitee.com/masx200/deep-observe-agent-proxy.git",
-        "dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git"
-  ,
         "@babel/core": "^7.6.0",
         "@babel/plugin-proposal-class-properties": "^7.5.5",
         "@babel/plugin-transform-react-jsx": "^7.3.0",
         "@babel/preset-env": "^7.6.0",
+        "@masx200/deep-observe-agent-proxy": "https://gitee.com/masx200/deep-observe-agent-proxy.git",
+        "@masx200/dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git",
         "@typescript-eslint/eslint-plugin": "^2.2.0",
         "@typescript-eslint/parser": "^2.2.0",
         "babel-plugin-htm": "^2.2.0",
@@ -55,6 +51,7 @@
         "rollup-plugin-scss": "^1.0.2",
         "rollup-plugin-terser": "^5.1.2",
         "rollup-plugin-typescript": "^1.0.1",
+        "rollup-plugin-typescript2": "^0.24.3",
         "terser": "^4.3.1",
         "tslib": "^1.10.0",
         "typescript": "^3.6.3"

@@ -1,34 +1,41 @@
-export interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint ,K> {
+/* export interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint > {
   
- (...Array<ReactiveState<T>>):K
+ (...ReactiveState<T>[])=>any
+} */
+interface CallbackReactiveState2<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  (...args: T[]): any;
 }
-
+import { invalid_ReactiveState } from "./conditon";
+import { invalid_Function, usestste } from "./context-mounted-unmounted-";
+import ReactiveState, {
+  dispatchsymbol,
+  isReactiveState
+} from "./reactivestate";
+import readonlyproxy from "./readonlyproxy";
 import {
-defineProperty,
+  defineProperty,
   //   deleteProperty,
   get,
   //   getOwnPropertyDescriptor,
   has,
-  ownKeys
+  ownKeys,
+  apply
   //   getPrototypeOf
   //   set
 } from "./reflect";
-
-import ReactiveState, {
-  isReactiveState,
-  dispatchsymbol
-} from "./reactivestate";
-import { isFunction, isArray, isobject } from "./util";
-import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function, usestste } from "./context-mounted-unmounted-";
-import readonlyproxy from "./readonlyproxy";
-import { watch } from "./watch";
 import { toArray } from "./toArray";
+import { isArray, isFunction, isobject } from "./util";
+import { watch } from "./watch";
+
 //const { defineProperty } = Object;
-export default <T,K>(
-  state: ReactiveState <T>| Array<ReactiveState<T>>,
-  callback: CallbackReactiveState<T,K>
-): ReactiveState<K>  => {
+export default function<
+  T extends string | number | boolean | undefined | object | bigint
+>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
+  callback: CallbackReactiveState2<T>
+): ReactiveState<any> {
   if (
     !(
       (isArray(state) || isReactiveState(state)) &&
@@ -38,13 +45,13 @@ export default <T,K>(
   ) {
     console.error(state);
     console.error(callback);
-console.error(invalid_ReactiveState+invalid_Function)
+    console.error(invalid_ReactiveState + invalid_Function);
 
-    throw TypeError(  );
+    throw TypeError();
   }
-  const state1array: ReactiveState[]
-  //   if (isReactiveState(state)) {
-  = toArray(state);
+  const state1array: ReactiveState<T>[] =
+    //   if (isReactiveState(state)) {
+    toArray(state);
   /*  state1 = Arraycomputed(
       toArray(state),
 
@@ -59,29 +66,32 @@ console.error(invalid_ReactiveState+invalid_Function)
   const state1 = Arraycomputed(state1array, callback);
   usestste(state1);
   return state1;
-};
+}
 
-function Arraycomputed<T,k>(
+function Arraycomputed<
+  T extends string | number | boolean | undefined | object | bigint
+>(
   state: ReactiveState<T>[],
-  callback: CallbackReactiveState<T,k>
-): ReactiveState<k> {
+  callback: CallbackReactiveState2<T>
+): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
-    const value = callback.call(undefined, ...state.map(st => st.valueOf()));
+    const value = apply(callback, undefined, state.map(st => st.valueOf()));
+    // callback(...state.map(st => st.valueOf()));
     return isReactiveState(value) ? value.value : value;
   };
 
-let memorized = getter();
+  let memorized = getter();
 
-if(isFunction(memorized)){
-console.error(memorized)
-throw new TypeError()
-}
+  if (isFunction(memorized)) {
+    console.error(memorized);
+    throw new TypeError();
+  }
   defineProperty(reactivestate, "value", {
     get: getter,
     configurable: true
   });
-  
+
   state.forEach(state => {
     watch(state, () => {
       let newvalue = getter();
@@ -119,18 +129,16 @@ export function getproperyreadproxy(a: object) {
       return has(target, key) || has(myvalueobj, key);
     },
     get(target, key) {
-      
       if (has(target, key)) {
         return get(target, key);
-      } else
-{
-const myvalue = get(target, "value");
-      const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
+      } else {
+        const myvalue = get(target, "value");
+        const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
 
- if (has(myvalueobj, key)) {
-        return get(myvalueobj, key);
+        if (has(myvalueobj, key)) {
+          return get(myvalueobj, key);
+        }
       }
-}
       //   return get(target, key);
       /*  const myvalue = get(target, "value");
 

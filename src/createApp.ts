@@ -1,20 +1,13 @@
 export const invalid_Virtualdom = "invalid Virtualdom ";
-import ReactiveState from './reactivestate';
+import { VaildVDom } from "./conditon";
 import document from "./dom";
 import { isvalidvdom } from "./html";
-import Virtualdom from "./virtualdom";
-import render from "./rendervdomtoreal";
 import mount from "./mount";
-import { isArray } from "./util";
+import render from "./rendervdomtoreal";
 import { toArray } from "./toArray";
+import { isArray } from "./util";
 export default function MountElement<T extends Element>(
-  vdom:
-    | Node
-    | Virtualdom
-    | string
-    | number
-    | Array<Virtualdom | string | ReactiveState | Node | number>
-    | ReactiveState,
+  vdom: VaildVDom | Node | Element | Array<Node | Element>,
   container: T
 ): T {
   if (isArray(vdom)) {
@@ -23,7 +16,7 @@ export default function MountElement<T extends Element>(
   const el = container;
   if (!(el instanceof HTMLElement)) {
     console.error(el);
-console.error("invalid container HTMLElement!")
+    console.error("invalid container HTMLElement!");
     throw TypeError();
   }
 
@@ -32,8 +25,8 @@ console.error("invalid container HTMLElement!")
     el === document.documentElement ||
     el === document.head
   ) {
-console.error(el);
-console.error("Do not mount  to <html> or <body> <head>.")
+    console.error(el);
+    console.error("Do not mount  to <html> or <body> <head>.");
     throw Error();
   }
   /*   if (
@@ -57,19 +50,22 @@ console.error("Do not mount  to <html> or <body> <head>.")
   if (isvalidvdom(vdom)) {
     // mount(elesarray.map(e => render(e)), container);
     mount(render(elesarray), container);
-  } else if (vdom instanceof Node || isNodeArray(vdom)) {
+  } else if (isNode(vdom) /*  instanceof Node */ || isNodeArray(vdom)) {
     mount(elesarray, container);
   } else {
     console.error(vdom);
-console.error(invalid_Virtualdom);
+    console.error(invalid_Virtualdom);
     throw TypeError();
   }
 
   //
   return container;
 }
-function isNodeArray(array: any[]): array is Node[] {
-//https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-  return isArray(array) && array.every(a=>a instanceof Node)
-//!array.map(e => e instanceof Node).includes(false);
+export function isNodeArray(array: any[]): array is Node[] {
+  //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+  return isArray(array) && array.every(a => a instanceof Node);
+  //!array.map(e => e instanceof Node).includes(false);
+}
+export function isNode(a: any): a is Node {
+  return a instanceof Node;
 }

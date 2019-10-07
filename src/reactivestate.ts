@@ -1,20 +1,20 @@
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
-export function isReactiveState(a: any): a is ReactiveState {
+export function isReactiveState(a: any): a is ReactiveState<any> {
   return a instanceof ReactiveState;
 }
 // import Reflect from "./reflect";
-import { getsymbol, isobject, isSet } from "./util";
-// export const textnodesymbol = Symbol("textnode");
-export const changetextnodesymbol = Symbol("changetextnode");
 import isprimitive from "./isprimitive";
 import { get } from "./reflect";
+import { isobject, isSet } from "./util";
+// export const textnodesymbol = Symbol("textnode");
+export const changetextnodesymbol = Symbol("changetextnode");
 export const eventtargetsymbol = Symbol("eventtatget");
 export const memlisteners = Symbol("memlisteners");
 export const dispatchsymbol = Symbol("dispatch");
-export const subscribesymbol = getsymbol("subscribe");
-export const removeallistenerssymbol = getsymbol("removeallisteners");
-export const addallistenerssymbol = getsymbol("addallisteners");
+export const subscribesymbol = Symbol("subscribe");
+export const removeallistenerssymbol = Symbol("removeallisteners");
+export const addallistenerssymbol = Symbol("addallisteners");
 /* const forkarryaprototype = {};
 ownKeys(Array.prototype).forEach(key => {
   forkarryaprototype[key] = Array.prototype[key];
@@ -25,13 +25,10 @@ forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
 /* extends forkarray  */
 
-
-
-
-
-export default class ReactiveState<T extends string | number | boolean | undefined | object|bigint>
-{
-constructor(init?:T) {
+export default class ReactiveState<
+  T extends string | number | boolean | undefined | object | bigint
+> {
+  constructor(init?: T) {
     //super();
     if (isprimitive(init) || isobject(init)) {
       Object.defineProperty(this, "value", {
@@ -43,7 +40,7 @@ constructor(init?:T) {
       // this.value = init;
     } else {
       console.error(init);
-console.error(invalid_primitive_or_object_state)
+      console.error(invalid_primitive_or_object_state);
       throw TypeError();
     }
     // this[eventtargetsymbol] = new EventTarget();
@@ -62,8 +59,6 @@ console.error(invalid_primitive_or_object_state)
 
 } */
 
-
-
   [addallistenerssymbol]() {
     this[memlisteners].forEach(([value, callback]) => {
       this[eventtargetsymbol].addEventListener(value, callback);
@@ -73,14 +68,18 @@ console.error(invalid_primitive_or_object_state)
     this[textnodesymbol] = textnode;
   } */
   // [textnodesymbol]: Text | undefined;
-  value: T
+  /*  [changetextnodesymbol](textnode: Text) {
+      this[textnodesymbol] = textnode;
+    } */
+  // [textnodesymbol]: Text | undefined;
+  value: T | undefined;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners]: Array<[string, EventListener]> = [];
-  
-//剑头函数绑定this
-  valueOf=() =>{
+
+  //剑头函数绑定this
+  valueOf = () => {
     return this.value;
-  }
+  };
   toString() {
     const value = this.valueOf();
     return isprimitive(value)
@@ -93,21 +92,21 @@ console.error(invalid_primitive_or_object_state)
   }
   [dispatchsymbol](eventname?: string) {
     const name = eventname ? String(eventname) : "value";
-  //  if (name !== "value") {
-  //    this[eventtargetsymbol].dispatchEvent(
-   //     new CustomEvent(name, { detail: name })
+    //  if (name !== "value") {
+    //    this[eventtargetsymbol].dispatchEvent(
+    //     new CustomEvent(name, { detail: name })
     //  );
-   // }
+    // }
 
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
     );
   }
-  [subscribesymbol](callback: Function/*, eventname?: string*/) {
+  [subscribesymbol](callback: Function /*, eventname?: string*/) {
     // this[eventtargetsymbol].addEventListener("value", callback);
-   // const name = eventname ? String(eventname) : "value";
-  const name="value";
-  this[memlisteners].push([
+    // const name = eventname ? String(eventname) : "value";
+    const name = "value";
+    this[memlisteners].push([
       name,
       (event: Event) => callback.call(undefined, this, get(event, "detail"))
     ]);

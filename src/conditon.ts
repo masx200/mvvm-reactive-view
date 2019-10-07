@@ -1,50 +1,49 @@
+export type VaildVDom =
+  | Virtualdom<any>
+  | string
+  | number
+  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
+  | ReactiveState<any>;
+import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
+import { AttrChange } from "./attrchange";
+import createApp, { invalid_Virtualdom } from "./createApp";
+import createElement from "./createelement";
+import { setelehtml } from "./dom";
+// const readysymbol = Symbol("ready");
+import { onmounted, onunmounted } from "./elementonmountandunmount";
+import { isvalidvdom } from "./html";
 import { componentsymbol } from "./iscomponent";
+import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
-// import { readysymbol } from "./createComponent";
-export const invalid_ReactiveState = "invalid ReactiveState";
 import { get } from "./reflect";
 import render from "./rendervdomtoreal";
-import createeleattr from "dom-element-attribute-agent-proxy";
-import { AttrChange } from "./attrchange";
+// import mount from "./mount";
+import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
 import Virtualdom from "./virtualdom";
-import ReactiveState, { isReactiveState } from './reactivestate';
+// import { readysymbol } from "./createComponent";
+export const invalid_ReactiveState = "invalid ReactiveState";
 const truevdomsymbol = Symbol("truevdom");
 const falsevdomsymbol = Symbol("falsevdom");
 const trueelesymbol = Symbol("trueele");
 const falseelesymbol = Symbol("falseele");
-const handletrue = getsymbol("handletrue");
-const handlefalse = getsymbol("handlefalse");
-// const readysymbol = Symbol("ready");
-import { onmounted, onunmounted } from "./elementonmountandunmount";
-// import mount from "./mount";
-import { isarray, getsymbol, isundefined, isboolean } from "./util";
-import createApp, { invalid_Virtualdom } from "./createApp";
-import { setelehtml } from "./dom";
-import { isvalidvdom } from "./html";
+const handletrue = Symbol("handletrue");
+const handlefalse = Symbol("handlefalse");
 
 export default function(
-  conditon: ReactiveState | boolean,
-  iftrue?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState,
-  iffalse?:
-    | Virtualdom
-    | string
-    | Array<Virtualdom | string | ReactiveState>
-    | ReactiveState
-): Virtualdom {
+  conditon: ReactiveState<any> | boolean,
+  iftrue?: VaildVDom,
+  iffalse?: VaildVDom
+): Virtualdom<any> {
   if (!(isReactiveState(conditon) || isboolean(conditon))) {
-console.error(conditon)
-console.error(invalid_ReactiveState)
+    console.error(conditon);
+    console.error(invalid_ReactiveState);
     throw TypeError();
   }
   [iftrue, iffalse].forEach(a => {
     if (!(isundefined(a) || isvalidvdom(a))) {
-console.error(a)
-console.error(invalid_Virtualdom)
+      console.error(a);
+      console.error(invalid_Virtualdom);
       throw new TypeError();
     }
   });
@@ -57,18 +56,17 @@ console.error(invalid_Virtualdom)
       // if(){}
       const optionstrue = get(options, "true");
       const optionsfalse = get(options, "false");
-      this[truevdomsymbol] = 
-/*isarray(optionstrue)
+      this[truevdomsymbol] =
+        /*isarray(optionstrue)
         ? optionstrue.filter(Boolean)
         : */
-[optionstrue].flat(1/0).filter(Boolean);
+        [optionstrue].flat(1 / 0).filter(Boolean);
       this[falsevdomsymbol] =
-
-/* isarray(optionsfalse)
+        /* isarray(optionsfalse)
         ? optionsfalse.filter(Boolean)
         : */
 
-[optionsfalse].flat(1/0).filter(Boolean);
+        [optionsfalse].flat(1 / 0).filter(Boolean);
       // optionsfalse;
     }
     [falseelesymbol]: any[];
@@ -115,13 +113,13 @@ console.error(invalid_Virtualdom)
         // createApp(this[elementsymbol], this);
         this[readysymbol] = true;
 
-        const attrs = createeleattr(this);
+        const attrs: { [key: string]: any } = createeleattr(this);
         // console.log(attrs);
         if (true === attrs["value"]) {
-          this[handletrue]();
+          get(this, handletrue).call(this);
         }
         if (false === attrs["value"]) {
-          this[handlefalse]();
+          get(this, handlefalse).call(this);
           //
         }
       }
@@ -138,7 +136,7 @@ console.error(invalid_Virtualdom)
       if (this[readysymbol]) {
         // console.log(name, oldValue, newValue);
         if (name === "value") {
-          const attrs = createeleattr(this);
+          const attrs: { [key: string]: any } = createeleattr(this);
           //   console.log(attrs);
           if (true === attrs["value"]) {
             this[handletrue]();
@@ -155,7 +153,7 @@ console.error(invalid_Virtualdom)
     }
   }
   /* vdom.options = { true: iftrue, false: iffalse }; */
-  const vdom = new Virtualdom(Condition, { value: conditon });
+  const vdom = createElement(Condition, { value: conditon });
   return vdom;
   /*  */
 }
