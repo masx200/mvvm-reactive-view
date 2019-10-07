@@ -303,13 +303,13 @@ function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance");
 }
 
-var _window = window, CustomEvent = _window.CustomEvent, requestAnimationFrame$1 = _window.requestAnimationFrame, URL = _window.URL, Blob = _window.Blob, Element = _window.Element, Node = _window.Node, String$1 = _window.String, Array$1 = _window.Array, document$1 = _window.document, Object$1 = _window.Object, Reflect$1 = _window.Reflect, Proxy$1 = _window.Proxy, _Symbol = _window.Symbol, Boolean = _window.Boolean, Promise$1 = _window.Promise, Set$1 = _window.Set, Math$1 = _window.Math, Error = _window.Error, TypeError$1 = _window.TypeError, EventTarget = _window.EventTarget, JSON = _window.JSON;
+var _Function = Function("return this")(), CustomEvent = _Function.CustomEvent, requestAnimationFrame$1 = _Function.requestAnimationFrame, URL = _Function.URL, Blob = _Function.Blob, Element = _Function.Element, Node = _Function.Node, String$1 = _Function.String, Array$1 = _Function.Array, document$1 = _Function.document, Object$1 = _Function.Object, Reflect$1 = _Function.Reflect, Proxy$1 = _Function.Proxy, _Symbol = _Function.Symbol, Boolean = _Function.Boolean, Promise$1 = _Function.Promise, Set$1 = _Function.Set, Math$1 = _Function.Math, Error = _Function.Error, TypeError$1 = _Function.TypeError, EventTarget = _Function.EventTarget, JSON = _Function.JSON, Map$1 = _Function.Map, window$1 = _Function.window;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
 }
 
-var Reflect$1$1 = window.Reflect;
+var Reflect$1$1 = window$1.Reflect;
 
 var apply = Reflect$1$1.apply, construct = Reflect$1$1.construct, defineProperty = Reflect$1$1.defineProperty, deleteProperty = Reflect$1$1.deleteProperty, _get = Reflect$1$1.get, getOwnPropertyDescriptor = Reflect$1$1.getOwnPropertyDescriptor, getPrototypeOf = Reflect$1$1.getPrototypeOf, _has = Reflect$1$1.has, _ownKeys = Reflect$1$1.ownKeys, _set = Reflect$1$1.set;
 
@@ -353,7 +353,7 @@ function isSet(a) {
     return gettagtype(a) === "set" && a instanceof Set$1;
 }
 
-var _window2 = window, HTMLElement$1 = _window2.HTMLElement, customElements$1 = _window2.customElements, Proxy$1$1 = _window2.Proxy;
+var HTMLElement$1 = window$1.HTMLElement, customElements$1 = window$1.customElements, Proxy$1$1 = window$1.Proxy;
 
 if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1$1) || !isobject(customElements$1)) {
     console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
@@ -366,9 +366,9 @@ var hyphenate = function hyphenate(str) {
     return str.replace(hyphenateRE, "-$1").toLowerCase();
 };
 
-var String$1$1 = window.String;
+var String$1$1 = window$1.String;
 
-var Reflect$2 = window.Reflect;
+var Reflect$2 = window$1.Reflect;
 
 var get$1 = Reflect$2.get, set$1 = Reflect$2.set, ownKeys$1 = Reflect$2.ownKeys;
 
@@ -539,7 +539,7 @@ function isinputtextortextarea(ele) {
     return tagname === "input" && get$1(ele, "type") === "text" || tagname === "textarea";
 }
 
-var document$1$1 = window.document;
+var document$1$1 = window$1.document;
 
 function seteletext(e, v) {
     e.textContent = v;
@@ -665,6 +665,8 @@ var AttrChange = function(_HTMLElement) {
     } ]);
     return AttrChange;
 }(_wrapNativeSuper(HTMLElement));
+
+var r = "function" == typeof Map$1, u = r ? new Map$1 : {};
 
 function merge_entries(a) {
     var m = {};
@@ -915,7 +917,7 @@ function mount(ele, container) {
 
 var invalid_custom_element_class = "invalid custom element class !";
 
-if (!isobject(window.customElements)) {
+if (!isobject(window$1.customElements)) {
     console.error(" customElements  not supported !");
     throw new TypeError$1;
 }
@@ -927,15 +929,15 @@ function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6
     return outputentrie ? outputentrie[0] : undefined;
 }
 
-window.CustomElementRegistry = _get(getPrototypeOf(window.customElements), "constructor");
+window$1.CustomElementRegistry = _get(getPrototypeOf(window$1.customElements), "constructor");
 
 var elementset = _Symbol["for"]("elementset");
 
 var elementmap = _Symbol["for"]("elementmap");
 
-var _window3 = window, CustomElementRegistry = _window3.CustomElementRegistry;
+var CustomElementRegistry = window$1.CustomElementRegistry;
 
-var customElements$1$1 = window.customElements;
+var customElements$1$1 = window$1.customElements;
 
 if (!_has(customElements$1$1, elementset)) {
     _set(customElements$1$1, elementset, new Set$1);
@@ -1185,7 +1187,7 @@ function rewatch(state) {
     state[addallistenerssymbol]();
 }
 
-var _window4 = window, requestAnimationFrame$1$1 = _window4.requestAnimationFrame;
+var requestAnimationFrame$1$1 = window$1.requestAnimationFrame;
 
 var directive = {
     ref: function ref(ele, _ref29, _vdom) {
@@ -1451,7 +1453,7 @@ function isArray$1(a) {
     return Array$1.isArray(a);
 }
 
-var Reflect$3 = window.Reflect;
+var Reflect$3 = window$1.Reflect;
 
 var ownKeys$2 = Reflect$3.ownKeys, deleteProperty$1 = Reflect$3.deleteProperty, apply$1 = Reflect$3.apply, construct$1 = Reflect$3.construct, defineProperty$1 = Reflect$3.defineProperty, get$2 = Reflect$3.get, getOwnPropertyDescriptor$1 = Reflect$3.getOwnPropertyDescriptor, getPrototypeOf$1 = Reflect$3.getPrototypeOf, has$1 = Reflect$3.has, set$2 = Reflect$3.set, _setPrototypeOf$1 = Reflect$3.setPrototypeOf;
 
