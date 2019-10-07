@@ -9,7 +9,7 @@ import { /* has,  */ get } from "./reflect";
 import { isFunction } from "./util";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function isundefined(a: any): a is void {
-  return typeof a === "undefined" || a === null;
+  return (!a && a === void 0) || a === null;
 }
 
 export function isnumber(a: any): a is number {

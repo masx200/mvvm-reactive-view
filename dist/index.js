@@ -11,7 +11,7 @@ const {apply: apply, construct: construct, defineProperty: defineProperty, delet
 const isplainobject = a => isobject(a) && gettagtype(a) === "object";
 
 function isundefined(a) {
-    return typeof a === "undefined" || a === null;
+    return !a && a === void 0 || a === null;
 }
 
 function isnumber(a) {
