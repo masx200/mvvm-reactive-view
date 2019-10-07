@@ -8,13 +8,37 @@
 
 ## 不使用 `diff` 算法,使用 `proxy` 精准监听状态变化,高效更新视图,状态都是响应式，可观察的对象,每次状态改变不会重新生成`虚拟 dom`
 
-## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`
+## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`，响应式状态可以独立于组件存在
 
 ## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
 ### 浏览器要求原生支持`Proxy`和`ECMASCRIPT2015+`
+
+# 安装 `npm` 模块
+
+```powershell
+cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
+```
+
+或者
+
+```powershell
+yarn add https://github.com/masx200/mvvm-reactive-view.git
+```
+
+
+# 从 `cdn` 获取模块
+
+## 开发模式
+
+https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js
+
+## 生产模式
+
+https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
+
 
 ### 关于 `Proxy`
 
@@ -47,17 +71,7 @@ import "@masx200/mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
-# 安装 `npm` 模块
 
-```powershell
-cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
-```
-
-或者
-
-```powershell
-yarn add https://github.com/masx200/mvvm-reactive-view.git
-```
 
 # 使用 `npm` 模块
 
@@ -79,16 +93,6 @@ import {
   render
 } from "@masx200/mvvm-reactive-view";
 ```
-
-# 从 `cdn` 获取模块
-
-## 开发模式
-
-https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js
-
-## 生产模式
-
-https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
 
 # 快速上手,可在浏览器中运行而不需要编译工具
 
