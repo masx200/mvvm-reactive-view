@@ -318,7 +318,7 @@ var isplainobject = function isplainobject(a) {
 };
 
 function isundefined(a) {
-    return typeof a === "undefined" || a === null;
+    return !a && a === void 0 || a === null;
 }
 
 function isnumber(a) {
@@ -1144,7 +1144,12 @@ function clearall() {
 
 function watch(state, callback) {
     if (isarray(state)) {
-        state.forEach((function(state1) {
+        var statearray = toArray(state);
+        if (!statearray.length) {
+            console.error("Empty array not allowed");
+            throw new Error;
+        }
+        statearray.forEach((function(state1) {
             watchsingle(state1, (function() {
                 callback.apply(void 0, _toConsumableArray(state));
             }));
@@ -1366,7 +1371,7 @@ function handleprops(element, vdom) {
     (function(element, vdom) {
         Object$1.entries(vdom.directives).forEach((function(_ref36) {
             var _ref37 = _slicedToArray(_ref36, 2), name = _ref37[0], value = _ref37[1];
-            if (typeof directive[name] === "function") {
+            if (isfunction(directive[name])) {
                 directive[name](element, value, vdom);
             } else {
                 console.error(vdom.directives);
@@ -2187,6 +2192,10 @@ function computed(state, callback) {
         throw TypeError$1();
     }
     var state1array = toArray(state);
+    if (!state1array.length) {
+        console.error("Empty array not allowed");
+        throw new Error;
+    }
     var state1 = Arraycomputed(state1array, callback);
     usestste(state1);
     return state1;

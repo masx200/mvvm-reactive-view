@@ -774,7 +774,12 @@ function clearall() {
 
 function watch(state, callback) {
     if (isarray(state)) {
-        state.forEach(state1 => {
+        const statearray = toArray(state);
+        if (!statearray.length) {
+            console.error("Empty array not allowed");
+            throw new Error;
+        }
+        statearray.forEach(state1 => {
             watchsingle(state1, () => {
                 callback(...state);
             });
@@ -1756,6 +1761,10 @@ function computed(state, callback) {
         throw TypeError();
     }
     const state1array = toArray(state);
+    if (!state1array.length) {
+        console.error("Empty array not allowed");
+        throw new Error;
+    }
     const state1 = Arraycomputed(state1array, callback);
     usestste(state1);
     return state1;

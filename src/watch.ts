@@ -14,6 +14,7 @@ import ReactiveState, {
 } from "./reactivestate";
 //import { requestAnimationFrame } from "./directives";
 import { isarray, isFunction } from "./util";
+import { toArray } from "./toArray";
 
 export function watch<
   T extends string | number | boolean | undefined | object | bigint
@@ -23,7 +24,12 @@ export function watch<
   callback: CallbackReactiveState1<T>
 ) {
   if (isarray(state)) {
-    state.forEach(state1 => {
+    const statearray = toArray(state);
+    if (!statearray.length) {
+      console.error("Empty array not allowed");
+      throw new Error();
+    }
+    statearray.forEach(state1 => {
       watchsingle(state1, () => {
         callback(...state);
       });

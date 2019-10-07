@@ -52,6 +52,10 @@ export default function<
   const state1array: ReactiveState<T>[] =
     //   if (isReactiveState(state)) {
     toArray(state);
+  if (!state1array.length) {
+    console.error("Empty array not allowed");
+    throw new Error();
+  }
   /*  state1 = Arraycomputed(
       toArray(state),
 
