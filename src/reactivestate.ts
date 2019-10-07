@@ -1,3 +1,6 @@
+import debounce from "lodash/debounce"
+
+
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
@@ -91,7 +94,10 @@ export default class ReactiveState<
       : "";
   }
   [dispatchsymbol](eventname?: string) {
-    const name = eventname ? String(eventname) : "value";
+
+
+debounce((eventname)=>{
+const name = eventname ? String(eventname) : "value";
     //  if (name !== "value") {
     //    this[eventtargetsymbol].dispatchEvent(
     //     new CustomEvent(name, { detail: name })
@@ -101,6 +107,9 @@ export default class ReactiveState<
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
     );
+
+})(eventname)
+    
   }
   [subscribesymbol](callback: Function /*, eventname?: string*/) {
     // this[eventtargetsymbol].addEventListener("value", callback);
