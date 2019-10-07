@@ -8,7 +8,7 @@ import {
   MountElement,
   useMounted,
   useUnMounted
-} from "../dist/index.js";
+} from "../../dist/index.js";
 console.log(h, createElement);
 function useMousePosition() {
   const x = createState(0);

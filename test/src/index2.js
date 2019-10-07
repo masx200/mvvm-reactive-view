@@ -1,13 +1,13 @@
 import {
-  watch,
   createComponent,
   createElement,
   createState,
   h,
   //   createElement,
   html,
-  MountElement
-} from "../dist/index.js";
+  MountElement,
+  watch
+} from "../../dist/index.js";
 console.log(h, createElement);
 /* console.log([
   condition,

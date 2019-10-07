@@ -1,11 +1,12 @@
-import { h, createElement } from "../dist/index.js";
-console.log(h, createElement);
 import {
   createComponent,
+  createElement,
   //   createElement,
   createState,
+  h,
   MountElement
-} from "../dist/index.js";
+} from "../../dist/index.js";
+console.log(h, createElement);
 const number = createState(10);
 function increment() {
   number.value++;

@@ -1,18 +1,17 @@
-import { h, createElement } from "../dist/index.js";
-console.log(h, createElement);
-/* import * as mycss from "./test.css";
-console.log(mycss); */
 import {
   createComponent,
+  createElement,
   //   createElement,
   createState,
+  h,
   html,
   MountElement,
   useMounted,
   useUnMounted,
   watch
-} from "../dist/index.js";
+} from "../../dist/index.js";
 import mycss from "./test.css";
+console.log(h, createElement);
 (() => {
   var mycom = (props, children) => {
     const number = createState(1);

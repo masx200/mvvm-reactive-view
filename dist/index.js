@@ -1819,7 +1819,8 @@ function getproperyreadproxy(a) {
                 const myvalue = get(target, "value");
                 const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
                 if (has(myvalueobj, key)) {
-                    return get(myvalueobj, key);
+                    const property = get(myvalueobj, key);
+                    return isfunction(property) ? property.bind(myvalueobj) : property;
                 }
             }
         }

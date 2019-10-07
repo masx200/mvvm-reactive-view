@@ -4,6 +4,8 @@ import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
 import postcss from "rollup-plugin-postcss";
+// import generateHtml from "rollup-plugin-generate-html";
+// import html from "rollup-plugin-html";
 // import scss from "rollup-plugin-scss";
 // import typescript from "rollup-plugin-typescript";
 /* const myterserplugin = terser({
@@ -24,11 +26,11 @@ import postcss from "rollup-plugin-postcss";
 }); */
 export default [
   {
-    input: "./test/index.js",
+    input: "./test/src/index.js",
     output: [
       {
-        file: "./test/output-es2015.js",
-        format: "esm",
+        file: "./test/dist/output-es2015.js",
+        format: "iife",
         sourcemap: true
       }
     ],
@@ -69,9 +71,22 @@ export default [
         extract: false,
         inject: false
       })
+      /* generateHtml({
+        filename: "./test/dist/index.html",
+        template: "./test/src/index.html"
+      }) */
       //   scss({
       //     /* output: true */
       //   })
+      /*   html({
+        include: "./test/*.html",
+        htmlMinifierOptions: {
+          collapseWhitespace: true,
+          collapseBooleanAttributes: true,
+          conservativeCollapse: true,
+          minifyJS: true
+        }
+      }) */
     ]
   }
   /*  {

@@ -1,4 +1,4 @@
-import typescript from "typescript";
+import typescriptlib from "typescript";
 // import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
@@ -34,7 +34,10 @@ export default [
       json(),
       resolve(),
       commonjs(),
-      typescriptplugin({ tsconfig: "tsconfig.json", typescript: typescript }),
+      typescriptplugin({
+        tsconfig: "tsconfig.json",
+        typescript: typescriptlib
+      }),
       terser({
         sourcemap: true,
         compress: false,

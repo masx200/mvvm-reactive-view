@@ -1,16 +1,15 @@
-import { h, createElement } from "../dist/index.js";
-console.log(h, createElement);
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-// import modulecss from "./main.b9c7ffd191cff11a9b96.css";
 import {
   condition,
+  createElement,
   //   createElement,
   createRef,
   createState,
+  h,
   html,
   MountElement,
   watch
-} from "../dist/index.js";
+} from "../../dist/index.js";
+console.log(h, createElement);
 /* console.log([
   Fragment,
   createRef,

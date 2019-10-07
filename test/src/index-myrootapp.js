@@ -1,15 +1,16 @@
-import { h, createElement } from "../dist/index.js";
-console.log(h, createElement);
 import {
   createComponent,
+  createElement,
   //   createElement,
   createRef,
   createState,
+  h,
   html,
   MountElement,
   watch
-} from "../dist/index.js";
+} from "../../dist/index.js";
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
+console.log(h, createElement);
 const mycomapp = createComponent(() => {
   const inputpassword = createState("");
   const inputref = createRef();

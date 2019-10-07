@@ -1,12 +1,13 @@
-import { h, createElement } from "../dist/index.js";
-console.log(h, createElement);
 import {
   computed,
+  createElement,
   createRef,
   createState,
+  h,
   MountElement,
   watch
-} from "../dist/index.js";
+} from "../../dist/index.js";
+console.log(h, createElement);
 // console.log()
 // export{vdom}
 const temp_ref = createRef();

@@ -140,7 +140,9 @@ export function getproperyreadproxy(a: object) {
         const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
 
         if (has(myvalueobj, key)) {
-          return get(myvalueobj, key);
+          /* 对于string,number等原始类型,返回的函数要绑定this */
+          const property = get(myvalueobj, key);
+          return isFunction(property) ? property.bind(myvalueobj) : property;
         }
       }
       //   return get(target, key);
