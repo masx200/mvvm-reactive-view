@@ -901,9 +901,9 @@ interface ExtendOptions {
 function directives(options?: ExtendOptions): ExtendOptions;
 ```
 
-## `html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
+## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
-## `h`等同于`createElement`,用来生成虚拟 `dom`
+## 函数`h`等同于`createElement`,用来生成虚拟 `dom`
 
 ```ts
 type styleprop =
