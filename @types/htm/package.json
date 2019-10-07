@@ -1,5 +1,8 @@
 {
     "module": "index",
     "name": "@types/htm",
-    "types": "index"
+    "types": "index",
+    "dependencies": {
+        "htm": "^2.2.1"
+    }
 }
