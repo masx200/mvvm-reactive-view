@@ -47,7 +47,8 @@ export function isvalidvdom(v: any): v is VaildVDom {
       : true;
     return flag;*/
     //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-    return v.every(e => isvalidvdom(e));
+    //不允许空数组
+return v.length&&v.every(e => isvalidvdom(e));
   } else if (
     isVirtualdom(v)
     // v instanceof Virtualdom
