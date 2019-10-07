@@ -94,7 +94,7 @@ export default class ReactiveState<
       : "";
   }
   [dispatchsymbol](eventname?: string) {
-
+//添加防抖函数
 
 debounce((eventname)=>{
 const name = eventname ? String(eventname) : "value";
