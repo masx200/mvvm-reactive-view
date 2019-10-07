@@ -47,7 +47,7 @@ import "@masx200/mvvm-reactive-view/polyfill/custom-elements.min.js";
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
-# 安装 npm 模块
+# 安装 `npm` 模块
 
 ```powershell
 cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
@@ -59,7 +59,7 @@ cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
 yarn add https://github.com/masx200/mvvm-reactive-view.git
 ```
 
-# 使用 npm 模块
+# 使用 `npm` 模块
 
 ```js
 import {
