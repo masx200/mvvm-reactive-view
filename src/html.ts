@@ -1,3 +1,6 @@
+import {apply}from "./reflect"
+
+
 // declare const htm: (
 //   strings?: TemplateStringsArray,
 //   ...values: any[]
@@ -27,7 +30,9 @@ strings?: TemplateStringsArray,
   ...values: any[]
 ): Virtualdom<any>
 function html(...inargs: any[]): Virtualdom<any> {
-  return (htm as HTM).call(h, ...inargs);
+ // return (htm as HTM).call(h, ...inargs);
+
+return apply(htm as HTM,h,inargs)
 }
 
 /* 如果出现未闭合标签会产生错误的vdom */
