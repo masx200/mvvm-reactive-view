@@ -42,7 +42,7 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
 或者
 
 ```js
-import "mvvm-reactive-view/polyfill/custom-elements.min.js";
+import "@masx200/mvvm-reactive-view/polyfill/custom-elements.min.js";
 ```
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
