@@ -730,10 +730,6 @@ const stylestate = createState({
   color: colortext
 });
 
-/* 
-第二种用法
-*/
-watch(colortext, state => (stylestate.color = state.valueOf()));
 
 const vdom = html`
   <hr />
@@ -749,6 +745,13 @@ watch([colortext, stylestate], (a, b) =>
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
+```js
+/* 
+第二种用法
+*/
+watch(colortext, state => (stylestate.color = state.valueOf()));
+
+```
 # API
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
