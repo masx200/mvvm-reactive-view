@@ -362,39 +362,43 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
 ```js
-var mycom = (props, children) => {
-  useMounted(() => {
-    console.log("mounted1");
-  });
-  useMounted(() => {
-    console.log("mounted2", props);
-  });
-  useUnMounted(() => {
-    console.log("unmounted");
-  });
-  watch(props.cccccc, console.log);
-  return createElement("div", null, [
-    "wwwwwwwwwwww",
-    createElement("div", null, ["createComponent"]),
-    children,
-    createElement("div", null, [props.cccccc])
-  ]);
-};
-mycom.defaultProps = { cccccc: "bbbbbbb" };
-mycom.css = `
-* {
+const mycom = createComponent(
+  Object.assign(
+    (props, children) => {
+      useMounted(() => {
+        console.log("mounted1");
+      });
+      useMounted(() => {
+        console.log("mounted2", props);
+      });
+      useUnMounted(() => {
+        console.log("unmounted");
+      });
+      watch(props.cccccc, console.log);
+      return createElement("div", null, [
+        "wwwwwwwwwwww",
+        createElement("div", null, ["createComponent"]),
+        children,
+        createElement("div", null, [props.cccccc])
+      ]);
+    },
+    {
+      defaultProps: {
+        cccccc: "bbbbbbb"
+      },
+      css: `* {
   color: purple !important;
 
   font-size: 50px;
 }
-
   .article-content h3 {
     font-size: 18px;
-  }
+  }`
+    }
+  )
+);
 
-
-`;
-const myclasscomponent = createComponent(mycom);
+const myclasscomponent = mycom;
 const vdom = createElement(
   myclasscomponent,
   {
