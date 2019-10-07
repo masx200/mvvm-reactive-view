@@ -130,8 +130,10 @@ const vdom = html`
       stylestate.color = "red";
     }}
   >
-    red</button
-  ><button
+    red
+  </button>
+
+  <button
     @click=${() => {
       stylestate.color = "green";
     }}
