@@ -22,6 +22,10 @@ import { isArray, isnumber, isstring } from "./util";
 import Virtualdom, { isVirtualdom } from "./virtualdom";
 
 // const html = htm.bind(h);
+function html(
+strings?: TemplateStringsArray,
+  ...values: any[]
+): Virtualdom<any>
 function html(...inargs: any[]): Virtualdom<any> {
   return (htm as HTM).call(h, ...inargs);
 }
