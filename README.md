@@ -198,32 +198,33 @@ https://tc39.es/proposal-flatMap/
 
 ```json 
 {
-    'plugins': [
+    "plugins": [
         [
-            '@babel/plugin-transform-react-jsx',
+            "@babel/plugin-transform-react-jsx",
             {
-                'pragma': 'createElement',
-                'pragmaFrag': '\'\''
+                "pragma": "createElement",
+                "pragmaFrag": "\"\""
             }
         ],
         [
-            'babel-plugin-htm',
+            "babel-plugin-htm",
             {
-                'tag': 'html',
-                'pragma': 'h'
+                "tag": "html",
+                "pragma": "h"
             }
         ],
-        '@babel/plugin-proposal-class-properties'
+        "@babel/plugin-proposal-class-properties"
     ],
-    'presets': [[
-            '@babel/preset-env',
+    "presets": [[
+            "@babel/preset-env",
             {
-                'corejs': 3,
-                'useBuiltIns': 'usage',
-                'targets': { 'esmodules': true }
+                "corejs": 3,
+                "useBuiltIns": "usage",
+                "targets": { "esmodules": true }
             }
         ]]
 }
+
 ```
 
 # 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
