@@ -60,7 +60,7 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
 # `webcomponent` `custom-elements` `polyfill`
 
 ```html
-<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
+<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js" type="module"></script>
 ```
 
 或者
