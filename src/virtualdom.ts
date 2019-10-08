@@ -16,6 +16,7 @@ export function createVirtualElement
 :Virtualdom<T>{
     //对象浅拷贝
     props = { ...props };
+children=children.flat(1 / 0)
     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
     // console.log(type, props, children);
     //添加支持on开头事件绑定写法
@@ -52,7 +53,7 @@ const thisarg=Object.create(null)
           //    e[1] instanceof ReactiveState
         )
       ),
-      children: children.flat(1 / 0),
+      children ,
       onevent: Object.fromEntries(
         /* 需要合并entries
         [
