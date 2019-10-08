@@ -21,13 +21,13 @@ export default [{
                             pragmaFrag: '\'\''
                         }
                     ],
-                        [
-      "babel-plugin-htm",
-      {
-        "tag": "html",
-        "pragma": "h"
-      }
-    ],
+                    [
+                        'babel-plugin-htm',
+                        {
+                            'tag': 'html',
+                            'pragma': 'h'
+                        }
+                    ],
                     '@babel/plugin-proposal-class-properties'
                 ],
                 presets: [[
