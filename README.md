@@ -367,6 +367,8 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
+组件卸载时，组件内创建的响应式状态会自动取消`watch`，自动给元素删除事件监听器`removeEventListener`
+
 ```js
 const mycom = createComponent(
   Object.assign(
