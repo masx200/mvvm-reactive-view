@@ -47,7 +47,16 @@ export default [
           "babel-plugin-htm",
           "@babel/plugin-proposal-class-properties"
         ],
-        presets: ["@babel/preset-env"]
+        presets: [[
+      "@babel/preset-env",
+      {
+corejs:3,
+useBuiltIns:"usage",
+        "targets": {
+          "esmodules": true
+        }
+      }
+    ]]
       }),
       json(),
       resolve(),
