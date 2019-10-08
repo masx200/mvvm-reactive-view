@@ -114,6 +114,7 @@ const thisarg=Object.create(null)
           ])
       )
     });
+thisarg  [Symbol.toStringTag] = "VirtualElement";
 return thisarg
 }
 
