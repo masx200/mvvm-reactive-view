@@ -13,7 +13,8 @@ export type Vdomchildren = Array<
 >;
 
 export default class Virtualdom<T extends Class | string | Function> {
-  /* get [Symbol.toStringTag]() {
+ [Symbol.toStringTag]="VirtualElement"
+ /* get [Symbol.toStringTag]() {
     return "VirtualElement";
   } */
   //   options: any |undefined
