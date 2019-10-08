@@ -424,6 +424,99 @@ setTimeout(() => {
 }, 5000);
 ```
 
+
+# 组件中逻辑提取和重用
+
+## 您可以通过简单地将其导出为函数来重用组件逻辑的任何部分
+
+## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
+
+### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
+
+### 例子：跟踪鼠标的位置
+
+```jsx
+function useMousePosition() {
+  const x = createState(0);
+  const y = createState(0);
+
+  function update(e) {
+    x.value = e.pageX;
+    y.value = e.pageY;
+  }
+
+  useMounted(() => {
+    window.addEventListener("mousemove", update);
+  });
+
+  useUnMounted(() => {
+    window.removeEventListener("mousemove", update);
+  });
+
+  return { x, y };
+}
+
+const mycomapp = createComponent(() => {
+  const { x, y } = useMousePosition();
+  const plus = computed(x, x => {
+    return x + 100;
+  });
+  const multi = computed([x, y], (x, y) => {
+    return x * y;
+  });
+  watch([x, y, multi, plus], (...args) => {
+    console.log(args.map(a => a.valueOf()));
+  });
+  return (
+    <div>
+      <h3> 鼠标位置</h3>
+      <h2>x:{x}</h2>
+
+      <h1>y:{y}</h1>
+      <p>x+100 是{plus}</p>
+      <p>x*y 是{multi}</p>
+    </div>
+  );
+});
+var vdom = createElement(mycomapp);
+
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
+## 另一种状态之间有依赖关系的用法,看起来是状态里面嵌套状态,但是实际上只是个语法糖
+
+```js
+/* 第一种用法 */
+const colortext = createState("red");
+const stylestate = createState({
+  display: "block",
+  width: "100%",
+  color: colortext
+});
+
+
+const vdom = html`
+  <hr />
+  <h1 style=${stylestate}>input color ${colortext}</h1>
+  <input _value=${colortext} />
+  <hr />
+`;
+
+console.log([vdom, colortext, stylestate]);
+watch([colortext, stylestate], (a, b) =>
+  console.log([a, b].map(a => a.valueOf()))
+);
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
+```js
+/* 
+第二种用法
+*/
+watch(colortext, state => (stylestate.color = state.valueOf()));
+
+```
+
 ## 不建议在组件局部样式 css 中使用`@import`加载外部样式表
 
 如果像如下这样,在组件局部样式 css 中引用外部 css,可能会导致页面闪动
@@ -669,97 +762,6 @@ const vdomobj = html`
 `;
 ```
 
-# 组件中逻辑提取和重用
-
-## 您可以通过简单地将其导出为函数来重用组件逻辑的任何部分
-
-## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
-
-### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
-
-### 例子：跟踪鼠标的位置
-
-```jsx
-function useMousePosition() {
-  const x = createState(0);
-  const y = createState(0);
-
-  function update(e) {
-    x.value = e.pageX;
-    y.value = e.pageY;
-  }
-
-  useMounted(() => {
-    window.addEventListener("mousemove", update);
-  });
-
-  useUnMounted(() => {
-    window.removeEventListener("mousemove", update);
-  });
-
-  return { x, y };
-}
-
-const mycomapp = createComponent(() => {
-  const { x, y } = useMousePosition();
-  const plus = computed(x, x => {
-    return x + 100;
-  });
-  const multi = computed([x, y], (x, y) => {
-    return x * y;
-  });
-  watch([x, y, multi, plus], (...args) => {
-    console.log(args.map(a => a.valueOf()));
-  });
-  return (
-    <div>
-      <h3> 鼠标位置</h3>
-      <h2>x:{x}</h2>
-
-      <h1>y:{y}</h1>
-      <p>x+100 是{plus}</p>
-      <p>x*y 是{multi}</p>
-    </div>
-  );
-});
-var vdom = createElement(mycomapp);
-
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
-```
-
-## 另一种状态之间有依赖关系的用法,看起来是状态里面嵌套状态,但是实际上只是个语法糖
-
-```js
-/* 第一种用法 */
-const colortext = createState("red");
-const stylestate = createState({
-  display: "block",
-  width: "100%",
-  color: colortext
-});
-
-
-const vdom = html`
-  <hr />
-  <h1 style=${stylestate}>input color ${colortext}</h1>
-  <input _value=${colortext} />
-  <hr />
-`;
-
-console.log([vdom, colortext, stylestate]);
-watch([colortext, stylestate], (a, b) =>
-  console.log([a, b].map(a => a.valueOf()))
-);
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
-```
-
-```js
-/* 
-第二种用法
-*/
-watch(colortext, state => (stylestate.color = state.valueOf()));
-
-```
 # API
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
