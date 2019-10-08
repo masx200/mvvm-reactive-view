@@ -12,7 +12,7 @@ export type Vdomchildren = Array<
 >;
 export function createVirtualElement
 <T extends Class | string | Function>
-(type: T="", props?: ElementAttrs={}, children?: Vdomchildren=[])
+(type: T="", props: ElementAttrs={}, children: Vdomchildren=[])
 :Virtualdom<T>{
     //对象浅拷贝
     props = { ...props };
