@@ -196,33 +196,33 @@ https://tc39.es/proposal-flatMap/
 
 还需要使用`babel-preset-env`包含`core-js@3` 和 `"@babel/plugin-proposal-class-properties"`
 
-```json
+```json 
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "corejs": 3
-      }
-    ]
-  ],
-  "plugins": [
-    "@babel/plugin-proposal-class-properties",
-    [
-      "babel-plugin-htm",
-      {
-        "tag": "html",
-        "pragma": "h"
-      }
+    'plugins': [
+        [
+            '@babel/plugin-transform-react-jsx',
+            {
+                'pragma': 'createElement',
+                'pragmaFrag': '\'\''
+            }
+        ],
+        [
+            'babel-plugin-htm',
+            {
+                'tag': 'html',
+                'pragma': 'h'
+            }
+        ],
+        '@babel/plugin-proposal-class-properties'
     ],
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "createElement",
-        "pragmaFrag": "''"
-      }
-    ]
-  ]
+    'presets': [[
+            '@babel/preset-env',
+            {
+                'corejs': 3,
+                'useBuiltIns': 'usage',
+                'targets': { 'esmodules': true }
+            }
+        ]]
 }
 ```
 
