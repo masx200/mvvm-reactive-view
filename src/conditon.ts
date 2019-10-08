@@ -6,13 +6,14 @@ export type VaildVDom =
   | ReactiveState<any>;
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { AttrChange } from "./attrchange";
-import createApp, { invalid_Virtualdom } from "./createApp";
+import { invalid_Virtualdom } from "./createApp";
 import createElement from "./createelement";
 import { setelehtml } from "./dom";
 // const readysymbol = Symbol("ready");
 import { onmounted, onunmounted } from "./elementonmountandunmount";
 import { isvalidvdom } from "./html";
 import { componentsymbol } from "./iscomponent";
+import mount from "./mount";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
 import { get } from "./reflect";
@@ -84,7 +85,7 @@ export default function(
         }
         //   mount(this[falseelesymbol], this);
         const elementtomount = this[falseelesymbol];
-        createApp(elementtomount, this);
+        mount(elementtomount, this);
         elementtomount.forEach(e => onmounted(e));
         if (this[trueelesymbol]) {
           this[trueelesymbol].forEach(e => onunmounted(e));
@@ -101,7 +102,7 @@ export default function(
         //
         //   mount(this[trueelesymbol], this);
         const elementtomount = this[trueelesymbol];
-        createApp(elementtomount, this);
+        mount(elementtomount, this);
         elementtomount.forEach(e => onmounted(e));
         if (this[falseelesymbol]) {
           this[falseelesymbol].forEach(e => onunmounted(e));

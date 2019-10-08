@@ -12,6 +12,11 @@ export default function MountElement<T extends Element>(
 ): T {
   if (isArray(vdom)) {
     vdom = vdom.flat(Infinity);
+    if (!vdom.length) {
+      //不允许空数组
+      console.error("Empty array not allowed");
+      throw new TypeError();
+    }
   }
   const el = container;
   if (!(el instanceof HTMLElement)) {
@@ -63,8 +68,8 @@ export default function MountElement<T extends Element>(
 }
 export function isNodeArray(arr: any[]): arr is Node[] {
   //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-//不允许空数组  
-return isArray(arr) && arr.length&&arr.every(a => a instanceof Node);
+  //不允许空数组
+  return !!(isArray(arr) && arr.length && arr.every(a => isNode(a)));
   //!array.map(e => e instanceof Node).includes(false);
 }
 export function isNode(a: any): a is Node {

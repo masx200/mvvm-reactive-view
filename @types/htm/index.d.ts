@@ -8,8 +8,8 @@ import Virtualdom from "../../src/virtualdom";
   export default htm;
 }
  */
-declare const htm: (
-  strings?: TemplateStringsArray,
-  ...values: any[]
-) => Virtualdom<any>;
+declare interface Htm {
+  (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
+}
+declare const htm: Htm;
 export default htm;

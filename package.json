@@ -1,5 +1,5 @@
 {
-    "version": "1.2.26",
+    "version": "1.2.27",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/@masx200"
     },
@@ -24,14 +24,13 @@
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {},
     "devDependencies": {
-"@types/lodash":"^4.14.142",
-        
         "@babel/core": "^7.6.0",
         "@babel/plugin-proposal-class-properties": "^7.5.5",
         "@babel/plugin-transform-react-jsx": "^7.3.0",
         "@babel/preset-env": "^7.6.0",
         "@masx200/deep-observe-agent-proxy": "https://gitee.com/masx200/deep-observe-agent-proxy.git",
         "@masx200/dom-element-attribute-agent-proxy": "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git",
+        "@types/lodash": "^4.14.142",
         "@typescript-eslint/eslint-plugin": "^2.2.0",
         "@typescript-eslint/parser": "^2.2.0",
         "babel-plugin-htm": "^2.2.0",
@@ -44,16 +43,13 @@
         "lodash": "^4.17.15",
         "node-sass": "^4.12.0",
         "prettier": "^1.18.2",
-        "rollup": "latest",
+        "rollup": "^1.23.1",
         "rollup-plugin-babel": "^4.3.3",
         "rollup-plugin-commonjs": "^10.1.0",
-    
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-postcss": "^2.0.3",
-       
         "rollup-plugin-terser": "^5.1.2",
-        
         "rollup-plugin-typescript2": "^0.24.3",
         "terser": "^4.3.1",
         "tslib": "^1.10.0",

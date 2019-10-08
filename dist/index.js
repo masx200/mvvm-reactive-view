@@ -1,4 +1,4 @@
-const {CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window} = Function("return this")();
+const {CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
@@ -302,9 +302,6 @@ function createanotherhtmldocument() {
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
-    constructor() {
-        super();
-    }
     set textContent(a) {
         return;
     }
@@ -382,7 +379,223 @@ function merge_entries(a) {
     return Object.entries(m).map(([k, v]) => [ k, Array.from(v) ]);
 }
 
-var _a, _b;
+function isObject(value) {
+    var type = typeof value;
+    return value != null && (type == "object" || type == "function");
+}
+
+var isObject_1 = isObject;
+
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+
+var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+
+var _freeGlobal = freeGlobal;
+
+var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+
+var root = _freeGlobal || freeSelf || Function("return this")();
+
+var _root = root;
+
+var now = function() {
+    return _root.Date.now();
+};
+
+var now_1 = now;
+
+var Symbol$1 = _root.Symbol;
+
+var _Symbol = Symbol$1;
+
+var objectProto = Object.prototype;
+
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+var nativeObjectToString = objectProto.toString;
+
+var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+
+function getRawTag(value) {
+    var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+    try {
+        value[symToStringTag] = undefined;
+        var unmasked = true;
+    } catch (e) {}
+    var result = nativeObjectToString.call(value);
+    if (unmasked) {
+        if (isOwn) {
+            value[symToStringTag] = tag;
+        } else {
+            delete value[symToStringTag];
+        }
+    }
+    return result;
+}
+
+var _getRawTag = getRawTag;
+
+var objectProto$1 = Object.prototype;
+
+var nativeObjectToString$1 = objectProto$1.toString;
+
+function objectToString(value) {
+    return nativeObjectToString$1.call(value);
+}
+
+var _objectToString = objectToString;
+
+var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
+
+var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
+
+function baseGetTag(value) {
+    if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+    }
+    return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
+}
+
+var _baseGetTag = baseGetTag;
+
+function isObjectLike(value) {
+    return value != null && typeof value == "object";
+}
+
+var isObjectLike_1 = isObjectLike;
+
+var symbolTag = "[object Symbol]";
+
+function isSymbol(value) {
+    return typeof value == "symbol" || isObjectLike_1(value) && _baseGetTag(value) == symbolTag;
+}
+
+var isSymbol_1 = isSymbol;
+
+var NAN = 0 / 0;
+
+var reTrim = /^\s+|\s+$/g;
+
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+var reIsBinary = /^0b[01]+$/i;
+
+var reIsOctal = /^0o[0-7]+$/i;
+
+var freeParseInt = parseInt;
+
+function toNumber(value) {
+    if (typeof value == "number") {
+        return value;
+    }
+    if (isSymbol_1(value)) {
+        return NAN;
+    }
+    if (isObject_1(value)) {
+        var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+        value = isObject_1(other) ? other + "" : other;
+    }
+    if (typeof value != "string") {
+        return value === 0 ? value : +value;
+    }
+    value = value.replace(reTrim, "");
+    var isBinary = reIsBinary.test(value);
+    return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+}
+
+var toNumber_1 = toNumber;
+
+var FUNC_ERROR_TEXT = "Expected a function";
+
+var nativeMax = Math.max, nativeMin = Math.min;
+
+function debounce(func, wait, options) {
+    var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+    if (typeof func != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    wait = toNumber_1(wait) || 0;
+    if (isObject_1(options)) {
+        leading = !!options.leading;
+        maxing = "maxWait" in options;
+        maxWait = maxing ? nativeMax(toNumber_1(options.maxWait) || 0, wait) : maxWait;
+        trailing = "trailing" in options ? !!options.trailing : trailing;
+    }
+    function invokeFunc(time) {
+        var args = lastArgs, thisArg = lastThis;
+        lastArgs = lastThis = undefined;
+        lastInvokeTime = time;
+        result = func.apply(thisArg, args);
+        return result;
+    }
+    function leadingEdge(time) {
+        lastInvokeTime = time;
+        timerId = setTimeout(timerExpired, wait);
+        return leading ? invokeFunc(time) : result;
+    }
+    function remainingWait(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+        return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+    }
+    function shouldInvoke(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+        return lastCallTime === undefined || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+    }
+    function timerExpired() {
+        var time = now_1();
+        if (shouldInvoke(time)) {
+            return trailingEdge(time);
+        }
+        timerId = setTimeout(timerExpired, remainingWait(time));
+    }
+    function trailingEdge(time) {
+        timerId = undefined;
+        if (trailing && lastArgs) {
+            return invokeFunc(time);
+        }
+        lastArgs = lastThis = undefined;
+        return result;
+    }
+    function cancel() {
+        if (timerId !== undefined) {
+            clearTimeout(timerId);
+        }
+        lastInvokeTime = 0;
+        lastArgs = lastCallTime = lastThis = timerId = undefined;
+    }
+    function flush() {
+        return timerId === undefined ? result : trailingEdge(now_1());
+    }
+    function debounced() {
+        var time = now_1(), isInvoking = shouldInvoke(time);
+        lastArgs = arguments;
+        lastThis = this;
+        lastCallTime = time;
+        if (isInvoking) {
+            if (timerId === undefined) {
+                return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+                clearTimeout(timerId);
+                timerId = setTimeout(timerExpired, wait);
+                return invokeFunc(lastCallTime);
+            }
+        }
+        if (timerId === undefined) {
+            timerId = setTimeout(timerExpired, wait);
+        }
+        return result;
+    }
+    debounced.cancel = cancel;
+    debounced.flush = flush;
+    return debounced;
+}
+
+var debounce_1 = debounce;
+
+var _a, _b, _c;
+
+const debouncedispatch = Symbol("debouncedispatch");
 
 const invalid_primitive_or_object_state = "invalid primitive or object state";
 
@@ -404,11 +617,18 @@ const addallistenerssymbol = Symbol("addallisteners");
 
 class ReactiveState {
     constructor(init) {
+        this[Symbol.toStringTag] = "ReactiveState";
         this[_a] = new EventTarget;
         this[_b] = [];
         this.valueOf = () => {
             return this.value;
         };
+        this[_c] = debounce_1(eventname => {
+            const name = eventname ? String(eventname) : "value";
+            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
+                detail: name
+            }));
+        });
         if (isprimitive(init) || isobject(init)) {
             Object.defineProperty(this, "value", {
                 value: init,
@@ -430,11 +650,8 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
-        const name = eventname ? String(eventname) : "value";
-        this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
-            detail: name
-        }));
+    [(_a = eventtargetsymbol, _b = memlisteners, _c = debouncedispatch, dispatchsymbol)](eventname) {
+        this[debouncedispatch](eventname);
     }
     [subscribesymbol](callback) {
         const name = "value";
@@ -451,16 +668,13 @@ class ReactiveState {
     }
 }
 
-Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
-    value: "ReactiveState"
-});
-
 function isVirtualdom(a) {
     return a instanceof Virtualdom;
 }
 
 class Virtualdom {
     constructor(type, props = {}, children = []) {
+        this[Symbol.toStringTag] = "VirtualElement";
         this.props = {};
         this.children = [];
         this.directives = {};
@@ -483,10 +697,6 @@ class Virtualdom {
         });
     }
 }
-
-defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
-    value: "VirtualElement"
-});
 
 function createElement(type, propsorchildren, ...children) {
     if (isarray(propsorchildren)) {
@@ -511,7 +721,7 @@ function createElement$1(type, props = {}, ...children) {
 }
 
 function html(...inargs) {
-    return htm.call(createElement, ...inargs);
+    return apply(htm, createElement, inargs);
 }
 
 function isvalidvdom(v) {
@@ -1038,6 +1248,10 @@ const invalid_Virtualdom = "invalid Virtualdom ";
 function MountElement(vdom, container) {
     if (isarray(vdom)) {
         vdom = vdom.flat(Infinity);
+        if (!vdom.length) {
+            console.error("Empty array not allowed");
+            throw new TypeError;
+        }
     }
     const el = container;
     if (!(el instanceof HTMLElement)) {
@@ -1063,8 +1277,8 @@ function MountElement(vdom, container) {
     return container;
 }
 
-function isNodeArray(array) {
-    return isarray(array) && array.every(a => a instanceof Node);
+function isNodeArray(arr) {
+    return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
 }
 
 function isNode(a) {
@@ -1619,11 +1833,11 @@ function onmounted(ele) {
             get(ele, bindstatesymbol).forEach(state => {
                 rewatch(state);
             });
-            if (has(ele, innerstatesymbol)) {
-                get(ele, innerstatesymbol).forEach(state => {
-                    rewatch(state);
-                });
-            }
+        }
+        if (has(ele, innerstatesymbol)) {
+            get(ele, innerstatesymbol).forEach(state => {
+                rewatch(state);
+            });
         }
         onmounted(getdomchildren(ele));
     }
@@ -1695,7 +1909,7 @@ function conditon(conditon, iftrue, iffalse) {
                     this[falseelesymbol] = render(this[falsevdomsymbol]);
                 }
                 const elementtomount = this[falseelesymbol];
-                MountElement(elementtomount, this);
+                mount(elementtomount, this);
                 elementtomount.forEach(e => onmounted(e));
                 if (this[trueelesymbol]) {
                     this[trueelesymbol].forEach(e => onunmounted(e));
@@ -1709,7 +1923,7 @@ function conditon(conditon, iftrue, iffalse) {
                     this[trueelesymbol] = render(this[truevdomsymbol]);
                 }
                 const elementtomount = this[trueelesymbol];
-                MountElement(elementtomount, this);
+                mount(elementtomount, this);
                 elementtomount.forEach(e => onmounted(e));
                 if (this[falseelesymbol]) {
                     this[falseelesymbol].forEach(e => onunmounted(e));

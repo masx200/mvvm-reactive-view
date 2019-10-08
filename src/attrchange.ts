@@ -3,9 +3,9 @@ import { isFunction } from "./util";
 import { get } from "./reflect";
 const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
-  constructor() {
+  /* constructor() {
     super();
-  }
+  } */
   set textContent(a: string) {
     return;
   }

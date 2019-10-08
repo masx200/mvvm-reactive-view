@@ -1,6 +1,6 @@
-import debounce from "lodash/debounce"
+import debounce from "lodash/debounce";
 
-const debouncedispatch=Symbol("debouncedispatch")
+const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
@@ -31,7 +31,7 @@ deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
-[Symbol.toStringTag]="ReactiveState"
+  [Symbol.toStringTag] = "ReactiveState";
 
   constructor(init?: T) {
     //super();
@@ -96,8 +96,8 @@ export default class ReactiveState<
       : "";
   }
 
-[debouncedispatch]=debounce((eventname)=>{
-const name = eventname ? String(eventname) : "value";
+  [debouncedispatch] = debounce((eventname?: string) => {
+    const name = eventname ? String(eventname) : "value";
     //  if (name !== "value") {
     //    this[eventtargetsymbol].dispatchEvent(
     //     new CustomEvent(name, { detail: name })
@@ -107,13 +107,11 @@ const name = eventname ? String(eventname) : "value";
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
     );
-
-})
+  });
   [dispatchsymbol](eventname?: string) {
-//添加防抖函数
+    //添加防抖函数
 
-this[debouncedispatch](eventname)
-    
+    this[debouncedispatch](eventname);
   }
   [subscribesymbol](callback: Function /*, eventname?: string*/) {
     // this[eventtargetsymbol].addEventListener("value", callback);
@@ -139,6 +137,6 @@ this[debouncedispatch](eventname)
       : void 0;
   }
 }
-Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
+/* Reflect.defineProperty(ReactiveState.prototype, Symbol.toStringTag, {
   value: "ReactiveState"
-});
+}); */

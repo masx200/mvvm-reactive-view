@@ -273,7 +273,7 @@
     function _nonIterableRest() {
         throw new TypeError("Invalid attempt to destructure non-iterable instance");
     }
-    var _Function = Function("return this")(), CustomEvent = _Function.CustomEvent, requestAnimationFrame$1 = _Function.requestAnimationFrame, URL = _Function.URL, Blob = _Function.Blob, Element = _Function.Element, Node = _Function.Node, String$1 = _Function.String, Array$1 = _Function.Array, document$1 = _Function.document, Object$1 = _Function.Object, Reflect$1 = _Function.Reflect, Proxy$1 = _Function.Proxy, _Symbol = _Function.Symbol, Boolean = _Function.Boolean, Promise$1 = _Function.Promise, Set$1 = _Function.Set, Math$1 = _Function.Math, Error = _Function.Error, TypeError$1 = _Function.TypeError, EventTarget = _Function.EventTarget, JSON = _Function.JSON, Map$1 = _Function.Map, window$1 = _Function.window;
+    var _Function = Function("return this")(), CustomEvent = _Function.CustomEvent, requestAnimationFrame$1 = _Function.requestAnimationFrame, URL = _Function.URL, Blob = _Function.Blob, Element = _Function.Element, Node = _Function.Node, String$1 = _Function.String, Array$1 = _Function.Array, document$1 = _Function.document, Object$1 = _Function.Object, Reflect$1 = _Function.Reflect, Proxy$1 = _Function.Proxy, _Symbol2 = _Function.Symbol, Boolean = _Function.Boolean, Promise$1 = _Function.Promise, Set$1 = _Function.Set, Math$1 = _Function.Math, Error = _Function.Error, TypeError$1 = _Function.TypeError, EventTarget = _Function.EventTarget, JSON = _Function.JSON, Map$1 = _Function.Map, window$1 = _Function.window, clearTimeout = _Function.clearTimeout, setTimeout$1 = _Function.setTimeout, parseInt = _Function.parseInt, globalThis = _Function.globalThis, self = _Function.self, global = _Function.global;
     function isprimitive(a) {
         return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
     }
@@ -533,7 +533,7 @@
         _inherits(AttrChange, _HTMLElement);
         function AttrChange() {
             _classCallCheck(this, AttrChange);
-            return _possibleConstructorReturn(this, _getPrototypeOf(AttrChange).call(this));
+            return _possibleConstructorReturn(this, _getPrototypeOf(AttrChange).apply(this, arguments));
         }
         _createClass(AttrChange, [ {
             key: "setAttribute",
@@ -594,26 +594,205 @@
             return [ k, Array$1.from(v) ];
         }));
     }
-    var _a, _b;
+    function isObject(value) {
+        var type = _typeof(value);
+        return value != null && (type == "object" || type == "function");
+    }
+    var isObject_1 = isObject;
+    var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window$1 !== "undefined" ? window$1 : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+    var freeGlobal = _typeof(commonjsGlobal) == "object" && commonjsGlobal && commonjsGlobal.Object === Object$1 && commonjsGlobal;
+    var _freeGlobal = freeGlobal;
+    var freeSelf = _typeof(self) == "object" && self && self.Object === Object$1 && self;
+    var root = _freeGlobal || freeSelf || Function("return this")();
+    var _root = root;
+    var now = function now() {
+        return _root.Date.now();
+    };
+    var now_1 = now;
+    var Symbol$1 = _root.Symbol;
+    var _Symbol = Symbol$1;
+    var objectProto = Object$1.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var nativeObjectToString = objectProto.toString;
+    var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+    function getRawTag(value) {
+        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+        try {
+            value[symToStringTag] = undefined;
+            var unmasked = true;
+        } catch (e) {}
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+            if (isOwn) {
+                value[symToStringTag] = tag;
+            } else {
+                delete value[symToStringTag];
+            }
+        }
+        return result;
+    }
+    var _getRawTag = getRawTag;
+    var objectProto$1 = Object$1.prototype;
+    var nativeObjectToString$1 = objectProto$1.toString;
+    function objectToString(value) {
+        return nativeObjectToString$1.call(value);
+    }
+    var _objectToString = objectToString;
+    var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
+    var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
+    function baseGetTag(value) {
+        if (value == null) {
+            return value === undefined ? undefinedTag : nullTag;
+        }
+        return symToStringTag$1 && symToStringTag$1 in Object$1(value) ? _getRawTag(value) : _objectToString(value);
+    }
+    var _baseGetTag = baseGetTag;
+    function isObjectLike(value) {
+        return value != null && _typeof(value) == "object";
+    }
+    var isObjectLike_1 = isObjectLike;
+    var symbolTag = "[object Symbol]";
+    function isSymbol(value) {
+        return _typeof(value) == "symbol" || isObjectLike_1(value) && _baseGetTag(value) == symbolTag;
+    }
+    var isSymbol_1 = isSymbol;
+    var NAN = 0 / 0;
+    var reTrim = /^\s+|\s+$/g;
+    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+    var reIsBinary = /^0b[01]+$/i;
+    var reIsOctal = /^0o[0-7]+$/i;
+    var freeParseInt = parseInt;
+    function toNumber(value) {
+        if (typeof value == "number") {
+            return value;
+        }
+        if (isSymbol_1(value)) {
+            return NAN;
+        }
+        if (isObject_1(value)) {
+            var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+            value = isObject_1(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+            return value === 0 ? value : +value;
+        }
+        value = value.replace(reTrim, "");
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+    }
+    var toNumber_1 = toNumber;
+    var FUNC_ERROR_TEXT = "Expected a function";
+    var nativeMax = Math$1.max, nativeMin = Math$1.min;
+    function debounce(func, wait, options) {
+        var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+        if (typeof func != "function") {
+            throw new TypeError$1(FUNC_ERROR_TEXT);
+        }
+        wait = toNumber_1(wait) || 0;
+        if (isObject_1(options)) {
+            leading = !!options.leading;
+            maxing = "maxWait" in options;
+            maxWait = maxing ? nativeMax(toNumber_1(options.maxWait) || 0, wait) : maxWait;
+            trailing = "trailing" in options ? !!options.trailing : trailing;
+        }
+        function invokeFunc(time) {
+            var args = lastArgs, thisArg = lastThis;
+            lastArgs = lastThis = undefined;
+            lastInvokeTime = time;
+            result = func.apply(thisArg, args);
+            return result;
+        }
+        function leadingEdge(time) {
+            lastInvokeTime = time;
+            timerId = setTimeout$1(timerExpired, wait);
+            return leading ? invokeFunc(time) : result;
+        }
+        function remainingWait(time) {
+            var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+            return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+        }
+        function shouldInvoke(time) {
+            var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+            return lastCallTime === undefined || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+        }
+        function timerExpired() {
+            var time = now_1();
+            if (shouldInvoke(time)) {
+                return trailingEdge(time);
+            }
+            timerId = setTimeout$1(timerExpired, remainingWait(time));
+        }
+        function trailingEdge(time) {
+            timerId = undefined;
+            if (trailing && lastArgs) {
+                return invokeFunc(time);
+            }
+            lastArgs = lastThis = undefined;
+            return result;
+        }
+        function cancel() {
+            if (timerId !== undefined) {
+                clearTimeout(timerId);
+            }
+            lastInvokeTime = 0;
+            lastArgs = lastCallTime = lastThis = timerId = undefined;
+        }
+        function flush() {
+            return timerId === undefined ? result : trailingEdge(now_1());
+        }
+        function debounced() {
+            var time = now_1(), isInvoking = shouldInvoke(time);
+            lastArgs = arguments;
+            lastThis = this;
+            lastCallTime = time;
+            if (isInvoking) {
+                if (timerId === undefined) {
+                    return leadingEdge(lastCallTime);
+                }
+                if (maxing) {
+                    clearTimeout(timerId);
+                    timerId = setTimeout$1(timerExpired, wait);
+                    return invokeFunc(lastCallTime);
+                }
+            }
+            if (timerId === undefined) {
+                timerId = setTimeout$1(timerExpired, wait);
+            }
+            return result;
+        }
+        debounced.cancel = cancel;
+        debounced.flush = flush;
+        return debounced;
+    }
+    var debounce_1 = debounce;
+    var _a, _b, _c;
+    var debouncedispatch = _Symbol2("debouncedispatch");
     var invalid_primitive_or_object_state = "invalid primitive or object state";
     function isReactiveState(a) {
         return a instanceof ReactiveState;
     }
-    var eventtargetsymbol = _Symbol("eventtatget");
-    var memlisteners = _Symbol("memlisteners");
-    var dispatchsymbol = _Symbol("dispatch");
-    var subscribesymbol = _Symbol("subscribe");
-    var removeallistenerssymbol = _Symbol("removeallisteners");
-    var addallistenerssymbol = _Symbol("addallisteners");
+    var eventtargetsymbol = _Symbol2("eventtatget");
+    var memlisteners = _Symbol2("memlisteners");
+    var dispatchsymbol = _Symbol2("dispatch");
+    var subscribesymbol = _Symbol2("subscribe");
+    var removeallistenerssymbol = _Symbol2("removeallisteners");
+    var addallistenerssymbol = _Symbol2("addallisteners");
     var ReactiveState = function() {
         function ReactiveState(init) {
             var _this2 = this;
             _classCallCheck(this, ReactiveState);
+            this[_Symbol2.toStringTag] = "ReactiveState";
             this[_a] = new EventTarget;
             this[_b] = [];
             this.valueOf = function() {
                 return _this2.value;
             };
+            this[_c] = debounce_1((function(eventname) {
+                var name = eventname ? String$1(eventname) : "value";
+                _this2[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
+                    detail: name
+                }));
+            }));
             if (isprimitive(init) || isobject(init)) {
                 Object$1.defineProperty(this, "value", {
                     value: init,
@@ -642,12 +821,9 @@
                 return isprimitive(value) ? String$1(value) : isSet(value) ? JSON.stringify(_toConsumableArray(value)) : isobject(value) ? JSON.stringify(value) : "";
             }
         }, {
-            key: (_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol),
+            key: (_a = eventtargetsymbol, _b = memlisteners, _c = debouncedispatch, dispatchsymbol),
             value: function value(eventname) {
-                var name = eventname ? String$1(eventname) : "value";
-                this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
-                    detail: name
-                }));
+                this[debouncedispatch](eventname);
             }
         }, {
             key: subscribesymbol,
@@ -668,7 +844,7 @@
                 }));
             }
         }, {
-            key: _Symbol.toPrimitive,
+            key: _Symbol2.toPrimitive,
             value: function value() {
                 var value = this.valueOf();
                 return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
@@ -676,9 +852,6 @@
         } ]);
         return ReactiveState;
     }();
-    Reflect$1.defineProperty(ReactiveState.prototype, _Symbol.toStringTag, {
-        value: "ReactiveState"
-    });
     function isVirtualdom(a) {
         return a instanceof Virtualdom;
     }
@@ -686,6 +859,7 @@
         var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
         _classCallCheck(this, Virtualdom);
+        this[_Symbol2.toStringTag] = "VirtualElement";
         this.props = {};
         this.children = [];
         this.directives = {};
@@ -733,9 +907,6 @@
             })))
         });
     };
-    defineProperty(Virtualdom.prototype, _Symbol.toStringTag, {
-        value: "VirtualElement"
-    });
     function createElement(type, propsorchildren) {
         for (var _len = arguments.length, children = new Array$1(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
             children[_key - 2] = arguments[_key];
@@ -817,8 +988,8 @@
         return outputentrie ? outputentrie[0] : undefined;
     }
     window$1.CustomElementRegistry = _get(getPrototypeOf(window$1.customElements), "constructor");
-    var elementset = _Symbol["for"]("elementset");
-    var elementmap = _Symbol["for"]("elementmap");
+    var elementset = _Symbol2["for"]("elementset");
+    var elementmap = _Symbol2["for"]("elementmap");
     var CustomElementRegistry = window$1.CustomElementRegistry;
     var customElements$1$1 = window$1.customElements;
     if (!_has(customElements$1$1, elementset)) {
@@ -871,9 +1042,9 @@
             }
         }
     };
-    _set(customElements$1$1, _Symbol.iterator, (function() {
+    _set(customElements$1$1, _Symbol2.iterator, (function() {
         var entries = Object$1.entries(customElements$1$1[elementmap]);
-        return entries[_Symbol.iterator].call(entries);
+        return entries[_Symbol2.iterator].call(entries);
     }));
     var charactorlist = Array$1(26).fill(undefined).map((function(v, i) {
         return 97 + i;
@@ -1077,8 +1248,8 @@
             }
         };
     }
-    var componentsymbol = _Symbol("component");
-    var eventlistenerssymbol = _Symbol("eventlisteners");
+    var componentsymbol = _Symbol2("component");
+    var eventlistenerssymbol = _Symbol2("eventlisteners");
     function onevent(element, eventname, callback) {
         firstaddlisteners(element, eventname, toArray(callback));
     }
@@ -1113,8 +1284,8 @@
             }));
         }
     }
-    var bindstatesymbol = _Symbol("bindstate");
-    var virtualdomsymbol = _Symbol("virtualelement");
+    var bindstatesymbol = _Symbol2("bindstate");
+    var virtualdomsymbol = _Symbol2("virtualelement");
     function throwinvalideletype(type) {
         console.error(type);
         console.error("invalid element type!");
@@ -1243,6 +1414,10 @@
     function MountElement(vdom, container) {
         if (isarray(vdom)) {
             vdom = vdom.flat(Infinity);
+            if (!vdom.length) {
+                console.error("\u4e0d\u5141\u8bb8\u7a7a\u6570\u7ec4");
+                throw new TypeError$1;
+            }
         }
         var el = container;
         if (!(el instanceof HTMLElement)) {
@@ -1267,10 +1442,10 @@
         }
         return container;
     }
-    function isNodeArray(array) {
-        return isarray(array) && array.every((function(a) {
-            return a instanceof Node;
-        }));
+    function isNodeArray(arr) {
+        return !!(isarray(arr) && arr.length && arr.every((function(a) {
+            return isNode(a);
+        })));
     }
     function isNode(a) {
         return a instanceof Node;
@@ -1675,18 +1850,18 @@
             }
         });
     }
-    var readysymbol = _Symbol("ready");
+    var readysymbol = _Symbol2("ready");
     function setimmediate(fun) {
         return Promise$1.resolve().then((function() {
             return fun();
         }));
     }
-    var innerstatesymbol = _Symbol("innerstate");
-    var attributessymbol = _Symbol("attributes");
-    var elementsymbol = _Symbol("innerelement");
-    var vdomsymbol = _Symbol("innervdom");
-    var mountedsymbol = _Symbol("mounted");
-    var unmountedsymbol = _Symbol("unmounted");
+    var innerstatesymbol = _Symbol2("innerstate");
+    var attributessymbol = _Symbol2("attributes");
+    var elementsymbol = _Symbol2("innerelement");
+    var vdomsymbol = _Symbol2("innervdom");
+    var mountedsymbol = _Symbol2("mounted");
+    var unmountedsymbol = _Symbol2("unmounted");
     function createComponent(custfun) {
         var _a, _b, _c, _d;
         if (isfunction(custfun)) {
@@ -1818,11 +1993,11 @@
                 _get(ele, bindstatesymbol).forEach((function(state) {
                     rewatch(state);
                 }));
-                if (_has(ele, innerstatesymbol)) {
-                    _get(ele, innerstatesymbol).forEach((function(state) {
-                        rewatch(state);
-                    }));
-                }
+            }
+            if (_has(ele, innerstatesymbol)) {
+                _get(ele, innerstatesymbol).forEach((function(state) {
+                    rewatch(state);
+                }));
             }
             onmounted(getdomchildren(ele));
         }
@@ -1845,12 +2020,12 @@
         }
     }
     var invalid_ReactiveState = "invalid ReactiveState";
-    var truevdomsymbol = _Symbol("truevdom");
-    var falsevdomsymbol = _Symbol("falsevdom");
-    var trueelesymbol = _Symbol("trueele");
-    var falseelesymbol = _Symbol("falseele");
-    var handletrue = _Symbol("handletrue");
-    var handlefalse = _Symbol("handlefalse");
+    var truevdomsymbol = _Symbol2("truevdom");
+    var falsevdomsymbol = _Symbol2("falsevdom");
+    var trueelesymbol = _Symbol2("trueele");
+    var falseelesymbol = _Symbol2("falseele");
+    var handletrue = _Symbol2("handletrue");
+    var handlefalse = _Symbol2("handlefalse");
     function conditon(conditon, iftrue, iffalse) {
         var _a, _b;
         if (!(isReactiveState(conditon) || isboolean(conditon))) {
@@ -1891,7 +2066,7 @@
                             this[falseelesymbol] = render(this[falsevdomsymbol]);
                         }
                         var elementtomount = this[falseelesymbol];
-                        MountElement(elementtomount, this);
+                        mount(elementtomount, this);
                         elementtomount.forEach((function(e) {
                             return onmounted(e);
                         }));
@@ -1911,7 +2086,7 @@
                             this[trueelesymbol] = render(this[truevdomsymbol]);
                         }
                         var elementtomount = this[trueelesymbol];
-                        MountElement(elementtomount, this);
+                        mount(elementtomount, this);
                         elementtomount.forEach((function(e) {
                             return onmounted(e);
                         }));

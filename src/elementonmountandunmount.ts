@@ -33,19 +33,19 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         .forEach((state: ReactiveState<any>) => {
           rewatch(state);
         });
-}
-      if (
-        has(ele, innerstatesymbol)
-        //   ele[innerstatesymbol]
-      ) {
-        (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
-          (state: ReactiveState<any>) => {
-            rewatch(state);
-          }
-        );
-      }
-      // readdlisteners(ele);
-    
+    }
+    if (
+      has(ele, innerstatesymbol)
+      //   ele[innerstatesymbol]
+    ) {
+      (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
+        (state: ReactiveState<any>) => {
+          rewatch(state);
+        }
+      );
+    }
+    // readdlisteners(ele);
+
     onmounted(getdomchildren(ele));
   }
 

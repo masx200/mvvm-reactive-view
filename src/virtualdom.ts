@@ -3,7 +3,6 @@ import { Class } from "./customclass";
 // import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import ReactiveState, { isReactiveState } from "./reactivestate";
-import { defineProperty } from "./reflect";
 export function isVirtualdom(a: any): a is Virtualdom<any> {
   return a instanceof Virtualdom;
 }
@@ -13,8 +12,8 @@ export type Vdomchildren = Array<
 >;
 
 export default class Virtualdom<T extends Class | string | Function> {
- [Symbol.toStringTag]="VirtualElement"
- /* get [Symbol.toStringTag]() {
+  [Symbol.toStringTag] = "VirtualElement";
+  /* get [Symbol.toStringTag]() {
     return "VirtualElement";
   } */
   //   options: any |undefined
@@ -137,6 +136,7 @@ value
 */
   }
 }
-defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
+/* defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
   value: "VirtualElement"
 });
+ */

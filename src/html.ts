@@ -1,5 +1,4 @@
-import {apply}from "./reflect"
-
+import { apply } from "./reflect";
 
 // declare const htm: (
 //   strings?: TemplateStringsArray,
@@ -12,9 +11,9 @@ import {apply}from "./reflect"
   ) => Virtualdom<any>;
   export default htm;
 } */
-interface HTM {
+/* interface HTM {
   (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
-}
+} */
 import htm from "htm";
 import { VaildVDom } from "./conditon";
 // import htm from "../types/htm";
@@ -26,13 +25,13 @@ import Virtualdom, { isVirtualdom } from "./virtualdom";
 
 // const html = htm.bind(h);
 function html(
-strings?: TemplateStringsArray,
+  strings?: TemplateStringsArray,
   ...values: any[]
-): Virtualdom<any>
+): Virtualdom<any>;
 function html(...inargs: any[]): Virtualdom<any> {
- // return (htm as HTM).call(h, ...inargs);
+  // return (htm as HTM).call(h, ...inargs);
 
-return apply(htm as HTM,h,inargs)
+  return apply(htm /* as HTM */, h, inargs);
 }
 
 /* 如果出现未闭合标签会产生错误的vdom */
@@ -53,7 +52,8 @@ export function isvalidvdom(v: any): v is VaildVDom {
     return flag;*/
     //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
     //不允许空数组
-return v.length&&v.every(e => isvalidvdom(e));
+    /* children可能为空数组 */
+    return /* !! */ /* v.length */ /* && */ v.every(e => isvalidvdom(e));
   } else if (
     isVirtualdom(v)
     // v instanceof Virtualdom
