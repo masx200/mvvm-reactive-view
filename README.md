@@ -317,6 +317,23 @@ document.body.appendChild(
 );
 ```
 
+### 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
+
+## 可以给组件设置默认属性,设置组件初始化函数的`defaultProps`属性即可
+
+组件初始化函数需要返回一个`虚拟DOM`
+
+最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
+
+## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
+
+在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
+
+组件卸载时，组件内创建的响应式状态会自动取消`watch`，自动给元素删除事件监听器`removeEventListener`
+
+
 ## 父子组件传数据
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数
@@ -353,21 +370,6 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 与`React hooks`不同，该组件初始化函数仅被调用一次
 
-在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
-
-## 可以给组件设置默认属性,设置组件初始化函数的`defaultProps`属性即可
-
-组件初始化函数需要返回一个`虚拟DOM`
-
-最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
-
-## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
-
-在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
-
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
-
-组件卸载时，组件内创建的响应式状态会自动取消`watch`，自动给元素删除事件监听器`removeEventListener`
 
 ```js
 const mycom = createComponent(
