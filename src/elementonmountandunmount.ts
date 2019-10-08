@@ -33,7 +33,7 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         .forEach((state: ReactiveState<any>) => {
           rewatch(state);
         });
-
+}
       if (
         has(ele, innerstatesymbol)
         //   ele[innerstatesymbol]
@@ -45,7 +45,7 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         );
       }
       // readdlisteners(ele);
-    }
+    
     onmounted(getdomchildren(ele));
   }
 
