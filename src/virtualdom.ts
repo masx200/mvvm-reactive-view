@@ -130,7 +130,7 @@ return thisarg
     return "VirtualElement";
   } */
   //   options: any |undefined
-  element: undefined | Element | Node;
+/*  element: undefined | Element | Node;
   type: T | undefined;
   props: ElementAttrs = {};
   children: Vdomchildren = [];
@@ -152,7 +152,7 @@ value
 
 ]);
 */
-    const propsentriesNOTevents = propsentries.filter(
+ /*   const propsentriesNOTevents = propsentries.filter(
       ([key]) => !(key.startsWith("@") || key.startsWith("on"))
     );
     const 字母开头的entries = propsentriesNOTevents.filter(([key]) =>
@@ -164,7 +164,7 @@ value
       bindattr: Object.fromEntries(
         /*   propsentriesNOTevents
           .filter(([key]) => 字母大小写.test(key[0])) */
-        字母开头的entries.filter(
+    /*    字母开头的entries.filter(
           e => isReactiveState(e[1])
           // e[1] instanceof ReactiveState
         )
@@ -172,7 +172,7 @@ value
       props: Object.fromEntries(
         /*   propsentriesNOTevents
           .filter(([key]) => 字母大小写.test(key[0])) */
-        字母开头的entries.filter(
+      /*  字母开头的entries.filter(
           e => !isReactiveState(e[1])
           //    e[1] instanceof ReactiveState
         )
@@ -200,7 +200,7 @@ value
         [["value",["f","f","f","f"]]]
         
         */
-        merge_entries([
+   /*     merge_entries([
           ...propsentries
             .filter(([key]) => /\@/.test(key[0]))
             .map(([key, value]) => [
@@ -247,7 +247,7 @@ value
       configurable: true
     });
 */
-  }
+/*  }
 }*/
 /* defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
   value: "VirtualElement"
