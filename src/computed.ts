@@ -2,7 +2,7 @@
   
  (...ReactiveState<T>[])=>any
 } */
-interface CallbackReactiveState2<
+interface CallbackReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
   (...args: T[]): any;
@@ -34,7 +34,7 @@ export default function<
   T extends string | number | boolean | undefined | object | bigint
 >(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState2<T>
+  callback: CallbackReactiveState<T>
 ): ReactiveState<any> {
   if (
     !(
