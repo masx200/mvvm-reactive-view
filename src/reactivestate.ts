@@ -130,8 +130,9 @@ if(this[callbackmap].get(callback)){
 eventlistener=this[callbackmap].get(callback)
 
 }else{
+//自动解包
 eventlistener=
-      (event: Event) => callback.call(undefined, this, get(event, "detail"))
+      (event: Event) => callback.call(undefined, this.valueOf(), get(event, "detail"))
   
 this[callbackmap].set(callback,eventlistener)
 }
