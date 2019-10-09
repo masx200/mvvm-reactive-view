@@ -1,6 +1,6 @@
 export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { AttrChange } from "./attrchange";
+import { AttrChange, attributeChangedCallback } from "./attrchange";
 import {
   closectx,
   getMounted,
@@ -11,7 +11,7 @@ import {
 } from "./context-mounted-unmounted-";
 import { /* createApp, */ invalid_Virtualdom } from "./createApp";
 import createstate from "./createstate";
-import { Class, Custom } from "./customclass";
+import { Custom } from "./customclass";
 import { seteletext } from "./dom";
 import { onmounted, onunmounted } from "./elementonmountandunmount";
 import { isvalidvdom } from "./html";
@@ -22,15 +22,15 @@ import { componentsymbol } from "./iscomponent";
 import mount from "./mount";
 import {
   /* parsecsstext,
-    prefixcssrules,
-    cssrulestocsstext, */
+        prefixcssrules,
+        cssrulestocsstext, */
   //   savestyleblob,
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
   registercssprefix,
   /*  loadlinkstyle,
-    createlinkstylesheet */
+        createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
 } from "./parsecss";
@@ -50,28 +50,17 @@ const vdomsymbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
-export function createComponent(custfun: Custom): Class {
+export function createComponent(custfun: Custom): Function {
   if (isfunction(custfun)) {
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
-    return class Component extends AttrChange {
-      [innerstatesymbol]: Array<ReactiveState<any>>;
-      static [componentsymbol] = componentsymbol;
-      static css = isstring(css) && css ? css : undefined;
-      [readysymbol] = false;
-      [mountedsymbol]: Array<Function>;
-      [unmountedsymbol]: Array<Function>;
-      static defaultProps = isobject(defaultProps)
-        ? JSON.parse(JSON.stringify(defaultProps))
-        : undefined;
-      [attributessymbol]: { [s: string]: ReactiveState<any> } | object = {};
-      [elementsymbol]: Array<Node>;
-      [vdomsymbol]: Array<
-        Virtualdom<any> | ReactiveState<any> | string | number
-      >;
+    class Component extends AttrChange {
+      // new (propsjson?: object | undefined, children?: any[] | undefined): HTMLElement
+
+      //   constructor(...args: any[]);
       constructor(
         propsjson: object = {},
-        children: any[] = [] /* , options?: any */
+        children: any[] = [] /* , options?: any */ //   : HTMLElement;
       ) {
         super();
 
@@ -83,9 +72,9 @@ export function createComponent(custfun: Custom): Class {
             registercssprefix(css, prefix);
             /* 把css文本先解析成cssom ,然后添加前缀,然后转成字符串,生成blob,再生成link-stylesheet,添加*/
             /* const cssomold = parsecsstext(css);
-            const cssomnew = prefixcssrules(cssomold, prefix);
-            //   console.log([css, prefix, cssomold, cssomnew]);
-            const cssnewtext = cssrulestocsstext(cssomnew); */
+                const cssomnew = prefixcssrules(cssomold, prefix);
+                //   console.log([css, prefix, cssomold, cssomnew]);
+                const cssnewtext = cssrulestocsstext(cssomnew); */
             // const cssnewtext = transformcsstext(css, prefix);
             // savestyleblob(prefix, cssnewtext);
             // console.log(cssnewtext, componentsstylesheet);
@@ -149,8 +138,8 @@ export function createComponent(custfun: Custom): Class {
         }
         if (isvalidvdom(possiblyvirtualdom)) {
           const thisvdomsymbol /* isArray(possiblyvirtualdom)
-            ? possiblyvirtualdom
-            : [possiblyvirtualdom]; */ = toArray(
+                ? possiblyvirtualdom
+                : [possiblyvirtualdom]; */ = toArray(
             possiblyvirtualdom
           );
           //
@@ -169,6 +158,23 @@ export function createComponent(custfun: Custom): Class {
         //   this[mountedsymbol] = getMounted();
         //   this[unmountedsymbol] = getUnMounted();
       }
+      prototype!: HTMLElement;
+      defaultProps?: { [key: string]: any } | undefined;
+      css?: string | undefined;
+      [innerstatesymbol]: Array<ReactiveState<any>>;
+      static [componentsymbol] = componentsymbol;
+      static css = isstring(css) && css ? css : undefined;
+      [readysymbol] = false;
+      [mountedsymbol]: Array<Function>;
+      [unmountedsymbol]: Array<Function>;
+      static defaultProps = isobject(defaultProps)
+        ? JSON.parse(JSON.stringify(defaultProps))
+        : undefined;
+      [attributessymbol]: { [s: string]: ReactiveState<any> } | object = {};
+      [elementsymbol]: Array<Node>;
+      [vdomsymbol]: Array<
+        Virtualdom<any> | ReactiveState<any> | string | number
+      >;
 
       connectedCallback() {
         if (!this[elementsymbol]) {
@@ -229,7 +235,7 @@ export function createComponent(custfun: Custom): Class {
         });
         onunmounted(this);
       }
-      attributeChangedCallback(
+      [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);
@@ -248,7 +254,9 @@ export function createComponent(custfun: Custom): Class {
           //   this[attributessymbol][name][dispatchsymbol]();
         }
       }
-    };
+    }
+
+    return Component;
   } else {
     console.error(custfun);
     console.error(invalid_Function);

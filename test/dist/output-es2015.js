@@ -359,7 +359,7 @@
             return super.innerText;
         }
         set innerText(_a) {}
-        [attributeChangedCallback]() {}
+        [attributeChangedCallback](_name, _oldValue, _newValue) {}
         setAttribute(qualifiedName, value) {
             var callback = get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
@@ -1708,13 +1708,12 @@
                     });
                     onunmounted(this);
                 }
-                attributeChangedCallback(name) {
+                [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
                     if (get(this, attributessymbol)[name]) {
                         set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                     }
                 }
-            }, _a = componentsymbol, _b = readysymbol, _c = attributessymbol, _d[_a] = componentsymbol, 
-            _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
+            }, _d[_a] = componentsymbol, _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
             _d;
         } else {
             console.error(custfun);
@@ -1839,7 +1838,7 @@
             disconnectedCallback() {
                 onunmounted(this);
             }
-            attributeChangedCallback(name) {
+            [attributeChangedCallback](name) {
                 if (this[readysymbol]) {
                     if (name === "value") {
                         var attrs = createeleattragentreadwrite(this);

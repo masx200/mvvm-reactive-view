@@ -1,8 +1,15 @@
 import { getAttribute, removeAttribute, setAttribute } from "./dom";
-import { isFunction } from "./util";
+import { noop } from "./noop";
 import { get } from "./reflect";
-const attributeChangedCallback = "attributeChangedCallback";
+import { isFunction } from "./util";
+export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
+  prototype!: HTMLElement;
+  /*  defaultProps?: { [key: string]: any } | undefined;
+  css?: string | undefined; */
+  /* constructor() {
+    super();
+  } */
   get textContent() {
     return String(super.textContent || "");
   }
@@ -21,7 +28,12 @@ export class AttrChange extends HTMLElement {
   set innerText(_a: string) {
     // return;
   }
-  [attributeChangedCallback]() {
+  [attributeChangedCallback](
+    name: string
+
+    /* _name?: any, _oldValue?: any, _newValue?: any */
+  ) {
+    noop(name);
     //
   }
   /* constructor() {

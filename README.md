@@ -865,7 +865,7 @@ type VaildVDom =
   | number
   | Array<Virtualdom<any> | string | number | ReactiveState<any>>
   | ReactiveState<any>;
-interface Class {
+interface Class extends HTMLElement {
   new (propsjson?: object, children?: any[]): HTMLElement;
   prototype: HTMLElement;
   defaultProps?: { [key: string]: any };

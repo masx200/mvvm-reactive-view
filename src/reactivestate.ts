@@ -31,7 +31,7 @@ deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
-  [Symbol.toStringTag] = "ReactiveState";
+  readonly [Symbol.toStringTag] = "ReactiveState";
 
   constructor(init?: T) {
     //super();

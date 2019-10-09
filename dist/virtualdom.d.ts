@@ -7,8 +7,8 @@ export declare type Vdomchildren = Array<Virtualdom<any> | string | ReactiveStat
 export { createVirtualElement };
 declare function createVirtualElement<T extends Class | string | Function>(type: T, props?: ElementAttrs, children?: Vdomchildren): Virtualdom<T>;
 interface Virtualdom<T extends Class | string | Function> {
-    [isvirtualelement]: symbol;
-    [Symbol.toStringTag]: string;
+    readonly [isvirtualelement]: symbol;
+    readonly [Symbol.toStringTag]: string;
     element: undefined | Element | Node;
     type: T;
     props: ElementAttrs;

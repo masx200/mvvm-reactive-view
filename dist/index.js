@@ -299,6 +299,8 @@ function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
 }
 
+const noop = new Function;
+
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
@@ -314,7 +316,9 @@ class AttrChange extends HTMLElement {
         return super.innerText;
     }
     set innerText(_a) {}
-    [attributeChangedCallback]() {}
+    [attributeChangedCallback](name) {
+        noop(name);
+    }
     setAttribute(qualifiedName, value) {
         const callback = get(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);
@@ -1740,11 +1744,11 @@ const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
 function createComponent(custfun) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     if (isfunction(custfun)) {
         const defaultProps = get(custfun, "defaultProps");
         const css = get(custfun, "css");
-        return _d = class Component extends AttrChange {
+        class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_b] = false;
@@ -1822,14 +1826,16 @@ function createComponent(custfun) {
                 });
                 onunmounted(this);
             }
-            attributeChangedCallback(name) {
+            [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
                 if (get(this, attributessymbol)[name]) {
                     set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                 }
             }
-        }, _a = componentsymbol, _b = readysymbol, _c = attributessymbol, _d[_a] = componentsymbol, 
-        _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
-        _d;
+        }
+        Component[_a] = componentsymbol;
+        Component.css = isstring(css) && css ? css : undefined;
+        Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
+        return Component;
     } else {
         console.error(custfun);
         console.error(invalid_Function);
@@ -1963,7 +1969,7 @@ function conditon(conditon, iftrue, iffalse) {
         disconnectedCallback() {
             onunmounted(this);
         }
-        attributeChangedCallback(name) {
+        [attributeChangedCallback](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);

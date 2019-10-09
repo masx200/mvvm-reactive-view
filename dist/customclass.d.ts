@@ -1,6 +1,6 @@
 import { VaildVDom } from "./conditon";
-export interface Class {
-    new (propsjson?: object, children?: any[]): HTMLElement;
+export interface Class extends HTMLElement {
+    new (...args: any[]): HTMLElement;
     prototype: HTMLElement;
     defaultProps?: {
         [key: string]: any;

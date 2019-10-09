@@ -10,7 +10,7 @@ export declare const subscribesymbol: unique symbol;
 export declare const removeallistenerssymbol: unique symbol;
 export declare const addallistenerssymbol: unique symbol;
 export default class ReactiveState<T extends string | number | boolean | undefined | object | bigint> {
-    [Symbol.toStringTag]: string;
+    readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
     [addallistenerssymbol](): void;
     value: T | undefined;

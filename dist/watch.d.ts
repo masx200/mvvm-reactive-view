@@ -1,3 +1,4 @@
+export declare type CancelWatch = () => void;
 interface CallbackReactiveState1<T extends string | number | boolean | undefined | object | bigint> {
     (...args: ReactiveState<T>[]): void;
 }

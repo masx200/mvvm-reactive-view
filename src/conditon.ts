@@ -1,11 +1,5 @@
-export type VaildVDom =
-  | Virtualdom<any>
-  | string
-  | number
-  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
-  | ReactiveState<any>;
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import { AttrChange } from "./attrchange";
+import { AttrChange, attributeChangedCallback } from "./attrchange";
 import { invalid_Virtualdom } from "./createApp";
 import createElement from "./createelement";
 import { setelehtml } from "./dom";
@@ -22,6 +16,12 @@ import render from "./rendervdomtoreal";
 import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
 import Virtualdom from "./virtualdom";
+export type VaildVDom =
+  | Virtualdom<any>
+  | string
+  | number
+  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
+  | ReactiveState<any>;
 // import { readysymbol } from "./createComponent";
 export const invalid_ReactiveState = "invalid ReactiveState";
 const truevdomsymbol = Symbol("truevdom");
@@ -35,7 +35,7 @@ export default function(
   conditon: ReactiveState<any> | boolean,
   iftrue?: VaildVDom,
   iffalse?: VaildVDom
-): Virtualdom<any> {
+): Virtualdom<Function> {
   if (!(isReactiveState(conditon) || isboolean(conditon))) {
     console.error(conditon);
     console.error(invalid_ReactiveState);
@@ -50,9 +50,12 @@ export default function(
   });
   const options = { true: iftrue, false: iffalse };
   class Condition extends AttrChange {
+    prototype!: HTMLElement;
+    defaultProps?: { [key: string]: any } | undefined;
+    css?: string | undefined;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
-    constructor(/* propsjson?: object, children?: any[], options: object = {} */) {
+    constructor() /* propsjson?: object, children?: any[], options: object = {} */ {
       super();
       // if(){}
       const optionstrue = get(options, "true");
@@ -131,7 +134,7 @@ export default function(
       onunmounted(this);
     }
 
-    attributeChangedCallback(
+    [attributeChangedCallback](
       name: string /* , oldValue: any, newValue: any */
     ) {
       if (this[readysymbol]) {
