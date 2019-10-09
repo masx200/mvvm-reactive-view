@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
 import typescriptplugin from 'rollup-plugin-typescript2';
-const banner = `const {CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map,window,clearTimeout,setTimeout,parseInt,globalThis ,self ,global }=Function('return this')();`;
+const banner = `const {RegExp,CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map,window,clearTimeout,setTimeout,parseInt,globalThis ,self ,global }=Function('return this')();`;
 const myterserplugin = terser({
     sourcemap: true,
     toplevel: true,
