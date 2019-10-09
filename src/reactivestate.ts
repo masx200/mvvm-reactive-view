@@ -124,7 +124,7 @@ callback: Function
  /*, eventname?: string*/
 ) {
 
-let eventlistener
+let eventlistener:EventListener
 
 if(this[callbackmap].get(callback)){
 eventlistener=this[callbackmap].get(callback)
