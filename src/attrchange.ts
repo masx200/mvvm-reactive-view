@@ -4,7 +4,8 @@ import { get } from "./reflect";
 import { isFunction } from "./util";
 export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
-  prototype!: HTMLElement;
+[attributeChangedCallback]?:(name?:string) =>void
+// prototype!: HTMLElement;
   /*  defaultProps?: { [key: string]: any } | undefined;
   css?: string | undefined; */
   /* constructor() {
@@ -28,14 +29,14 @@ export class AttrChange extends HTMLElement {
   set innerText(_a: string) {
     // return;
   }
-  [attributeChangedCallback](
-    name: string
+ // [attributeChangedCallback](
+ //   name: string
 
     /* _name?: any, _oldValue?: any, _newValue?: any */
-  ) {
-    noop(name);
+ // ) {
+ //   noop(name);
     //
-  }
+//  }
   /* constructor() {
     super();
   } */
