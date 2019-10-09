@@ -50,9 +50,9 @@ export default function(
   });
   const options = { true: iftrue, false: iffalse };
   class Condition extends AttrChange {
-    prototype!: HTMLElement;
-    defaultProps?: { [key: string]: any } | undefined;
-    css?: string | undefined;
+   // prototype!: HTMLElement;
+   // defaultProps?: { [key: string]: any } | undefined;
+   // css?: string | undefined;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     constructor() /* propsjson?: object, children?: any[], options: object = {} */ {
