@@ -37,7 +37,8 @@ export function watch<
       });
     });
   } else if (isReactiveState(state)) {
-    watchsingle(state, callback);
+  //  watchsingle(state, callback);
+return watch(toArray(state))
   } else {
     console.error(state);
     console.error(callback);
