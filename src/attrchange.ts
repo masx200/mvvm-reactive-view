@@ -4,7 +4,7 @@ import { get } from "./reflect";
 import { isFunction } from "./util";
 export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
-[attributeChangedCallback]?:(name?:string) =>void
+async[attributeChangedCallback]?:(name?:string) =>void
 // prototype!: HTMLElement;
   /*  defaultProps?: { [key: string]: any } | undefined;
   css?: string | undefined; */
