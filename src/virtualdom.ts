@@ -56,7 +56,7 @@ interface Virtualdom<T extends Class | string | Function>
 {[isvirtualelement]:isvirtualelement
 [Symbol.toStringTag]: string;
     element: undefined | Element | Node;
-    type: T | undefined;
+    type: T ;
     props: ElementAttrs;
     children: Vdomchildren;
     directives: {[key:string]:any};
