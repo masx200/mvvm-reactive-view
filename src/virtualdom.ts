@@ -52,7 +52,22 @@ export function createVirtualElement
     return thisarg;
 
 }
-
+interface Virtualdom<T extends Class | string | Function>
+{[isvirtualelement]:isvirtualelement
+[Symbol.toStringTag]: string;
+    element: undefined | Element | Node;
+    type: T | undefined;
+    props: ElementAttrs;
+    children: Vdomchildren;
+    directives: {[key:string]:any};
+    onevent: {
+        [key: string]: Array<EventListener>;
+    };
+    bindattr: {
+        [key: string]: ReactiveState<any>;
+    };
+}
+export default Virtualdom
 /*export default class Virtualdom<T extends Class | string | Function> {
   [Symbol.toStringTag] = "VirtualElement";
   /* get [Symbol.toStringTag]() {
