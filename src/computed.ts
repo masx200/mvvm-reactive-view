@@ -1,7 +1,4 @@
-/* export interface CallbackReactiveState<T extends string | number | boolean | undefined | object|bigint > {
-  
- (...ReactiveState<T>[])=>any
-} */
+
 interface CallbackReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
@@ -76,10 +73,11 @@ function Arraycomputed<
   T extends string | number | boolean | undefined | object | bigint
 >(
   state: ReactiveState<T>[],
-  callback: CallbackReactiveState2<T>
+  callback: CallbackReactiveState<T>
 ): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
+//自动解包
     const value = apply(callback, undefined, state.map(st => st.valueOf()));
     // callback(...state.map(st => st.valueOf()));
     return isReactiveState(value) ? value.value : value;
