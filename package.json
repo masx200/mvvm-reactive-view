@@ -37,7 +37,7 @@
         "babel-preset-env": "^1.7.0",
         "core-js": "^3.2.1",
         "core-js-pure": "^3.2.1",
-        "eslint": "^6.4.0",
+        "eslint": "^6.5.1",
         "eslint-config-prettier": "^6.3.0",
         "htm": "^2.2.1",
         "lodash": "^4.17.15",
