@@ -112,7 +112,7 @@ export default function(
         }
       }
     }
-    connectedCallback() {
+  async  connectedCallback() {
       if (!this[readysymbol]) {
         // createApp(this[elementsymbol], this);
         this[readysymbol] = true;
@@ -130,11 +130,11 @@ export default function(
       onmounted(this);
       //
     }
-    disconnectedCallback() {
+  async  disconnectedCallback() {
       onunmounted(this);
     }
 
-    [attributeChangedCallback](
+  async  [attributeChangedCallback](
       name: string /* , oldValue: any, newValue: any */
     ) {
       if (this[readysymbol]) {
