@@ -972,22 +972,25 @@ interface Ref<T> {
 export default function createRef<T>(value: T): Ref<T>;
 ```
 
-## 虚拟 `dom` `Virtualdom`类
+## `虚拟 dom` `Virtualdom`接口
 
 ```ts
-class Virtualdom<T extends Class | string | Function> {
+interface Virtualdom<T extends Class | string | Function> {
+  [isvirtualelement]: symbol;
+  [Symbol.toStringTag]: string;
   element: undefined | Element | Node;
-  type: T | undefined;
+  type: T;
   props: ElementAttrs;
   children: Vdomchildren;
-  directives: object;
+  directives: {
+    [key: string]: any;
+  };
   onevent: {
     [key: string]: Array<EventListener>;
   };
   bindattr: {
     [key: string]: ReactiveState<any>;
   };
-  constructor(type: T, props?: ElementAttrs, children?: Vdomchildren);
 }
 ```
 
