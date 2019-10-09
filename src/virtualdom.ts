@@ -124,7 +124,7 @@ thisarg[isvirtualelement]=isvirtualelement
 return thisarg
 }
 
-export default class Virtualdom<T extends Class | string | Function> {
+/*export default class Virtualdom<T extends Class | string | Function> {
   [Symbol.toStringTag] = "VirtualElement";
   /* get [Symbol.toStringTag]() {
     return "VirtualElement";
@@ -248,7 +248,7 @@ value
     });
 */
   }
-}
+}*/
 /* defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
   value: "VirtualElement"
 });
