@@ -42,7 +42,7 @@ export function createVirtualElement
                 [value].flat(1 / 0)
             ])
         ])),
-        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0]) || key[0].startsWith('_')).map(([key, value]) => [
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => new RegExp("*").test(key[0]) || key[0].startsWith('_')).map(([key, value]) => [
             key.slice(1).toLowerCase().trim(),
             value
         ]))
