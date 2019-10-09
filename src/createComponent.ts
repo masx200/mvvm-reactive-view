@@ -236,7 +236,7 @@ export function createComponent(custfun: Custom): Function {
       
   onunmounted(this);
       }
-      [attributeChangedCallback](
+   async   [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);
