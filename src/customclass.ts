@@ -1,6 +1,6 @@
 import { VaildVDom } from "./conditon";
+import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./virtualdom";
-import { ElementAttrs } from "./createelement";
 
 export interface Class extends HTMLElement {
   new (...args: any[]): HTMLElement;
@@ -10,7 +10,10 @@ export interface Class extends HTMLElement {
   css?: string;
 }
 export interface Custom {
-  (props?: ElementAttrs, children?: Vdomchildren): VaildVDom;
+  (
+    props?: { [key: string]: ReactiveState<any> },
+    children?: Vdomchildren
+  ): VaildVDom;
   defaultProps?: { [key: string]: any };
   css?: string;
 }
