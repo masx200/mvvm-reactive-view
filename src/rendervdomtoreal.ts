@@ -190,7 +190,7 @@ export default function render(
       /* typeof type !== "function" */
     ) {
       /* 如果自己创造的组件就不加children, */
-      if (!type[componentsymbol]) {
+      if (componentsymbol!==type[componentsymbol]) {
         if (element) {
           mount(
             vdom.children.map(e => {
