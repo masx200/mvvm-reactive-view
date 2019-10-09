@@ -1,5 +1,5 @@
 import{get,has}from"./reflect"
-
+import{isobject}from"./util"
 import { ElementAttrs } from "./createelement";
 import { Class } from "./customclass";
 // import { Class } from "./rendervdomtoreal";
@@ -9,7 +9,7 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
   return a instanceof Virtualdom;
 }*/
 export function isVirtualdom(a: any): a is Virtualdom<any> {
-  return has(a,isvirtualelement)&&get(a,isvirtualelement)===isvirtualelement ;
+  return isobject(a)&&has(a,isvirtualelement)&&get(a,isvirtualelement)===isvirtualelement ;
 }
 const isvirtualelement=Symbol("isvirtualelement")
 export type Vdomchildren = Array<
