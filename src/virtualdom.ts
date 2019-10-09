@@ -229,8 +229,8 @@ value
       //指令支持以"*"开头和"_"开头
       directives: Object.fromEntries(
         propsentriesNOTevents
-          .filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_"))
-          .map(([key, value]) => [
+        /*  .filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_"))
+        /*  .map(([key, value]) => [
             //指令也变成小写
             key
               .slice(1)
