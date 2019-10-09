@@ -50,7 +50,7 @@ export default function(
   });
   const options = { true: iftrue, false: iffalse };
   class Condition extends AttrChange {
-    static [componentsymbol] = true;
+    static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     constructor(/* propsjson?: object, children?: any[], options: object = {} */) {
       super();
