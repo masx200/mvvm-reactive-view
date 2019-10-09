@@ -1,3 +1,4 @@
+import { Class } from "./customclass";
 import ReactiveState from "./reactivestate";
 import { apply } from "./reflect";
 import { isarray, isfunction, isplainobject, isstring } from "./util";
@@ -82,7 +83,7 @@ function createElement<T extends Function | string>(
   ...children: T
 ): T; */
 
-function createElement<T extends Function | string>(
+function createElement<T extends Function | string|Class>(
   type: T,
   props: ElementAttrs = {},
   ...children: Vdomchildren
