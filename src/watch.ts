@@ -1,8 +1,8 @@
 export type CancelWatch = () => void;
-interface CallbackReactiveState1<
+interface CallbackReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
-  (...args: ReactiveState<T>[]): void;
+  (...args: T[]): void;
 }
 // import { CallbackReactiveState } from "./computed";
 import { invalid_ReactiveState } from "./conditon";
@@ -22,7 +22,7 @@ export function watch<
 >(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
 
-  callback: CallbackReactiveState1<T>
+  callback: CallbackReactiveState<T>
 ) {
   if (isarray(state)) {
     const statearray = toArray(state);
