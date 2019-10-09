@@ -15,12 +15,12 @@ import render from "./rendervdomtoreal";
 // import mount from "./mount";
 import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
-import Virtualdom from "./virtualdom";
+import Virtualdom, { Vdomchildren } from "./virtualdom";
 export type VaildVDom =
   | Virtualdom<any>
   | string
   | number
-  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
+  | Vdomchildren
   | ReactiveState<any>;
 // import { readysymbol } from "./createComponent";
 export const invalid_ReactiveState = "invalid ReactiveState";

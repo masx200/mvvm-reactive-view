@@ -1,4 +1,6 @@
 import { VaildVDom } from "./conditon";
+import { Vdomchildren } from "./virtualdom";
+import { ElementAttrs } from "./createelement";
 
 export interface Class extends HTMLElement {
   new (...args: any[]): HTMLElement;
@@ -8,7 +10,7 @@ export interface Class extends HTMLElement {
   css?: string;
 }
 export interface Custom {
-  (props?: object, children?: Array<any>): VaildVDom;
+  (props?: ElementAttrs, children?: Vdomchildren): VaildVDom;
   defaultProps?: { [key: string]: any };
   css?: string;
 }
