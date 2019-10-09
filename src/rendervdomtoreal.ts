@@ -13,7 +13,7 @@ import {
   mathnamespace,
   svgnamespace
 } from "./dom";
-import { componentsymbol } from "./iscomponent";
+import { iscomponent } from "./iscomponent";
 import { isconnected } from "./isconnected";
 import mount from "./mount";
 import onevent /*  eventlistenerssymbol  */ from "./onevent";
@@ -190,7 +190,10 @@ export default function render(
       /* typeof type !== "function" */
     ) {
       /* 如果自己创造的组件就不加children, */
-      if (componentsymbol !== type[componentsymbol]) {
+      if (
+        !iscomponent(type)
+        // componentsymbol !== type[componentsymbol]
+      ) {
         if (element) {
           mount(
             vdom.children.map(e => {

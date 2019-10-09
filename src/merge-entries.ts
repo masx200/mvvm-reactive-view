@@ -19,5 +19,5 @@ export function merge_entries(a: any[] /* Array<[any, Array<any>]> */): any[] {
       m[key].add(v);
     });
   });
-  return Object.entries(m).map(([k, v]) => [k, Array.from(v)]);
+  return Object.entries(m).map(([k, v]) => [k, [...v]]);
 }

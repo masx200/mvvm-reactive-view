@@ -28,7 +28,6 @@ cnpm install --save  https://github.com/masx200/mvvm-reactive-view.git
 yarn add https://github.com/masx200/mvvm-reactive-view.git
 ```
 
-
 # 从 `cdn` 获取模块
 
 ## 开发模式
@@ -38,7 +37,6 @@ https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.js
 ## 生产模式
 
 https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
-
 
 ### 关于 `Proxy`
 
@@ -60,7 +58,10 @@ https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/
 # `webcomponent` `custom-elements` `polyfill`
 
 ```html
-<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js" type="module"></script>
+<script
+  src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"
+  type="module"
+></script>
 ```
 
 或者
@@ -70,8 +71,6 @@ import "@masx200/mvvm-reactive-view/polyfill/custom-elements.min.js";
 ```
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
-
-
 
 # 使用 `npm` 模块
 
@@ -196,35 +195,36 @@ https://tc39.es/proposal-flatMap/
 
 还需要使用`babel-preset-env`包含`core-js@3` 和 `"@babel/plugin-proposal-class-properties"`
 
-```json 
+```json
 {
-    "plugins": [
-        [
-            "@babel/plugin-transform-react-jsx",
-            {
-                "pragma": "createElement",
-                "pragmaFrag": "\"\""
-            }
-        ],
-        [
-            "babel-plugin-htm",
-            {
-                "tag": "html",
-                "pragma": "h"
-            }
-        ],
-        "@babel/plugin-proposal-class-properties"
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "createElement",
+        "pragmaFrag": "\"\""
+      }
     ],
-    "presets": [[
-            "@babel/preset-env",
-            {
-                "corejs": 3,
-                "useBuiltIns": "usage",
-                "targets": { "esmodules": true }
-            }
-        ]]
+    [
+      "babel-plugin-htm",
+      {
+        "tag": "html",
+        "pragma": "h"
+      }
+    ],
+    "@babel/plugin-proposal-class-properties"
+  ],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "corejs": 3,
+        // "useBuiltIns": "usage",
+        "targets": { "esmodules": true }
+      }
+    ]
+  ]
 }
-
 ```
 
 # 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
@@ -334,7 +334,6 @@ document.body.appendChild(
 
 组件卸载时，组件内创建的响应式状态会自动取消`watch`，自动给元素删除事件监听器`removeEventListener`
 
-
 ## 父子组件传数据
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数
@@ -370,7 +369,6 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。
 
 与`React hooks`不同，该组件初始化函数仅被调用一次
-
 
 ```js
 const mycom = createComponent(
@@ -424,7 +422,6 @@ setTimeout(() => {
   vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
 }, 5000);
 ```
-
 
 # 组件中逻辑提取和重用
 
@@ -495,7 +492,6 @@ const stylestate = createState({
   color: colortext
 });
 
-
 const vdom = html`
   <hr />
   <h1 style=${stylestate}>input color ${colortext}</h1>
@@ -515,7 +511,6 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 第二种用法
 */
 watch(colortext, state => (stylestate.color = state.valueOf()));
-
 ```
 
 ## 不建议在组件局部样式 css 中使用`@import`加载外部样式表

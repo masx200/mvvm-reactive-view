@@ -63,7 +63,7 @@ export default function(
       [...propsorchildren, ...children].flat(1 / 0)
     ); */
   } else {
-    return apply(createElement, undefined, Array.from(arguments)); // createElement(...arguments);
+    return apply(createElement, undefined, arguments); // createElement(...arguments);
   }
 }
 function createElement<T extends Vdomchildren>(
@@ -84,7 +84,7 @@ function createElement<T extends Function | string>(
 ): T; */
 
 function createElement<T extends Function | string | Class>(
-  type: T = "",
+  type: T,
   props: ElementAttrs = {},
   ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
@@ -92,9 +92,10 @@ function createElement<T extends Function | string | Class>(
   // if(isarray()){}
   /* add fragment element */
   //   console.log(type, props, children);
-  let typenormalized = isstring(type) || isfunction(type) ? type : "";
+  let typenormalized: "" | Function | string =
+    isstring(type) || isfunction(type) ? type : "";
   const propsnormalized = isplainobject(props) ? props : {};
-  const childrennormalized = children
+  const childrennormalized: Vdomchildren = children
     .flat(Infinity)
     .map(a => (a === 0 ? "0" : a))
     .filter(a => !!a);
@@ -125,10 +126,14 @@ function createElement<T extends Function | string | Class>(
       childrennormalized
     ) as Virtualdom<any>;
 */
-    return createVirtualElement(
+    return apply(createVirtualElement, undefined, [
       typenormalized,
       propsnormalized,
       childrennormalized
-    );
+    ]) as Virtualdom<T>;
+
+    /*  createVirtualElement(
+     
+    ); */
   }
 }

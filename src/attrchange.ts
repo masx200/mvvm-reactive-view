@@ -3,18 +3,31 @@ import { isFunction } from "./util";
 import { get } from "./reflect";
 const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
+  get textContent() {
+    return String(super.textContent || "");
+  }
+  set textContent(_a: string) {
+    // return;
+  }
+  get innerHTML() {
+    return super.innerHTML;
+  }
+  set innerHTML(_a: string) {
+    // return;
+  }
+  get innerText() {
+    return super.innerText;
+  }
+  set innerText(_a: string) {
+    // return;
+  }
+  [attributeChangedCallback]() {
+    //
+  }
   /* constructor() {
     super();
   } */
-  set textContent(a: string) {
-    return;
-  }
-  set innerHTML(a: string) {
-    return;
-  }
-  set innerText(a: string) {
-    return;
-  }
+
   //禁止设置innerhtml，innertext，textcontent
   /* disconnectedCallback() {
   console.log('Custom square element removed from page.');

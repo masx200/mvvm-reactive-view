@@ -36,6 +36,9 @@ function html(...inargs: any[]): Virtualdom<any> {
 
 /* 如果出现未闭合标签会产生错误的vdom */
 export function isvalidvdom(v: any): v is VaildVDom {
+  if (isstring(v)) {
+    return true;
+  }
   if (isnumber(v)) {
     return true;
   }
@@ -58,19 +61,18 @@ export function isvalidvdom(v: any): v is VaildVDom {
     isVirtualdom(v)
     // v instanceof Virtualdom
   ) {
-    if (isvalidvdom(v.children)) {
+    return isvalidvdom(v.children);
+    /*  if (isvalidvdom(v.children)) {
       return true;
-    }
+    } */
   } else if (
     isReactiveState(v)
     //  v instanceof ReactiveState
   ) {
     return true;
-  } else {
-    if (isstring(v)) {
-      return true;
-    }
   }
+  /*  else {
+  } */
   return flag;
 }
 export default function(

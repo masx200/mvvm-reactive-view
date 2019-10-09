@@ -3,7 +3,7 @@ import { Class } from "./customclass";
 //// import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import ReactiveState, { isReactiveState } from "./reactivestate";
-import { get, has } from "./reflect";
+import { get, has, defineProperty } from "./reflect";
 import { isobject } from "./util";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
@@ -25,7 +25,7 @@ function createVirtualElement<T extends Class | string | Function>(
   props: ElementAttrs = {},
   children: Vdomchildren = []
 ): Virtualdom<T> {
-  props = { ...props };
+  props = Object.assign({}, props);
   children = children.flat(1 / 0);
   const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
   const propsentries = Object.entries(props);
@@ -35,7 +35,19 @@ function createVirtualElement<T extends Class | string | Function>(
   const 字母开头的entries = propsentriesNOTevents.filter(([key]) =>
     字母大小写.test(key[0])
   );
-  const thisarg = Object.create(null);
+  const thisarg: Virtualdom<T> = Object.create(null);
+  ["onevent", "element"].forEach(key => {
+    defineProperty(thisarg, key, {
+      //   enumerable: false,
+      writable: true
+    });
+  });
+  ["type", "props", "children", "directives", "bindattr"].forEach(key => {
+    defineProperty(thisarg, key, {
+      enumerable: true,
+      writable: true
+    });
+  });
   Object.assign(thisarg, {
     type,
     bindattr: Object.fromEntries(
@@ -69,7 +81,7 @@ function createVirtualElement<T extends Class | string | Function>(
     ),
     directives: Object.fromEntries(
       propsentriesNOTevents
-        .filter(([key]) => key[0] === "*" || key[0].startsWith("_"))
+        .filter(([key]) => key[0] === "*" || key[0] === "_")
         .map(([key, value]) => [
           key
             .slice(1)
@@ -79,10 +91,13 @@ function createVirtualElement<T extends Class | string | Function>(
         ])
     )
   });
-  thisarg[Symbol.toStringTag] = "VirtualElement";
-  thisarg[isvirtualelement] = isvirtualelement;
+  defineProperty(thisarg, Symbol.toStringTag, { value: "VirtualElement" });
+  //   thisarg[Symbol.toStringTag] = "VirtualElement";
+  //   thisarg[isvirtualelement] = isvirtualelement;
+  defineProperty(thisarg, isvirtualelement, { value: isvirtualelement });
   return thisarg;
 }
+// JSON.stringify
 interface Virtualdom<T extends Class | string | Function> {
   [isvirtualelement]: symbol;
   [Symbol.toStringTag]: string;

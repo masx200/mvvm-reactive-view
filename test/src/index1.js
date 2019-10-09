@@ -279,12 +279,14 @@ console.log(
     .map(() => RandomDefine(class extends HTMLElement {}))
 );
 */
+class Bqqqqqqqqq extends HTMLElement {}
+class Aqqqqqqqqq extends HTMLElement {}
 console.log(customElements, [...customElements]);
-customElements.define(
-  "qqqqqqqqqq-----a",
-  class Bqqqqqqqqq extends HTMLElement {}
-);
-customElements.define(
-  "qqqqqqqqqq-----a",
-  class Aqqqqqqqqq extends HTMLElement {}
+customElements.define("qqqqqqqqqq-----a", Bqqqqqqqqq);
+customElements.define("qqqqqqqqqq-----a", Aqqqqqqqqq);
+document.body.appendChild(
+  MountElement(
+    [h(Bqqqqqqqqq), createElement(Aqqqqqqqqq)],
+    document.createElement("div")
+  )
 );

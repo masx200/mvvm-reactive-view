@@ -302,15 +302,19 @@ function createanotherhtmldocument() {
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
-    set textContent(a) {
-        return;
+    get textContent() {
+        return String(super.textContent || "");
     }
-    set innerHTML(a) {
-        return;
+    set textContent(_a) {}
+    get innerHTML() {
+        return super.innerHTML;
     }
-    set innerText(a) {
-        return;
+    set innerHTML(_a) {}
+    get innerText() {
+        return super.innerText;
     }
+    set innerText(_a) {}
+    [attributeChangedCallback]() {}
     setAttribute(qualifiedName, value) {
         const callback = get(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);
@@ -376,7 +380,7 @@ function merge_entries(a) {
             m[key].add(v);
         });
     });
-    return Object.entries(m).map(([k, v]) => [ k, Array.from(v) ]);
+    return Object.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
 }
 
 function isObject(value) {
@@ -669,40 +673,52 @@ class ReactiveState {
 }
 
 function isVirtualdom(a) {
-    return a instanceof Virtualdom;
+    return isobject(a) && has(a, isvirtualelement) && get(a, isvirtualelement) === isvirtualelement;
 }
 
-class Virtualdom {
-    constructor(type, props = {}, children = []) {
-        this[Symbol.toStringTag] = "VirtualElement";
-        this.props = {};
-        this.children = [];
-        this.directives = {};
-        this.onevent = {};
-        this.bindattr = {};
-        props = {
-            ...props
-        };
-        const \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z\u4e00-\u9fa5]/;
-        const propsentries = Object.entries(props);
-        const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
-        const \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(([key]) => \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]));
-        Object.assign(this, {
-            type: type,
-            bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
-            props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
-            children: children.flat(1 / 0),
-            onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-            directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => /\*/.test(key[0]) || key[0].startsWith("_")).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+const isvirtualelement = Symbol("isvirtualelement");
+
+function createVirtualElement(type, props = {}, children = []) {
+    props = Object.assign({}, props);
+    children = children.flat(1 / 0);
+    const \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z\u4e00-\u9fa5]/;
+    const propsentries = Object.entries(props);
+    const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
+    const \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(([key]) => \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]));
+    const thisarg = Object.create(null);
+    [ "onevent", "element" ].forEach(key => {
+        defineProperty(thisarg, key, {
+            writable: true
         });
-    }
+    });
+    [ "type", "props", "children", "directives", "bindattr" ].forEach(key => {
+        defineProperty(thisarg, key, {
+            enumerable: true,
+            writable: true
+        });
+    });
+    Object.assign(thisarg, {
+        type: type,
+        bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
+        props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
+        children: children,
+        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+    });
+    defineProperty(thisarg, Symbol.toStringTag, {
+        value: "VirtualElement"
+    });
+    defineProperty(thisarg, isvirtualelement, {
+        value: isvirtualelement
+    });
+    return thisarg;
 }
 
 function createElement(type, propsorchildren, ...children) {
     if (isarray(propsorchildren)) {
         return apply(createElement$1, undefined, [ type, undefined, [ ...propsorchildren, ...children ].flat(1 / 0) ]);
     } else {
-        return apply(createElement$1, undefined, Array.from(arguments));
+        return apply(createElement$1, undefined, arguments);
     }
 }
 
@@ -716,7 +732,7 @@ function createElement$1(type, props = {}, ...children) {
     if ("" === typenormalized) {
         return childrennormalized;
     } else {
-        return new Virtualdom(typenormalized, propsnormalized, childrennormalized);
+        return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
     }
 }
 
@@ -725,6 +741,9 @@ function html(...inargs) {
 }
 
 function isvalidvdom(v) {
+    if (isstring(v)) {
+        return true;
+    }
     if (isnumber(v)) {
         return true;
     }
@@ -732,20 +751,14 @@ function isvalidvdom(v) {
     if (isarray(v)) {
         return v.every(e => isvalidvdom(e));
     } else if (isVirtualdom(v)) {
-        if (isvalidvdom(v.children)) {
-            return true;
-        }
+        return isvalidvdom(v.children);
     } else if (isReactiveState(v)) {
         return true;
-    } else {
-        if (isstring(v)) {
-            return true;
-        }
     }
     return flag;
 }
 
-function assertvalidvirtualdom(...args) {
+function html$1(...args) {
     const vdom = html(...args);
     if (isvalidvdom(vdom)) {
         return vdom;
@@ -1076,6 +1089,10 @@ function createhtmlandtextdirective(seteletext, errorname) {
 
 const componentsymbol = Symbol("component");
 
+function iscomponent(a) {
+    return isfunction(a) && has(a, componentsymbol) && get(a, componentsymbol) === componentsymbol;
+}
+
 const eventlistenerssymbol = Symbol("eventlisteners");
 
 function onevent(element, eventname, callback) {
@@ -1183,7 +1200,7 @@ function render(vdom, namespace) {
             handleprops(element, vdom);
         }
         if (type && (isfunction(type) || isstring(type))) {
-            if (!type[componentsymbol]) {
+            if (!iscomponent(type)) {
                 if (element) {
                     mount(vdom.children.map(e => {
                         if (type === "svg" && isVirtualdom(e)) {
@@ -1810,7 +1827,7 @@ function createComponent(custfun) {
                     set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                 }
             }
-        }, _a = componentsymbol, _b = readysymbol, _c = attributessymbol, _d[_a] = true, 
+        }, _a = componentsymbol, _b = readysymbol, _c = attributessymbol, _d[_a] = componentsymbol, 
         _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
         _d;
     } else {
@@ -1960,7 +1977,7 @@ function conditon(conditon, iftrue, iffalse) {
             }
         }
     }
-    Condition[_a] = true;
+    Condition[_a] = componentsymbol;
     const vdom = createElement(Condition, {
         value: conditon
     });
@@ -2108,5 +2125,5 @@ extenddirectives({
     }
 });
 
-export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as directives, createElement as h, assertvalidvirtualdom as html, render, useMounted, useUnMounted, watch };
+export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as directives, createElement as h, html$1 as html, render, useMounted, useUnMounted, watch };
 //# sourceMappingURL=index.js.map
