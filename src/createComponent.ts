@@ -158,9 +158,9 @@ export function createComponent(custfun: Custom): Function {
         //   this[mountedsymbol] = getMounted();
         //   this[unmountedsymbol] = getUnMounted();
       }
-      prototype!: HTMLElement;
-      defaultProps?: { [key: string]: any } | undefined;
-      css?: string | undefined;
+   //   prototype!: HTMLElement;
+   //   defaultProps?: { [key: string]: any } | undefined;
+    //  css?: string | undefined;
       [innerstatesymbol]: Array<ReactiveState<any>>;
       static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
@@ -176,7 +176,7 @@ export function createComponent(custfun: Custom): Function {
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
 
-      connectedCallback() {
+   async   connectedCallback() {
         if (!this[elementsymbol]) {
           this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
         }
@@ -229,11 +229,12 @@ export function createComponent(custfun: Custom): Function {
         });
         onmounted(this);
       }
-      disconnectedCallback() {
+    async  disconnectedCallback() {
         this[unmountedsymbol].forEach(f => {
           setimmediate(f);
         });
-        onunmounted(this);
+      
+  onunmounted(this);
       }
       [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */
