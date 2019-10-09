@@ -1,5 +1,6 @@
 import debounce from "lodash/debounce";
-
+const callbackmap=Symbol("callbackmap")
+const unsubscribe=Symbol("unsubscribe")
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
@@ -31,6 +32,9 @@ deleteProperty(forkarray.prototype, "length"); */
 export default class ReactiveState<
   T extends string | number | boolean | undefined | object | bigint
 > {
+
+[callbackmap]=new Map<Function,EventListener>
+
   readonly [Symbol.toStringTag] = "ReactiveState";
 
   constructor(init?: T) {
@@ -114,15 +118,37 @@ const name = "value";
 
     this[debouncedispatch](eventname);
   }
-  [subscribesymbol](callback: Function /*, eventname?: string*/) {
+  [subscribesymbol](
+callback: Function
+ /*, eventname?: string*/
+) {
+
+let eventlistener
+
+if(this[callbackmap].get(callback)){
+eventlistener=this[callbackmap].get(callback)
+
+}else{
+eventlistener=
+      (event: Event) => callback.call(undefined, this, get(event, "detail"))
+  
+this[callbackmap].set(callback)
+}
     // this[eventtargetsymbol].addEventListener("value", callback);
     // const name = eventname ? String(eventname) : "value";
-    const name = "value";
+  //  const name = "value";
     this[memlisteners].add(
-
-      (event: Event) => callback.call(undefined, this, get(event, "detail"))
-    );
+eventlistener
+  );
   } 
+[unsubscribe](callback: Function){
+const eventlistener=this[callbackmap].get(callback)
+if(!eventlistener){throw new Error}
+this[memlisteners].delete(
+eventlistener
+  );
+
+}
   [removeallistenerssymbol]() {
 const name = "value";
     this[memlisteners].forEach((callback) => {
