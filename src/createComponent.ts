@@ -56,7 +56,7 @@ export function createComponent(custfun: Custom): Class {
     const css = get(custfun, "css");
     return class Component extends AttrChange {
       [innerstatesymbol]: Array<ReactiveState<any>>;
-      static [componentsymbol] = true;
+      static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
       [mountedsymbol]: Array<Function>;
