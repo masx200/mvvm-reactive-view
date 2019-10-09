@@ -47,7 +47,7 @@ h(type,children)
 */
 
 export default function(
-  type?: Function | string | "",
+  type?: Function | string | ""|Class,
   propsorchildren?: Vdomchildren | ElementAttrs,
   ...children: Vdomchildren
 ) {
@@ -84,7 +84,7 @@ function createElement<T extends Function | string>(
 ): T; */
 
 function createElement<T extends Function | string|Class>(
-  type: T,
+  type: T="",
   props: ElementAttrs = {},
   ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
