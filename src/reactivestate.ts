@@ -65,8 +65,9 @@ export default class ReactiveState<
 } */
 
   [addallistenerssymbol]() {
-    this[memlisteners].forEach(([value, callback]) => {
-      this[eventtargetsymbol].addEventListener(value, callback);
+const name = "value";
+    this[memlisteners].forEach((callback) => {
+      this[eventtargetsymbol].addEventListener(name, callback);
     });
   }
   /*  [changetextnodesymbol](textnode: Text) {
@@ -79,7 +80,7 @@ export default class ReactiveState<
   // [textnodesymbol]: Text | undefined;
   value: T | undefined;
   [eventtargetsymbol] = new EventTarget();
-  [memlisteners]: Array<[string, EventListener]> = [];
+  [memlisteners]=new Set<EventListener> ;
 
   //剑头函数绑定this
   valueOf = () => {
@@ -117,14 +118,15 @@ export default class ReactiveState<
     // this[eventtargetsymbol].addEventListener("value", callback);
     // const name = eventname ? String(eventname) : "value";
     const name = "value";
-    this[memlisteners].push([
-      name,
+    this[memlisteners].add(
+
       (event: Event) => callback.call(undefined, this, get(event, "detail"))
-    ]);
-  } /*  */
+    );
+  } 
   [removeallistenerssymbol]() {
-    this[memlisteners].forEach(([value, callback]) => {
-      this[eventtargetsymbol].removeEventListener(value, callback);
+const name = "value";
+    this[memlisteners].forEach((callback) => {
+      this[eventtargetsymbol].removeEventListener(name, callback);
     });
   }
   [Symbol.toPrimitive]() {
