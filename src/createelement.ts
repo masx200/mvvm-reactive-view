@@ -2,7 +2,7 @@ import { Class } from "./customclass";
 import ReactiveState from "./reactivestate";
 import { apply } from "./reflect";
 import { isarray, isfunction, isplainobject, isstring } from "./util";
-import Virtualdom, { Vdomchildren ,createVirtualElement} from "./virtualdom";
+import Virtualdom, { Vdomchildren, createVirtualElement } from "./virtualdom";
 type styleprop =
   | string
   | object
@@ -47,7 +47,7 @@ h(type,children)
 */
 
 export default function(
-  type?: Function | string | ""|Class,
+  type?: Function | string | "" | Class,
   propsorchildren?: Vdomchildren | ElementAttrs,
   ...children: Vdomchildren
 ) {
@@ -83,8 +83,8 @@ function createElement<T extends Function | string>(
   ...children: T
 ): T; */
 
-function createElement<T extends Function | string|Class>(
-  type: T="",
+function createElement<T extends Function | string | Class>(
+  type: T = "",
   props: ElementAttrs = {},
   ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
@@ -119,15 +119,16 @@ function createElement<T extends Function | string|Class>(
     ])
   ); */
 
-   /* return new Virtualdom(
+    /* return new Virtualdom(
       typenormalized,
       propsnormalized,
       childrennormalized
     ) as Virtualdom<any>;
 */
-return createVirtualElement(typenormalized,
+    return createVirtualElement(
+      typenormalized,
       propsnormalized,
       childrennormalized
-    )
+    );
   }
 }

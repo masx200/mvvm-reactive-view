@@ -73,11 +73,11 @@ export function isvalidvdom(v: any): v is VaildVDom {
   }
   return flag;
 }
-export default function (
+export default function(
   strings?: TemplateStringsArray,
   ...values: any[]
 ): Virtualdom<any>;
-export default function (...args: any[]) {
+export default function(...args: any[]) {
   const vdom = html(...args);
   if (isvalidvdom(vdom)) {
     return vdom;
@@ -87,4 +87,3 @@ export default function (...args: any[]) {
     throw new TypeError();
   }
 }
- 
