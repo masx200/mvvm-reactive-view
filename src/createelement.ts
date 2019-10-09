@@ -1,7 +1,7 @@
 import ReactiveState from "./reactivestate";
 import { apply } from "./reflect";
 import { isarray, isfunction, isplainobject, isstring } from "./util";
-import Virtualdom, { Vdomchildren } from "./virtualdom";
+import Virtualdom, { Vdomchildren ,createVirtualElement} from "./virtualdom";
 type styleprop =
   | string
   | object
@@ -117,10 +117,16 @@ function createElement<T extends Function | string>(
       value
     ])
   ); */
-    return new Virtualdom(
+
+   /* return new Virtualdom(
       typenormalized,
       propsnormalized,
       childrennormalized
     ) as Virtualdom<any>;
+*/
+return createVirtualElement(typenormalized,
+      propsnormalized,
+      childrennormalized
+    )
   }
 }
