@@ -1,12 +1,17 @@
+import{get,has}from"./reflect"
+
 import { ElementAttrs } from "./createelement";
 import { Class } from "./customclass";
 // import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import ReactiveState, { isReactiveState } from "./reactivestate";
-export function isVirtualdom(a: any): a is Virtualdom<any> {
+/*export function isVirtualdom(a: any): a is Virtualdom<any> {
   return a instanceof Virtualdom;
+}*/
+export function isVirtualdom(a: any): a is Virtualdom<any> {
+  return has(a,isvirtualelement)&&get(a,isvirtualelement)===isvirtualelement ;
 }
-
+const isvirtualelement=Symbol("isvirtualelement")
 export type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;
@@ -115,6 +120,7 @@ const thisarg=Object.create(null)
       )
     });
 thisarg  [Symbol.toStringTag] = "VirtualElement";
+thisarg[isvirtualelement]=isvirtualelement
 return thisarg
 }
 
