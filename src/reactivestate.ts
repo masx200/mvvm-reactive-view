@@ -133,7 +133,7 @@ eventlistener=this[callbackmap].get(callback)
 eventlistener=
       (event: Event) => callback.call(undefined, this, get(event, "detail"))
   
-this[callbackmap].set(callback)
+this[callbackmap].set(callback,eventlistener)
 }
     // this[eventtargetsymbol].addEventListener("value", callback);
     // const name = eventname ? String(eventname) : "value";
