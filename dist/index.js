@@ -690,14 +690,8 @@ function createVirtualElement(type, props = {}, children = []) {
     const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
     const \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(([key]) => \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]));
     const thisarg = Object.create(null);
-    [ "onevent", "element" ].forEach(key => {
+    [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
         defineProperty(thisarg, key, {
-            writable: true
-        });
-    });
-    [ "type", "props", "children", "directives", "bindattr" ].forEach(key => {
-        defineProperty(thisarg, key, {
-            enumerable: true,
             writable: true
         });
     });

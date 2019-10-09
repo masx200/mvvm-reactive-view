@@ -36,18 +36,26 @@ function createVirtualElement<T extends Class | string | Function>(
     字母大小写.test(key[0])
   );
   const thisarg: Virtualdom<T> = Object.create(null);
-  ["onevent", "element"].forEach(key => {
+  [
+    "onevent",
+    "element",
+    "type",
+    "props",
+    "children",
+    "directives",
+    "bindattr"
+  ].forEach(key => {
     defineProperty(thisarg, key, {
       //   enumerable: false,
       writable: true
     });
   });
-  ["type", "props", "children", "directives", "bindattr"].forEach(key => {
-    defineProperty(thisarg, key, {
-      enumerable: true,
-      writable: true
-    });
-  });
+  //   ["type", "props", "children", "directives", "bindattr"].forEach(key => {
+  //     defineProperty(thisarg, key, {
+  //       enumerable: true,
+  //       writable: true
+  //     });
+  //   });
   Object.assign(thisarg, {
     type,
     bindattr: Object.fromEntries(

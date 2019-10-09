@@ -345,6 +345,7 @@
     function createanotherhtmldocument() {
         return document$1$1.implementation.createHTMLDocument("");
     }
+    var noop = new Function;
     var attributeChangedCallback = "attributeChangedCallback";
     class AttrChange extends HTMLElement {
         get textContent() {
@@ -359,7 +360,9 @@
             return super.innerText;
         }
         set innerText(_a) {}
-        [attributeChangedCallback](_name, _oldValue, _newValue) {}
+        [attributeChangedCallback](name) {
+            noop(name);
+        }
         setAttribute(qualifiedName, value) {
             var callback = get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
@@ -655,14 +658,8 @@
             return \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]);
         });
         var thisarg = Object$1.create(null);
-        [ "onevent", "element" ].forEach(key => {
+        [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
             defineProperty(thisarg, key, {
-                writable: true
-            });
-        });
-        [ "type", "props", "children", "directives", "bindattr" ].forEach(key => {
-            defineProperty(thisarg, key, {
-                enumerable: true,
                 writable: true
             });
         });
@@ -1618,11 +1615,11 @@
     var mountedsymbol = Symbol("mounted");
     var unmountedsymbol = Symbol("unmounted");
     function createComponent(custfun) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         if (isfunction(custfun)) {
             var defaultProps = get(custfun, "defaultProps");
             var css = get(custfun, "css");
-            return _d = class Component extends AttrChange {
+            class Component extends AttrChange {
                 constructor() {
                     var propsjson = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                     var children = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -1713,8 +1710,11 @@
                         set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                     }
                 }
-            }, _d[_a] = componentsymbol, _d.css = isstring(css) && css ? css : undefined, _d.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined, 
-            _d;
+            }
+            Component[_a] = componentsymbol;
+            Component.css = isstring(css) && css ? css : undefined;
+            Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
+            return Component;
         } else {
             console.error(custfun);
             console.error(invalid_Function);
@@ -2183,6 +2183,12 @@
             return x * y;
         });
         console.log(plus, multi);
+        watch([ x, y, multi, plus ], (function() {
+            for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+            }
+            console.log(args.map(a => a.valueOf()));
+        }));
         return createElement("div", null, createElement("h3", null, " \u9f20\u6807\u4f4d\u7f6e"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 \u662f", plus), createElement("p", null, "x*y \u662f", multi));
     });
     mycomapp.css = "\n*{font-size:80px !important;}\np{color:blue !important;}\n";
@@ -3022,7 +3028,7 @@
         })();
     })();
     {
-        var vdom$3 = [ createElement("html", null, "testhtml"), createElement("button", {
+        var vdom$3 = createElement("div", [ [ createElement("html", null, "testhtml"), createElement("button", {
             onclick: [ console.log, () => {
                 console.log("onclick");
             } ],
@@ -3030,7 +3036,7 @@
             "@click": [ console.log, () => {
                 console.log("@click");
             } ]
-        }), createElement("style", null) ];
+        }), createElement("style", null) ] ]);
         document.body.appendChild(MountElement(vdom$3, document.createElement("div")));
         console.log("onclick", " @click", vdom$3);
     }

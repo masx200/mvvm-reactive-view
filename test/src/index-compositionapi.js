@@ -1,4 +1,5 @@
 import {
+  watch,
   computed,
   createComponent,
   createElement,
@@ -41,9 +42,9 @@ const mycomapp = createComponent(() => {
     return x * y;
   });
   console.log(plus, multi);
-  /* watch([x, y, multi, plus], (...args) => {
+  watch([x, y, multi, plus], (...args) => {
     console.log(args.map(a => a.valueOf()));
-  }); */
+  });
   return (
     <div>
       <h3> 鼠标位置</h3>
