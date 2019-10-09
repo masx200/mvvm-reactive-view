@@ -53,7 +53,8 @@ export function createVirtualElement
 
 }
 interface Virtualdom<T extends Class | string | Function>
-{[isvirtualelement]:isvirtualelement
+{
+[isvirtualelement]:isvirtualelement
 [Symbol.toStringTag]: string;
     element: undefined | Element | Node;
     type: T ;
