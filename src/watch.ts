@@ -32,7 +32,8 @@ export function watch<
     }
     statearray.forEach(state1 => {
       watchsingle(state1, () => {
-        callback(...state);
+//watch的回调函数自动解包
+        callback(...statearray.map(r=>r.valueOf()));
       });
     });
   } else if (isReactiveState(state)) {
@@ -64,7 +65,14 @@ function watchsingle(
     throw TypeError();
   }
 
-  state[subscribesymbol](callback);
+  state[subscribesymbol](
+
+callback
+
+
+
+
+);
 
   //  if (statekey) {
 
