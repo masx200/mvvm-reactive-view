@@ -1,6 +1,7 @@
+export const removeonelistner=Symbol("removeonelistner")
 import debounce from "lodash/debounce";
 const callbackmap=Symbol("callbackmap")
-const unsubscribe=Symbol("unsubscribe")
+export const unsubscribe=Symbol("unsubscribe")
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
@@ -150,11 +151,17 @@ eventlistener
 
 }
   [removeallistenerssymbol]() {
-const name = "value";
+
     this[memlisteners].forEach((callback) => {
-      this[eventtargetsymbol].removeEventListener(name, callback);
-    });
+      this[removeonelistner](callback)
+  });
   }
+[removeonelistner](callback:EventListener){
+const name = "value";
+this[eventtargetsymbol].removeEventListener(name, callback);
+  
+
+}
   [Symbol.toPrimitive]() {
     //return this.value;
     const value = this.valueOf();
