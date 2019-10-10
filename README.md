@@ -813,13 +813,7 @@ class ReactiveState<T extends UnwrapedState> {
 
 ## 函数`h`等同于`createElement`,用来生成虚拟 `dom`
 
-## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
-
-## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
-
-## `虚拟 dom` `Virtualdom`接口
-
-```ts
+```typescript
 type styleprop =
   | string
   | object
@@ -835,6 +829,20 @@ interface ElementAttrs {
   class?: classprop;
   [key: string]: any;
 }
+ function createElement<T extends Function | string>(type: T, propsorchildren?: Vdomchildren, ...children: Vdomchildren): Virtualdom<T>;
+ function createElement<T extends Vdomchildren>(type: "", propsorchildren?: T, ...children: T): T;
+ function createElement<T extends Vdomchildren>(type: "", props?: ElementAttrs, ...children: T): T;
+ function createElement<T extends Function | string>(type: T, props?: ElementAttrs, ...children: Vdomchildren): Virtualdom<T>;
+```
+
+## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
+
+## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
+
+## `虚拟 dom` `Virtualdom`接口
+
+```ts
+
 type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;
