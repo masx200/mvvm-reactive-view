@@ -145,7 +145,7 @@ if(!eventlistener){throw new Error}
 this[memlisteners].delete(
 eventlistener
   );
-
+this[removeonelistner](eventlistener)
 }
   [removeallistenerssymbol]() {
 
