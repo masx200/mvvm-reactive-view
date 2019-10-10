@@ -104,11 +104,7 @@ const name = "value";
 
   [debouncedispatch] = debounce((eventname?: string) => {
     const name = eventname ? String(eventname) : "value";
-    //  if (name !== "value") {
-    //    this[eventtargetsymbol].dispatchEvent(
-    //     new CustomEvent(name, { detail: name })
-    //  );
-    // }
+   
 
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
@@ -125,9 +121,9 @@ callback: Function
 ) {
 
 let eventlistener:EventListener
-
-if(this[callbackmap].get(callback)){
-eventlistener=this[callbackmap].get(callback)
+const possiblecallback=this[callbackmap].get(callback)
+if(possiblecallback){
+eventlistener=possiblecallback
 
 }else{
 //自动解包
