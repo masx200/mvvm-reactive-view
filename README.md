@@ -219,7 +219,7 @@ https://tc39.es/proposal-flatMap/
       "@babel/preset-env",
       {
         "corejs": 3,
-        // "useBuiltIns": "usage",
+         "useBuiltIns": "usage",
         "targets": { "esmodules": true }
       }
     ]
@@ -760,7 +760,10 @@ const vdomobj = html`
 `;
 ```
 
-# API :可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
+# API : 可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
+
+https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
+
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
 
