@@ -1,9 +1,8 @@
-
-interface CallbackReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
+/* interface CallbackReactiveState<
+ 
 > {
   (...args: T[]): any;
-}
+} */
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function, usestste } from "./context-mounted-unmounted-";
 import ReactiveState, {
@@ -24,14 +23,12 @@ import {
 } from "./reflect";
 import { toArray } from "./toArray";
 import { isArray, isFunction, isobject } from "./util";
-import { watch } from "./watch";
+import { watch, CallbackReactiveState, UnwrapedState } from "./watch";
 
 //const { defineProperty } = Object;
-export default function<
-  T extends string | number | boolean | undefined | object | bigint
->(
+export default function<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState<T>
+  callback: CallbackReactiveState
 ): ReactiveState<any> {
   if (
     !(
@@ -69,15 +66,13 @@ export default function<
   return state1;
 }
 
-function Arraycomputed<
-  T extends string | number | boolean | undefined | object | bigint
->(
+function Arraycomputed<T extends UnwrapedState>(
   state: ReactiveState<T>[],
-  callback: CallbackReactiveState<T>
+  callback: CallbackReactiveState
 ): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
-//自动解包
+    //自动解包
     const value = apply(callback, undefined, state.map(st => st.valueOf()));
     // callback(...state.map(st => st.valueOf()));
     return isReactiveState(value) ? value.value : value;

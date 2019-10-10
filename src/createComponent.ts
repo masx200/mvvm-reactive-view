@@ -49,8 +49,11 @@ const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
+export interface Htmlelementconstructor {
+  new (): HTMLElement;
+}
 
-export function createComponent(custfun: Custom): Function {
+export function createComponent(custfun: Custom): Htmlelementconstructor {
   if (isfunction(custfun)) {
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
@@ -158,9 +161,9 @@ export function createComponent(custfun: Custom): Function {
         //   this[mountedsymbol] = getMounted();
         //   this[unmountedsymbol] = getUnMounted();
       }
-   //   prototype!: HTMLElement;
-   //   defaultProps?: { [key: string]: any } | undefined;
-    //  css?: string | undefined;
+      //   prototype!: HTMLElement;
+      //   defaultProps?: { [key: string]: any } | undefined;
+      //  css?: string | undefined;
       [innerstatesymbol]: Array<ReactiveState<any>>;
       static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
@@ -176,7 +179,7 @@ export function createComponent(custfun: Custom): Function {
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
 
-   async   connectedCallback() {
+      async connectedCallback() {
         if (!this[elementsymbol]) {
           this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
         }
@@ -229,14 +232,14 @@ export function createComponent(custfun: Custom): Function {
         });
         onmounted(this);
       }
-    async  disconnectedCallback() {
+      async disconnectedCallback() {
         this[unmountedsymbol].forEach(f => {
           setimmediate(f);
         });
-      
-  onunmounted(this);
+
+        onunmounted(this);
       }
-   async   [attributeChangedCallback](
+      async [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);

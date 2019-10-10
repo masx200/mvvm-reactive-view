@@ -1,7 +1,7 @@
-export const removeonelistner=Symbol("removeonelistner")
+export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
-const callbackmap=Symbol("callbackmap")
-export const unsubscribe=Symbol("unsubscribe")
+const callbackmap = Symbol("callbackmap");
+export const unsubscribe = Symbol("unsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
@@ -12,6 +12,7 @@ export function isReactiveState(a: any): a is ReactiveState<any> {
 import isprimitive from "./isprimitive";
 import { get } from "./reflect";
 import { isobject, isSet } from "./util";
+import { UnwrapedState } from "./watch";
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
 export const eventtargetsymbol = Symbol("eventtatget");
@@ -30,11 +31,8 @@ forkarray.prototype.constructor = forkarray;
 deleteProperty(forkarray.prototype, "length"); */
 /* extends forkarray  */
 
-export default class ReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
-> {
-
-[callbackmap]=new Map<Function,EventListener>
+export default class ReactiveState<T extends UnwrapedState> {
+  [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
 
@@ -70,8 +68,8 @@ export default class ReactiveState<
 } */
 
   [addallistenerssymbol]() {
-const name = "value";
-    this[memlisteners].forEach((callback) => {
+    const name = "value";
+    this[memlisteners].forEach(callback => {
       this[eventtargetsymbol].addEventListener(name, callback);
     });
   }
@@ -85,7 +83,7 @@ const name = "value";
   // [textnodesymbol]: Text | undefined;
   value: T | undefined;
   [eventtargetsymbol] = new EventTarget();
-  [memlisteners]=new Set<EventListener> ;
+  [memlisteners] = new Set<EventListener>();
 
   //剑头函数绑定this
   valueOf = () => {
@@ -104,7 +102,6 @@ const name = "value";
 
   [debouncedispatch] = debounce((eventname?: string) => {
     const name = eventname ? String(eventname) : "value";
-   
 
     this[eventtargetsymbol].dispatchEvent(
       new CustomEvent("value", { detail: name })
@@ -116,49 +113,42 @@ const name = "value";
     this[debouncedispatch](eventname);
   }
   [subscribesymbol](
-callback: Function
- /*, eventname?: string*/
-) {
+    callback: Function
+    /*, eventname?: string*/
+  ) {
+    let eventlistener: EventListener;
+    const possiblecallback = this[callbackmap].get(callback);
+    if (possiblecallback) {
+      eventlistener = possiblecallback;
+    } else {
+      //自动解包
+      eventlistener = (event: Event) =>
+        callback.call(undefined, this.valueOf(), get(event, "detail"));
 
-let eventlistener:EventListener
-const possiblecallback=this[callbackmap].get(callback)
-if(possiblecallback){
-eventlistener=possiblecallback
-
-}else{
-//自动解包
-eventlistener=
-      (event: Event) => callback.call(undefined, this.valueOf(), get(event, "detail"))
-  
-this[callbackmap].set(callback,eventlistener)
-}
+      this[callbackmap].set(callback, eventlistener);
+    }
     // this[eventtargetsymbol].addEventListener("value", callback);
     // const name = eventname ? String(eventname) : "value";
-  //  const name = "value";
-    this[memlisteners].add(
-eventlistener
-  );
-  } 
-[unsubscribe](callback: Function){
-const eventlistener=this[callbackmap].get(callback)
-if(!eventlistener){throw new Error}
-this[memlisteners].delete(
-eventlistener
-  );
-this[removeonelistner](eventlistener)
-}
-  [removeallistenerssymbol]() {
-
-    this[memlisteners].forEach((callback) => {
-      this[removeonelistner](callback)
-  });
+    //  const name = "value";
+    this[memlisteners].add(eventlistener);
   }
-[removeonelistner](callback:EventListener){
-const name = "value";
-this[eventtargetsymbol].removeEventListener(name, callback);
-  
-
-}
+  [unsubscribe](callback: Function) {
+    const eventlistener = this[callbackmap].get(callback);
+    if (!eventlistener) {
+      throw new Error();
+    }
+    this[memlisteners].delete(eventlistener);
+    this[removeonelistner](eventlistener);
+  }
+  [removeallistenerssymbol]() {
+    this[memlisteners].forEach(callback => {
+      this[removeonelistner](callback);
+    });
+  }
+  [removeonelistner](callback: EventListener) {
+    const name = "value";
+    this[eventtargetsymbol].removeEventListener(name, callback);
+  }
   [Symbol.toPrimitive]() {
     //return this.value;
     const value = this.valueOf();

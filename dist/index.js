@@ -299,8 +299,6 @@ function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
 }
 
-const noop = new Function;
-
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
@@ -316,9 +314,6 @@ class AttrChange extends HTMLElement {
         return super.innerText;
     }
     set innerText(_a) {}
-    [attributeChangedCallback](name) {
-        noop(name);
-    }
     setAttribute(qualifiedName, value) {
         const callback = get(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);
@@ -601,7 +596,13 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
+
+const removeonelistner = Symbol("removeonelistner");
+
+const callbackmap = Symbol("callbackmap");
+
+const unsubscribe = Symbol("unsubscribe");
 
 const debouncedispatch = Symbol("debouncedispatch");
 
@@ -625,13 +626,14 @@ const addallistenerssymbol = Symbol("addallisteners");
 
 class ReactiveState {
     constructor(init) {
+        this[_a] = new Map;
         this[Symbol.toStringTag] = "ReactiveState";
-        this[_a] = new EventTarget;
-        this[_b] = [];
+        this[_b] = new EventTarget;
+        this[_c] = new Set;
         this.valueOf = () => {
             return this.value;
         };
-        this[_c] = debounce_1(eventname => {
+        this[_d] = debounce_1(eventname => {
             const name = eventname ? String(eventname) : "value";
             this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
                 detail: name
@@ -649,26 +651,46 @@ class ReactiveState {
             throw TypeError();
         }
     }
-    [addallistenerssymbol]() {
-        this[memlisteners].forEach(([value, callback]) => {
-            this[eventtargetsymbol].addEventListener(value, callback);
+    [(_a = callbackmap, addallistenerssymbol)]() {
+        const name = "value";
+        this[memlisteners].forEach(callback => {
+            this[eventtargetsymbol].addEventListener(name, callback);
         });
     }
     toString() {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_a = eventtargetsymbol, _b = memlisteners, _c = debouncedispatch, dispatchsymbol)](eventname) {
+    [(_b = eventtargetsymbol, _c = memlisteners, _d = debouncedispatch, dispatchsymbol)](eventname) {
         this[debouncedispatch](eventname);
     }
     [subscribesymbol](callback) {
-        const name = "value";
-        this[memlisteners].push([ name, event => callback.call(undefined, this, get(event, "detail")) ]);
+        let eventlistener;
+        const possiblecallback = this[callbackmap].get(callback);
+        if (possiblecallback) {
+            eventlistener = possiblecallback;
+        } else {
+            eventlistener = event => callback.call(undefined, this.valueOf(), get(event, "detail"));
+            this[callbackmap].set(callback, eventlistener);
+        }
+        this[memlisteners].add(eventlistener);
+    }
+    [unsubscribe](callback) {
+        const eventlistener = this[callbackmap].get(callback);
+        if (!eventlistener) {
+            throw new Error;
+        }
+        this[memlisteners].delete(eventlistener);
+        this[removeonelistner](eventlistener);
     }
     [removeallistenerssymbol]() {
-        this[memlisteners].forEach(([value, callback]) => {
-            this[eventtargetsymbol].removeEventListener(value, callback);
+        this[memlisteners].forEach(callback => {
+            this[removeonelistner](callback);
         });
+    }
+    [removeonelistner](callback) {
+        const name = "value";
+        this[eventtargetsymbol].removeEventListener(name, callback);
     }
     [Symbol.toPrimitive]() {
         const value = this.valueOf();
@@ -994,7 +1016,7 @@ function clearall() {
 }
 
 function watch(state, callback) {
-    if (isarray(state)) {
+    if (isarray(state) || isReactiveState(state)) {
         const statearray = toArray(state);
         if (!statearray.length) {
             console.error("Empty array not allowed");
@@ -1002,11 +1024,9 @@ function watch(state, callback) {
         }
         statearray.forEach(state1 => {
             watchsingle(state1, () => {
-                callback(...state);
+                callback(...statearray.map(r => r.valueOf()));
             });
         });
-    } else if (isReactiveState(state)) {
-        watchsingle(state, callback);
     } else {
         console.error(state);
         console.error(callback);
@@ -1069,7 +1089,8 @@ function createhtmlandtextdirective(seteletext, errorname) {
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
-            watch(text, state => {
+            watch(text, () => {
+                const state = text;
                 if (isconnected(element)) {
                     seteletext(ele, String(state));
                 }
@@ -1151,7 +1172,8 @@ function render(vdom, namespace) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
         set(textnode, virtualdomsymbol, vdom);
-        watch(reactive, state => {
+        watch(reactive, () => {
+            const state = reactive;
             if (isconnected(element)) {
                 changetext(textnode, String(state));
             }
@@ -1240,7 +1262,8 @@ function handleprops(element, vdom) {
         vdom.element = element;
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
-            watch(primitivestate, state => {
+            watch(primitivestate, () => {
+                const state = primitivestate;
                 if (isconnected(element)) {
                     attribute1[key] = state.valueOf();
                 }
@@ -1792,7 +1815,7 @@ function createComponent(custfun) {
                     throw TypeError();
                 }
             }
-            connectedCallback() {
+            async connectedCallback() {
                 if (!this[elementsymbol]) {
                     this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
                 }
@@ -1814,13 +1837,13 @@ function createComponent(custfun) {
                 });
                 onmounted(this);
             }
-            disconnectedCallback() {
+            async disconnectedCallback() {
                 this[unmountedsymbol].forEach(f => {
                     setimmediate(f);
                 });
                 onunmounted(this);
             }
-            [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
+            async [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
                 if (get(this, attributessymbol)[name]) {
                     set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                 }
@@ -1947,7 +1970,7 @@ function conditon(conditon, iftrue, iffalse) {
                 }
             }
         }
-        connectedCallback() {
+        async connectedCallback() {
             if (!this[readysymbol]) {
                 this[readysymbol] = true;
                 const attrs = createeleattragentreadwrite(this);
@@ -1960,10 +1983,10 @@ function conditon(conditon, iftrue, iffalse) {
             }
             onmounted(this);
         }
-        disconnectedCallback() {
+        async disconnectedCallback() {
             onunmounted(this);
         }
-        [attributeChangedCallback](name) {
+        async [attributeChangedCallback](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);

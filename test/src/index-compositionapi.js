@@ -43,7 +43,7 @@ const mycomapp = createComponent(() => {
   });
   console.log(plus, multi);
   watch([x, y, multi, plus], (...args) => {
-    console.log(args.map(a => a.valueOf()));
+    console.log(args);
   });
   return (
     <div>

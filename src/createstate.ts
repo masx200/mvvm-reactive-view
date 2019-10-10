@@ -10,33 +10,28 @@ import ReactiveState, {
 } from "./reactivestate";
 import { set } from "./reflect";
 import { isobject, isprimitive } from "./util";
+import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
 
-export default function<
-  T extends string | number | boolean | undefined | object | bigint
->(init: ReactiveState<T>): ReactiveState<T>;
-export default function<
-  T extends string | number | boolean | undefined | object | bigint
->(init: T): ReactiveState<T>;
-export default function<
-  T extends string | number | boolean | undefined | object | bigint
->(init: T | ReactiveState<T>): ReactiveState<T> {
+export default function<T extends UnwrapedState>(
+  init: ReactiveState<T>
+): ReactiveState<T>;
+export default function<T extends UnwrapedState>(init: T): ReactiveState<T>;
+export default function<T extends UnwrapedState>(
+  init: T | ReactiveState<T>
+): ReactiveState<T> {
   /* 收集组件内部创建的 ReactiveState*/
   const state: ReactiveState<T> = createstate(init) as ReactiveState<T>;
   usestste(state);
   return state;
 }
 
-function createstate<
-  T extends string | number | boolean | undefined | object | bigint
->(init: ReactiveState<T>): ReactiveState<T>;
-function createstate<
-  T extends string | number | boolean | undefined | object | bigint
->(init: T): ReactiveState<T>;
+function createstate<T extends UnwrapedState>(
+  init: ReactiveState<T>
+): ReactiveState<T>;
+function createstate<T extends UnwrapedState>(init: T): ReactiveState<T>;
 
-function createstate<
-  T extends string | number | boolean | undefined | object | bigint
->(init: T | ReactiveState<T>) {
+function createstate<T extends UnwrapedState>(init: T | ReactiveState<T>) {
   if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
     console.error(init);
     console.error(invalid_primitive_or_object_state);

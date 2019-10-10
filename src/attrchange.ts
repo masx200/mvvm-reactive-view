@@ -1,11 +1,10 @@
 import { getAttribute, removeAttribute, setAttribute } from "./dom";
-import { noop } from "./noop";
 import { get } from "./reflect";
 import { isFunction } from "./util";
 export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
-async[attributeChangedCallback]?:(name?:string) =>void
-// prototype!: HTMLElement;
+  //   [attributeChangedCallback](name?: string): void;
+  // prototype!: HTMLElement;
   /*  defaultProps?: { [key: string]: any } | undefined;
   css?: string | undefined; */
   /* constructor() {
@@ -29,14 +28,14 @@ async[attributeChangedCallback]?:(name?:string) =>void
   set innerText(_a: string) {
     // return;
   }
- // [attributeChangedCallback](
- //   name: string
+  // [attributeChangedCallback](
+  //   name: string
 
-    /* _name?: any, _oldValue?: any, _newValue?: any */
- // ) {
- //   noop(name);
-    //
-//  }
+  /* _name?: any, _oldValue?: any, _newValue?: any */
+  // ) {
+  //   noop(name);
+  //
+  //  }
   /* constructor() {
     super();
   } */

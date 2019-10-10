@@ -123,7 +123,8 @@ function createhtmlandtextdirective(seteletext: Function, errorname: string) {
       //  text instanceof ReactiveState
     ) {
       //   const ReactiveState = text;
-      watch(text, (state: { value: any }) => {
+      watch(text, (/* state: { value: any } */) => {
+        const state = text;
         if (isconnected(element)) {
           seteletext(ele, String(state));
         }

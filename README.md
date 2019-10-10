@@ -463,7 +463,7 @@ const mycomapp = createComponent(() => {
     return x * y;
   });
   watch([x, y, multi, plus], (...args) => {
-    console.log(args.map(a => a.valueOf()));
+    console.log(args);
   });
   return (
     <div>
@@ -500,9 +500,7 @@ const vdom = html`
 `;
 
 console.log([vdom, colortext, stylestate]);
-watch([colortext, stylestate], (a, b) =>
-  console.log([a, b].map(a => a.valueOf()))
-);
+watch([colortext, stylestate], (a, b) => console.log([a, b]));
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
@@ -758,47 +756,11 @@ const vdomobj = html`
 `;
 ```
 
-# API
+# API :可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
 
-```ts
-function render(
-  vdom: Virtualdom<string | Function>,
-  namespace?: string
-): Element;
-function render(
-  vdom: Virtualdom<"script" | "" | "html">,
-  namespace?: string
-): Node;
-function render(
-  vdom: Array<Virtualdom<any> | string | ReactiveState<any> | number>,
-  namespace?: string
-): Array<Node | Element>;
-function render(
-  vdom: string | ReactiveState<any> | number,
-  namespace?: string
-): Node;
-function render(
-  vdom: Array<Virtualdom<any>>,
-  namespace?: string
-): Array<Element>;
-function render(
-  vdom: Array<string | ReactiveState<any> | number>,
-  namespace?: string
-): Array<Node>;
-```
-
 ## 使用`createState`来生成一个引用形式响应式的状态，
-
-```ts
-function createState<
-  T extends string | number | boolean | undefined | object | bigint
->(init: ReactiveState<T>): ReactiveState<T>;
-function createState<
-  T extends string | number | boolean | undefined | object | bigint
->(init: T): ReactiveState<T>;
-```
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
 
@@ -807,11 +769,16 @@ function createState<
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-class ReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
-> {
+export type UnwrapedState =
+  | string
+  | number
+  | boolean
+  | undefined
+  | object
+  | bigint;
+class ReactiveState<T extends UnwrapedState> {
   constructor(init?: T);
-
+  readonly [Symbol.toStringTag] = "ReactiveState";
   value: T | undefined;
 
   valueOf: () => T | undefined;
@@ -823,98 +790,27 @@ class ReactiveState<
 
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
-### 第一个参数是依赖项,或者依赖项数组,第二个参数是回调函数,返回一个响应式状态对象,
+### 第一个参数是 ReactiveState,或者 ReactiveState 数组,第二个参数是回调函数,返回一个响应式状态对象,
 
-```typescript
-function computed<
-  T extends string | number | boolean | undefined | object | bigint
->(
-  state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState<T>
-): ReactiveState<any>;
-interface CallbackReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
-> {
-  (...args: T[]): any;
-}
-```
-
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数
-
-```ts
-function watch<
-  T extends string | number | boolean | undefined | object | bigint
->(
-  state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState<T>
-): void;
-interface CallbackReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
-> {
-  (...args: T[]): void;
-}
-```
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 ReactiveState,或者 ReactiveState 数组
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
-```ts
-function createComponent(custfun: Custom): Class;
-type VaildVDom =
-  | Virtualdom<any>
-  | string
-  | number
-  | Array<Virtualdom<any> | string | number | ReactiveState<any>>
-  | ReactiveState<any>;
-interface Class extends HTMLElement {
-  new (propsjson?: object, children?: any[]): HTMLElement;
-  prototype: HTMLElement;
-  defaultProps?: { [key: string]: any };
-  css?: string;
-}
-interface Custom {
-  (props?: object, children?: Array<any>): VaildVDom;
-  defaultProps?: { [key: string]: any };
-  css?: string;
-}
-```
-
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
-
-```ts
-function useMounted(fun: Function): void;
-
-function useUnMounted(fun: Function): void;
-```
 
 ## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 
-```ts
-function condition(
-  conditon: ReactiveState<any> | boolean,
-  iftrue?: VaildVDom,
-  iffalse?: VaildVDom
-): Virtualdom<any>;
-```
-
 ## 使用`directives`函数来扩展指令,返回已有的指令合集
-
-```ts
-interface Extendfun {
-  (
-    element: Element,
-    value: any | ReactiveState<any>,
-    vdom: Virtualdom<any>
-  ): void;
-}
-interface ExtendOptions {
-  [s: string]: Extendfun;
-}
-function directives(options?: ExtendOptions): ExtendOptions;
-```
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
 ## 函数`h`等同于`createElement`,用来生成虚拟 `dom`
+
+## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
+
+## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
+
+## `虚拟 dom` `Virtualdom`接口
 
 ```ts
 type styleprop =
@@ -932,51 +828,18 @@ interface ElementAttrs {
   class?: classprop;
   [key: string]: any;
 }
-function createElement<T extends Function | string>(
-  type: T,
-  propsorchildren?: Vdomchildren,
-  ...children: Vdomchildren
-): Virtualdom<T>;
-function createElement<T extends Vdomchildren>(
-  type: "",
-  propsorchildren?: T,
-  ...children: T
-): T;
-function createElement<T extends Vdomchildren>(
-  type: "",
-  props?: ElementAttrs,
-  ...children: T
-): T;
-function createElement<T extends Function | string>(
-  type: T,
-  props?: ElementAttrs,
-  ...children: Vdomchildren
-): Virtualdom<T>;
-```
-
-## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
-
-```ts
-function MountElement<T extends Element>(
-  vdom: VaildVDom | Node | Element | Array<Node | Element>,
-  container: T
-): T;
-```
-
-## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
-
-```ts
-interface Ref<T> {
-  value: T;
+type Vdomchildren = Array<
+  Virtualdom<any> | string | ReactiveState<any> | number
+>;
+interface Class extends HTMLElement {
+  new (): HTMLElement;
+  prototype: HTMLElement;
+  defaultProps?: {
+    [key: string]: any;
+  };
+  css?: string;
 }
-export default function createRef<T>(value: T): Ref<T>;
-```
-
-## `虚拟 dom` `Virtualdom`接口
-
-```ts
 interface Virtualdom<T extends Class | string | Function> {
-  [isvirtualelement]: symbol;
   [Symbol.toStringTag]: string;
   element: undefined | Element | Node;
   type: T;

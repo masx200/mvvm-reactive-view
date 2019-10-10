@@ -3,7 +3,7 @@ import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./virtualdom";
 
 export interface Class extends HTMLElement {
-  new (...args: any[]): HTMLElement;
+  new (): HTMLElement;
   //   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
   prototype: HTMLElement;
   defaultProps?: { [key: string]: any };

@@ -16,6 +16,7 @@ import render from "./rendervdomtoreal";
 import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
 import Virtualdom, { Vdomchildren } from "./virtualdom";
+import { Htmlelementconstructor } from "./createComponent";
 export type VaildVDom =
   | Virtualdom<any>
   | string
@@ -35,7 +36,7 @@ export default function(
   conditon: ReactiveState<any> | boolean,
   iftrue?: VaildVDom,
   iffalse?: VaildVDom
-): Virtualdom<Function> {
+): Virtualdom<Htmlelementconstructor> {
   if (!(isReactiveState(conditon) || isboolean(conditon))) {
     console.error(conditon);
     console.error(invalid_ReactiveState);
@@ -50,9 +51,9 @@ export default function(
   });
   const options = { true: iftrue, false: iffalse };
   class Condition extends AttrChange {
-   // prototype!: HTMLElement;
-   // defaultProps?: { [key: string]: any } | undefined;
-   // css?: string | undefined;
+    // prototype!: HTMLElement;
+    // defaultProps?: { [key: string]: any } | undefined;
+    // css?: string | undefined;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     constructor() /* propsjson?: object, children?: any[], options: object = {} */ {
@@ -112,7 +113,7 @@ export default function(
         }
       }
     }
-  async  connectedCallback() {
+    async connectedCallback() {
       if (!this[readysymbol]) {
         // createApp(this[elementsymbol], this);
         this[readysymbol] = true;
@@ -130,11 +131,11 @@ export default function(
       onmounted(this);
       //
     }
-  async  disconnectedCallback() {
+    async disconnectedCallback() {
       onunmounted(this);
     }
 
-  async  [attributeChangedCallback](
+    async [attributeChangedCallback](
       name: string /* , oldValue: any, newValue: any */
     ) {
       if (this[readysymbol]) {

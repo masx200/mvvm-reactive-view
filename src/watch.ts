@@ -1,8 +1,15 @@
-export type CancelWatch = () => void;
-interface CallbackReactiveState<
-  T extends string | number | boolean | undefined | object | bigint
-> {
-  (...args: T[]): void;
+export type CancelWatchfun = () => void;
+export type UnwrapedState =
+  | string
+  | number
+  | boolean
+  | undefined
+  | object
+  | bigint;
+export interface CallbackReactiveState /* <
+  
+> */ {
+  (...args: UnwrapedState[]): void;
 }
 
 import { invalid_ReactiveState } from "./conditon";
@@ -17,14 +24,12 @@ import ReactiveState, {
 import { isarray, isFunction } from "./util";
 import { toArray } from "./toArray";
 
-export function watch<
-  T extends string | number | boolean | undefined | object | bigint
->(
+export function watch<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
 
-  callback: CallbackReactiveState<T>
+  callback: CallbackReactiveState
 ) {
-  if (isarray(state)||isReactiveState(state)) {
+  if (isarray(state) || isReactiveState(state)) {
     const statearray = toArray(state);
     if (!statearray.length) {
       console.error("Empty array not allowed");
@@ -32,15 +37,15 @@ export function watch<
     }
     statearray.forEach(state1 => {
       watchsingle(state1, () => {
-//watch的回调函数自动解包
-        callback(...statearray.map(r=>r.valueOf()));
+        //watch的回调函数自动解包
+        callback(...statearray.map(r => r.valueOf()));
       });
     });
   }
- //  else if (isReactiveState(state)) {
+  //  else if (isReactiveState(state)) {
   //  watchsingle(state, callback);
-////return watch(toArray(state),callback)
- // } 
+  ////return watch(toArray(state),callback)
+  // }
   else {
     console.error(state);
     console.error(callback);
@@ -68,14 +73,7 @@ function watchsingle(
     throw TypeError();
   }
 
-  state[subscribesymbol](
-
-callback
-
-
-
-
-);
+  state[subscribesymbol](callback);
 
   //  if (statekey) {
 

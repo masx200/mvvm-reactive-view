@@ -91,7 +91,8 @@ export default function render(
       console.warn(error);
     } */
 
-    watch(reactive, (state: ReactiveState<any>) => {
+    watch(reactive, (/* state: ReactiveState<any> */) => {
+      const state = reactive;
       if (isconnected(element)) {
         changetext(textnode, String(state));
       }
@@ -264,7 +265,8 @@ function handleprops(
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
       attribute1[key] = primitivestate.valueOf();
-      watch(primitivestate, (state: ReactiveState<any>) => {
+      watch(primitivestate, (/* state: ReactiveState<any> */) => {
+        const state = primitivestate;
         if (isconnected(element)) {
           attribute1[key] = state.valueOf();
         }

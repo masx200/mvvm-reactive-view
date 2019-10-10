@@ -2,7 +2,7 @@ import { VaildVDom } from "./conditon";
 import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./virtualdom";
 export interface Class extends HTMLElement {
-    new (...args: any[]): HTMLElement;
+    new (): HTMLElement;
     prototype: HTMLElement;
     defaultProps?: {
         [key: string]: any;
