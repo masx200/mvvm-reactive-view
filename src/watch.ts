@@ -4,7 +4,7 @@ interface CallbackReactiveState<
 > {
   (...args: T[]): void;
 }
-// import { CallbackReactiveState } from "./computed";
+
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function } from "./context-mounted-unmounted-";
 import ReactiveState, {
@@ -24,7 +24,7 @@ export function watch<
 
   callback: CallbackReactiveState<T>
 ) {
-  if (isarray(state)) {
+  if (isarray(state)||isReactiveState(state)) {
     const statearray = toArray(state);
     if (!statearray.length) {
       console.error("Empty array not allowed");
@@ -36,10 +36,12 @@ export function watch<
         callback(...statearray.map(r=>r.valueOf()));
       });
     });
-  } else if (isReactiveState(state)) {
+  }
+ //  else if (isReactiveState(state)) {
   //  watchsingle(state, callback);
-return watch(toArray(state),callback)
-  } else {
+////return watch(toArray(state),callback)
+ // } 
+  else {
     console.error(state);
     console.error(callback);
     console.error(invalid_ReactiveState + invalid_Function);
