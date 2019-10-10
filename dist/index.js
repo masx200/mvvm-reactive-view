@@ -144,7 +144,7 @@ function createeleattragentreadwrite(ele) {
                 return true;
             }
             if (isinputtextortextareaflag && key === valuestring) {
-                return set$1(ele, valuestring, v);
+                return set$1(ele, valuestring, String$1(v));
             } else if (key === "style") {
                 const csstext = isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v);
                 set$1(get$1(ele, "style"), "cssText", csstext.trim());
@@ -220,7 +220,7 @@ function removeAttribute(ele, key) {
 
 function isinputtextortextarea(ele) {
     const tagname = geteletagname(ele);
-    return tagname === "input" && get$1(ele, "type") === "text" || tagname === "textarea";
+    return tagname === "textarea" || tagname === "select" || tagname === "input" && get$1(ele, "type") === "text";
 }
 
 const document$1 = window.document;
@@ -1216,9 +1216,6 @@ function render(vdom, namespace) {
         } else {
             throwinvalideletype(vdom);
         }
-        if (element) {
-            handleprops(element, vdom);
-        }
         if (type && (isfunction(type) || isstring(type))) {
             if (!iscomponent(type)) {
                 if (element) {
@@ -1233,9 +1230,11 @@ function render(vdom, namespace) {
                             return render(e);
                         }
                     }), element);
-                    return element;
                 }
             }
+        }
+        if (element) {
+            handleprops(element, vdom);
         }
         return element;
     } else {
@@ -2109,7 +2108,7 @@ function extenddirectives(options = {}) {
 extenddirectives({
     value(_element, value, vdom) {
         console.log(vdom);
-        if (isReactiveState(value) && (vdom.type === "input" || vdom.type === "textarea")) {
+        if (isReactiveState(value) && (vdom.type === "input" || vdom.type === "textarea" || vdom.type === "select")) {
             vdom.bindattr["value"] = value;
             [ "change", "input" ].forEach(eventname => {
                 const origin = vdom.onevent[eventname];

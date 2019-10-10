@@ -9,3 +9,4 @@ import "./index-myrootapp";
 import "./index-x.js";
 import "./index2.js";
 import "./index-teststore.js";
+import "./index-select";

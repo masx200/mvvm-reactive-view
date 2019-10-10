@@ -705,7 +705,7 @@ console.log(ref.value);
 <button _text="click me" />
 ```
 
-### 指令`value`只是一个简单的表单`textarea`或者`input`元素的`value`值双向绑定语法糖
+### 指令`value`只是一个简单的表单`textarea`或者`input`或者`select`元素的`value`值双向绑定语法糖
 
 ```jsx
 <input _value={state} />
@@ -713,6 +713,10 @@ console.log(ref.value);
 
 ```jsx
 <textarea _value={state} />
+```
+
+```jsx
+<select _value={state} />
 ```
 
 ### 指令`checked`只是一个简单的`checkbox`表单`input`元素的`checked`值双向绑定语法糖

@@ -15,7 +15,9 @@ directives({
       isReactiveState(value) &&
       //   value instanceof ReactiveState
 
-      (vdom.type === "input" || vdom.type === "textarea")
+      (vdom.type === "input" ||
+        vdom.type === "textarea" ||
+        vdom.type === "select")
     ) {
       vdom.bindattr["value"] = value;
       ["change", "input"].forEach(eventname => {

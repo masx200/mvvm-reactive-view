@@ -173,9 +173,6 @@ export default function render(
       // throw TypeError("invalid element type!");
     }
     // apply(handleprops)
-    if (element) {
-      handleprops(element, vdom);
-    }
 
     /* 自定义组件不添加children,而是从构造函数传入 */
     /* web components也可以设置 childnodes,比如说slot */
@@ -213,10 +210,18 @@ export default function render(
 
             element
           );
-          return element;
+          //   return element;
         }
       }
     }
+    /* 对于select元素,设置value属性时,如果没有 找到对应的option元素,则设置失败,
+    
+    改成先加children,后设attributes,
+    */
+    if (element) {
+      handleprops(element, vdom);
+    }
+
     return element as Node | Element;
   } else {
     throwinvalideletype(vdom);

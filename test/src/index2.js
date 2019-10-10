@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createComponent,
   createElement,
@@ -165,8 +166,33 @@ console.log(h, createElement);
   /* watch(stylestate, console.log);
   watch(state1, console.log); */
   console.log([vdom, colortext, stylestate]);
-  watch([colortext, stylestate], (a, b) =>
-    console.log([a, b].map(a => a.valueOf()))
-  );
+  watch([colortext, stylestate], (a, b) => console.log([a, { ...b }]));
+  document.body.appendChild(MountElement(vdom, document.createElement("div")));
+})();
+(() => {
+  const colortext = createState("blue");
+  const stylestate = createState({
+    display: "block",
+    width: "100%",
+    color: colortext
+  });
+  /* const inputref = createRef();
+    const state1 = createState("hello"); */
+  const vdom = html`
+    <hr />
+    <h1 style=${stylestate}>input color ${colortext}</h1>
+    <input _value=${colortext} />
+    <hr />
+  `;
+  /* watch(stylestate, console.log);
+    watch(state1, console.log); */
+  //   console.log([vdom, colortext, stylestate]);
+  var inter = setInterval(() => {
+    colortext.value = "#" + (Math.random() * 16 ** 7).toString(16).slice(0, 6);
+  }, 500);
+  setTimeout(() => {
+    clearInterval(inter);
+  }, 10000);
+  watch([colortext, stylestate], (a, b) => console.log([a, { ...b }]));
   document.body.appendChild(MountElement(vdom, document.createElement("div")));
 })();

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createComponent,
   createElement,
@@ -62,9 +63,8 @@ console.log(h, createElement);
     MountElement(
       createElement(
         myclasscomponent,
-        null,
 
-        html`
+        [
           <form
             id="newsletterForm"
             class="newsletter-form nodisable"
@@ -95,9 +95,9 @@ console.log(h, createElement);
                 id="newsletterEmail"
                 class="form-group newsletter-group-email"
               >
-                <label for="newsletterEmailInput" class="form-label offscreen"
-                  >电子邮件地址</label
-                >
+                <label for="newsletterEmailInput" class="form-label offscreen">
+                  电子邮件地址
+                </label>
                 <input
                   type="email"
                   id="newsletterEmailInput"
@@ -120,9 +120,9 @@ console.log(h, createElement);
                   required=""
                 />
                 <label for="newsletterPrivacyInput">
-                  我接受 Mozilla 按照<a href="https://www.mozilla.org/privacy/"
-                    >隐私政策</a
-                  >所述的方式处理我的信息。
+                  我接受 Mozilla 按照
+                  <a href="https://www.mozilla.org/privacy/">隐私政策</a>
+                  所述的方式处理我的信息。
                 </label>
               </div>
               <div id="newsletterSubmit" class="newsletter-group-submit">
@@ -131,7 +131,8 @@ console.log(h, createElement);
                   type="submit"
                   class="button neutral newsletter-submit"
                 >
-                  立即注册<svg
+                  立即注册
+                  <svg
                     class="icon icon-arrow"
                     xmlns="http://www.w3.org/2000/svg"
                     width="23"
@@ -139,15 +140,13 @@ console.log(h, createElement);
                     viewBox="0 0 23 28"
                     aria-hidden="true"
                   >
-                    <path
-                      d="M23 15a2.01 2.01 0 0 1-.578 1.422L12.25 26.594c-.375.359-.891.578-1.422.578s-1.031-.219-1.406-.578L8.25 25.422c-.375-.375-.594-.891-.594-1.422s.219-1.047.594-1.422L12.828 18h-11C.703 18 0 17.062 0 16v-2c0-1.062.703-2 1.828-2h11L8.25 7.406a1.96 1.96 0 0 1 0-2.812l1.172-1.172c.375-.375.875-.594 1.406-.594s1.047.219 1.422.594l10.172 10.172c.375.359.578.875.578 1.406z"
-                    ></path>
+                    <path d="M23 15a2.01 2.01 0 0 1-.578 1.422L12.25 26.594c-.375.359-.891.578-1.422.578s-1.031-.219-1.406-.578L8.25 25.422c-.375-.375-.594-.891-.594-1.422s.219-1.047.594-1.422L12.828 18h-11C.703 18 0 17.062 0 16v-2c0-1.062.703-2 1.828-2h11L8.25 7.406a1.96 1.96 0 0 1 0-2.812l1.172-1.172c.375-.375.875-.594 1.406-.594s1.047.219 1.422.594l10.172 10.172c.375.359.578.875.578 1.406z"></path>
                   </svg>
                 </button>
               </div>
             </div>
           </form>
-        `
+        ]
       ),
       document.createElement("div")
     )
