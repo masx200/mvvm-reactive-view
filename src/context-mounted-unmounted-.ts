@@ -6,12 +6,16 @@ const errormessage =
 let ctxopen = false;
 let MountedSet: Set<Function> = new Set();
 let UnMountedSet: Set<Function> = new Set();
-let StateSet: Set<ReactiveState<any>> = new Set();
+let StateSet: Set<
+  ReactiveState<any> | Readonly<ReactiveState<any>>
+> = new Set();
 /* 收集组件内部创建的 ReactiveState*/
-export function getstates(): Array<ReactiveState<any>> {
+export function getstates() {
   return [...StateSet];
 }
-export function usestste(state: ReactiveState<any>) {
+export function usestste(
+  state: ReactiveState<any> | Readonly<ReactiveState<any>>
+) {
   if (ctxopen) {
     StateSet.add(state);
   }

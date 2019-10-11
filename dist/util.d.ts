@@ -1,3 +1,4 @@
+export declare function issymbol(a: any): a is symbol;
 export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };

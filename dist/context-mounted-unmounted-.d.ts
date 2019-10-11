@@ -1,7 +1,7 @@
 import ReactiveState from "./reactivestate";
 export declare const invalid_Function = "invalid Function";
-export declare function getstates(): Array<ReactiveState<any>>;
-export declare function usestste(state: ReactiveState<any>): void;
+export declare function getstates(): (ReactiveState<any> | Readonly<ReactiveState<any>>)[];
+export declare function usestste(state: ReactiveState<any> | Readonly<ReactiveState<any>>): void;
 export declare function getMounted(): Function[];
 export declare function getUnMounted(): Function[];
 export declare function useMounted(fun: Function): void;

@@ -1,1 +1,1 @@
-export const readysymbol = Symbol("ready");
+export const readysymbol = Symbol("readystate");

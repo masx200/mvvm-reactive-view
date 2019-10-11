@@ -1,7 +1,7 @@
 /// <reference types="lodash" />
 export declare const removeonelistner: unique symbol;
 declare const callbackmap: unique symbol;
-export declare const unsubscribe: unique symbol;
+export declare const cancelsubscribe: unique symbol;
 declare const debouncedispatch: unique symbol;
 export declare const invalid_primitive_or_object_state = "invalid primitive or object state";
 export declare function isReactiveState(a: any): a is ReactiveState<any>;
@@ -26,7 +26,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     [debouncedispatch]: ((eventname?: string | undefined) => void) & import("lodash").Cancelable;
     [dispatchsymbol](eventname?: string): void;
     [subscribesymbol](callback: Function): void;
-    [unsubscribe](callback: Function): void;
+    [cancelsubscribe](callback: Function): void;
     [removeallistenerssymbol](): void;
     [removeonelistner](callback: EventListener): void;
     [Symbol.toPrimitive](): string | undefined;

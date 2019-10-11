@@ -12,6 +12,6 @@ export declare function savestyleblob(tagname: string, csstext?: string, urltext
 export declare function cssrulestocsstext(cssrules: Array<CSSRule>): string;
 export declare function createlinkstylesheet(url: string): HTMLLinkElement;
 export declare function transformcsstext(text: string, prefix: string): string;
-export declare function registercssprefix(text: string, prefix: string): void;
-export declare function loadlinkstyle(stylelinkelement: HTMLElement, container: HTMLElement | Element | SVGSVGElement | SVGElement): Promise<unknown>;
-export declare function waitloadallstyle(prefix: string, _this: Element | HTMLElement | SVGSVGElement | SVGElement): Promise<unknown[]>;
+export declare function registercssprefix(text: string, prefix: string): Promise<void>;
+export declare function loadlinkstyle(stylelinkelement: HTMLElement, container: HTMLElement | Element | SVGSVGElement | SVGElement): Promise<void>;
+export declare function waitloadallstyle(prefix: string, _this: Element | HTMLElement | SVGSVGElement | SVGElement): Promise<void>;

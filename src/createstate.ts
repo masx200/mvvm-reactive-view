@@ -1,4 +1,4 @@
-import{issymbol}from"./util"
+import { issymbol } from "./util";
 // import deepobserve from "deep-observe-agent-proxy";
 import { getproperyreadproxy } from "./computed";
 import { usestste } from "./context-mounted-unmounted-";
@@ -9,7 +9,7 @@ import ReactiveState, {
   // textnodesymbol,
   isReactiveState
 } from "./reactivestate";
-import { set ,getOwnPropertyDescriptor} from "./reflect";
+import { set, getOwnPropertyDescriptor } from "./reflect";
 import { isobject, isprimitive } from "./util";
 import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
@@ -17,12 +17,14 @@ export const set_prototype = Set.prototype;
 export default function<T extends UnwrapedState>(
   init: ReactiveState<T>
 ): ReactiveState<T>;
-export default function<T extends UnwrapedState>(init: T): ReactiveState<T>;
 export default function<T extends UnwrapedState>(
-  init: T | ReactiveState<T>
+  init: Exclude<T, ReactiveState<any>> | undefined
+): ReactiveState<T>;
+export default function<T extends UnwrapedState>(
+  init: Exclude<T, ReactiveState<any>> | ReactiveState<T> | undefined
 ): ReactiveState<T> {
   /* 收集组件内部创建的 ReactiveState*/
-  const state: ReactiveState<T> = createstate(init) as ReactiveState<T>;
+  const state: ReactiveState<T> = createstate(init as any) as ReactiveState<T>;
   usestste(state);
   return state;
 }
@@ -30,9 +32,13 @@ export default function<T extends UnwrapedState>(
 function createstate<T extends UnwrapedState>(
   init: ReactiveState<T>
 ): ReactiveState<T>;
-function createstate<T extends UnwrapedState>(init: T): ReactiveState<T>;
+function createstate<T extends UnwrapedState>(
+  init: Exclude<T, ReactiveState<any>> | undefined
+): ReactiveState<T>;
 
-function createstate<T extends UnwrapedState>(init: T | ReactiveState<T>) {
+function createstate<T extends UnwrapedState>(
+  init: Exclude<T, ReactiveState<any>> | ReactiveState<T> | undefined
+) {
   if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
     console.error(init);
     console.error(invalid_primitive_or_object_state);
@@ -42,16 +48,14 @@ function createstate<T extends UnwrapedState>(init: T | ReactiveState<T>) {
   if (isprimitive(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
-getOwnPropertyDescriptor(target,key){
-//对于symbol属性，返回undefined
-if(issymbol(key)){
-return
-}
-else{
-
-return getOwnPropertyDescriptor(target,key)
-}
-},
+        getOwnPropertyDescriptor(target, key) {
+          //对于symbol属性，返回undefined
+          if (issymbol(key)) {
+            return;
+          } else {
+            return getOwnPropertyDescriptor(target, key);
+          }
+        },
         defineProperty() {
           return false;
         },

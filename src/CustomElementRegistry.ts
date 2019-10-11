@@ -14,12 +14,12 @@ if (
   throw new TypeError();
 }
 
-function 使用value从表中查询key(
-  表: object,
-  组件状态名: any
+function Usevaluetoquerythekeyfromthetable(
+  table: object,
+  Componentstatusname: any
 ): string | undefined {
-  const outputentrie = Object.entries(表).find(v => {
-    return v[1] === 组件状态名;
+  const outputentrie = Object.entries(table).find(v => {
+    return v[1] === Componentstatusname;
   });
   return outputentrie ? outputentrie[0] : undefined;
 }
@@ -81,7 +81,10 @@ function RandomDefineCustomElement(
 
     return elementname;
   } else {
-    return 使用value从表中查询key(get(customElements, elementmap), initclass);
+    return Usevaluetoquerythekeyfromthetable(
+      get(customElements, elementmap),
+      initclass
+    );
   }
 
   //如果已经注册自定义组件，则返回注册的名称

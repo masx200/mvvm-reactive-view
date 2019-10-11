@@ -37,7 +37,7 @@ import {
 import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
 import readonlyproxy from "./readonlyproxy";
 import { readysymbol } from "./readysymbol";
-import { get, set } from "./reflect";
+import { get, set, apply } from "./reflect";
 import render from "./rendervdomtoreal";
 import { setimmediate } from "./setimmediate";
 import { toArray } from "./toArray";
@@ -51,6 +51,7 @@ const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 export interface Htmlelementconstructor {
   new (): HTMLElement;
+  prototype: HTMLElement;
 }
 
 export function createComponent(custfun: Custom): Htmlelementconstructor {
@@ -121,13 +122,17 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
           | (string | Virtualdom<any> | ReactiveState<any>)[]
           | any;
         try {
-          possiblyvirtualdom = custfun.call(
+          possiblyvirtualdom = apply(custfun, undefined, [
+            readonlyprop,
+            children
+          ]);
+          /* custfun.call(
             undefined,
             //让组件里面无法修改props的reactivestate的value
             // readonlyproxy(thisattributess),
             readonlyprop,
-            children
-          );
+            children */
+          // );
         } catch (error) {
           closectx();
           console.error(error);
@@ -164,7 +169,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       //   prototype!: HTMLElement;
       //   defaultProps?: { [key: string]: any } | undefined;
       //  css?: string | undefined;
-      [innerstatesymbol]: Array<ReactiveState<any>>;
+      [innerstatesymbol]: Array<Readonly<ReactiveState<any>>>;
       static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;

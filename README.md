@@ -219,7 +219,7 @@ https://tc39.es/proposal-flatMap/
       "@babel/preset-env",
       {
         "corejs": 3,
-         "useBuiltIns": "usage",
+        "useBuiltIns": "usage",
         "targets": { "esmodules": true }
       }
     ]
@@ -716,7 +716,7 @@ console.log(ref.value);
 ```
 
 ```jsx
-<select _value={state} />
+<select _value={state}></select>
 ```
 
 ### 指令`checked`只是一个简单的`checkbox`表单`input`元素的`checked`值双向绑定语法糖
@@ -763,7 +763,6 @@ const vdomobj = html`
 # `API` : 可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
-
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
 
@@ -829,10 +828,26 @@ interface ElementAttrs {
   class?: classprop;
   [key: string]: any;
 }
- function createElement<T extends Function | string>(type: T, propsorchildren?: Vdomchildren, ...children: Vdomchildren): Virtualdom<T>;
- function createElement<T extends Vdomchildren>(type: "", propsorchildren?: T, ...children: T): T;
- function createElement<T extends Vdomchildren>(type: "", props?: ElementAttrs, ...children: T): T;
- function createElement<T extends Function | string>(type: T, props?: ElementAttrs, ...children: Vdomchildren): Virtualdom<T>;
+function createElement<T extends Function | string>(
+  type: T,
+  propsorchildren?: Vdomchildren,
+  ...children: Vdomchildren
+): Virtualdom<T>;
+function createElement<T extends Vdomchildren>(
+  type: "",
+  propsorchildren?: T,
+  ...children: T
+): T;
+function createElement<T extends Vdomchildren>(
+  type: "",
+  props?: ElementAttrs,
+  ...children: T
+): T;
+function createElement<T extends Function | string>(
+  type: T,
+  props?: ElementAttrs,
+  ...children: Vdomchildren
+): Virtualdom<T>;
 ```
 
 ## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
@@ -842,7 +857,6 @@ interface ElementAttrs {
 ## `虚拟 dom` `Virtualdom`接口
 
 ```ts
-
 type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;

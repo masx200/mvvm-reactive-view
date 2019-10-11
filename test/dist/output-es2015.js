@@ -102,6 +102,9 @@
     }
     var Reflect$1 = window$1.Reflect;
     var {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, set: set} = Reflect$1;
+    function issymbol(a) {
+        return gettagtype(a) === "symbol";
+    }
     var isplainobject = a => isobject(a) && gettagtype(a) === "object";
     function isundefined(a) {
         return !a && a === void 0 || a === null;
@@ -571,7 +574,7 @@
     var _a, _b, _c, _d;
     var removeonelistner = Symbol("removeonelistner");
     var callbackmap = Symbol("callbackmap");
-    var unsubscribe = Symbol("unsubscribe");
+    var cancelsubscribe = Symbol("cancelsubscribe");
     var debouncedispatch = Symbol("debouncedispatch");
     var invalid_primitive_or_object_state = "invalid primitive or object state";
     function isReactiveState(a) {
@@ -634,7 +637,7 @@
             }
             this[memlisteners].add(eventlistener);
         }
-        [unsubscribe](callback) {
+        [cancelsubscribe](callback) {
             var eventlistener = this[callbackmap].get(callback);
             if (!eventlistener) {
                 throw new Error;
@@ -1376,6 +1379,9 @@
             return false;
         };
         objproxyhandler.getOwnPropertyDescriptor = (target, key) => {
+            if (issymbol(key)) {
+                return;
+            }
             var myvalue = get(target, "value");
             var descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
             if (descripter) {
@@ -1483,6 +1489,13 @@
         }
         if (isprimitive(init)) {
             return getproperyreadproxy(new Proxy(new ReactiveState(init), {
+                getOwnPropertyDescriptor(target, key) {
+                    if (issymbol(key)) {
+                        return;
+                    } else {
+                        return getOwnPropertyDescriptor(target, key);
+                    }
+                },
                 defineProperty() {
                     return false;
                 },
@@ -1587,10 +1600,16 @@
         var cssnewtext = cssrulestocsstext(cssomnew);
         return cssnewtext;
     }
-    function registercssprefix(text, prefix) {
-        var css = text;
-        var cssnewtext = transformcsstext(css, prefix);
-        savestyleblob(prefix, cssnewtext);
+    function registercssprefix(_x, _x2) {
+        return _registercssprefix.apply(this, arguments);
+    }
+    function _registercssprefix() {
+        _registercssprefix = _asyncToGenerator((function*(text, prefix) {
+            var css = text;
+            var cssnewtext = transformcsstext(css, prefix);
+            savestyleblob(prefix, cssnewtext);
+        }));
+        return _registercssprefix.apply(this, arguments);
     }
     function loadlinkstyle(stylelinkelement, container) {
         return new Promise$1(rs => {
@@ -1603,8 +1622,14 @@
             appendchild(container, stylelinkelement);
         });
     }
-    function waitloadallstyle(prefix, _this) {
-        return Promise$1.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
+    function waitloadallstyle(_x3, _x4) {
+        return _waitloadallstyle.apply(this, arguments);
+    }
+    function _waitloadallstyle() {
+        _waitloadallstyle = _asyncToGenerator((function*(prefix, _this) {
+            yield Promise$1.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
+        }));
+        return _waitloadallstyle.apply(this, arguments);
     }
     function readonlyproxy(target) {
         return new Proxy(target, {
@@ -1622,7 +1647,7 @@
             }
         });
     }
-    var readysymbol = Symbol("ready");
+    var readysymbol = Symbol("readystate");
     function setimmediate(fun) {
         return Promise$1.resolve().then(() => fun());
     }
@@ -2109,13 +2134,13 @@
         console.log(vdom3);
         document.body.appendChild(MountElement(vdom3, document.createElement("div")));
         var state3 = createstate("<a>\u7ed1\u5b9ainnerhtml</a>");
-        var vdom4 = [ createElement("div", {
-            "*text": state3
+        var vdom4 = createElement("", null, createElement("div", {
+            _text: state3
         }), createElement("div", {
-            "*html": state3
-        }), createElement("script", null) ];
-        watch(state1, state => state3.value = state.value);
-        watch(state2, state => state1.value = state.value);
+            _html: state3
+        }), createElement("script", null, " "));
+        watch(state1, state => state3.value = state);
+        watch(state2, state => state1.value = state);
         console.log(state3);
         console.log(vdom4);
         document.body.appendChild(MountElement(vdom4, document.createElement("div")));

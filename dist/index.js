@@ -8,6 +8,10 @@ const Reflect$1 = window.Reflect;
 
 const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, set: set} = Reflect$1;
 
+function issymbol(a) {
+    return gettagtype(a) === "symbol";
+}
+
 const isplainobject = a => isobject(a) && gettagtype(a) === "object";
 
 function isundefined(a) {
@@ -602,7 +606,7 @@ const removeonelistner = Symbol("removeonelistner");
 
 const callbackmap = Symbol("callbackmap");
 
-const unsubscribe = Symbol("unsubscribe");
+const cancelsubscribe = Symbol("cancelsubscribe");
 
 const debouncedispatch = Symbol("debouncedispatch");
 
@@ -675,7 +679,7 @@ class ReactiveState {
         }
         this[memlisteners].add(eventlistener);
     }
-    [unsubscribe](callback) {
+    [cancelsubscribe](callback) {
         const eventlistener = this[callbackmap].get(callback);
         if (!eventlistener) {
             throw new Error;
@@ -809,9 +813,9 @@ if (!isobject(window.customElements)) {
     throw new TypeError;
 }
 
-function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
-    const outputentrie = Object.entries(\u8868).find(v => {
-        return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
+function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
+    const outputentrie = Object.entries(table).find(v => {
+        return v[1] === Componentstatusname;
     });
     return outputentrie ? outputentrie[0] : undefined;
 }
@@ -857,7 +861,7 @@ function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
         }
         return elementname;
     } else {
-        return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(get(customElements$1, elementmap), initclass);
+        return Usevaluetoquerythekeyfromthetable(get(customElements$1, elementmap), initclass);
     }
 }
 
@@ -1475,6 +1479,9 @@ function handleobjectstate(init) {
         return false;
     };
     objproxyhandler.getOwnPropertyDescriptor = (target, key) => {
+        if (issymbol(key)) {
+            return;
+        }
         const myvalue = get(target, "value");
         const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
         if (descripter) {
@@ -1585,6 +1592,13 @@ function createstate$1(init) {
     }
     if (isprimitive(init)) {
         return getproperyreadproxy(new Proxy(new ReactiveState(init), {
+            getOwnPropertyDescriptor(target, key) {
+                if (issymbol(key)) {
+                    return;
+                } else {
+                    return getOwnPropertyDescriptor(target, key);
+                }
+            },
             defineProperty() {
                 return false;
             },
@@ -1702,7 +1716,7 @@ function transformcsstext(text, prefix) {
     return cssnewtext;
 }
 
-function registercssprefix(text, prefix) {
+async function registercssprefix(text, prefix) {
     const css = text;
     const cssnewtext = transformcsstext(css, prefix);
     savestyleblob(prefix, cssnewtext);
@@ -1720,8 +1734,8 @@ function loadlinkstyle(stylelinkelement, container) {
     });
 }
 
-function waitloadallstyle(prefix, _this) {
-    return Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
+async function waitloadallstyle(prefix, _this) {
+    await Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
 }
 
 function readonlyproxy(target) {
@@ -1741,7 +1755,7 @@ function readonlyproxy(target) {
     });
 }
 
-const readysymbol = Symbol("ready");
+const readysymbol = Symbol("readystate");
 
 function setimmediate(fun) {
     return Promise.resolve().then(() => fun());
@@ -1791,7 +1805,7 @@ function createComponent(custfun) {
                 const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 let possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = custfun.call(undefined, readonlyprop, children);
+                    possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children ]);
                 } catch (error) {
                     closectx();
                     console.error(error);
@@ -2047,7 +2061,7 @@ function Arraycomputed(state, callback) {
             }
         });
     });
-    return getproperyreadproxy(readonlyproxy(reactivestate));
+    return readonlyproxy(getproperyreadproxy(reactivestate));
 }
 
 const __proto__ = "__proto__";

@@ -29,7 +29,7 @@ import { watch, CallbackReactiveState, UnwrapedState } from "./watch";
 export default function<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
   callback: CallbackReactiveState
-): ReactiveState<any> {
+): Readonly<ReactiveState<any>> {
   if (
     !(
       (isArray(state) || isReactiveState(state)) &&
@@ -69,7 +69,7 @@ export default function<T extends UnwrapedState>(
 function Arraycomputed<T extends UnwrapedState>(
   state: ReactiveState<T>[],
   callback: CallbackReactiveState
-): ReactiveState<any> {
+): Readonly<ReactiveState<any>> {
   const reactivestate = new ReactiveState();
   const getter = () => {
     //自动解包
@@ -101,7 +101,7 @@ function Arraycomputed<T extends UnwrapedState>(
     });
   });
 
-  return getproperyreadproxy(readonlyproxy(reactivestate));
+  return readonlyproxy(getproperyreadproxy(reactivestate));
 }
 const __proto__ = "__proto__";
 export function getproperyreadproxy<T extends object>(a: T): T;

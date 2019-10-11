@@ -2,18 +2,19 @@ import { VaildVDom } from "./conditon";
 import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./virtualdom";
 
-export interface Class extends HTMLElement {
+export interface Class {
   new (): HTMLElement;
   //   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
   prototype: HTMLElement;
-  defaultProps?: { [key: string]: any };
+  defaultProps?: Record<string, any>;
   css?: string;
 }
 export interface Custom {
   (
-    props?: { [key: string]: ReactiveState<any> },
+    props?: Readonly<Record<string, Readonly<ReactiveState<any>>>>,
+    //  { [key: string]: ReactiveState<any> },
     children?: Vdomchildren
   ): VaildVDom;
-  defaultProps?: { [key: string]: any };
+  defaultProps?: Record<string, any>;
   css?: string;
 }

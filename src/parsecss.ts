@@ -136,7 +136,7 @@ export function transformcsstext(text: string, prefix: string): string {
   //   console.log([text, cssomold, cssomnew, cssnewtext]);
   return cssnewtext;
 }
-export function registercssprefix(text: string, prefix: string) {
+export async function registercssprefix(text: string, prefix: string) {
   const css = text;
   const cssnewtext = transformcsstext(css, prefix);
   //   cssnewtext.forEach(url => {
@@ -147,7 +147,7 @@ export function registercssprefix(text: string, prefix: string) {
 export function loadlinkstyle(
   stylelinkelement: HTMLElement,
   container: HTMLElement | Element | SVGSVGElement | SVGElement
-) {
+): Promise<void> {
   return new Promise(rs => {
     const loaderrorfun = () => {
       stylelinkelement.onload = stylelinkelement.onerror = null;
@@ -160,11 +160,11 @@ export function loadlinkstyle(
   });
 }
 
-export function waitloadallstyle(
+export async function waitloadallstyle(
   prefix: string,
   _this: Element | HTMLElement | SVGSVGElement | SVGElement
 ) {
-  return Promise.all(
+  await Promise.all(
     [...componentsstylesheet[prefix]].map(styleurl =>
       loadlinkstyle(createlinkstylesheet(styleurl), _this)
     )

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   condition,
@@ -144,17 +145,20 @@ console.log(h, createElement);
   document.body.appendChild(MountElement(vdom3, document.createElement("div")));
   //////////////////////
   const state3 = createState("<a>绑定innerhtml</a>");
-  const vdom4 = html`
-    <div *text=${state3}></div>
-    <div *html=${state3}></div>
+  const vdom4 = (
+    <>
+      <div _text={state3}></div>
+      <div _html={state3}></div>
 
-    <script />
-  `;
+      <script> </script>
+    </>
+  );
+
   // setInterval(() => {
   //   state3.value = String(Math.random());
   // }, 2000);
-  watch(state1, state => (state3.value = state.value));
-  watch(state2, state => (state1.value = state.value));
+  watch(state1, state => (state3.value = state));
+  watch(state2, state => (state1.value = state));
   console.log(state3);
   // watch(state3, console.log);
   console.log(vdom4);
