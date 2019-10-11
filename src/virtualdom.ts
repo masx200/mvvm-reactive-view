@@ -108,7 +108,7 @@ function createVirtualElement<T extends Class | string | Function>(
 // JSON.stringify
 interface Virtualdom<T extends Class | string | Function> {
   readonly [isvirtualelement]: symbol;
-  readonly [Symbol.toStringTag]: string;
+  readonly [Symbol.toStringTag]: "VirtualElement";
   element: undefined | Element | Node;
   type: T;
   props: ElementAttrs;
