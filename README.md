@@ -508,7 +508,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 /* 
 第二种用法
 */
-watch(colortext, state => (stylestate.color = state.valueOf()));
+watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
 ```
 
 ## 不建议在组件局部样式 css 中使用`@import`加载外部样式表
@@ -797,9 +797,9 @@ class ReactiveState<T extends UnwrapedState> {
 
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
-### 第一个参数是 ReactiveState,或者 ReactiveState 数组,第二个参数是回调函数,返回一个响应式状态对象,
+### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
 
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 ReactiveState,或者 ReactiveState 数组
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
