@@ -1,3 +1,8 @@
+export function issymbol(a:any):a is symbol{
+
+return gettagtype(a) === "symbol"
+}
+
 export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
