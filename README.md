@@ -760,7 +760,7 @@ const vdomobj = html`
 `;
 ```
 
-# API : 可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
+# `API` : 可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
@@ -811,7 +811,7 @@ class ReactiveState<T extends UnwrapedState> {
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
-## 函数`h`等同于`createElement`,用来生成虚拟 `dom`,第一个参数可以是元素的标签名，或者`costum element`的构造函数，第二个参数可以是子元素数组，或者元素的attributes,后面的剩余参数都是子元素
+## 函数`h`等同于`createElement`,用来生成虚拟 `dom`,第一个参数可以是元素的标签名，或者`costum element`的构造函数，第二个参数可以是子元素数组，或者元素的`attributes`,后面的剩余参数都是子元素
 
 ```typescript
 type styleprop =
