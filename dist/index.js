@@ -303,6 +303,10 @@ function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
 }
 
+function setimmediate(fun) {
+    return Promise.resolve().then(() => fun());
+}
+
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
@@ -324,7 +328,9 @@ class AttrChange extends HTMLElement {
         if (oldValue !== value) {
             setAttribute(this, qualifiedName, value);
             if (isfunction(callback)) {
-                callback.call(this, qualifiedName, oldValue, value);
+                setimmediate(() => {
+                    callback.call(this, qualifiedName, oldValue, value);
+                });
             }
         }
     }
@@ -334,7 +340,9 @@ class AttrChange extends HTMLElement {
         if (null !== oldValue) {
             removeAttribute$1(this, qualifiedName);
             if (isfunction(callback)) {
-                callback.call(this, qualifiedName, oldValue, undefined);
+                setimmediate(() => {
+                    callback.call(this, qualifiedName, oldValue, undefined);
+                });
             }
         }
     }
@@ -674,7 +682,7 @@ class ReactiveState {
         if (possiblecallback) {
             eventlistener = possiblecallback;
         } else {
-            eventlistener = event => callback.call(undefined, this.valueOf(), get(event, "detail"));
+            eventlistener = () => callback(this.valueOf());
             this[callbackmap].set(callback, eventlistener);
         }
         this[memlisteners].add(eventlistener);
@@ -1026,11 +1034,20 @@ function watch(state, callback) {
             console.error("Empty array not allowed");
             throw new Error;
         }
-        statearray.forEach(state1 => {
-            watchsingle(state1, () => {
-                callback(...statearray.map(r => r.valueOf()));
-            });
+        const debouncedcallback = debounce_1(callback);
+        const stateandlisteners = statearray.map(state1 => {
+            const listener = () => {
+                debouncedcallback(...statearray.map(r => r.valueOf()));
+            };
+            watchsingle(state1, listener);
+            return [ state1, listener ];
         });
+        const cancelWatch = () => {
+            stateandlisteners.forEach(([state, listener]) => {
+                state[cancelsubscribe](listener);
+            });
+        };
+        return cancelWatch;
     } else {
         console.error(state);
         console.error(callback);
@@ -1244,7 +1261,6 @@ function render(vdom, namespace) {
     } else {
         throwinvalideletype(vdom);
     }
-    console.error(vdom);
     throw new Error;
 }
 
@@ -1757,10 +1773,6 @@ function readonlyproxy(target) {
 
 const readysymbol = Symbol("readystate");
 
-function setimmediate(fun) {
-    return Promise.resolve().then(() => fun());
-}
-
 const innerstatesymbol = Symbol("innerstate");
 
 const attributessymbol = Symbol("attributes");
@@ -1774,14 +1786,15 @@ const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
 function createComponent(custfun) {
-    var _a, _b;
+    var _a, _b, _c;
     if (isfunction(custfun)) {
         const defaultProps = get(custfun, "defaultProps");
         const css = get(custfun, "css");
         class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
-                this[_b] = false;
+                this[_a] = {};
+                this[_c] = false;
                 const css = get(this.constructor, "css");
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
@@ -1797,8 +1810,8 @@ function createComponent(custfun) {
                 if (isobject(propsjson)) {
                     Object.assign(attrs, propsjson);
                 }
-                openctx();
                 const props = attrs;
+                openctx();
                 const thisattributess = Object.fromEntries(Object.entries(props).map(([key, value]) => [ key, createstate(value) ]));
                 this[attributessymbol] = readonlyproxy(thisattributess);
                 const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
@@ -1855,13 +1868,13 @@ function createComponent(custfun) {
                 });
                 onunmounted(this);
             }
-            async [(_a = componentsymbol, _b = readysymbol, attributeChangedCallback)](name) {
+            [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
                 if (get(this, attributessymbol)[name]) {
                     set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                 }
             }
         }
-        Component[_a] = componentsymbol;
+        Component[_b] = componentsymbol;
         Component.css = isstring(css) && css ? css : undefined;
         Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
         return Component;
@@ -2060,7 +2073,7 @@ function Arraycomputed(state, callback) {
             }
         });
     });
-    return readonlyproxy(getproperyreadproxy(reactivestate));
+    return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 
 const __proto__ = "__proto__";

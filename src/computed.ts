@@ -101,7 +101,7 @@ function Arraycomputed<T extends UnwrapedState>(
     });
   });
 
-  return readonlyproxy(getproperyreadproxy(reactivestate));
+  return getproperyreadproxy(readonlyproxy(reactivestate));
 }
 const __proto__ = "__proto__";
 export function getproperyreadproxy<T extends object>(a: T): T;

@@ -2,7 +2,7 @@ export declare function issymbol(a: any): a is symbol;
 export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
-declare const isplainobject: (a: any) => boolean;
+declare const isplainobject: (a: any) => a is Record<any, any>;
 import isprimitive from "./isprimitive";
 export declare function isundefined(a: any): a is void;
 export declare function isnumber(a: any): a is number;

@@ -6,7 +6,8 @@ export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
 
-const isplainobject = (a: any) :a is Record<any,any>=> isobject(a) && gettagtype(a) === "object";
+const isplainobject = (a: any): a is Record<any, any> =>
+  isobject(a) && gettagtype(a) === "object";
 
 import isprimitive from "./isprimitive";
 import { /* has,  */ get } from "./reflect";

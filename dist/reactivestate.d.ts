@@ -1,11 +1,11 @@
 /// <reference types="lodash" />
 export declare const removeonelistner: unique symbol;
+import { UnwrapedState } from "./watch";
 declare const callbackmap: unique symbol;
 export declare const cancelsubscribe: unique symbol;
 declare const debouncedispatch: unique symbol;
 export declare const invalid_primitive_or_object_state = "invalid primitive or object state";
 export declare function isReactiveState(a: any): a is ReactiveState<any>;
-import { UnwrapedState } from "./watch";
 export declare const changetextnodesymbol: unique symbol;
 export declare const eventtargetsymbol: unique symbol;
 export declare const memlisteners: unique symbol;

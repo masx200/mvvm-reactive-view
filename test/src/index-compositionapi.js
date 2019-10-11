@@ -42,9 +42,14 @@ const mycomapp = createComponent(() => {
   const multi = computed([x, y], (x, y) => {
     return x * y;
   });
-  console.log(plus, multi);
-  watch([x, y, multi, plus], (...args) => {
-    console.log(args);
+  //   console.log(plus, multi);
+  let count = 0;
+  const cancelwatch = watch([x, y, multi, plus], (...args) => {
+    console.log(count, args);
+    count++;
+    if (count > 50) {
+      cancelwatch();
+    }
   });
   return (
     <div>

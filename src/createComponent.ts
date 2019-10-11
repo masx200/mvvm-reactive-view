@@ -59,6 +59,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
     class Component extends AttrChange {
+      [attributessymbol]: Record<string, Readonly<ReactiveState<any>>> = {};
       // new (propsjson?: object | undefined, children?: any[] | undefined): HTMLElement
 
       //   constructor(...args: any[]);
@@ -67,7 +68,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         children: any[] = [] /* , options?: any */ //   : HTMLElement;
       ) {
         super();
-
+        // this[attributessymbol] = {};
         const css = get(this.constructor, "css");
 
         if (css) {
@@ -86,7 +87,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         }
         const defaultProps = get(this.constructor, "defaultProps");
         // this.constructor["defaultProps"];
-        const attrs = createeleattragentreadwrite(this);
+        const attrs: Record<string, any> = createeleattragentreadwrite(this);
         //   const props = {};
         if (isobject(defaultProps)) {
           Object.assign(attrs, defaultProps);
@@ -96,15 +97,18 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
           Object.assign(attrs, propsjson);
           // Object.assign(props, propsjson);
         }
+        // console.log({ ...attrs });
         //   this[attributessymbol] = createeleattragentreadwrite(this);
         // const props = createeleattragentreadwrite(this);/
-        openctx();
         const props = attrs;
+        openctx();
+
         const thisattributess = Object.fromEntries(
           Object.entries(props).map(([key, value]) => [key, createstate(value)])
         );
         this[attributessymbol] = readonlyproxy(thisattributess);
-
+        // console.log({ props, thisattributess });
+        // debugger;
         /* 把attributes的reactivestates也放进innerstates中 */
         const readonlyprop = readonlyproxy(
           Object.fromEntries(
@@ -180,7 +184,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       static defaultProps = isobject(defaultProps)
         ? JSON.parse(JSON.stringify(defaultProps))
         : undefined;
-      [attributessymbol]: Record<string, Readonly<ReactiveState<any>>>;
+
       [elementsymbol]: Array<Node>;
       [vdomsymbol]: Array<
         Virtualdom<any> | ReactiveState<any> | string | number
@@ -246,7 +250,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
 
         onunmounted(this);
       }
-      async [attributeChangedCallback](
+      [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);

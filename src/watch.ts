@@ -1,3 +1,4 @@
+import debounce from "lodash/debounce";
 export type CancelWatchfun = () => void;
 export type UnwrapedState =
   | string
@@ -18,7 +19,8 @@ import ReactiveState, {
   addallistenerssymbol,
   isReactiveState,
   removeallistenerssymbol,
-  subscribesymbol
+  subscribesymbol,
+  cancelsubscribe
 } from "./reactivestate";
 //import { requestAnimationFrame } from "./directives";
 import { isarray, isFunction } from "./util";
@@ -30,17 +32,35 @@ export function watch<T extends UnwrapedState>(
   callback: CallbackReactiveState
 ) {
   if (isarray(state) || isReactiveState(state)) {
-    const statearray = toArray(state);
+    const statearray: ReactiveState<any>[] = toArray(state);
     if (!statearray.length) {
       console.error("Empty array not allowed");
       throw new Error();
     }
-    statearray.forEach(state1 => {
-      watchsingle(state1, () => {
-        //watch的回调函数自动解包
-        callback(...statearray.map(r => r.valueOf()));
+    /* 给watch的callback自动防抖 */
+    const debouncedcallback = debounce(callback);
+    const stateandlisteners: [ReactiveState<any>, Function][] = statearray.map(
+      state1 => {
+        const listener = () => {
+          //watch的回调函数自动解包
+          debouncedcallback(...statearray.map(r => r.valueOf()));
+        };
+        watchsingle(
+          state1,
+
+          listener
+        );
+
+        return [state1, listener];
+      }
+    );
+
+    const cancelWatch: CancelWatchfun = () => {
+      stateandlisteners.forEach(([state, listener]) => {
+        state[cancelsubscribe](listener);
       });
-    });
+    };
+    return cancelWatch;
   }
   //  else if (isReactiveState(state)) {
   //  watchsingle(state, callback);
@@ -58,7 +78,7 @@ function watchsingle(
   state: ReactiveState<any>,
   callback: Function
   //  statekey?: string
-): void {
+) {
   if (
     !(
       isReactiveState(state) &&

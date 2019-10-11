@@ -172,6 +172,16 @@ export default function render(
       throwinvalideletype(vdom);
       // throw TypeError("invalid element type!");
     }
+    /*  if (element) {
+      const attribute1: { [key: string]: any } = createeleattr(element);
+      Object.assign(
+        attribute1,
+
+        /* 把属性为false的先不设置 */
+    //     vdom.props
+    //     // Object.fromEntries(Object.entries(vdom.props).filter())
+    //   );
+    // } */
     // apply(handleprops)
 
     /* 自定义组件不添加children,而是从构造函数传入 */
@@ -230,7 +240,9 @@ export default function render(
   //   throw Error();
   //   throwinvalideletype();
 
-  console.error(vdom);
+  /* console.error(vdom);
+  throw new Error(); */
+  //   return;
   throw new Error();
 }
 

@@ -1,5 +1,9 @@
 export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
+// import Reflect from "./reflect";
+import isprimitive from "./isprimitive";
+import { isobject, isSet } from "./util";
+import { UnwrapedState } from "./watch";
 const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
@@ -8,11 +12,6 @@ export const invalid_primitive_or_object_state =
 export function isReactiveState(a: any): a is ReactiveState<any> {
   return a instanceof ReactiveState;
 }
-// import Reflect from "./reflect";
-import isprimitive from "./isprimitive";
-import { get } from "./reflect";
-import { isobject, isSet } from "./util";
-import { UnwrapedState } from "./watch";
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
 export const eventtargetsymbol = Symbol("eventtatget");
@@ -122,8 +121,7 @@ export default class ReactiveState<T extends UnwrapedState> {
       eventlistener = possiblecallback;
     } else {
       //自动解包
-      eventlistener = (event: Event) =>
-        callback( this.valueOf());
+      eventlistener = () => callback(this.valueOf());
 
       this[callbackmap].set(callback, eventlistener);
     }

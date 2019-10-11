@@ -431,6 +431,12 @@ setTimeout(() => {
 
 ### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
 
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
+
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
 ### 例子：跟踪鼠标的位置
 
 ```jsx
@@ -462,8 +468,13 @@ const mycomapp = createComponent(() => {
   const multi = computed([x, y], (x, y) => {
     return x * y;
   });
-  watch([x, y, multi, plus], (...args) => {
-    console.log(args);
+  let count = 0;
+  const cancelwatch = watch([x, y, multi, plus], (...args) => {
+    console.log(count, args);
+    count++;
+    if (count > 50) {
+      cancelwatch();
+    }
   });
   return (
     <div>
@@ -797,12 +808,6 @@ class ReactiveState<T extends UnwrapedState> {
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
 ### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
-
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组
-
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
 
 ## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 

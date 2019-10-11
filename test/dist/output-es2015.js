@@ -348,6 +348,9 @@
     function createanotherhtmldocument() {
         return document$1$1.implementation.createHTMLDocument("");
     }
+    function setimmediate(fun) {
+        return Promise$1.resolve().then(() => fun());
+    }
     var attributeChangedCallback = "attributeChangedCallback";
     class AttrChange extends HTMLElement {
         get textContent() {
@@ -368,7 +371,9 @@
             if (oldValue !== value) {
                 setAttribute(this, qualifiedName, value);
                 if (isfunction(callback)) {
-                    callback.call(this, qualifiedName, oldValue, value);
+                    setimmediate(() => {
+                        callback.call(this, qualifiedName, oldValue, value);
+                    });
                 }
             }
         }
@@ -378,7 +383,9 @@
             if (null !== oldValue) {
                 removeAttribute$1(this, qualifiedName);
                 if (isfunction(callback)) {
-                    callback.call(this, qualifiedName, oldValue, undefined);
+                    setimmediate(() => {
+                        callback.call(this, qualifiedName, oldValue, undefined);
+                    });
                 }
             }
         }
@@ -632,7 +639,7 @@
             if (possiblecallback) {
                 eventlistener = possiblecallback;
             } else {
-                eventlistener = event => callback.call(undefined, this.valueOf(), get(event, "detail"));
+                eventlistener = () => callback(this.valueOf());
                 this[callbackmap].set(callback, eventlistener);
             }
             this[memlisteners].add(eventlistener);
@@ -779,9 +786,9 @@
         console.error(" customElements  not supported !");
         throw new TypeError;
     }
-    function \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(\u8868, \u7ec4\u4ef6\u72b6\u6001\u540d) {
-        var outputentrie = Object$1.entries(\u8868).find(v => {
-            return v[1] === \u7ec4\u4ef6\u72b6\u6001\u540d;
+    function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
+        var outputentrie = Object$1.entries(table).find(v => {
+            return v[1] === Componentstatusname;
         });
         return outputentrie ? outputentrie[0] : undefined;
     }
@@ -819,7 +826,7 @@
             }
             return elementname;
         } else {
-            return \u4f7f\u7528value\u4ece\u8868\u4e2d\u67e5\u8be2key(get(customElements$1$1, elementmap), initclass);
+            return Usevaluetoquerythekeyfromthetable(get(customElements$1$1, elementmap), initclass);
         }
     }
     customElements$1$1.define = function(name, constructor, options) {
@@ -954,11 +961,21 @@
                 console.error("Empty array not allowed");
                 throw new Error;
             }
-            statearray.forEach(state1 => {
-                watchsingle(state1, () => {
-                    callback(...statearray.map(r => r.valueOf()));
-                });
+            var debouncedcallback = debounce_1(callback);
+            var stateandlisteners = statearray.map(state1 => {
+                var listener = () => {
+                    debouncedcallback(...statearray.map(r => r.valueOf()));
+                };
+                watchsingle(state1, listener);
+                return [ state1, listener ];
             });
+            var cancelWatch = () => {
+                stateandlisteners.forEach(_ref13 => {
+                    var [state, listener] = _ref13;
+                    state[cancelsubscribe](listener);
+                });
+            };
+            return cancelWatch;
         } else {
             console.error(state);
             console.error(callback);
@@ -1056,16 +1073,16 @@
     }
     function removelisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get(ele, eventlistenerssymbol).forEach(_ref13 => {
-                var [event, call] = _ref13;
+            get(ele, eventlistenerssymbol).forEach(_ref14 => {
+                var [event, call] = _ref14;
                 domremovelisten(ele, event, call);
             });
         }
     }
     function readdlisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get(ele, eventlistenerssymbol).forEach(_ref14 => {
-                var [event, call] = _ref14;
+            get(ele, eventlistenerssymbol).forEach(_ref15 => {
+                var [event, call] = _ref15;
                 domaddlisten(ele, event, call);
             });
         }
@@ -1120,8 +1137,8 @@
                 if (isobject(type["defaultProps"])) {
                     vdom.props = JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props)));
                 }
-                var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(_ref15 => {
-                    var [key, value] = _ref15;
+                var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(_ref16 => {
+                    var [key, value] = _ref16;
                     return [ key, value.value ];
                 })))));
                 _element2 = createcostumelemet(type, propsjson, vdom.children);
@@ -1152,13 +1169,12 @@
         } else {
             throwinvalideletype(vdom);
         }
-        console.error(vdom);
         throw new Error;
     }
     function handleprops(element, vdom) {
         ((element, vdom) => {
-            Object$1.entries(vdom.directives).forEach(_ref16 => {
-                var [name, value] = _ref16;
+            Object$1.entries(vdom.directives).forEach(_ref17 => {
+                var [name, value] = _ref17;
                 if (isfunction(directive[name])) {
                     directive[name](element, value, vdom);
                 } else {
@@ -1171,8 +1187,8 @@
             Object$1.assign(attribute1, vdom.props);
             set(element, virtualdomsymbol, vdom);
             vdom.element = element;
-            Object$1.entries(vdom.bindattr).forEach(_ref17 => {
-                var [key, primitivestate] = _ref17;
+            Object$1.entries(vdom.bindattr).forEach(_ref18 => {
+                var [key, primitivestate] = _ref18;
                 attribute1[key] = primitivestate.valueOf();
                 watch(primitivestate, () => {
                     var state = primitivestate;
@@ -1181,8 +1197,8 @@
                     }
                 });
             });
-            Object$1.entries(vdom.onevent).forEach(_ref18 => {
-                var [event, callbacks] = _ref18;
+            Object$1.entries(vdom.onevent).forEach(_ref19 => {
+                var [event, callbacks] = _ref19;
                 onevent(element, event, callbacks);
             });
         })(element, vdom);
@@ -1348,8 +1364,8 @@
         });
         if (containReactiveState) {
             initobj = _objectSpread2({}, init);
-            state_entries.forEach(_ref19 => {
-                var [key, state] = _ref19;
+            state_entries.forEach(_ref20 => {
+                var [key, state] = _ref20;
                 defineProperty(initobj, key, {
                     enumerable: true,
                     get() {
@@ -1361,8 +1377,8 @@
         }
         var reactive = new ReactiveState(initobj);
         if (containReactiveState) {
-            state_entries.forEach(_ref20 => {
-                var [key, state] = _ref20;
+            state_entries.forEach(_ref21 => {
+                var [key, state] = _ref21;
                 watch(state, () => {
                     reactive[dispatchsymbol](String$1(key));
                 });
@@ -1648,9 +1664,6 @@
         });
     }
     var readysymbol = Symbol("readystate");
-    function setimmediate(fun) {
-        return Promise$1.resolve().then(() => fun());
-    }
     var innerstatesymbol = Symbol("innerstate");
     var attributessymbol = Symbol("attributes");
     var elementsymbol = Symbol("innerelement");
@@ -1667,8 +1680,8 @@
                     var propsjson = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                     var children = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
                     super();
-                    this[_b] = false;
-                    this[_c] = {};
+                    this[_a] = {};
+                    this[_c] = false;
                     var css = get(this.constructor, "css");
                     if (css) {
                         var prefix = this.tagName.toLowerCase();
@@ -1684,20 +1697,20 @@
                     if (isobject(propsjson)) {
                         Object$1.assign(attrs, propsjson);
                     }
-                    openctx();
                     var props = attrs;
-                    var thisattributess = Object$1.fromEntries(Object$1.entries(props).map(_ref21 => {
-                        var [key, value] = _ref21;
+                    openctx();
+                    var thisattributess = Object$1.fromEntries(Object$1.entries(props).map(_ref22 => {
+                        var [key, value] = _ref22;
                         return [ key, createstate(value) ];
                     }));
                     this[attributessymbol] = readonlyproxy(thisattributess);
-                    var readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(_ref22 => {
-                        var [key, value] = _ref22;
+                    var readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(_ref23 => {
+                        var [key, value] = _ref23;
                         return [ key, readonlyproxy(value) ];
                     })));
                     var possiblyvirtualdom;
                     try {
-                        possiblyvirtualdom = custfun.call(undefined, readonlyprop, children);
+                        possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children ]);
                     } catch (error) {
                         closectx();
                         console.error(error);
@@ -1754,16 +1767,13 @@
                         onunmounted(_this3);
                     }))();
                 }
-                [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
-                    var _this4 = this;
-                    return _asyncToGenerator((function*() {
-                        if (get(_this4, attributessymbol)[name]) {
-                            set(get(_this4, attributessymbol)[name], "value,", createeleattragentreadwrite(_this4)[name]);
-                        }
-                    }))();
+                [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
+                    if (get(this, attributessymbol)[name]) {
+                        set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
+                    }
                 }
             }
-            Component[_a] = componentsymbol;
+            Component[_b] = componentsymbol;
             Component.css = isstring(css) && css ? css : undefined;
             Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
             return Component;
@@ -1875,38 +1885,38 @@
                 }
             }
             connectedCallback() {
-                var _this5 = this;
+                var _this4 = this;
                 return _asyncToGenerator((function*() {
-                    if (!_this5[readysymbol]) {
-                        _this5[readysymbol] = true;
-                        var attrs = createeleattragentreadwrite(_this5);
+                    if (!_this4[readysymbol]) {
+                        _this4[readysymbol] = true;
+                        var attrs = createeleattragentreadwrite(_this4);
                         if (true === attrs["value"]) {
-                            get(_this5, handletrue).call(_this5);
+                            get(_this4, handletrue).call(_this4);
                         }
                         if (false === attrs["value"]) {
-                            get(_this5, handlefalse).call(_this5);
+                            get(_this4, handlefalse).call(_this4);
                         }
                     }
-                    onmounted(_this5);
+                    onmounted(_this4);
                 }))();
             }
             disconnectedCallback() {
-                var _this6 = this;
+                var _this5 = this;
                 return _asyncToGenerator((function*() {
-                    onunmounted(_this6);
+                    onunmounted(_this5);
                 }))();
             }
             [attributeChangedCallback](name) {
-                var _this7 = this;
+                var _this6 = this;
                 return _asyncToGenerator((function*() {
-                    if (_this7[readysymbol]) {
+                    if (_this6[readysymbol]) {
                         if (name === "value") {
-                            var attrs = createeleattragentreadwrite(_this7);
+                            var attrs = createeleattragentreadwrite(_this6);
                             if (true === attrs["value"]) {
-                                _this7[handletrue]();
+                                _this6[handletrue]();
                             }
                             if (false === attrs["value"]) {
-                                _this7[handlefalse]();
+                                _this6[handlefalse]();
                             }
                         }
                     }
@@ -1996,8 +2006,8 @@
     }
     function extenddirectives() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        Object$1.entries(options).forEach(_ref23 => {
-            var [key, value] = _ref23;
+        Object$1.entries(options).forEach(_ref24 => {
+            var [key, value] = _ref24;
             if (typeof value !== "function") {
                 console.error(value);
                 console.error(invalid_Function);
@@ -2244,11 +2254,16 @@
             return x * y;
         });
         console.log(plus, multi);
-        watch([ x, y, multi, plus ], (function() {
+        var count = 0;
+        var cancelwatch = watch([ x, y, multi, plus ], (function() {
             for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
                 args[_key] = arguments[_key];
             }
-            console.log(args);
+            console.log(count, args);
+            count++;
+            if (count > 50) {
+                cancelwatch();
+            }
         }));
         return createElement("div", null, createElement("h3", null, " \u9f20\u6807\u4f4d\u7f6e"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 \u662f", plus), createElement("p", null, "x*y \u662f", multi));
     });
@@ -3144,7 +3159,7 @@
         }), createElement("hr", null) ];
         var inter = setInterval(() => {
             colortext.value = "#" + (Math.random() * 16 ** 7).toString(16).slice(0, 6);
-        }, 500);
+        }, 1e3);
         setTimeout(() => {
             clearInterval(inter);
         }, 1e4);
