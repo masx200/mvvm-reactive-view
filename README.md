@@ -81,7 +81,7 @@ import {
   useMounted,
   useUnMounted,
   condition,
-  directives,
+  extendDirectives,
   watch,
   html,
   h,
@@ -104,7 +104,7 @@ import {
   useMounted,
   useUnMounted,
   condition,
-  directives,
+  extendDirectives,
   watch,
   html,
   h,
@@ -739,8 +739,12 @@ console.log(ref.value);
 # 扩展自定义指令
 
 ```js
-directives({ myfocus(element, value, vdom) {} });
-
+extendDirectives({
+  myfocus(value, element, vdom) {
+    console.log(value, element, vdom);
+  }
+});
+const myvalue = "your directive value";
 html`
   <input *myfocus=${myvalue} />
 `;
@@ -811,7 +815,7 @@ class ReactiveState<T extends UnwrapedState> {
 
 ## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 
-## 使用`directives`函数来扩展指令,返回已有的指令合集
+## 使用`extendDirectives`函数来扩展指令,返回已有的指令合集
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
@@ -865,29 +869,22 @@ function createElement<T extends Function | string>(
 type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;
-interface Class extends HTMLElement {
+interface Class {
   new (): HTMLElement;
   prototype: HTMLElement;
-  defaultProps?: {
-    [key: string]: any;
-  };
+  defaultProps?: Record<string, any>;
   css?: string;
 }
 interface Virtualdom<T extends Class | string | Function> {
-  [Symbol.toStringTag]: string;
+  readonly [isvirtualelement]: unique symbol;
+  readonly [Symbol.toStringTag]: "VirtualElement";
   element: undefined | Element | Node;
   type: T;
   props: ElementAttrs;
   children: Vdomchildren;
-  directives: {
-    [key: string]: any;
-  };
-  onevent: {
-    [key: string]: Array<EventListener>;
-  };
-  bindattr: {
-    [key: string]: ReactiveState<any>;
-  };
+  directives: Record<string, any>;
+  onevent: Record<string, Array<EventListener>>;
+  bindattr: Record<string, ReactiveState<any>>;
 }
 ```
 

@@ -7,7 +7,7 @@ import isprimitive from "./isprimitive";
 export declare function isundefined(a: any): a is void;
 export declare function isnumber(a: any): a is number;
 export declare function isboolean(a: any): a is boolean;
-export declare function isobject(a: any): a is object | Record<string, any>;
+export declare function isobject(a: any): a is Exclude<object, Function>;
 export declare function isstring(a: any): a is string;
 export declare function isfunction(a: any): a is Function;
 export declare function isarray(a: any): a is Array<any>;

@@ -59,8 +59,19 @@ export default class ReactiveState<T extends UnwrapedState> {
     //});
 
 */
-  }
 
+    const debouncedfun = debounce((eventname?: string) => {
+      const name = eventname ? String(eventname) : "value";
+
+      this[eventtargetsymbol].dispatchEvent(
+        new CustomEvent("value", { detail: name })
+      );
+    });
+    this[debouncedispatch] = (eventname?: string) => {
+      debouncedfun(eventname);
+    };
+  }
+  [debouncedispatch]: (eventname?: string | undefined) => void;
   /* get [Symbol.toStringTag]() {
   //  return "ReativeState";
 
@@ -99,13 +110,6 @@ export default class ReactiveState<T extends UnwrapedState> {
       : "";
   }
 
-  [debouncedispatch] = debounce((eventname?: string) => {
-    const name = eventname ? String(eventname) : "value";
-
-    this[eventtargetsymbol].dispatchEvent(
-      new CustomEvent("value", { detail: name })
-    );
-  });
   [dispatchsymbol](eventname?: string) {
     //添加防抖函数
 

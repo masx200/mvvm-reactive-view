@@ -1,4 +1,3 @@
-/// <reference types="lodash" />
 export declare const removeonelistner: unique symbol;
 import { UnwrapedState } from "./watch";
 declare const callbackmap: unique symbol;
@@ -17,13 +16,13 @@ export default class ReactiveState<T extends UnwrapedState> {
     [callbackmap]: Map<Function, EventListener>;
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
+    [debouncedispatch]: (eventname?: string | undefined) => void;
     [addallistenerssymbol](): void;
     value: T | undefined;
     [eventtargetsymbol]: EventTarget;
     [memlisteners]: Set<EventListener>;
     valueOf: () => T | undefined;
     toString(): string;
-    [debouncedispatch]: ((eventname?: string | undefined) => void) & import("lodash").Cancelable;
     [dispatchsymbol](eventname?: string): void;
     [subscribesymbol](callback: Function): void;
     [cancelsubscribe](callback: Function): void;

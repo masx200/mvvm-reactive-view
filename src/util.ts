@@ -23,7 +23,7 @@ export function isnumber(a: any): a is number {
 export function isboolean(a: any): a is boolean {
   return typeof a === "boolean";
 }
-export function isobject(a: any): a is object | Record<string, any> {
+export function isobject(a: any): a is Exclude<object, Function> {
   return typeof a === "object" && a !== null;
 }
 // export function isstring(a: string): true;

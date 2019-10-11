@@ -258,7 +258,7 @@ function handleprops(
         ) /* typeof directives[name] === "function" */
         /*name in directives &&*/
       ) {
-        directives[name](element, value, vdom);
+        directives[name](value, element, vdom);
       } else {
         console.error(vdom.directives);
         console.error("invalid directives " + name);

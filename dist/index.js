@@ -608,7 +608,7 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-var _a, _b, _c, _d;
+var _a, _b, _c;
 
 const removeonelistner = Symbol("removeonelistner");
 
@@ -645,12 +645,6 @@ class ReactiveState {
         this.valueOf = () => {
             return this.value;
         };
-        this[_d] = debounce_1(eventname => {
-            const name = eventname ? String(eventname) : "value";
-            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
-                detail: name
-            }));
-        });
         if (isprimitive(init) || isobject(init)) {
             Object.defineProperty(this, "value", {
                 value: init,
@@ -662,6 +656,15 @@ class ReactiveState {
             console.error(invalid_primitive_or_object_state);
             throw TypeError();
         }
+        const debouncedfun = debounce_1(eventname => {
+            const name = eventname ? String(eventname) : "value";
+            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
+                detail: name
+            }));
+        });
+        this[debouncedispatch] = eventname => {
+            debouncedfun(eventname);
+        };
     }
     [(_a = callbackmap, addallistenerssymbol)]() {
         const name = "value";
@@ -673,7 +676,7 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_b = eventtargetsymbol, _c = memlisteners, _d = debouncedispatch, dispatchsymbol)](eventname) {
+    [(_b = eventtargetsymbol, _c = memlisteners, dispatchsymbol)](eventname) {
         this[debouncedispatch](eventname);
     }
     [subscribesymbol](callback) {
@@ -1077,30 +1080,52 @@ function rewatch(state) {
     state[addallistenerssymbol]();
 }
 
+function extenddirectives(options = {}) {
+    Object.entries(options).forEach(([key, value]) => {
+        if (typeof value !== "function") {
+            console.error(value);
+            console.error(invalid_Function);
+            throw TypeError();
+        } else {
+            if (!directive[key]) {
+                Reflect.set(directive, key, value);
+            } else {
+                console.error(directive);
+                console.error("do not extend existing directive");
+                throw new Error;
+            }
+        }
+    });
+    return directive;
+}
+
 const {requestAnimationFrame: requestAnimationFrame$1} = window;
 
 const directive = {
-    ref(ele, ref, _vdom) {
-        console.log(_vdom);
-        if (isobject(ref)) {
-            set(ref, "value", ele);
-        } else if (isfunction(ref)) {
+    ref(ref, ele, _vdom) {
+        if (isfunction(ref)) {
             apply(ref, undefined, [ ele ]);
+        } else if (isobject(ref)) {
+            set(ref, "value", ele);
         } else {
+            console.log(_vdom);
             console.error(ref);
             console.error("invalid ref");
             throw TypeError();
         }
-    },
-    html(ele, html, _vdom) {
+    }
+};
+
+extenddirectives({
+    html(html, ele, _vdom) {
         console.log(_vdom);
         createhtmlandtextdirective(setelehtml, "html")(ele, html);
     },
-    text(ele, text, _vdom) {
+    text(text, ele, _vdom) {
         console.log(_vdom);
         createhtmlandtextdirective(seteletext, "text")(ele, text);
     }
-};
+});
 
 function createhtmlandtextdirective(seteletext, errorname) {
     return function(ele, text) {
@@ -1268,7 +1293,7 @@ function handleprops(element, vdom) {
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
             if (isfunction(directive[name])) {
-                directive[name](element, value, vdom);
+                directive[name](value, element, vdom);
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);
@@ -2112,66 +2137,36 @@ function createRef(value) {
     };
 }
 
-function extenddirectives(options = {}) {
-    Object.entries(options).forEach(([key, value]) => {
-        if (typeof value !== "function") {
-            console.error(value);
-            console.error(invalid_Function);
-            throw TypeError();
-        } else {
-            if (!directive[key]) {
-                Reflect.set(directive, key, value);
-            } else {
-                console.error(directive);
-                console.error("do not extend existing directive");
-                throw new Error;
-            }
-        }
-    });
-    return directive;
+extenddirectives({
+    value(value, element, vdom) {
+        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+    },
+    checked(value, element, vdom) {
+        model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
+    }
+});
+
+function model(types, bindattribute, domprop, eventnames, value, vdom) {
+    if (!isReactiveState(value)) {
+        console.error(value);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
+        throw TypeError();
+    }
+    if (types.includes(vdom.type)) {
+        set(vdom.bindattr, bindattribute, value);
+        eventnames.forEach(eventname => {
+            const origin = vdom.onevent[eventname];
+            const eventsarray = toArray(origin);
+            set(vdom.onevent, eventname, [ ...eventsarray, e => {
+                return value.value = get(e.target, domprop);
+            } ].filter(Boolean));
+        });
+    } else {
+        console.error(vdom);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
+        throw TypeError();
+    }
 }
 
-extenddirectives({
-    value(_element, value, vdom) {
-        console.log(vdom);
-        if (isReactiveState(value) && (vdom.type === "input" || vdom.type === "textarea" || vdom.type === "select")) {
-            vdom.bindattr["value"] = value;
-            [ "change", "input" ].forEach(eventname => {
-                const origin = vdom.onevent[eventname];
-                const eventsarray = toArray(origin);
-                set(vdom.onevent, eventname, [ ...eventsarray, e => {
-                    return value.value = e.target.value;
-                } ].filter(Boolean));
-            });
-        } else {
-            console.error(value);
-            console.error(vdom);
-            console.error(invalid_ReactiveState + invalid_Virtualdom);
-            throw TypeError();
-        }
-    }
-});
-
-extenddirectives({
-    checked(_element, value, vdom) {
-        console.log(vdom);
-        if (isReactiveState(value) && vdom.type === "input") {
-            vdom.bindattr["checked"] = value;
-            [ "change", "input" ].forEach(eventname => {
-                const origin = vdom.onevent[eventname];
-                const eventsarray = toArray(origin);
-                set(vdom.onevent, eventname, [ ...eventsarray, e => {
-                    return value.value = e.target.checked;
-                } ].filter(Boolean));
-            });
-        } else {
-            console.error(value);
-            console.error(vdom);
-            console.error(invalid_ReactiveState + invalid_Virtualdom);
-            throw TypeError();
-        }
-    }
-});
-
-export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as directives, createElement as h, html$1 as html, render, useMounted, useUnMounted, watch };
+export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as extendDirectives, createElement as h, html$1 as html, render, useMounted, useUnMounted, watch };
 //# sourceMappingURL=index.js.map

@@ -1,1 +1,1 @@
-export declare function merge_entries(a: any[]): any[];
+export declare function merge_entries(a: [string, any][]): [string, any][];

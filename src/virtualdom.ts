@@ -107,19 +107,22 @@ function createVirtualElement<T extends Class | string | Function>(
 }
 // JSON.stringify
 interface Virtualdom<T extends Class | string | Function> {
-  readonly [isvirtualelement]: symbol;
+  readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
   element: undefined | Element | Node;
   type: T;
   props: ElementAttrs;
   children: Vdomchildren;
-  directives: { [key: string]: any };
-  onevent: {
-    [key: string]: Array<EventListener>;
-  };
-  bindattr: {
+  directives: Record<string, any>;
+  //   { [key: string]: any };
+  onevent: Record<string, Array<EventListener>>;
+  //   {
+  //     [key: string]: Array<EventListener>;
+  //   };
+  bindattr: Record<string, ReactiveState<any>>;
+  /* {
     [key: string]: ReactiveState<any>;
-  };
+  }; */
 }
 export default Virtualdom;
 // //export default class Virtualdom<T extends Class | string | Function> {

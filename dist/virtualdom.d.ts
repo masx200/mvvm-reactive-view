@@ -7,20 +7,14 @@ export declare type Vdomchildren = Array<Virtualdom<any> | string | ReactiveStat
 export { createVirtualElement };
 declare function createVirtualElement<T extends Class | string | Function>(type: T, props?: ElementAttrs, children?: Vdomchildren): Virtualdom<T>;
 interface Virtualdom<T extends Class | string | Function> {
-    readonly [isvirtualelement]: symbol;
+    readonly [isvirtualelement]: unique symbol;
     readonly [Symbol.toStringTag]: "VirtualElement";
     element: undefined | Element | Node;
     type: T;
     props: ElementAttrs;
     children: Vdomchildren;
-    directives: {
-        [key: string]: any;
-    };
-    onevent: {
-        [key: string]: Array<EventListener>;
-    };
-    bindattr: {
-        [key: string]: ReactiveState<any>;
-    };
+    directives: Record<string, any>;
+    onevent: Record<string, Array<EventListener>>;
+    bindattr: Record<string, ReactiveState<any>>;
 }
 export default Virtualdom;
