@@ -80,10 +80,10 @@ function Arraycomputed<T extends UnwrapedState>(
 
   let memorized = getter();
 
-  if (isFunction(memorized)) {
-    console.error(memorized);
-    throw new TypeError();
-  }
+ // if (isFunction(memorized)) {
+ //   console.error(memorized);
+ //   throw new TypeError();
+ // }
   defineProperty(reactivestate, "value", {
     get: getter,
     configurable: true
