@@ -1,7 +1,7 @@
 export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
 const callbackmap = Symbol("callbackmap");
-export const unsubscribe = Symbol("unsubscribe");
+export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
@@ -132,7 +132,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     //  const name = "value";
     this[memlisteners].add(eventlistener);
   }
-  [unsubscribe](callback: Function) {
+  [cancelsubscribe](callback: Function) {
     const eventlistener = this[callbackmap].get(callback);
     if (!eventlistener) {
       throw new Error();
