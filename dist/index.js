@@ -1774,7 +1774,7 @@ const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 
 function createComponent(custfun) {
-    var _a, _b, _c;
+    var _a, _b;
     if (isfunction(custfun)) {
         const defaultProps = get(custfun, "defaultProps");
         const css = get(custfun, "css");
@@ -1782,7 +1782,6 @@ function createComponent(custfun) {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_b] = false;
-                this[_c] = {};
                 const css = get(this.constructor, "css");
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
@@ -1856,7 +1855,7 @@ function createComponent(custfun) {
                 });
                 onunmounted(this);
             }
-            async [(_a = componentsymbol, _b = readysymbol, _c = attributessymbol, attributeChangedCallback)](name) {
+            async [(_a = componentsymbol, _b = readysymbol, attributeChangedCallback)](name) {
                 if (get(this, attributessymbol)[name]) {
                     set(get(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
                 }

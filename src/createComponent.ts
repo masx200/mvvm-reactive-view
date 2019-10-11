@@ -169,7 +169,9 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       //   prototype!: HTMLElement;
       //   defaultProps?: { [key: string]: any } | undefined;
       //  css?: string | undefined;
-      [innerstatesymbol]: Array<Readonly<ReactiveState<any>>>;
+      [innerstatesymbol]: Array<
+        ReactiveState<any> | Readonly<ReactiveState<any>>
+      >;
       static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
@@ -178,7 +180,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       static defaultProps = isobject(defaultProps)
         ? JSON.parse(JSON.stringify(defaultProps))
         : undefined;
-      [attributessymbol]: { [s: string]: ReactiveState<any> } | object = {};
+      [attributessymbol]: Record<string, Readonly<ReactiveState<any>>>;
       [elementsymbol]: Array<Node>;
       [vdomsymbol]: Array<
         Virtualdom<any> | ReactiveState<any> | string | number
