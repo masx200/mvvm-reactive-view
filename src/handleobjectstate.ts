@@ -1,3 +1,4 @@
+import {issymbol}from"./util"
 import deepobserve from "@masx200/deep-observe-agent-proxy";
 import { isplainobject, isarray, isSet, isobject } from "./util";
 import ReactiveState, {
@@ -61,6 +62,11 @@ export default function(init: object): ReactiveState<object> {
     target: ReactiveState<object>,
     key
   ) => {
+
+//如果是symbol属性返回undefined
+if(issymbol(key)){
+return
+}
     const myvalue = get(target, "value");
 
     const descripter =
