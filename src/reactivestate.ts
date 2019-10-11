@@ -123,7 +123,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     } else {
       //自动解包
       eventlistener = (event: Event) =>
-        callback.call(undefined, this.valueOf(), get(event, "detail"));
+        callback( this.valueOf());
 
       this[callbackmap].set(callback, eventlistener);
     }
