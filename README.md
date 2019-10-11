@@ -227,7 +227,9 @@ https://tc39.es/proposal-flatMap/
 }
 ```
 
-# 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
+# 响应式状态对象 `ReactiveState`,可以独立于组件存在,可以在任何地方使用,
+
+### `ReactiveState`状态改变触发`Event`,触发函数也已经用 `lodash`的`debounce`函数包装成防抖函数，保证了短时间内只能触发一次事件
 
 ## `ReactiveState`,基于 `EventTarget` 和 `Proxy`,
 
@@ -370,6 +372,15 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 与`React hooks`不同，该组件初始化函数仅被调用一次
 
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
+
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
+
+## 函数`watch`的回调函数已经自动使用`lodash`的`debounce`方法包装成防抖函数了，确保短时间内回调函数只执行一次
+
 ```js
 const mycom = createComponent(
   Object.assign(
@@ -431,11 +442,6 @@ setTimeout(() => {
 
 ### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
 
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
-
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
 
 ### 例子：跟踪鼠标的位置
 
