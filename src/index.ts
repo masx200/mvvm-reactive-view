@@ -10,7 +10,7 @@ import createElement from "./createelement";
 import createRef from "./createref";
 import createState from "./createstate";
 import "./CustomElementRegistry";
-import directives from "./extend-directive";
+import extendDirectives from "./extend-directive";
 import html from "./html";
 //请自行使用babel-preset-env和core-js 3
 //import "./Object-fromEntries";
@@ -29,5 +29,5 @@ export { MountElement };
 export { createRef };
 export { createState };
 export { watch };
-export { directives };
+export { extendDirectives };
 export { condition };

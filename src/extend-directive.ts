@@ -1,11 +1,11 @@
 import { invalid_Function } from "./context-mounted-unmounted-";
 import directives from "./directives";
 import Virtualdom from "./virtualdom";
-import ReactiveState from "./reactivestate";
 export interface Extendfun {
   (
+    value: any,
     element: Element,
-    value: any | ReactiveState<any>,
+
     vdom: Virtualdom<any>
   ): void;
 }

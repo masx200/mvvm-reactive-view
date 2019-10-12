@@ -189,7 +189,7 @@ console.log(h, createElement);
   //   console.log([vdom, colortext, stylestate]);
   var inter = setInterval(() => {
     colortext.value = "#" + (Math.random() * 16 ** 7).toString(16).slice(0, 6);
-  }, 500);
+  }, 1000);
   setTimeout(() => {
     clearInterval(inter);
   }, 10000);

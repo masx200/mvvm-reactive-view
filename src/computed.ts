@@ -1,3 +1,6 @@
+import { isobject, isprimitive } from "./util";
+
+
 /* interface CallbackReactiveState<
  
 > {
@@ -75,15 +78,28 @@ function Arraycomputed<T extends UnwrapedState>(
     //自动解包
     const value = apply(callback, undefined, state.map(st => st.valueOf()));
     // callback(...state.map(st => st.valueOf()));
-    return isReactiveState(value) ? value.value : value;
+  const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
+
+if(isobject(possiblevalue)||isprimitive(possiblevalue)){
+
+
+return possiblevalue
+
+ }
+
+else{
+console.error(possiblevalue)
+throw TypeError()
+
+}
   };
 
   let memorized = getter();
 
-  if (isFunction(memorized)) {
-    console.error(memorized);
-    throw new TypeError();
-  }
+ // if (isFunction(memorized)) {
+ //   console.error(memorized);
+ //   throw new TypeError();
+ // }
   defineProperty(reactivestate, "value", {
     get: getter,
     configurable: true
@@ -101,7 +117,7 @@ function Arraycomputed<T extends UnwrapedState>(
     });
   });
 
-  return readonlyproxy(getproperyreadproxy(reactivestate));
+  return readonlyproxy (getproperyreadproxy(reactivestate));
 }
 const __proto__ = "__proto__";
 export function getproperyreadproxy<T extends object>(a: T): T;
@@ -110,6 +126,14 @@ export function getproperyreadproxy(a: object) {
   //   const target = isobject(a) ? a : getPrototypeOf(a);
   const target = a;
   return new Proxy(target, {
+getOwnPropertyDescriptor(target, key) {
+          //对于symbol属性，返回undefined
+          if (issymbol(key)) {
+            return;
+          } else {
+            return getOwnPropertyDescriptor(target, key);
+          }
+        },
     ownKeys(target) {
       let myvalue = get(target, "value");
       const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];

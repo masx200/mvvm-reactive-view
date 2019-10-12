@@ -4,9 +4,7 @@ export declare function parsecsstext(text: string): Array<CSSRule>;
 export declare function isCSSStyleRule(a: any): a is CSSStyleRule;
 export declare function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string): CSSStyleRule;
 export declare function prefixcssrules(cssRulesarray: Array<CSSRule>, prefix: string): Array<CSSRule>;
-declare const componentsstylesheet: {
-    [key: string]: Set<string>;
-};
+declare const componentsstylesheet: Record<string, Set<string>>;
 export { componentsstylesheet };
 export declare function savestyleblob(tagname: string, csstext?: string, urltext?: string): void;
 export declare function cssrulestocsstext(cssrules: Array<CSSRule>): string;

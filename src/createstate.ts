@@ -48,14 +48,7 @@ function createstate<T extends UnwrapedState>(
   if (isprimitive(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
-        getOwnPropertyDescriptor(target, key) {
-          //对于symbol属性，返回undefined
-          if (issymbol(key)) {
-            return;
-          } else {
-            return getOwnPropertyDescriptor(target, key);
-          }
-        },
+        
         defineProperty() {
           return false;
         },

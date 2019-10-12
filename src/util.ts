@@ -1,12 +1,14 @@
 export function issymbol(a: any): a is symbol {
-  return gettagtype(a) === "symbol";
+  return typeof a==="symbol"
+//||gettagtype(a) === "symbol";
 }
 
 export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
 
-const isplainobject = (a: any) => isobject(a) && gettagtype(a) === "object";
+const isplainobject = (a: any): a is Record<any, any> =>
+  isobject(a) && gettagtype(a) === "object";
 
 import isprimitive from "./isprimitive";
 import { /* has,  */ get } from "./reflect";
@@ -22,7 +24,7 @@ export function isnumber(a: any): a is number {
 export function isboolean(a: any): a is boolean {
   return typeof a === "boolean";
 }
-export function isobject(a: any): a is object | Record<string, any> {
+export function isobject(a: any): a is Exclude<object, Function> {
   return typeof a === "object" && a !== null;
 }
 // export function isstring(a: string): true;
@@ -45,14 +47,16 @@ export function gettagtype(a: any): string {
     .call(a)
     .replace("[object ", "")
     .replace("]", "")
-    .toLowerCase()
+    //.toLowerCase()
     .trim();
 }
-export function ispromise(a: any): a is Promise<any> {
-  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
-}
+//export function ispromise(a: any): a is Promise<any> {
+//  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
+//}
 export function isSet(a: any): a is Set<any> {
   return gettagtype(a) === "set" && a instanceof Set;
+
+
 }
 
 const camelizeRE = /-(\w)/g;

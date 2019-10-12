@@ -9,24 +9,28 @@ import { set, apply } from "./reflect";
 import Virtualdom from "./virtualdom";
 
 const directive: ExtendOptions = {
-  ref(ele: Element, ref: object | Function, _vdom: Virtualdom<any>) {
-    console.log(_vdom);
-    if (isobject(ref)) {
-      set(ref as object, "value", ele);
-      //   ref.value = ele;
-    } else if (isfunction(ref)) {
+  ref(ref: object | Function, ele: Element, _vdom: Virtualdom<any>) {
+    if (isfunction(ref)) {
       apply(ref as Function, undefined, [ele]);
       // ref(ele)
       //   ref.call(undefined, ele);
+    } else if (isobject(ref)) {
+      set(ref as object, "value", ele);
+      //   ref.value = ele;
     } else {
+      console.log(_vdom);
       console.error(ref);
       console.error("invalid ref");
       throw TypeError();
     }
-  },
+  }
+};
+import extenddirectives from "./extend-directive";
+extenddirectives({
   html(
-    ele: Element,
     html: string | ReactiveState<any>,
+    ele: Element,
+
     _vdom: Virtualdom<any>
   ) {
     console.log(_vdom);
@@ -35,77 +39,77 @@ const directive: ExtendOptions = {
     // ele.innerHTML = html;
     // console.log(ele.outerHTML);
     /*  if (typeof html == "string") {
-      requestAnimationFrame(() => {
-        setelehtml(ele, html);
-
-        /* ele.innerHTML = html;*/
+          requestAnimationFrame(() => {
+            setelehtml(ele, html);
+    
+            /* ele.innerHTML = html;*/
     //   console.log(ele.outerHTML);
     /*     });
-    } else if (html instanceof ReactiveState) {
-      //   const ReactiveState = html;
-      watch(html, (state: { value: any }) => {
-        /*ele.innerHTML = String(state);*/
+        } else if (html instanceof ReactiveState) {
+          //   const ReactiveState = html;
+          watch(html, (state: { value: any }) => {
+            /*ele.innerHTML = String(state);*/
     /*
-        setelehtml(ele, String(state));
-      });
-      //   ReactiveState[subscribesymbol]((state: { value: any }) => {
-      //     ele.innerHTML = String(state.value);
-      //   });
-      requestAnimationFrame(() => {
-        // console.log("html");
-        /*  ele.innerHTML = String(html);*/
+            setelehtml(ele, String(state));
+          });
+          //   ReactiveState[subscribesymbol]((state: { value: any }) => {
+          //     ele.innerHTML = String(state.value);
+          //   });
+          requestAnimationFrame(() => {
+            // console.log("html");
+            /*  ele.innerHTML = String(html);*/
     /*
-  //      setelehtml(ele, String(html));
- //     });
-  //  } else {
-
-//console.error()
-  //    throw TypeError("invalid html");
- //   }
-
-*/
+      //      setelehtml(ele, String(html));
+     //     });
+      //  } else {
+    
+    //console.error()
+      //    throw TypeError("invalid html");
+     //   }
+    
+    */
   },
   text(
-    ele: Element,
     text: string | ReactiveState<any>,
+    ele: Element,
     _vdom: Virtualdom<any>
   ) {
     console.log(_vdom);
     createhtmlandtextdirective(seteletext, "text")(ele, text);
 
     /*
-
-  // ele.textContent = text;
-    // console.log(ele.outerHTML);
-    if (typeof text == "string") {
-      requestAnimationFrame(() => {
-        seteletext(ele, text);
-        /*    ele.textContent = text;*/
+    
+      // ele.textContent = text;
+        // console.log(ele.outerHTML);
+        if (typeof text == "string") {
+          requestAnimationFrame(() => {
+            seteletext(ele, text);
+            /*    ele.textContent = text;*/
     /*      //   console.log(ele.outerHTML);
-      });
-    } else if (text instanceof ReactiveState) {
-      //   const ReactiveState = text;
-      watch(text, (state: { value: any }) => {
-        seteletext(ele, String(state));
-
-        /* ele.textContent = String(state);*/
+          });
+        } else if (text instanceof ReactiveState) {
+          //   const ReactiveState = text;
+          watch(text, (state: { value: any }) => {
+            seteletext(ele, String(state));
+    
+            /* ele.textContent = String(state);*/
     /*   });
-      //   ReactiveState[subscribesymbol]((state: { value: any }) => {
-      //     ele.textContent = String(state.value);
-      //   });
-      requestAnimationFrame(() => {
-        // console.log("text");
-        seteletext(ele, String(text));
-
-        /*  ele.textContent = String(text);*/
+          //   ReactiveState[subscribesymbol]((state: { value: any }) => {
+          //     ele.textContent = String(state.value);
+          //   });
+          requestAnimationFrame(() => {
+            // console.log("text");
+            seteletext(ele, String(text));
+    
+            /*  ele.textContent = String(text);*/
     /*    });
-   // } else {
-  //    throw TypeError("invalid text");
- //   }
-
-*/
+       // } else {
+      //    throw TypeError("invalid text");
+     //   }
+    
+    */
   }
-};
+});
 function createhtmlandtextdirective(seteletext: Function, errorname: string) {
   return function(ele: Element, text: string | ReactiveState<any>) {
     const element = ele;

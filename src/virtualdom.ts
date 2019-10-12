@@ -11,7 +11,7 @@ import { isobject } from "./util";
 export function isVirtualdom(a: any): a is Virtualdom<any> {
   return (
     isobject(a) &&
-    has(a, isvirtualelement) &&
+    // has(a, isvirtualelement) &&
     get(a, isvirtualelement) === isvirtualelement
   );
 }
@@ -114,14 +114,15 @@ interface Virtualdom<T extends Class | string | Function> {
   props: ElementAttrs;
   children: Vdomchildren;
   directives: Record<string, any>;
+  //   { [key: string]: any };
   onevent: Record<string, Array<EventListener>>;
-  /*  {
-    [key: string]: Array<EventListener>;
-  }; */
+  //   {
+  //     [key: string]: Array<EventListener>;
+  //   };
   bindattr: Record<string, ReactiveState<any>>;
-  // {
-  //   [key: string]: ReactiveState<any>;
-  // };
+  /* {
+    [key: string]: ReactiveState<any>;
+  }; */
 }
 export default Virtualdom;
 // //export default class Virtualdom<T extends Class | string | Function> {

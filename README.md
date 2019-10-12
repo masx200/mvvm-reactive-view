@@ -10,7 +10,7 @@
 
 ## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`，响应式状态可以独立于组件存在
 
-## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
+## 有着面向未来的函数式`API`，提供与`React Hooks`相同级别的逻辑组合功能，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，`Render Props`
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -81,7 +81,7 @@ import {
   useMounted,
   useUnMounted,
   condition,
-  directives,
+  extendDirectives,
   watch,
   html,
   h,
@@ -104,7 +104,7 @@ import {
   useMounted,
   useUnMounted,
   condition,
-  directives,
+  extendDirectives,
   watch,
   html,
   h,
@@ -227,7 +227,9 @@ https://tc39.es/proposal-flatMap/
 }
 ```
 
-# 响应式状态对象 ,可以独立于组件存在,可以在任何地方使用,
+# 响应式状态对象 `ReactiveState`,可以独立于组件存在,可以在任何地方使用,
+
+### `ReactiveState`状态改变触发`Event`,触发函数也已经用 `lodash`的`debounce`函数包装成防抖函数，保证了短时间内只能触发一次事件
 
 ## `ReactiveState`,基于 `EventTarget` 和 `Proxy`,
 
@@ -342,7 +344,7 @@ document.body.appendChild(
 
 https://blog.csdn.net/sinat_17775997/article/details/89181398
 
-### Mixin 带来的风险：
+### `Mixin` 带来的风险：
 
 Mixin 可能会相互依赖，相互耦合，不利于代码维护
 
@@ -352,7 +354,7 @@ Mixin 非常多时，组件是可以感知到的，
 
 甚至还要为其做相关处理，这样会给代码造成滚雪球式的复杂性
 
-### HOC 的缺陷
+### `HOC` 和`Render Props`的缺陷
 
 HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难。
 
@@ -362,13 +364,22 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 受到 `Vue Composition API`和`React Hooks`的启发,
 
-集各家所长，但是跟它们完全不同，
+集各家所长，但是跟它们有很大不同，
 
 响应式状态可以独立于组件存在,`watch`,`computed`,`createState`函数可以在组件外使用
 
 基于函数的 `API` 提供与`React Hooks`相同级别的逻辑组合功能，但有一些重要的区别。
 
 与`React hooks`不同，该组件初始化函数仅被调用一次
+
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
+
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
+
+## 函数`watch`的回调函数已经自动使用`lodash`的`debounce`方法包装成防抖函数了，确保短时间内回调函数只执行一次
 
 ```js
 const mycom = createComponent(
@@ -431,6 +442,7 @@ setTimeout(() => {
 
 ### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
 
+
 ### 例子：跟踪鼠标的位置
 
 ```jsx
@@ -462,8 +474,13 @@ const mycomapp = createComponent(() => {
   const multi = computed([x, y], (x, y) => {
     return x * y;
   });
-  watch([x, y, multi, plus], (...args) => {
-    console.log(args);
+  let count = 0;
+  const cancelwatch = watch([x, y, multi, plus], (...args) => {
+    console.log(count, args);
+    count++;
+    if (count > 50) {
+      cancelwatch();
+    }
   });
   return (
     <div>
@@ -728,8 +745,12 @@ console.log(ref.value);
 # 扩展自定义指令
 
 ```js
-directives({ myfocus(element, value, vdom) {} });
-
+extendDirectives({
+  myfocus(value, element, vdom) {
+    console.log(value, element, vdom);
+  }
+});
+const myvalue = "your directive value";
 html`
   <input *myfocus=${myvalue} />
 `;
@@ -798,15 +819,9 @@ class ReactiveState<T extends UnwrapedState> {
 
 ### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
 
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组
-
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
-
 ## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
 
-## 使用`directives`函数来扩展指令,返回已有的指令合集
+## 使用`extendDirectives`函数来扩展指令,返回已有的指令合集
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
@@ -860,29 +875,22 @@ function createElement<T extends Function | string>(
 type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;
-interface Class extends HTMLElement {
+interface Class {
   new (): HTMLElement;
   prototype: HTMLElement;
-  defaultProps?: {
-    [key: string]: any;
-  };
+  defaultProps?: Record<string, any>;
   css?: string;
 }
 interface Virtualdom<T extends Class | string | Function> {
-  [Symbol.toStringTag]: string;
+  readonly [isvirtualelement]: unique symbol;
+  readonly [Symbol.toStringTag]: "VirtualElement";
   element: undefined | Element | Node;
   type: T;
   props: ElementAttrs;
   children: Vdomchildren;
-  directives: {
-    [key: string]: any;
-  };
-  onevent: {
-    [key: string]: Array<EventListener>;
-  };
-  bindattr: {
-    [key: string]: ReactiveState<any>;
-  };
+  directives: Record<string, any>;
+  onevent: Record<string, Array<EventListener>>;
+  bindattr: Record<string, ReactiveState<any>>;
 }
 ```
 

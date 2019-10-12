@@ -1,18 +1,17 @@
 export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
+// import Reflect from "./reflect";
+import isprimitive from "./isprimitive";
+import { isobject, isSet ,gettagtype} from "./util";
+import { UnwrapedState } from "./watch";
 const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
-  return a instanceof ReactiveState;
+  return a instanceof ReactiveState&&gettagtype(a)==="reactivestate";
 }
-// import Reflect from "./reflect";
-import isprimitive from "./isprimitive";
-import { get } from "./reflect";
-import { isobject, isSet } from "./util";
-import { UnwrapedState } from "./watch";
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
 export const eventtargetsymbol = Symbol("eventtatget");
@@ -60,8 +59,19 @@ export default class ReactiveState<T extends UnwrapedState> {
     //});
 
 */
-  }
 
+    const debouncedfun = debounce((eventname?: string) => {
+      const name = eventname ? String(eventname) : "value";
+
+      this[eventtargetsymbol].dispatchEvent(
+        new CustomEvent("value", { detail: name })
+      );
+    });
+    this[debouncedispatch] = (eventname?: string) => {
+      debouncedfun(eventname);
+    };
+  }
+  [debouncedispatch]: (eventname?: string | undefined) => void;
   /* get [Symbol.toStringTag]() {
   //  return "ReativeState";
 
@@ -100,13 +110,6 @@ export default class ReactiveState<T extends UnwrapedState> {
       : "";
   }
 
-  [debouncedispatch] = debounce((eventname?: string) => {
-    const name = eventname ? String(eventname) : "value";
-
-    this[eventtargetsymbol].dispatchEvent(
-      new CustomEvent("value", { detail: name })
-    );
-  });
   [dispatchsymbol](eventname?: string) {
     //添加防抖函数
 
@@ -122,8 +125,7 @@ export default class ReactiveState<T extends UnwrapedState> {
       eventlistener = possiblecallback;
     } else {
       //自动解包
-      eventlistener = (event: Event) =>
-        callback.call(undefined, this.valueOf(), get(event, "detail"));
+      eventlistener = () => callback(this.valueOf());
 
       this[callbackmap].set(callback, eventlistener);
     }
