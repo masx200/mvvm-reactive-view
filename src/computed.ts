@@ -117,7 +117,7 @@ throw TypeError()
     });
   });
 
-  return getproperyreadproxy(readonlyproxy(reactivestate));
+  return readonlyproxy (getproperyreadproxy(reactivestate));
 }
 const __proto__ = "__proto__";
 export function getproperyreadproxy<T extends object>(a: T): T;
