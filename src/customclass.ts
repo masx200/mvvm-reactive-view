@@ -1,17 +1,18 @@
+export { Htmlelementconstructor as Class };
 import { VaildVDom } from "./conditon";
 import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./VirtualElement";
-
-export interface Class {
-  new (): HTMLElement;
-  //   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
-  prototype: HTMLElement;
-  defaultProps?: Record<string, any>;
-  css?: string;
-}
+import { Htmlelementconstructor } from "./createComponent";
+// /* export interface Class {
+//   new (): HTMLElement;
+//   //   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;
+//   prototype: HTMLElement;
+//   defaultProps?: Record<string, any>;
+//   css?: string;
+// } */
 export interface Custom {
   (
-    props?: Readonly<Record<string, Readonly<ReactiveState<any>>>>,
+    props?: Record<string, ReactiveState<any>>,
     //  { [key: string]: ReactiveState<any> },
     children?: Vdomchildren
   ): VaildVDom;

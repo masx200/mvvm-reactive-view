@@ -11,7 +11,7 @@ import {
   useMounted,
   useUnMounted
 } from "../../dist/index.js";
-console.log(h, createElement);
+console.log([h, createElement]);
 function useMousePosition() {
   const x = createState(0);
   const y = createState(0);
@@ -35,11 +35,15 @@ function useMousePosition() {
 const mycomapp = createComponent(() => {
   const { x, y } = useMousePosition();
   const plus = computed(x, x => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     return x + 100;
   });
   // other logic...
 
   const multi = computed([x, y], (x, y) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     return x * y;
   });
   //   console.log(plus, multi);

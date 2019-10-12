@@ -1,3 +1,4 @@
+export const innerwatchrecords = Symbol("innerwatchrecord");
 export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
 import { AttrChange, attributeChangedCallback } from "./attrchange";
@@ -6,10 +7,10 @@ import {
   getMounted,
   getstates,
   getUnMounted,
+  getwatchrecords,
   invalid_Function,
   openctx
 } from "./context-mounted-unmounted";
-import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
 import createstate from "./createstate";
 import { Custom } from "./customclass";
 import { seteletext } from "./dom";
@@ -20,24 +21,25 @@ import { isvalidvdom } from "./html";
 import { componentsymbol } from "./iscomponent";
 // import { insertfirst } from "./dom";
 import mount from "./mount-real-element";
+import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
 import {
   /* parsecsstext,
-        prefixcssrules,
-        cssrulestocsstext, */
+          prefixcssrules,
+          cssrulestocsstext, */
   //   savestyleblob,
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
   registercssprefix,
   /*  loadlinkstyle,
-        createlinkstylesheet */
+          createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
 } from "./parsecss-transformcss";
 import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
 import readonlyproxy from "./readonlyproxy";
 import { readysymbol } from "./readysymbol";
-import { get, set, apply } from "./reflect";
+import { apply, get } from "./reflect";
 import render from "./render-vdom-to-real";
 import { setimmediate } from "./setimmediate";
 import { toArray } from "./toArray";
@@ -52,6 +54,8 @@ const unmountedsymbol = Symbol("unmounted");
 export interface Htmlelementconstructor {
   new (): HTMLElement;
   prototype: HTMLElement;
+  defaultProps?: Record<string, any>;
+  css?: string;
 }
 
 export function createComponent(custfun: Custom): Htmlelementconstructor {
@@ -59,7 +63,8 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
     class Component extends AttrChange {
-      [attributessymbol]: Record<string, Readonly<ReactiveState<any>>> = {};
+      [innerwatchrecords]: [ReactiveState<any>, Function][];
+      [attributessymbol]: Record<string, ReactiveState<any>> = {};
       // new (propsjson?: object | undefined, children?: any[] | undefined): HTMLElement
 
       //   constructor(...args: any[]);
@@ -106,7 +111,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         const thisattributess = Object.fromEntries(
           Object.entries(props).map(([key, value]) => [key, createstate(value)])
         );
-        this[attributessymbol] = readonlyproxy(thisattributess);
+        this[attributessymbol] = thisattributess;
         // console.log({ props, thisattributess });
         // debugger;
         /* 把attributes的reactivestates也放进innerstates中 */
@@ -128,7 +133,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         try {
           possiblyvirtualdom = apply(custfun, undefined, [
             readonlyprop,
-            children
+            children.flat(1 / 0)
           ]);
           /* custfun.call(
             undefined,
@@ -159,6 +164,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
           this[innerstatesymbol] = getstates();
+          this[innerwatchrecords] = getwatchrecords();
           closectx();
         } else {
           closectx();
@@ -173,9 +179,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       //   prototype!: HTMLElement;
       //   defaultProps?: { [key: string]: any } | undefined;
       //  css?: string | undefined;
-      [innerstatesymbol]: Array<
-        ReactiveState<any> | Readonly<ReactiveState<any>>
-      >;
+      [innerstatesymbol]: Array<ReactiveState<any>>;
       static [componentsymbol] = componentsymbol;
       static css = isstring(css) && css ? css : undefined;
       [readysymbol] = false;
@@ -254,15 +258,21 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);
-        if (get(this, attributessymbol)[name]) {
+        const propreactivestate = this[attributessymbol][name];
+        const attributes = createeleattragentreadwrite(this) as Record<
+          string,
+          any
+        >;
+        if (propreactivestate) {
+          propreactivestate["value"] = attributes[name];
           /* 当属性改变时要跟ReactiveState同步状态 */
-          set(
+          /*   set(
             get(this, attributessymbol)[name],
             "value,",
             (createeleattragentreadwrite(this) as { [key: string]: any })[
               name
-            ] as any
-          );
+            ] as any */
+          //   );
           /*   this[attributessymbol][name].value = createeleattragentreadwrite(
             this
           )[name]; */

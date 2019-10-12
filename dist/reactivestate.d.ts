@@ -1,6 +1,7 @@
+export declare const addonelistner: unique symbol;
 export declare const removeonelistner: unique symbol;
 import { UnwrapedState } from "./watch";
-declare const callbackmap: unique symbol;
+export declare const callbackmap: unique symbol;
 export declare const cancelsubscribe: unique symbol;
 declare const debouncedispatch: unique symbol;
 export declare const invalid_primitive_or_object_state = "invalid primitive or object state";
@@ -17,6 +18,9 @@ export default class ReactiveState<T extends UnwrapedState> {
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
     [debouncedispatch]: (eventname?: string | undefined) => void;
+    [removeallistenerssymbol](): void;
+    [removeonelistner](callback: EventListener): void;
+    [addonelistner](callback: EventListener): void;
     [addallistenerssymbol](): void;
     value: T | undefined;
     [eventtargetsymbol]: EventTarget;
@@ -26,8 +30,6 @@ export default class ReactiveState<T extends UnwrapedState> {
     [dispatchsymbol](eventname?: string): void;
     [subscribesymbol](callback: Function): void;
     [cancelsubscribe](callback: Function): void;
-    [removeallistenerssymbol](): void;
-    [removeonelistner](callback: EventListener): void;
     [Symbol.toPrimitive](): string | undefined;
 }
 export {};

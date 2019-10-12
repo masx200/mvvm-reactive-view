@@ -10,8 +10,10 @@ import {
   MountElement,
   watch
 } from "../../dist/index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
-console.log(h, createElement);
+console.log([h, createElement]);
 const mycomapp = createComponent(() => {
   const inputpassword = createState("");
   const inputref = createRef();

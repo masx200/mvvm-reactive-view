@@ -1,7 +1,7 @@
-interface Ref<T> {
-  value: T;
+interface Ref<T = any | undefined> {
+  value: T | undefined;
 }
 
-export default function createRef<T>(value: T): Ref<T> {
+export default function createRef<T = any | undefined>(value?: T): Ref<T> {
   return { value };
 }

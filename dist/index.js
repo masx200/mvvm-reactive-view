@@ -303,10 +303,6 @@ const Reflect$2 = window.Reflect;
 
 const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get$1, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, set: set$1} = Reflect$2;
 
-function setimmediate(fun) {
-    return Promise.resolve().then(() => fun());
-}
-
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
@@ -328,9 +324,7 @@ class AttrChange extends HTMLElement {
         if (oldValue !== value) {
             setAttribute(this, qualifiedName, value);
             if (isfunction(callback)) {
-                setimmediate(() => {
-                    callback.call(this, qualifiedName, oldValue, value);
-                });
+                callback.call(this, qualifiedName, oldValue, value);
             }
         }
     }
@@ -340,9 +334,7 @@ class AttrChange extends HTMLElement {
         if (null !== oldValue) {
             removeAttribute$1(this, qualifiedName);
             if (isfunction(callback)) {
-                setimmediate(() => {
-                    callback.call(this, qualifiedName, oldValue, undefined);
-                });
+                callback.call(this, qualifiedName, oldValue, undefined);
             }
         }
     }
@@ -610,6 +602,8 @@ var debounce_1 = debounce;
 
 var _a, _b, _c;
 
+const addonelistner = Symbol("addonelistner");
+
 const removeonelistner = Symbol("removeonelistner");
 
 const callbackmap = Symbol("callbackmap");
@@ -666,10 +660,22 @@ class ReactiveState {
             debouncedfun(eventname);
         };
     }
-    [(_a = callbackmap, addallistenerssymbol)]() {
-        const name = "value";
+    [(_a = callbackmap, removeallistenerssymbol)]() {
         this[memlisteners].forEach(callback => {
-            this[eventtargetsymbol].addEventListener(name, callback);
+            this[removeonelistner](callback);
+        });
+    }
+    [removeonelistner](callback) {
+        const name = "value";
+        this[eventtargetsymbol].removeEventListener(name, callback);
+    }
+    [addonelistner](callback) {
+        const name = "value";
+        this[eventtargetsymbol].addEventListener(name, callback);
+    }
+    [addallistenerssymbol]() {
+        this[memlisteners].forEach(callback => {
+            this[addonelistner](callback);
         });
     }
     toString() {
@@ -697,15 +703,6 @@ class ReactiveState {
         }
         this[memlisteners].delete(eventlistener);
         this[removeonelistner](eventlistener);
-    }
-    [removeallistenerssymbol]() {
-        this[memlisteners].forEach(callback => {
-            this[removeonelistner](callback);
-        });
-    }
-    [removeonelistner](callback) {
-        const name = "value";
-        this[eventtargetsymbol].removeEventListener(name, callback);
     }
     [Symbol.toPrimitive]() {
         const value = this.valueOf();
@@ -943,6 +940,10 @@ function getancestornode(node) {
 }
 
 let watchrecord = [];
+
+function getwatchrecords() {
+    return [ ...watchrecord ];
+}
 
 function usewatch(state, callback) {
     if (ctxopen) {
@@ -1764,7 +1765,7 @@ function transformcsstext(text, prefix) {
     return cssnewtext;
 }
 
-async function registercssprefix(text, prefix) {
+function registercssprefix(text, prefix) {
     const css = text;
     const cssnewtext = transformcsstext(css, prefix);
     savestyleblob(prefix, cssnewtext);
@@ -1804,6 +1805,12 @@ function readonlyproxy(target) {
 }
 
 const readysymbol = Symbol("readystate");
+
+function setimmediate(fun) {
+    return Promise.resolve().then(() => fun());
+}
+
+const innerwatchrecords = Symbol("innerwatchrecord");
 
 const innerstatesymbol = Symbol("innerstate");
 
@@ -1845,11 +1852,11 @@ function createComponent(custfun) {
                 const props = attrs;
                 openctx();
                 const thisattributess = Object.fromEntries(Object.entries(props).map(([key, value]) => [ key, createstate(value) ]));
-                this[attributessymbol] = readonlyproxy(thisattributess);
+                this[attributessymbol] = thisattributess;
                 const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 let possiblyvirtualdom;
                 try {
-                    possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children ]);
+                    possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
                 } catch (error) {
                     closectx();
                     console.error(error);
@@ -1864,6 +1871,7 @@ function createComponent(custfun) {
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
                     this[innerstatesymbol] = getstates();
+                    this[innerwatchrecords] = getwatchrecords();
                     closectx();
                 } else {
                     closectx();
@@ -1901,8 +1909,10 @@ function createComponent(custfun) {
                 onunmounted(this);
             }
             [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
-                if (get$1(this, attributessymbol)[name]) {
-                    set$1(get$1(this, attributessymbol)[name], "value,", createeleattragentreadwrite(this)[name]);
+                const propreactivestate = this[attributessymbol][name];
+                const attributes = createeleattragentreadwrite(this);
+                if (propreactivestate) {
+                    propreactivestate["value"] = attributes[name];
                 }
             }
         }
@@ -1923,17 +1933,26 @@ function onmounted(ele) {
             onmounted(e);
         });
     } else if (isNode(ele)) {
-        if (has(ele, eventlistenerssymbol)) {
-            readdlisteners(ele);
-        }
+        readdlisteners(ele);
         if (has(ele, bindstatesymbol)) {
             get$1(ele, bindstatesymbol).forEach(state => {
                 rewatch(state);
+                state[dispatchsymbol]();
             });
         }
         if (has(ele, innerstatesymbol)) {
             get$1(ele, innerstatesymbol).forEach(state => {
                 rewatch(state);
+            });
+        }
+        if (has(ele, innerwatchrecords)) {
+            const watchrecords = get$1(ele, innerwatchrecords);
+            watchrecords.forEach(([state, callback]) => {
+                const eventlistener = state[callbackmap].get(callback);
+                if (!eventlistener) {
+                    throw new Error;
+                }
+                state[addonelistner](eventlistener);
             });
         }
         onmounted(getdomchildren(ele));
@@ -1946,12 +1965,20 @@ function onunmounted(ele) {
             onunmounted(e);
         });
     } else if (isNode(ele)) {
-        if (has(ele, eventlistenerssymbol)) {
-            removelisteners(ele);
-        }
+        removelisteners(ele);
         if (has(ele, innerstatesymbol)) {
             get$1(ele, innerstatesymbol).forEach(state => {
                 unwatch(state);
+            });
+        }
+        if (has(ele, innerwatchrecords)) {
+            const watchrecords = get$1(ele, innerwatchrecords);
+            watchrecords.forEach(([state, callback]) => {
+                const eventlistener = state[callbackmap].get(callback);
+                if (!eventlistener) {
+                    throw new Error;
+                }
+                state[removeonelistner](eventlistener);
             });
         }
         onunmounted(getdomchildren(ele));

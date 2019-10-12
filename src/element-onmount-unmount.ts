@@ -1,16 +1,17 @@
-import { innerstatesymbol } from "./createComponent";
+import { innerstatesymbol, innerwatchrecords } from "./createComponent";
 import { getdomchildren } from "./dom";
-import {
-  eventlistenerssymbol,
-  readdlisteners,
-  removelisteners
-} from "./handle-onevent";
-import ReactiveState from "./reactivestate";
+import { readdlisteners, removelisteners } from "./handle-onevent";
+import { isNode } from "./MountElement";
+import ReactiveState, {
+  addonelistner,
+  callbackmap,
+  removeonelistner,
+  dispatchsymbol
+} from "./reactivestate";
+import { get, has } from "./reflect";
 import { bindstatesymbol } from "./render-vdom-to-real";
 import { isArray } from "./util";
 import { rewatch /* , unwatch */, unwatch } from "./watch";
-import { isNode } from "./MountElement";
-import { has, get } from "./reflect";
 
 export function onmounted(ele: Element | Node | Array<Node>) {
   if (isArray(ele)) {
@@ -21,17 +22,22 @@ export function onmounted(ele: Element | Node | Array<Node>) {
     isNode(ele)
     //   ele instanceof Node
   ) {
-    if (has(ele, eventlistenerssymbol)) {
-      readdlisteners(ele);
-    }
+    // if (has(ele, eventlistenerssymbol)) {
+    readdlisteners(ele);
+    // }
     //全局共享状态
     if (
       has(ele, bindstatesymbol)
       // ele[bindstatesymbol]
     ) {
-      get(ele, bindstatesymbol) /*  ele[bindstatesymbol] */
+      (get(ele, bindstatesymbol) as ReactiveState<any>[])
+
+        /*  ele[bindstatesymbol] */
         .forEach((state: ReactiveState<any>) => {
           rewatch(state);
+
+          /* 当组件挂载时把状态跟dom元素同步一次 */
+          state[dispatchsymbol]();
         });
     }
     if (
@@ -45,7 +51,23 @@ export function onmounted(ele: Element | Node | Array<Node>) {
       );
     }
     // readdlisteners(ele);
-
+    /* 记录组件中使用的watch的state和callback,
+组件卸载时removeeventlistener,
+组件挂载时addeventlistener
+*/
+    if (has(ele, innerwatchrecords)) {
+      const watchrecords = get(ele, innerwatchrecords) as [
+        ReactiveState<any>,
+        Function
+      ][];
+      watchrecords.forEach(([state, callback]) => {
+        const eventlistener = state[callbackmap].get(callback);
+        if (!eventlistener) {
+          throw new Error();
+        }
+        state[addonelistner](eventlistener);
+      });
+    }
     onmounted(getdomchildren(ele));
   }
 
@@ -60,12 +82,12 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
     isNode(ele)
     //   ele instanceof Node
   ) {
-    if (
-      has(ele, eventlistenerssymbol)
-      // ele[eventlistenerssymbol]
-    ) {
-      removelisteners(ele);
-    }
+    // if (
+    //   has(ele, eventlistenerssymbol)
+    //   // ele[eventlistenerssymbol]
+    // ) {
+    removelisteners(ele);
+    // }
     /*   if (ele[bindstatesymbol]) {
       ele[bindstatesymbol].forEach((state: ReactiveState) => {
         unwatch(state);
@@ -84,6 +106,19 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
           unwatch(state);
         }
       );
+    }
+    if (has(ele, innerwatchrecords)) {
+      const watchrecords = get(ele, innerwatchrecords) as [
+        ReactiveState<any>,
+        Function
+      ][];
+      watchrecords.forEach(([state, callback]) => {
+        const eventlistener = state[callbackmap].get(callback);
+        if (!eventlistener) {
+          throw new Error();
+        }
+        state[removeonelistner](eventlistener);
+      });
     }
     onunmounted(getdomchildren(ele));
   }

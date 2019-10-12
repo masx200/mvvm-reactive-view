@@ -109,7 +109,7 @@ function createVirtualElement<T extends Class | string | Function>(
 interface Virtualdom<T extends Class | string | Function> {
   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
-  element: undefined | Element | Node;
+  element: Element | undefined;
   type: T;
   props: ElementAttrs;
   children: Vdomchildren;

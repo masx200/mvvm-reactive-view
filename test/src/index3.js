@@ -11,53 +11,65 @@ import {
   useUnMounted,
   watch
 } from "../../dist/index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 import mycss from "./test.css";
-console.log(h, createElement);
+console.log([h, createElement]);
 (() => {
-  var mycom = (props, children) => {
-    const number = createState(1);
-    useMounted(() => {
-      console.log("mounted1");
-    });
-    useMounted(() => {
-      console.log("mounted2", props);
-    });
-    useUnMounted(() => {
-      console.log("unmounted");
-    });
-    watch(props.cccccc, console.log);
-    return (
-      <div
-        onclick={() => {
-          number.value++;
-        }}
-      >
-        {[
-          number,
-          <br />,
-          "wwwwwwwwwwww",
-          createElement("div", null, ["createComponent"]),
-          children,
-          createElement("div", null, [props.cccccc])
-        ]}
-      </div>
-    );
-  };
-  mycom.defaultProps = { cccccc: "bbbbbbb" };
-  mycom.css = mycss; /* css``; */
-  const myclasscomponent = createComponent(mycom);
+  var mycom = createComponent(
+    Object.assign(
+      (props, children) => {
+        const number = createState(1);
+        useMounted(() => {
+          console.log("mounted1");
+        });
+        useMounted(() => {
+          console.log("mounted2", props);
+        });
+        useUnMounted(() => {
+          console.log("unmounted");
+        });
+        watch(props.cccccc, cccccc => {
+          console.log("cccccc", cccccc);
+        });
+        return (
+          <div
+            onclick={() => {
+              number.value++;
+            }}
+          >
+            {[
+              number,
+              <br />,
+              "wwwwwwwwwwww",
+              createElement("div", ["createComponent"]),
+              children,
+              createElement("div", <>props cccccc {props.cccccc}</>)
+            ]}
+          </div>
+        );
+      },
+      { defaultProps: { cccccc: "bbbbbbb" }, css: mycss }
+    )
+  );
+  //   /* mycom.defaultProps = { cccccc: "bbbbbbb" };
+  //   mycom.css = mycss; /* css``; */ */
+  const myclasscomponent = mycom;
   const vdom = createElement(
     myclasscomponent,
     {
       aaaaaa: 222222222,
       tttttt: "dddddddddd"
     },
-    ["children"]
+    "children"
   );
   console.log([vdom, myclasscomponent, mycom]);
   document.body.appendChild(MountElement(vdom, document.createElement("div")));
   setTimeout(() => {
-    vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
+    vdom.element.setAttribute(
+      "cccccc",
+      "aaaaaaaaaaaaaaaaaabbbbbbbbbbnnnnnnnnnnnnn"
+    );
   }, 5000);
   document.body.appendChild(
     MountElement(

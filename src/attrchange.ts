@@ -1,7 +1,6 @@
 import { getAttribute, removeAttribute, setAttribute } from "./dom";
 import { get } from "./reflect";
 import { isFunction } from "./util";
-import { setimmediate } from "./setimmediate";
 export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
   //   [attributeChangedCallback](name?: string): void;
@@ -69,9 +68,9 @@ export class AttrChange extends HTMLElement {
           // this[attributeChangedCallback]
         )
       ) {
-        setimmediate(() => {
-          callback.call(this, qualifiedName, oldValue, value);
-        });
+        // setimmediate(() => {
+        callback.call(this, qualifiedName, oldValue, value);
+        // });
       }
     }
   }
@@ -83,9 +82,9 @@ export class AttrChange extends HTMLElement {
       //   super.removeAttribute(qualifiedName);
       removeAttribute(this, qualifiedName);
       if (isFunction(callback)) {
-        setimmediate(() => {
-          callback.call(this, qualifiedName, oldValue, undefined);
-        });
+        // setimmediate(() => {
+        callback.call(this, qualifiedName, oldValue, undefined);
+        // });
       }
     }
   }

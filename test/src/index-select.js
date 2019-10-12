@@ -9,6 +9,7 @@ import {
   MountElement,
   watch
 } from "../../dist/index.js";
+console.log([h, createElement]);
 const vdom = (
   <select
     onchange={e => console.log(e)}

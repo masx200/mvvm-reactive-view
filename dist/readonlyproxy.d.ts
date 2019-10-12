@@ -1,1 +1,1 @@
-export default function <T extends object>(target: T): Readonly<T>;
+export default function <T extends object>(target: T): T;

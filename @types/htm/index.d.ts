@@ -1,4 +1,4 @@
-import Virtualdom from "../../src/VirtualElement";
+import Virtualdom, { Vdomchildren } from "../../src/VirtualElement";
 
 /* declare module "htm" {
   const htm: (
@@ -9,7 +9,9 @@ import Virtualdom from "../../src/VirtualElement";
 }
  */
 declare interface Htm {
-  (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
+  (strings?: TemplateStringsArray, ...values: any[]):
+    | Virtualdom<any>
+    | Vdomchildren;
 }
 declare const htm: Htm;
 export default htm;

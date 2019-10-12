@@ -42,8 +42,9 @@ export function firstaddlisteners(
       set(element, eventlistenerssymbol, []);
       //   element[eventlistenerssymbol] = [];
     }
-    (get(ele, eventlistenerssymbol) as any[])
-      /* ele[eventlistenerssymbol] */ .push([event, call]);
+    (get(ele, eventlistenerssymbol) as [string, EventListener][])
+      /* ele[eventlistenerssymbol] */
+      .push([event, call]);
     domaddlisten(ele, event, call);
   });
 }
@@ -54,8 +55,10 @@ export function removelisteners(
 ) {
   // const element = ele;
   if (has(ele, eventlistenerssymbol)) {
-    (get(ele, eventlistenerssymbol) as any[])
-      /*   ele[eventlistenerssymbol] */ .forEach(([event, call]) => {
+    (get(ele, eventlistenerssymbol) as [string, EventListener][])
+      /*   ele[eventlistenerssymbol] */
+
+      .forEach(([event, call]) => {
         //   ele[eventlistenerssymbol].push([event, call]);
         domremovelisten(ele, event, call);
       });
@@ -67,9 +70,11 @@ export function readdlisteners(
   //   callarray: Array<EventListener>
 ) {
   if (has(ele, eventlistenerssymbol)) {
-    (get(ele, eventlistenerssymbol) as any[]).forEach(([event, call]) => {
-      //   ele[eventlistenerssymbol].push([event, call]);
-      domaddlisten(ele, event, call);
-    });
+    (get(ele, eventlistenerssymbol) as [string, EventListener][]).forEach(
+      ([event, call]) => {
+        //   ele[eventlistenerssymbol].push([event, call]);
+        domaddlisten(ele, event, call);
+      }
+    );
   }
 }

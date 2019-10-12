@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createComponent,
@@ -5,9 +6,10 @@ import {
   //   createElement,
   createState,
   h,
-  MountElement
+  MountElement,
+  watch
 } from "../../dist/index.js";
-console.log(h, createElement);
+console.log([h, createElement]);
 const number = createState(10);
 function increment() {
   number.value++;
@@ -16,8 +18,17 @@ function decrement() {
   number.value--;
 }
 const store = { number, increment, decrement };
-
+let timer = setInterval(() => {
+  increment();
+}, 2000);
+setTimeout(() => {
+  clearInterval(timer);
+}, 8000);
 const mycomappclass = createComponent(() => {
+  watch(store.number, number => {
+    // console.trace();
+    console.log({ ...store }, number);
+  });
   const vdom = (
     <div>
       <h3> 点击数字</h3>
@@ -36,3 +47,17 @@ const vdom = [
 ];
 
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
+
+setTimeout(() => {
+  vdom.forEach(vdom => {
+    const element = vdom.element;
+    element.parentNode.removeChild(element);
+  });
+  // @ts-ignore
+  number.value = -50;
+
+  vdom.forEach(vdom => {
+    const element = vdom.element;
+    document.body.appendChild(element);
+  });
+}, 10000);

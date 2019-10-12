@@ -8,14 +8,14 @@ import {
   MountElement,
   watch
 } from "../../dist/index.js";
-console.log(h, createElement);
+console.log([h, createElement]);
 // console.log()
 // export{vdom}
 const temp_ref = createRef();
 const check = createState(false);
 const notcheck = computed(check, a => !a);
 var list = Array(10)
-  .fill()
+  .fill(undefined)
   .map((v, i) => i);
 watch(check, a => console.log(a));
 watch(notcheck, a => console.log(a));

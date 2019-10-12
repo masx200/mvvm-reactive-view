@@ -21,14 +21,14 @@ import { invalid_Virtualdom } from "./MountElement";
 import h from "./createelement";
 import { isReactiveState } from "./reactivestate";
 import { isArray, isnumber, isstring } from "./util";
-import Virtualdom, { isVirtualdom } from "./VirtualElement";
+import Virtualdom, { isVirtualdom, Vdomchildren } from "./VirtualElement";
 
 // const html = htm.bind(h);
-function html(
-  strings?: TemplateStringsArray,
-  ...values: any[]
-): Virtualdom<any>;
-function html(...inargs: any[]): Virtualdom<any> {
+// function html(
+//   strings?: TemplateStringsArray,
+//   ...values: any[]
+// ): Virtualdom<any>;
+function html(...inargs: any[]): Virtualdom<any> | Vdomchildren {
   // return (htm as HTM).call(h, ...inargs);
 
   return apply(htm /* as HTM */, h, inargs);
@@ -78,7 +78,7 @@ export function isvalidvdom(v: any): v is VaildVDom {
 export default function(
   strings?: TemplateStringsArray,
   ...values: any[]
-): Virtualdom<any>;
+): Virtualdom<any> | Vdomchildren;
 export default function(...args: any[]) {
   const vdom = html(...args);
   if (isvalidvdom(vdom)) {

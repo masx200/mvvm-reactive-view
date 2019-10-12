@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createComponent,
@@ -9,7 +10,7 @@ import {
   MountElement,
   watch
 } from "../../dist/index.js";
-console.log(h, createElement);
+console.log([h, createElement]);
 /* console.log([
   condition,
   Fragment,
@@ -166,6 +167,7 @@ console.log(h, createElement);
   /* watch(stylestate, console.log);
   watch(state1, console.log); */
   console.log([vdom, colortext, stylestate]);
+  // @ts-ignore
   watch([colortext, stylestate], (a, b) => console.log([a, { ...b }]));
   document.body.appendChild(MountElement(vdom, document.createElement("div")));
 })();
@@ -188,11 +190,13 @@ console.log(h, createElement);
     watch(state1, console.log); */
   //   console.log([vdom, colortext, stylestate]);
   var inter = setInterval(() => {
+    // @ts-ignore
     colortext.value = "#" + (Math.random() * 16 ** 7).toString(16).slice(0, 6);
   }, 1000);
   setTimeout(() => {
     clearInterval(inter);
   }, 10000);
+  // @ts-ignore
   watch([colortext, stylestate], (a, b) => console.log([a, { ...b }]));
   document.body.appendChild(MountElement(vdom, document.createElement("div")));
 })();

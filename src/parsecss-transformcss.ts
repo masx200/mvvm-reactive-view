@@ -137,7 +137,7 @@ export function transformcsstext(text: string, prefix: string): string {
   //   console.log([text, cssomold, cssomnew, cssnewtext]);
   return cssnewtext;
 }
-export async function registercssprefix(text: string, prefix: string) {
+export function registercssprefix(text: string, prefix: string) {
   const css = text;
   const cssnewtext = transformcsstext(css, prefix);
   //   cssnewtext.forEach(url => {

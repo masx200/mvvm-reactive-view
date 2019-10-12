@@ -30,7 +30,7 @@ import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
 export default function<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
   callback: CallbackReactiveState
-): Readonly<ReactiveState<any>> {
+): ReactiveState<any> {
   if (
     !(
       (isArray(state) || isReactiveState(state)) &&
@@ -70,7 +70,7 @@ export default function<T extends UnwrapedState>(
 function Arraycomputed<T extends UnwrapedState>(
   state: ReactiveState<T>[],
   callback: CallbackReactiveState
-): Readonly<ReactiveState<any>> {
+): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
     //自动解包

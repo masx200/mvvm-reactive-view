@@ -336,6 +336,8 @@ document.body.appendChild(
 
 组件卸载时，组件内创建的响应式状态会自动取消`watch`，自动给元素删除事件监听器`removeEventListener`
 
+组件挂载时，组件内创建的响应式状态会自动重新`watch`，自动给元素添加事件监听器`addEventListener`
+
 ## 父子组件传数据
 
 组件之间的数据传递只能是从父组件到子组件的单向数据流，以`json`格式传递参数

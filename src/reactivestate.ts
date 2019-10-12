@@ -1,10 +1,11 @@
+export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
 // import Reflect from "./reflect";
 import isprimitive from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
-const callbackmap = Symbol("callbackmap");
+export const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
@@ -76,11 +77,24 @@ export default class ReactiveState<T extends UnwrapedState> {
   //  return "ReativeState";
 
 } */
-
-  [addallistenerssymbol]() {
-    const name = "value";
+  [removeallistenerssymbol]() {
     this[memlisteners].forEach(callback => {
-      this[eventtargetsymbol].addEventListener(name, callback);
+      this[removeonelistner](callback);
+    });
+  }
+  [removeonelistner](callback: EventListener) {
+    const name = "value";
+    this[eventtargetsymbol].removeEventListener(name, callback);
+  }
+  [addonelistner](callback: EventListener) {
+    const name = "value";
+    this[eventtargetsymbol].addEventListener(name, callback);
+  }
+  [addallistenerssymbol]() {
+    // const name = "value";
+    this[memlisteners].forEach(callback => {
+      this[addonelistner](callback);
+      //   this[eventtargetsymbol].addEventListener(name, callback);
     });
   }
   /*  [changetextnodesymbol](textnode: Text) {
@@ -142,15 +156,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     this[memlisteners].delete(eventlistener);
     this[removeonelistner](eventlistener);
   }
-  [removeallistenerssymbol]() {
-    this[memlisteners].forEach(callback => {
-      this[removeonelistner](callback);
-    });
-  }
-  [removeonelistner](callback: EventListener) {
-    const name = "value";
-    this[eventtargetsymbol].removeEventListener(name, callback);
-  }
+
   [Symbol.toPrimitive]() {
     //return this.value;
     const value = this.valueOf();

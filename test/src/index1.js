@@ -11,7 +11,7 @@ import {
   MountElement,
   watch
 } from "../../dist/index.js";
-console.log(h, createElement);
+console.log([h, createElement]);
 /* console.log([
   Fragment,
   createRef,
