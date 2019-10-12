@@ -10,3 +10,8 @@ import "./index-x.js";
 import "./index2.js";
 import "./index-teststore.js";
 import "./index-select";
+/* navigator.serviceWorker
+  .register("./service-worker.js")
+  .then(console.log)
+  .catch(console.error);
+ */

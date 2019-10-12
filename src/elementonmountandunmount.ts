@@ -9,7 +9,7 @@ import ReactiveState from "./reactivestate";
 import { bindstatesymbol } from "./rendervdomtoreal";
 import { isArray } from "./util";
 import { rewatch /* , unwatch */, unwatch } from "./watch";
-import { isNode } from "./createApp";
+import { isNode } from "./MountElement";
 import { has, get } from "./reflect";
 
 export function onmounted(ele: Element | Node | Array<Node>) {

@@ -1,5 +1,5 @@
 import { invalid_ReactiveState } from "./conditon";
-import { invalid_Virtualdom } from "./createApp";
+import { invalid_Virtualdom } from "./MountElement";
 import directives from "./extend-directive";
 import ReactiveState, {
   // ReactiveState,

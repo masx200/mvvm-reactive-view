@@ -9,7 +9,7 @@ import {
   invalid_Function,
   openctx
 } from "./context-mounted-unmounted-";
-import { /* createApp, */ invalid_Virtualdom } from "./createApp";
+import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
 import createstate from "./createstate";
 import { Custom } from "./customclass";
 import { seteletext } from "./dom";

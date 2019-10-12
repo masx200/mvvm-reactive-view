@@ -17,7 +17,7 @@ import { apply } from "./reflect";
 import htm from "htm";
 import { VaildVDom } from "./conditon";
 // import htm from "../types/htm";
-import { invalid_Virtualdom } from "./createApp";
+import { invalid_Virtualdom } from "./MountElement";
 import h from "./createelement";
 import { isReactiveState } from "./reactivestate";
 import { isArray, isnumber, isstring } from "./util";

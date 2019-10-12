@@ -1,6 +1,6 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { AttrChange, attributeChangedCallback } from "./attrchange";
-import { invalid_Virtualdom } from "./createApp";
+import { invalid_Virtualdom } from "./MountElement";
 import createElement from "./createelement";
 import { setelehtml } from "./dom";
 // const readysymbol = Symbol("ready");
