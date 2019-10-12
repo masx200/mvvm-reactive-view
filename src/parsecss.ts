@@ -1,3 +1,6 @@
+export function isCSSStyleRule(a: any): a is CSSStyleRule {
+  return gettagtype(a) === "CSSStyleRule";
+}
 import createElement from "./createelement";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
@@ -9,10 +12,10 @@ import { get } from "./reflect";
 import render from "./rendervdomtoreal";
 import { gettagtype } from "./util";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
-  return gettagtype(a) === "cssmediarule";
+  return gettagtype(a) === "CSSMediaRule";
 }
 export function isCSSImportRule(a: any): a is CSSImportRule {
-  return gettagtype(a) === "cssimportrule";
+  return gettagtype(a) === "CSSImportRule";
 }
 
 export function parsecsstext(text: string): Array<CSSRule> {
@@ -32,10 +35,6 @@ export function parsecsstext(text: string): Array<CSSRule> {
       "cssRules"
     )
   );
-}
-
-export function isCSSStyleRule(a: any): a is CSSStyleRule {
-  return gettagtype(a) === "cssstylerule";
 }
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
