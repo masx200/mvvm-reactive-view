@@ -10,7 +10,7 @@
 
 ## 使用响应式状态管理全局共享状态，抛弃 `redux,vuex,mobx`，响应式状态可以独立于组件存在
 
-## 有着面向未来的函数式`API`，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，
+## 有着面向未来的函数式`API`，提供与`React Hooks`相同级别的逻辑组合功能，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，`Render Props`
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
@@ -344,7 +344,7 @@ document.body.appendChild(
 
 https://blog.csdn.net/sinat_17775997/article/details/89181398
 
-### Mixin 带来的风险：
+### `Mixin` 带来的风险：
 
 Mixin 可能会相互依赖，相互耦合，不利于代码维护
 
@@ -354,7 +354,7 @@ Mixin 非常多时，组件是可以感知到的，
 
 甚至还要为其做相关处理，这样会给代码造成滚雪球式的复杂性
 
-### HOC 的缺陷
+### `HOC` 和`Render Props`的缺陷
 
 HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难。
 
@@ -364,7 +364,7 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 受到 `Vue Composition API`和`React Hooks`的启发,
 
-集各家所长，但是跟它们完全不同，
+集各家所长，但是跟它们有很大不同，
 
 响应式状态可以独立于组件存在,`watch`,`computed`,`createState`函数可以在组件外使用
 
