@@ -1,6 +1,6 @@
 export function issymbol(a: any): a is symbol {
-  return typeof a==="symbol"
-//||gettagtype(a) === "symbol";
+  return typeof a === "symbol";
+  //||gettagtype(a) === "symbol";
 }
 
 export { isplainobject };
@@ -8,11 +8,9 @@ export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
 
 const isplainobject = (a: any): a is Record<any, any> =>
-  isobject(a) && gettagtype(a) === "object";
+  isobject(a) && gettagtype(a) === "Object";
 
 import isprimitive from "./isprimitive";
-import { /* has,  */ get } from "./reflect";
-import { isFunction } from "./util";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function isundefined(a: any): a is void {
   return (!a && a === void 0) || a === null;
@@ -37,26 +35,26 @@ export function isfunction(a: any): a is Function {
 }
 
 export function isarray(a: any): a is Array<any> {
-  return a instanceof Array && Array.isArray(a) && gettagtype(a) === "array";
+  return a instanceof Array && Array.isArray(a) && gettagtype(a) === "Array";
 }
 /* export function getsymbol(a: string) {
   return Symbol(a);
 } */
 export function gettagtype(a: any): string {
-  return {}.toString
-    .call(a)
-    .replace("[object ", "")
-    .replace("]", "")
-    //.toLowerCase()
-    .trim();
+  return (
+    {}.toString
+      .call(a)
+      .replace("[object ", "")
+      .replace("]", "")
+      //.toLowerCase()
+      .trim()
+  );
 }
 //export function ispromise(a: any): a is Promise<any> {
 //  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
 //}
 export function isSet(a: any): a is Set<any> {
-  return gettagtype(a) === "set" && a instanceof Set;
-
-
+  return gettagtype(a) === "Set" && a instanceof Set;
 }
 
 const camelizeRE = /-(\w)/g;

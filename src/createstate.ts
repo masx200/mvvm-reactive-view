@@ -1,4 +1,3 @@
-import { issymbol } from "./util";
 // import deepobserve from "deep-observe-agent-proxy";
 import { getproperyreadproxy } from "./computed";
 import { usestste } from "./context-mounted-unmounted-";
@@ -9,7 +8,7 @@ import ReactiveState, {
   // textnodesymbol,
   isReactiveState
 } from "./reactivestate";
-import { set, getOwnPropertyDescriptor } from "./reflect";
+import { set } from "./reflect";
 import { isobject, isprimitive } from "./util";
 import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
@@ -48,7 +47,6 @@ function createstate<T extends UnwrapedState>(
   if (isprimitive(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
-        
         defineProperty() {
           return false;
         },

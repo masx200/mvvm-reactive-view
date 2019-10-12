@@ -2,7 +2,7 @@ export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
 // import Reflect from "./reflect";
 import isprimitive from "./isprimitive";
-import { isobject, isSet ,gettagtype} from "./util";
+import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
 const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
@@ -10,7 +10,7 @@ const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
-  return a instanceof ReactiveState&&gettagtype(a)==="reactivestate";
+  return a instanceof ReactiveState && gettagtype(a) === "reactivestate";
 }
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");

@@ -1,6 +1,3 @@
-import { isobject, isprimitive } from "./util";
-
-
 /* interface CallbackReactiveState<
  
 > {
@@ -14,19 +11,20 @@ import ReactiveState, {
 } from "./reactivestate";
 import readonlyproxy from "./readonlyproxy";
 import {
+  apply,
+  //   getPrototypeOf
+  //   set
   defineProperty,
   //   deleteProperty,
   get,
   //   getOwnPropertyDescriptor,
   has,
   ownKeys,
-  apply
-  //   getPrototypeOf
-  //   set
+  getOwnPropertyDescriptor
 } from "./reflect";
 import { toArray } from "./toArray";
-import { isArray, isFunction, isobject } from "./util";
-import { watch, CallbackReactiveState, UnwrapedState } from "./watch";
+import { isArray, isFunction, isobject, isprimitive, issymbol } from "./util";
+import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
 
 //const { defineProperty } = Object;
 export default function<T extends UnwrapedState>(
@@ -78,28 +76,22 @@ function Arraycomputed<T extends UnwrapedState>(
     //自动解包
     const value = apply(callback, undefined, state.map(st => st.valueOf()));
     // callback(...state.map(st => st.valueOf()));
-  const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
+    const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
 
-if(isobject(possiblevalue)||isprimitive(possiblevalue)){
-
-
-return possiblevalue
-
- }
-
-else{
-console.error(possiblevalue)
-throw TypeError()
-
-}
+    if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
+      return possiblevalue;
+    } else {
+      console.error(possiblevalue);
+      throw TypeError();
+    }
   };
 
   let memorized = getter();
 
- // if (isFunction(memorized)) {
- //   console.error(memorized);
- //   throw new TypeError();
- // }
+  // if (isFunction(memorized)) {
+  //   console.error(memorized);
+  //   throw new TypeError();
+  // }
   defineProperty(reactivestate, "value", {
     get: getter,
     configurable: true
@@ -117,7 +109,7 @@ throw TypeError()
     });
   });
 
-  return readonlyproxy (getproperyreadproxy(reactivestate));
+  return readonlyproxy(getproperyreadproxy(reactivestate));
 }
 const __proto__ = "__proto__";
 export function getproperyreadproxy<T extends object>(a: T): T;
@@ -126,14 +118,14 @@ export function getproperyreadproxy(a: object) {
   //   const target = isobject(a) ? a : getPrototypeOf(a);
   const target = a;
   return new Proxy(target, {
-getOwnPropertyDescriptor(target, key) {
-          //对于symbol属性，返回undefined
-          if (issymbol(key)) {
-            return;
-          } else {
-            return getOwnPropertyDescriptor(target, key);
-          }
-        },
+    getOwnPropertyDescriptor(target, key) {
+      //对于symbol属性，返回undefined
+      if (issymbol(key)) {
+        return;
+      } else {
+        return getOwnPropertyDescriptor(target, key);
+      }
+    },
     ownKeys(target) {
       let myvalue = get(target, "value");
       const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
