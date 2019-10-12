@@ -378,7 +378,6 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
 
-
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
 ## 函数`watch`的回调函数已经自动使用`lodash`的`debounce`方法包装成防抖函数了，确保短时间内回调函数只执行一次
@@ -443,7 +442,6 @@ setTimeout(() => {
 ## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
 
 ### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
-
 
 ### 例子：跟踪鼠标的位置
 
@@ -886,7 +884,7 @@ interface Class {
 interface Virtualdom<T extends Class | string | Function> {
   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
-  element: undefined | Element | Node;
+  element: Element | undefined;
   type: T;
   props: ElementAttrs;
   children: Vdomchildren;
