@@ -1,5 +1,6 @@
 export function issymbol(a: any): a is symbol {
-  return typeof a==="symbol"||gettagtype(a) === "symbol";
+  return typeof a==="symbol"
+//||gettagtype(a) === "symbol";
 }
 
 export { isplainobject };
@@ -46,14 +47,16 @@ export function gettagtype(a: any): string {
     .call(a)
     .replace("[object ", "")
     .replace("]", "")
-    .toLowerCase()
+    //.toLowerCase()
     .trim();
 }
-export function ispromise(a: any): a is Promise<any> {
-  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
-}
+//export function ispromise(a: any): a is Promise<any> {
+//  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
+//}
 export function isSet(a: any): a is Set<any> {
   return gettagtype(a) === "set" && a instanceof Set;
+
+
 }
 
 const camelizeRE = /-(\w)/g;
