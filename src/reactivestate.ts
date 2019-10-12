@@ -10,7 +10,7 @@ const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
-  return a instanceof ReactiveState && gettagtype(a) === "reactivestate";
+  return a instanceof ReactiveState && gettagtype(a) === "ReactiveState";
 }
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
