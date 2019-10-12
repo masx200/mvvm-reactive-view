@@ -348,7 +348,7 @@ If you don't want to write CSS in JS, you can use `to-string-loader` of webpack,
 }
 ```
 
-If your CSS file starts with "_", CSS will use to-string-loader, such as:
+If your CSS file starts with "_", CSS will use `to-string-loader`, such as:
 
 ```js
 const css = require('./_index.css')
