@@ -1,9 +1,10 @@
-import typescriptlib from "typescript";
-import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
-import { terser } from "rollup-plugin-terser";
 import json from "rollup-plugin-json";
+import resolve from "rollup-plugin-node-resolve";
+import sourcemaps from "rollup-plugin-sourcemaps";
+import { terser } from "rollup-plugin-terser";
 import typescriptplugin from "rollup-plugin-typescript2";
+import typescriptlib from "typescript";
 const banner = `const {CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map,window,clearTimeout,setTimeout,parseInt,globalThis ,self ,global }=Function('return this')();`;
 const myterserplugin = terser({
   sourcemap: true,
@@ -49,7 +50,8 @@ export default [
           comments: !1,
           beautify: true
         }
-      })
+      }),
+      sourcemaps()
     ]
   },
   {
@@ -61,6 +63,6 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [resolve(), commonjs(), myterserplugin]
+    plugins: [resolve(), commonjs(), myterserplugin, sourcemaps()]
   }
 ];
