@@ -49,10 +49,14 @@ const mycomapp = createComponent(() => {
   //   console.log(plus, multi);
   let count = 0;
   const cancelwatch = watch([x, y, multi, plus], (...args) => {
+    if (count === 0) {
+      console.time("watchmousemove50");
+    }
     console.log(count, args);
     count++;
     if (count > 50) {
       cancelwatch();
+      console.timeEnd("watchmousemove50");
     }
   });
   return (

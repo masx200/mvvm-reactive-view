@@ -306,18 +306,6 @@ const {apply: apply, construct: construct, defineProperty: defineProperty, delet
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
-    get textContent() {
-        return String(super.textContent || "");
-    }
-    set textContent(_a) {}
-    get innerHTML() {
-        return super.innerHTML;
-    }
-    set innerHTML(_a) {}
-    get innerText() {
-        return super.innerText;
-    }
-    set innerText(_a) {}
     setAttribute(qualifiedName, value) {
         const callback = get$1(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);

@@ -10,24 +10,27 @@ export class AttrChange extends HTMLElement {
   /* constructor() {
     super();
   } */
-  get textContent() {
-    return String(super.textContent || "");
-  }
-  set textContent(_a: string) {
-    // return;
-  }
-  get innerHTML() {
-    return super.innerHTML;
-  }
-  set innerHTML(_a: string) {
-    // return;
-  }
-  get innerText() {
-    return super.innerText;
-  }
-  set innerText(_a: string) {
-    // return;
-  }
+
+  /* 跟seteletext发生冲突,清空children */
+  //   get textContent() {
+  //     return String(super.textContent || "");
+  //   }
+  //   set textContent(_a: string) {
+  //     console.trace();
+  //     // return;
+  //   }
+  //   get innerHTML() {
+  //     return super.innerHTML;
+  //   }
+  //   set innerHTML(_a: string) {
+  //     // return;
+  //   }
+  //   get innerText() {
+  //     return super.innerText;
+  //   }
+  //   set innerText(_a: string) {
+  //     // return;
+  //   }
   // [attributeChangedCallback](
   //   name: string
 

@@ -350,18 +350,6 @@
     var {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get$1, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1$1, set: set$1} = Reflect$2;
     var attributeChangedCallback = "attributeChangedCallback";
     class AttrChange extends HTMLElement {
-        get textContent() {
-            return String$1(super.textContent || "");
-        }
-        set textContent(_a) {}
-        get innerHTML() {
-            return super.innerHTML;
-        }
-        set innerHTML(_a) {}
-        get innerText() {
-            return super.innerText;
-        }
-        set innerText(_a) {}
         setAttribute(qualifiedName, value) {
             var callback = get$1(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
@@ -2282,6 +2270,9 @@
         });
         var count = 0;
         var cancelwatch = watch([ x, y, multi, plus ], (function() {
+            if (count === 0) {
+                console.time("watchmousemove50");
+            }
             for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
                 args[_key] = arguments[_key];
             }
@@ -2289,6 +2280,7 @@
             count++;
             if (count > 50) {
                 cancelwatch();
+                console.timeEnd("watchmousemove50");
             }
         }));
         return createElement("div", null, createElement("h3", null, " \u9f20\u6807\u4f4d\u7f6e"), createElement("h2", null, "x:", x), createElement("h1", null, "y:", y), createElement("p", null, "x+100 \u662f", plus), createElement("p", null, "x*y \u662f", multi));
