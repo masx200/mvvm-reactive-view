@@ -126,6 +126,14 @@ export function getproperyreadproxy(a: object) {
   //   const target = isobject(a) ? a : getPrototypeOf(a);
   const target = a;
   return new Proxy(target, {
+getOwnPropertyDescriptor(target, key) {
+          //对于symbol属性，返回undefined
+          if (issymbol(key)) {
+            return;
+          } else {
+            return getOwnPropertyDescriptor(target, key);
+          }
+        },
     ownKeys(target) {
       let myvalue = get(target, "value");
       const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
