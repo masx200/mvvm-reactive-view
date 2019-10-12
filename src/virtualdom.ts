@@ -11,7 +11,7 @@ import { isobject } from "./util";
 export function isVirtualdom(a: any): a is Virtualdom<any> {
   return (
     isobject(a) &&
-    has(a, isvirtualelement) &&
+   // has(a, isvirtualelement) &&
     get(a, isvirtualelement) === isvirtualelement
   );
 }
