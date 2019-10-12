@@ -334,6 +334,26 @@ document.body.appendChild(
 
 ## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
 
+How to import css string from css file?
+
+If you don't want to write CSS in JS, you can use `to-string-loader` of webpack, For example, the following configuration:
+
+```js
+{
+  test: /[\\|\/]_[\S]*\.css$/,
+  use: [
+    'to-string-loader',
+    'css-loader'
+  ]
+}
+```
+
+If your CSS file starts with "_", CSS will use to-string-loader, such as:
+
+```js
+const css = require('./_index.css')
+```
+
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
