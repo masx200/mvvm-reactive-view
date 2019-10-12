@@ -3,7 +3,7 @@ import { Class } from "./customclass";
 //// import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./merge-entries";
 import ReactiveState, { isReactiveState } from "./reactivestate";
-import { defineProperty, get, has } from "./reflect";
+import { defineProperty, get } from "./reflect";
 import { isobject } from "./util";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
@@ -85,7 +85,7 @@ function createVirtualElement<T extends Class | string | Function>(
               .trim(),
             [value].flat(1 / 0)
           ])
-      ])
+      ] as [string, any][])
     ),
     directives: Object.fromEntries(
       propsentriesNOTevents
