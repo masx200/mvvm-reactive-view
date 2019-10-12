@@ -4,9 +4,9 @@ import {
   eventlistenerssymbol,
   readdlisteners,
   removelisteners
-} from "./onevent";
+} from "./handle-onevent";
 import ReactiveState from "./reactivestate";
-import { bindstatesymbol } from "./rendervdomtoreal";
+import { bindstatesymbol } from "./render-vdom-to-real";
 import { isArray } from "./util";
 import { rewatch /* , unwatch */, unwatch } from "./watch";
 import { isNode } from "./MountElement";

@@ -4,18 +4,18 @@ import { invalid_Virtualdom } from "./MountElement";
 import createElement from "./createelement";
 import { setelehtml } from "./dom";
 // const readysymbol = Symbol("ready");
-import { onmounted, onunmounted } from "./elementonmountandunmount";
+import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { isvalidvdom } from "./html";
 import { componentsymbol } from "./iscomponent";
-import mount from "./mount";
+import mount from "./mount-real-element";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
 import { get } from "./reflect";
-import render from "./rendervdomtoreal";
+import render from "./render-vdom-to-real";
 // import mount from "./mount";
 import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
-import Virtualdom, { Vdomchildren } from "./virtualdom";
+import Virtualdom, { Vdomchildren } from "./VirtualElement";
 import { Htmlelementconstructor } from "./createComponent";
 export type VaildVDom =
   | Virtualdom<any>

@@ -1,4 +1,4 @@
-import { invalid_Function } from "./context-mounted-unmounted-";
+import { invalid_Function } from "./context-mounted-unmounted";
 import { domaddlisten, domremovelisten } from "./dom";
 import { toArray } from "./toArray";
 import { /* isArray, */ isfunction } from "./util";

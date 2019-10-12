@@ -2,8 +2,8 @@ export const invalid_Virtualdom = "invalid Virtualdom ";
 import { VaildVDom } from "./conditon";
 import document from "./dom";
 import { isvalidvdom } from "./html";
-import mount from "./mount";
-import render from "./rendervdomtoreal";
+import mount from "./mount-real-element";
+import render from "./render-vdom-to-real";
 import { toArray } from "./toArray";
 import { isArray } from "./util";
 export default function MountElement<T extends Element>(

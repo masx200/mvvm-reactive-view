@@ -1,4 +1,4 @@
-import Virtualdom from "./virtualdom";
+import Virtualdom from "./VirtualElement";
 export interface Extendfun {
     (value: any, element: Element, vdom: Virtualdom<any>): void;
 }

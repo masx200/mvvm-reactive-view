@@ -942,6 +942,18 @@ function getancestornode(node) {
     return node;
 }
 
+let watchrecord = [];
+
+function usewatch(state, callback) {
+    if (ctxopen) {
+        watchrecord.push([ state, callback ]);
+    }
+}
+
+function clearwatch() {
+    watchrecord = [];
+}
+
 const invalid_Function = "invalid Function";
 
 const errormessage = "invalid useMounted or useUnMounted out of createComponent";
@@ -1028,6 +1040,7 @@ function clearall() {
     clearMounted();
     clearUnMounted();
     clearstate();
+    clearwatch();
 }
 
 function watch(state, callback) {
@@ -1070,6 +1083,7 @@ function watchsingle(state, callback) {
     requestAnimationFrame(() => {
         rewatch(state);
     });
+    usewatch(state, callback);
 }
 
 function unwatch(state) {

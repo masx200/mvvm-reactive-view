@@ -6,7 +6,7 @@ import ReactiveState, { isReactiveState } from "./reactivestate";
 import { isfunction, isobject, isstring } from "./util";
 import { watch } from "./watch";
 import { set, apply } from "./reflect";
-import Virtualdom from "./virtualdom";
+import Virtualdom from "./VirtualElement";
 
 const directive: ExtendOptions = {
   ref(ref: object | Function, ele: Element, _vdom: Virtualdom<any>) {

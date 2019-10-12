@@ -9,7 +9,7 @@ import {
   createanotherhtmldocument /* , insertfirst */
 } from "./dom";
 import { get } from "./reflect";
-import render from "./rendervdomtoreal";
+import render from "./render-vdom-to-real";
 import { gettagtype } from "./util";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "CSSMediaRule";

@@ -14,7 +14,7 @@ export interface CallbackReactiveState /* <
 }
 
 import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function } from "./context-mounted-unmounted-";
+import { invalid_Function, usewatch } from "./context-mounted-unmounted";
 import ReactiveState, {
   addallistenerssymbol,
   isReactiveState,
@@ -106,6 +106,8 @@ function watchsingle(
     rewatch(state);
     // state[addallistenerssymbol]();
   });
+
+  usewatch(state, callback);
 }
 export function unwatch(state: ReactiveState<any>): void {
   state[removeallistenerssymbol]();

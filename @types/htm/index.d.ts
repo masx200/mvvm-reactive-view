@@ -1,4 +1,4 @@
-import Virtualdom from "../../src/virtualdom";
+import Virtualdom from "../../src/VirtualElement";
 
 /* declare module "htm" {
   const htm: (

@@ -1,5 +1,5 @@
 import ReactiveState from "./reactivestate";
-import Virtualdom, { Vdomchildren } from "./virtualdom";
+import Virtualdom, { Vdomchildren } from "./VirtualElement";
 declare type styleprop = string | object | ReactiveState<string> | ReactiveState<object>;
 declare type classprop = string | Set<string> | Array<string> | ReactiveState<string | Set<string> | Array<string>>;
 export interface ElementAttrs {

@@ -1,5 +1,21 @@
+let watchrecord: [ReactiveState<any>, Function][] = [];
+/* 记录组件中使用的watch的state和callback,
+组件卸载时removeeventlistener,
+组件挂载时addeventlistener
+*/
 import ReactiveState from "./reactivestate";
 import { isFunction } from "./util";
+export function getwatchrecords() {
+  return [...watchrecord];
+}
+export function usewatch(state: ReactiveState<any>, callback: Function) {
+  if (ctxopen) {
+    watchrecord.push([state, callback]);
+  }
+}
+function clearwatch() {
+  watchrecord = [];
+}
 export const invalid_Function = "invalid Function";
 const errormessage =
   "invalid useMounted or useUnMounted out of createComponent";
@@ -10,6 +26,7 @@ let StateSet: Set<
   ReactiveState<any> | Readonly<ReactiveState<any>>
 > = new Set();
 /* 收集组件内部创建的 ReactiveState*/
+
 export function getstates() {
   return [...StateSet];
 }
@@ -80,4 +97,5 @@ function clearall() {
   clearMounted();
   clearUnMounted();
   clearstate();
+  clearwatch();
 }

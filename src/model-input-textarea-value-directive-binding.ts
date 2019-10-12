@@ -7,7 +7,7 @@ import ReactiveState, {
 } from "./reactivestate";
 import { set, get } from "./reflect";
 import { toArray } from "./toArray";
-import Virtualdom from "./virtualdom";
+import Virtualdom from "./VirtualElement";
 directives({
   value(value, element, vdom) {
     model(

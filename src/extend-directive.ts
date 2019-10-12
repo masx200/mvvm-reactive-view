@@ -1,6 +1,6 @@
-import { invalid_Function } from "./context-mounted-unmounted-";
+import { invalid_Function } from "./context-mounted-unmounted";
 import directives from "./directives";
-import Virtualdom from "./virtualdom";
+import Virtualdom from "./VirtualElement";
 export interface Extendfun {
   (
     value: any,

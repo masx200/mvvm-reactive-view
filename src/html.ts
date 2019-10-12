@@ -21,7 +21,7 @@ import { invalid_Virtualdom } from "./MountElement";
 import h from "./createelement";
 import { isReactiveState } from "./reactivestate";
 import { isArray, isnumber, isstring } from "./util";
-import Virtualdom, { isVirtualdom } from "./virtualdom";
+import Virtualdom, { isVirtualdom } from "./VirtualElement";
 
 // const html = htm.bind(h);
 function html(

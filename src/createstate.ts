@@ -1,6 +1,6 @@
 // import deepobserve from "deep-observe-agent-proxy";
 import { getproperyreadproxy } from "./computed";
-import { usestste } from "./context-mounted-unmounted-";
+import { usestste } from "./context-mounted-unmounted";
 import handleobjectstate from "./handleobjectstate";
 import ReactiveState, {
   dispatchsymbol,

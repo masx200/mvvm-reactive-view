@@ -1,6 +1,6 @@
 import { VaildVDom } from "./conditon";
 import ReactiveState from "./reactivestate";
-import { Vdomchildren } from "./virtualdom";
+import { Vdomchildren } from "./VirtualElement";
 
 export interface Class {
   new (): HTMLElement;

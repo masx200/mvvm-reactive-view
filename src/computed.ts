@@ -4,7 +4,7 @@
   (...args: T[]): any;
 } */
 import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function, usestste } from "./context-mounted-unmounted-";
+import { invalid_Function, usestste } from "./context-mounted-unmounted";
 import ReactiveState, {
   dispatchsymbol,
   isReactiveState

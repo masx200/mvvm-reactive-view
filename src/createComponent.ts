@@ -8,18 +8,18 @@ import {
   getUnMounted,
   invalid_Function,
   openctx
-} from "./context-mounted-unmounted-";
+} from "./context-mounted-unmounted";
 import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
 import createstate from "./createstate";
 import { Custom } from "./customclass";
 import { seteletext } from "./dom";
-import { onmounted, onunmounted } from "./elementonmountandunmount";
+import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { isvalidvdom } from "./html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
 import { componentsymbol } from "./iscomponent";
 // import { insertfirst } from "./dom";
-import mount from "./mount";
+import mount from "./mount-real-element";
 import {
   /* parsecsstext,
         prefixcssrules,
@@ -33,17 +33,17 @@ import {
         createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
-} from "./parsecss";
+} from "./parsecss-transformcss";
 import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
 import readonlyproxy from "./readonlyproxy";
 import { readysymbol } from "./readysymbol";
 import { get, set, apply } from "./reflect";
-import render from "./rendervdomtoreal";
+import render from "./render-vdom-to-real";
 import { setimmediate } from "./setimmediate";
 import { toArray } from "./toArray";
 import { isArray, isfunction, isobject, isstring } from "./util";
 // import { Class } from "./rendervdomtoreal";
-import Virtualdom from "./virtualdom";
+import Virtualdom from "./VirtualElement";
 const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("innervdom");
