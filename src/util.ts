@@ -1,5 +1,5 @@
 export function issymbol(a: any): a is symbol {
-  return gettagtype(a) === "symbol"||typeof a==="symbol";
+  return typeof a==="symbol"||gettagtype(a) === "symbol";
 }
 
 export { isplainobject };
