@@ -78,7 +78,20 @@ function Arraycomputed<T extends UnwrapedState>(
     //自动解包
     const value = apply(callback, undefined, state.map(st => st.valueOf()));
     // callback(...state.map(st => st.valueOf()));
-    return isReactiveState(value) ? value.value : value;
+  const possiblevalue = isReactiveState(value) ? value.value : value;
+
+if(isobject(possiblevalue)||isprimitive(possiblevalue)){
+
+
+return possiblevalue
+
+ }
+
+else{
+console.error(possiblevalue)
+throw TypeError()
+
+}
   };
 
   let memorized = getter();
