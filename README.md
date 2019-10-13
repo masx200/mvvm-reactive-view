@@ -297,6 +297,9 @@ setTimeout(() => {
 
 # 组件化
 
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+
+
 一个简单的`helloworld`示例如下
 
 ```jsx
@@ -354,7 +357,7 @@ If your CSS file starts with "_", CSS will use `to-string-loader`, such as:
 const css = require('./_index.css')
 ```
 
-在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后添加前缀,再转换成 `css` 文本
+在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后给`selectorText`添加前缀,再转换成 `css` 文本
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
@@ -398,9 +401,8 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 
 与`React hooks`不同，该组件初始化函数仅被调用一次
 
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
+
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
