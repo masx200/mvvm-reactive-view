@@ -9,11 +9,11 @@ import createState from "./createstate";
 import "./CustomElementRegistry";
 import extendDirectives from "./extend-directive";
 import html from "./html";
-
 import "./model-input-textarea-value-directive-binding";
 import MountElement from "./MountElement";
 import render from "./render-vdom-to-real";
 import { watch } from "./watch";
+
 export { render };
 export { computed };
 export { useMounted, useUnMounted };
