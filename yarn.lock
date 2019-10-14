@@ -683,8 +683,8 @@
     to-fast-properties "^2.0.0"
 
 "@masx200/deep-observe-agent-proxy@https://gitee.com/masx200/deep-observe-agent-proxy.git":
-  version "1.1.5"
-  resolved "https://gitee.com/masx200/deep-observe-agent-proxy.git#eeb0963c1f7d31974e0cf5f7a0319917668da623"
+  version "1.2.0"
+  resolved "https://gitee.com/masx200/deep-observe-agent-proxy.git#e2e4549c55daa34cd804c3ee0e0e4282a922452f"
 
 "@masx200/dom-element-attribute-agent-proxy@https://gitee.com/masx200/dom-element-attribute-agent-proxy.git":
   version "1.1.16"

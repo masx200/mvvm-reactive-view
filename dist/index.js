@@ -1370,6 +1370,30 @@ function isNode(a) {
     return a instanceof Node;
 }
 
+const Setprototype = Set.prototype;
+
+const Mapprototype = Map.prototype;
+
+function ispromise(a) {
+    return a instanceof Promise;
+}
+
+function isdate(a) {
+    return a instanceof Date;
+}
+
+function isregexp(a) {
+    return a instanceof RegExp;
+}
+
+function isMap(a) {
+    return a instanceof Map;
+}
+
+function isSet$2(a) {
+    return a instanceof Set;
+}
+
 function isArray$1(a) {
     return Array.isArray(a);
 }
@@ -1392,16 +1416,55 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
         console.error("observe callback invalid !");
         throw Error();
     }
+    if (ispromise(target) || isregexp(target) || isdate(target)) {
+        return target;
+    }
     if (isfunction$1(target) || isobject$2(target)) {
         let fakeobj;
-        if (isArray$1(target)) {
+        if (isSet$2(target)) {
+            fakeobj = new Set([ ...target ]);
+            set$2(fakeobj, "add", value => {
+                Setprototype.add.call(target, value);
+                callback(ancestor, patharray, undefined, undefined);
+                return Setprototype.add.call(fakeobj, value);
+            });
+            set$2(fakeobj, "delete", value => {
+                Setprototype.delete.call(target, value);
+                callback(ancestor, patharray, undefined, undefined);
+                return Setprototype.delete.call(fakeobj, value);
+            });
+            set$2(fakeobj, "clear", () => {
+                Setprototype.clear.call(target);
+                callback(ancestor, patharray, undefined, undefined);
+                return Setprototype.clear.call(fakeobj);
+            });
+        } else if (isMap(target)) {
+            fakeobj = new Map([ ...target ]);
+            set$2(fakeobj, "clear", () => {
+                Mapprototype.clear.call(target);
+                callback(ancestor, patharray, undefined, undefined);
+                return Mapprototype.clear.call(fakeobj);
+            });
+            set$2(fakeobj, "set", (key, value) => {
+                Mapprototype.set.call(target, key, value);
+                callback(ancestor, patharray, undefined, undefined);
+                return Mapprototype.set.call(fakeobj, key, value);
+            });
+            set$2(fakeobj, "delete", value => {
+                Mapprototype.delete.call(target, value);
+                callback(ancestor, patharray, undefined, undefined);
+                return Mapprototype.delete.call(fakeobj, value);
+            });
+        } else if (isArray$1(target)) {
             fakeobj = [];
         } else if (isfunction$1(target)) {
             fakeobj = () => {};
         } else {
             fakeobj = {};
         }
-        setPrototypeOf(fakeobj, null);
+        if (!isSet$2(target) && !isMap(target)) {
+            setPrototypeOf(fakeobj, null);
+        }
         return new Proxy(fakeobj, {
             defineProperty(t, p, a) {
                 callback(ancestor, [ ...patharray, String(p) ], has$1(a, "value") ? a.value : isfunction$1(a.get) ? a.get() : undefined, get$2(target, p));
@@ -1454,6 +1517,9 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
             },
             get(t, k) {
                 var value = get$2(target, k);
+                if (isfunction$1(value) && (isSet$2(target) || isMap(target))) {
+                    return get$2(fakeobj, k).bind(fakeobj);
+                }
                 if (isfunction$1(value) || isobject$2(value)) {
                     return deepobserveaddpath(value, callback, [ ...patharray, String(k) ], target);
                 } else {
@@ -1560,41 +1626,41 @@ function handleobjectstate(init) {
                 switch (key) {
                   case "add":
                     {
-                        return add => {
+                        return (add => {
                             if (!set_prototype.has.call(value, add)) {
                                 const returnvalue = set_prototype[key].call(value, add);
                                 target[dispatchsymbol]();
                                 return returnvalue;
                             }
                             return;
-                        };
+                        }).bind(value);
                     }
 
                   case "delete":
                     {
-                        return dele => {
+                        return (dele => {
                             if (set_prototype.has.call(value, dele)) {
                                 const returnvalue = set_prototype[key].call(value, dele);
                                 target[dispatchsymbol]();
                                 return returnvalue;
                             }
                             return;
-                        };
+                        }).bind(value);
                     }
 
                   case "clear":
                     {
-                        return () => {
+                        return (() => {
                             if (value.size) {
                                 const returnvalue = set_prototype[key].call(value);
                                 target[dispatchsymbol]();
                                 return returnvalue;
                             }
                             return;
-                        };
+                        }).bind(value);
                     }
                 }
-            } else if (isarray(value) || isplainobject(value)) {
+            } else if (isobject(value)) {
                 return observedeepagent(get$1(value, key), () => {
                     target[dispatchsymbol](String(key));
                 });

@@ -106,40 +106,40 @@ export default function(init: object): ReactiveState<object> {
       ) {
         switch (key) {
           case "add": {
-            return (add: any) => {
+            return ((add: any) => {
               if (!set_prototype.has.call(value, add)) {
                 const returnvalue = set_prototype[key].call(value, add);
                 target[dispatchsymbol]();
                 return returnvalue;
               }
               return;
-            };
+            }).bind(value);
           }
           // break;
           case "delete": {
-            return (dele: any) => {
+            return ((dele: any) => {
               if (set_prototype.has.call(value, dele)) {
                 const returnvalue = set_prototype[key].call(value, dele);
                 target[dispatchsymbol]();
                 return returnvalue;
               }
               return;
-            };
+            }).bind(value);
           }
           // break;
           case "clear": {
-            return () => {
+            return (() => {
               if (value.size) {
                 const returnvalue = set_prototype[key].call(value);
                 target[dispatchsymbol]();
                 return returnvalue;
               }
               return;
-            };
+            }).bind(value);
           }
           // break;
         }
-      } else if (isarray(value) || isplainobject(value)) {
+      } else if (isobject(value)) {
         return deepobserve(get(value, key), () => {
           target[dispatchsymbol](String(key));
         });
