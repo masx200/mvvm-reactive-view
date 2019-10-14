@@ -135,7 +135,7 @@ export default function(
       onunmounted(this);
     }
 
-    async [attributeChangedCallback](
+    [attributeChangedCallback](
       name: string /* , oldValue: any, newValue: any */
     ) {
       if (this[readysymbol]) {

@@ -1,8 +1,8 @@
-export { Htmlelementconstructor as Class };
 import { VaildVDom } from "./conditon";
+import { Htmlelementconstructor } from "./createComponent";
 import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./VirtualElement";
-import { Htmlelementconstructor } from "./createComponent";
+export { Htmlelementconstructor as Class };
 export interface Custom {
     (props?: Record<string, ReactiveState<any>>, children?: Vdomchildren): VaildVDom;
     defaultProps?: Record<string, any>;

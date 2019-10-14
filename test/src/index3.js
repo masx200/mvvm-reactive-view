@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createComponent,
@@ -35,6 +36,7 @@ console.log([h, createElement]);
         return (
           <div
             onclick={() => {
+              // @ts-ignore
               number.value++;
             }}
           >

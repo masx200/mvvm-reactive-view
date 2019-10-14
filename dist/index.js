@@ -628,6 +628,7 @@ class ReactiveState {
             return this.value;
         };
         if (isprimitive(init) || isobject(init)) {
+            this.value = init;
             Object.defineProperty(this, "value", {
                 value: init,
                 configurable: true,
@@ -2124,7 +2125,7 @@ function conditon(conditon, iftrue, iffalse) {
         async disconnectedCallback() {
             onunmounted(this);
         }
-        async [attributeChangedCallback](name) {
+        [attributeChangedCallback](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);
@@ -2234,6 +2235,64 @@ function createRef(value) {
     };
 }
 
+const listinnervdom = Symbol("listinnervdom");
+
+const listinnerelement = Symbol("listinnerelement");
+
+function listmap(list, mapfun) {
+    var _a, _b;
+    const itemclass = createComponent(props => {
+        const myprops = props;
+        const value = myprops.value.valueOf();
+        const index = myprops.index.valueOf();
+        return mapfun(value, index);
+    });
+    const ITEMfactory = (value, index) => createElement(itemclass, {
+        value: value,
+        index: index
+    });
+    class ListMap extends AttrChange {
+        constructor() {
+            super(...arguments);
+            this[_b] = false;
+        }
+        [(_a = componentsymbol, _b = readysymbol, attributeChangedCallback)](name) {
+            if (this[readysymbol]) {
+                if (name === "value") {
+                    const attrs = createeleattragentreadwrite(this);
+                    const value = attrs["value"];
+                    console.log(value);
+                    if (!isarray(value)) {
+                        throw new TypeError;
+                    }
+                }
+            }
+        }
+        async disconnectedCallback() {
+            onunmounted(this);
+        }
+        async connectedCallback() {
+            if (!this[readysymbol]) {
+                this[readysymbol] = true;
+                const attrs = createeleattragentreadwrite(this);
+                const value = attrs["value"];
+                console.log(value);
+                if (!isarray(value)) {
+                    throw new TypeError;
+                }
+                this[listinnervdom] = value.map((v, i) => ITEMfactory(v, i));
+                this[listinnerelement] = render(this[listinnervdom]);
+                mount(this[listinnerelement], this);
+            }
+            onmounted(this);
+        }
+    }
+    ListMap[_a] = componentsymbol;
+    return createElement(ListMap, {
+        value: list
+    });
+}
+
 extenddirectives({
     value(value, element, vdom) {
         model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
@@ -2265,5 +2324,5 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as extendDirectives, createElement as h, html$1 as html, render, useMounted, useUnMounted, watch };
+export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as extendDirectives, createElement as h, html$1 as html, listmap, render, useMounted, useUnMounted, watch };
 //# sourceMappingURL=index.js.map

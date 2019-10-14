@@ -33,15 +33,19 @@ deleteProperty(forkarray.prototype, "length"); */
 /* extends forkarray  */
 
 export default class ReactiveState<T extends UnwrapedState> {
+  value: T extends Primitivetype ? Primitivetype : Exclude<object, Function>;
   [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
 
-  constructor(init?: undefined | Primitivetype | Exclude<object, Function>) {
+  constructor(init?: T) {
     //super();
     // this.value = undefined;
-    this.value = undefined;
+
     if (isprimitive(init) || isobject(init)) {
+      this.value = init as T extends Primitivetype
+        ? Primitivetype
+        : Exclude<object, Function>;
       Object.defineProperty(this, "value", {
         value: init,
         configurable: true,
@@ -108,7 +112,7 @@ export default class ReactiveState<T extends UnwrapedState> {
       this[textnodesymbol] = textnode;
     } */
   // [textnodesymbol]: Text | undefined;
-  value: undefined | Primitivetype | Exclude<object, Function>;
+
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = new Set<EventListener>();
 
