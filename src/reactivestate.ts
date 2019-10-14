@@ -1,3 +1,4 @@
+import { Primitivetype } from "./isprimitive";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
@@ -5,6 +6,7 @@ import debounce from "lodash/debounce";
 import isprimitive from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
+// import { Primitive } from 'lodash';
 export const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
@@ -36,8 +38,10 @@ export default class ReactiveState<T extends UnwrapedState> {
 
   readonly [Symbol.toStringTag] = "ReactiveState";
 
-  constructor(init?: T) {
+  constructor(init?: undefined | Primitivetype | Exclude<object, Function>) {
     //super();
+    // this.value = undefined;
+    this.value = undefined;
     if (isprimitive(init) || isobject(init)) {
       Object.defineProperty(this, "value", {
         value: init,
@@ -105,7 +109,7 @@ export default class ReactiveState<T extends UnwrapedState> {
       this[textnodesymbol] = textnode;
     } */
   // [textnodesymbol]: Text | undefined;
-  value: T | undefined;
+  value: undefined | Primitivetype | Exclude<object, Function>;
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = new Set<EventListener>();
 

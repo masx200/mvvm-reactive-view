@@ -1,30 +1,25 @@
 import debounce from "lodash/debounce";
+import { invalid_ReactiveState } from "./conditon";
+import { invalid_Function, usewatch } from "./context-mounted-unmounted";
+import { Primitivetype } from "./isprimitive";
+import ReactiveState, {
+  addallistenerssymbol,
+  cancelsubscribe,
+  isReactiveState,
+  removeallistenerssymbol,
+  subscribesymbol
+} from "./reactivestate";
+import { toArray } from "./toArray";
+//import { requestAnimationFrame } from "./directives";
+import { isarray, isFunction } from "./util";
 export type CancelWatchfun = () => void;
-export type UnwrapedState =
-  | string
-  | number
-  | boolean
-  | undefined
-  | object
-  | bigint;
+export type UnwrapedState = Primitivetype | Exclude<object, Function>;
+
 export interface CallbackReactiveState /* <
   
 > */ {
   (...args: UnwrapedState[]): void;
 }
-
-import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function, usewatch } from "./context-mounted-unmounted";
-import ReactiveState, {
-  addallistenerssymbol,
-  isReactiveState,
-  removeallistenerssymbol,
-  subscribesymbol,
-  cancelsubscribe
-} from "./reactivestate";
-//import { requestAnimationFrame } from "./directives";
-import { isarray, isFunction } from "./util";
-import { toArray } from "./toArray";
 
 export function watch<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,

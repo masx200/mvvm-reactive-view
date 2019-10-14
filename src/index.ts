@@ -9,6 +9,13 @@ import createState from "./createstate";
 import "./CustomElementRegistry";
 import extendDirectives from "./extend-directive";
 import html from "./html";
+//请自行使用babel-preset-env和core-js 3
+//import "./Object-fromEntries";
+// import "./setImmediate";
+//import "./array-prototype-flat";
+// export const Fragment = "";
+// import { isobject, isfunction } from "./util";
+import { listmap } from "./listmap";
 import "./model-input-textarea-value-directive-binding";
 import MountElement from "./MountElement";
 import render from "./render-vdom-to-real";
@@ -26,10 +33,4 @@ export { createState };
 export { watch };
 export { extendDirectives };
 export { condition };
-
-//请自行使用babel-preset-env和core-js 3
-//import "./Object-fromEntries";
-// import "./setImmediate";
-//import "./array-prototype-flat";
-// export const Fragment = "";
-// import { isobject, isfunction } from "./util";
+export { listmap };
