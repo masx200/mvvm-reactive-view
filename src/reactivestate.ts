@@ -1,11 +1,10 @@
-import { Primitivetype } from "./isprimitive";
-export const addonelistner = Symbol("addonelistner");
-export const removeonelistner = Symbol("removeonelistner");
 import debounce from "lodash/debounce";
 // import Reflect from "./reflect";
-import isprimitive from "./isprimitive";
+import isprimitive, { Primitivetype } from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
+export const addonelistner = Symbol("addonelistner");
+export const removeonelistner = Symbol("removeonelistner");
 // import { Primitive } from 'lodash';
 export const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");

@@ -1,8 +1,9 @@
-export { Htmlelementconstructor as Class };
 import { VaildVDom } from "./conditon";
+import { Htmlelementconstructor } from "./createComponent";
 import ReactiveState from "./reactivestate";
 import { Vdomchildren } from "./VirtualElement";
-import { Htmlelementconstructor } from "./createComponent";
+export { Htmlelementconstructor as Class };
+
 // /* export interface Class {
 //   new (): HTMLElement;
 //   //   new (propsjson?: object, children?: any[] /* , options?: any */): HTMLElement;

@@ -17,10 +17,10 @@ import {
   defineProperty,
   //   deleteProperty,
   get,
+  getOwnPropertyDescriptor,
   //   getOwnPropertyDescriptor,
   has,
-  ownKeys,
-  getOwnPropertyDescriptor
+  ownKeys
 } from "./reflect";
 import { toArray } from "./toArray";
 import { isArray, isFunction, isobject, isprimitive, issymbol } from "./util";
