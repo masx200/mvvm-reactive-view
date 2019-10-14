@@ -16,14 +16,14 @@ const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
 function listmap(
   list: any[] | Set<any>,
-  mapfun: (value: any, index: number) => VaildVDom
+  mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
 ): Virtualdom<Htmlelementconstructor> {
   const itemclass = createComponent(props => {
     const myprops = props as {
       value: ReactiveState<any>;
       index: ReactiveState<any>;
     };
-    const value = myprops.value.valueOf();
+    const value = myprops.value;
     const index = myprops.index.valueOf() as number;
     return mapfun(value, index);
   });

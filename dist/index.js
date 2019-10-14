@@ -2243,7 +2243,7 @@ function listmap(list, mapfun) {
     var _a, _b;
     const itemclass = createComponent(props => {
         const myprops = props;
-        const value = myprops.value.valueOf();
+        const value = myprops.value;
         const index = myprops.index.valueOf();
         return mapfun(value, index);
     });

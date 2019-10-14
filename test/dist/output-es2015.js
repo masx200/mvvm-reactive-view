@@ -2113,7 +2113,7 @@
         var _a, _b;
         var itemclass = createComponent(props => {
             var myprops = props;
-            var value = myprops.value.valueOf();
+            var value = myprops.value;
             var index = myprops.index.valueOf();
             return mapfun(value, index);
         });
