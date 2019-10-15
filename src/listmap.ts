@@ -15,7 +15,7 @@ export { listmap };
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
 function listmap(
-  list: any[] | Set<any>,
+  list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
   mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
 ): Virtualdom<Htmlelementconstructor> {
   const itemclass = createComponent(props => {
