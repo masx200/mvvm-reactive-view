@@ -12,6 +12,7 @@ import { onunmounted, onmounted } from "./element-onmount-unmount";
 import { isArray } from "./util";
 import render from "./render-vdom-to-real";
 export { listmap };
+const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
 function listmap(
@@ -31,6 +32,7 @@ function listmap(
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
+    [listlengthsymbol]: number;
     [listinnerelement]: Element | Node[];
     [listinnervdom]: Virtualdom<Htmlelementconstructor>[];
     static [componentsymbol] = componentsymbol;
@@ -45,6 +47,8 @@ function listmap(
             console.log(value);
             throw new TypeError();
           }
+          this[listlengthsymbol] = value.length;
+          // if(){}
         }
       }
     }
@@ -62,9 +66,11 @@ function listmap(
           console.log(value);
           throw new TypeError();
         }
+
         this[listinnervdom] = value.map((v, i) => ITEMfactory(v, i));
         this[listinnerelement] = render(this[listinnervdom]);
         mount(this[listinnerelement], this);
+        this[listlengthsymbol] = value.length;
       }
       onmounted(this);
     }
