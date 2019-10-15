@@ -35,7 +35,7 @@ function listmap(
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
-    [listvalueattr] = createstate(createeleattr(this)["value"]);
+    [listvalueattr] = createstate([]);
     [listlengthsymbol]: number;
     [listinnerelement]: Element | Node[];
     [listinnervdom]: Virtualdom<Htmlelementconstructor>[];
