@@ -1018,6 +1018,10 @@
     }
     function extenddirectives() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        if (!isplainobject(options)) {
+            console.error(options);
+            throw new TypeError;
+        }
         Object$1.entries(options).forEach(_ref14 => {
             var [key, value] = _ref14;
             if (typeof value !== "function") {

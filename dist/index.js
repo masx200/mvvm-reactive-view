@@ -1092,6 +1092,10 @@ function rewatch(state) {
 }
 
 function extenddirectives(options = {}) {
+    if (!isplainobject(options)) {
+        console.error(options);
+        throw new TypeError;
+    }
     Object.entries(options).forEach(([key, value]) => {
         if (typeof value !== "function") {
             console.error(value);

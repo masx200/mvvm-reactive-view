@@ -1,6 +1,7 @@
 import { invalid_Function } from "./context-mounted-unmounted";
 import directives from "./directives";
 import Virtualdom from "./VirtualElement";
+import { isplainobject } from "./util";
 export interface Extendfun {
   (
     value: any,
@@ -13,6 +14,10 @@ export interface ExtendOptions {
   [s: string]: Extendfun;
 }
 export default function extenddirectives(options: ExtendOptions = {}) {
+  if (!isplainobject(options)) {
+    console.error(options);
+    throw new TypeError();
+  }
   Object.entries(options).forEach(([key, value]) => {
     if (typeof value !== "function") {
       console.error(value);
