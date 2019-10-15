@@ -1,7 +1,7 @@
 function flattenDeep(arr1) {
   return arr1.reduce(
-    (acc, val) =>
-      Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val),
+    (acc, val) => acc.concat(Array.isArray(val) ? flattenDeep(val) : val),
+
     []
   );
 }
@@ -9,8 +9,15 @@ function flattenDeep(arr1) {
 function arrayflat(depth = 1) {
   if (depth <= 1) {
     return this.reduce((acc, val) => acc.concat(val), []);
-  } else {
+  } else if (depth > 10) {
     return flattenDeep(this);
+  } else {
+    let result = [...this];
+    while (depth >= 1) {
+      result = arrayflat.call(result);
+      depth--;
+    }
+    return result;
   }
 }
 
