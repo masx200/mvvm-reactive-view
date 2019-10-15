@@ -14,7 +14,7 @@ export default document;
 export declare const mathnamespace = "http://www.w3.org/1998/Math/MathML";
 export declare function createmathelement(): Element;
 export declare function createComment(): Comment;
-export declare function removeNode(node: Element): void;
+export declare function removeNode(node: Element | Node): void;
 export declare function replaceChild(newChild: Node, oldChild: Node): void;
 export declare function domaddlisten(ele: Element | Node, event: string, call: EventListener): void;
 export declare function domremovelisten(ele: Element | Node, event: string, call: EventListener): void;

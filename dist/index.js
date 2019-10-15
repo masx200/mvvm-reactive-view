@@ -269,6 +269,13 @@ function createmathelement() {
     return createElementNS(mathnamespace, "math");
 }
 
+function removeNode(node) {
+    let parentNode = node.parentNode;
+    if (parentNode) {
+        parentNode.removeChild(node);
+    }
+}
+
 function domaddlisten(ele, event, call) {
     ele.addEventListener(event, call);
 }
@@ -2235,14 +2242,14 @@ function createRef(value) {
     };
 }
 
-const listlengthsymbol = Symbol("listlength");
+const listvalueattr = Symbol("listvalueattr");
 
 const listinnervdom = Symbol("listinnervdom");
 
 const listinnerelement = Symbol("listinnerelement");
 
 function listmap(list, mapfun) {
-    var _a, _b;
+    var _a, _b, _c;
     const itemclass = createComponent(props => {
         const myprops = props;
         const value = myprops.value;
@@ -2256,9 +2263,10 @@ function listmap(list, mapfun) {
     class ListMap extends AttrChange {
         constructor() {
             super(...arguments);
-            this[_b] = false;
+            this[_a] = createstate([]);
+            this[_c] = false;
         }
-        [(_a = componentsymbol, _b = readysymbol, attributeChangedCallback)](name) {
+        [(_a = listvalueattr, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);
@@ -2267,7 +2275,22 @@ function listmap(list, mapfun) {
                         console.log(value);
                         throw new TypeError;
                     }
-                    this[listlengthsymbol] = value.length;
+                    this[listvalueattr]["value"] = value;
+                    const domchildren = getdomchildren(this);
+                    const newlength = value.length;
+                    const oldlength = domchildren.length;
+                    if (newlength > oldlength) {
+                        const numindexs = Array(newlength).fill(undefined).map((v, i) => i).slice(oldlength);
+                        const vdomstoadd = numindexs.map(index => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
+                        const realelementstoadd = render(vdomstoadd);
+                        this[listinnervdom].push(...vdomstoadd);
+                        this[listinnerelement].push(...realelementstoadd);
+                        realelementstoadd.forEach(element => appendchild(this, element));
+                    } else if (newlength < oldlength) {
+                        this[listinnervdom] = this[listinnervdom].slice(0, newlength);
+                        this[listinnerelement] = this[listinnerelement].slice(0, newlength);
+                        getdomchildren(this).slice(newlength).forEach(element => removeNode(element));
+                    }
                 }
             }
         }
@@ -2283,15 +2306,15 @@ function listmap(list, mapfun) {
                     console.log(value);
                     throw new TypeError;
                 }
-                this[listinnervdom] = value.map((v, i) => ITEMfactory(computed(value, v => v[i]), i));
+                this[listvalueattr]["value"] = value;
+                this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
                 this[listinnerelement] = render(this[listinnervdom]);
                 mount(this[listinnerelement], this);
-                this[listlengthsymbol] = value.length;
             }
             onmounted(this);
         }
     }
-    ListMap[_a] = componentsymbol;
+    ListMap[_b] = componentsymbol;
     return createElement(ListMap, {
         value: list
     });

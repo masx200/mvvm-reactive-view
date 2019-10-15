@@ -46,7 +46,7 @@ export function createmathelement() {
 export function createComment() {
   return document.createComment("");
 }
-export function removeNode(node: Element) {
+export function removeNode(node: Element | Node) {
   let parentNode = node.parentNode;
   if (parentNode) {
     parentNode.removeChild(node);

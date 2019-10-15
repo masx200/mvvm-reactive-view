@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   listmap,
@@ -14,8 +15,41 @@ const liststate = createState(
     .fill(undefined)
     .map((v, i) => i)
 );
-const vdom = listmap(liststate, (value, index) =>
-  createElement("div", ["item", "value", value, "index", index])
+const vdom = (
+  <div>
+    <button
+      _text="push"
+      onclick={() => {
+        // @ts-ignore
+        liststate.push(Math.random());
+      }}
+    />
+    <button
+      _text="pop"
+      onclick={() => {
+        // @ts-ignore
+        liststate.pop();
+      }}
+    />
+
+    <button
+      _text="shift"
+      onclick={() => {
+        // @ts-ignore
+        liststate.shift();
+      }}
+    />
+    <button
+      _text="unshift"
+      onclick={() => {
+        // @ts-ignore
+        liststate.unshift(Math.random());
+      }}
+    />
+    {listmap(liststate, (value, index) =>
+      createElement("div", ["item", "value", value, "index", index])
+    )}
+  </div>
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 console.log(vdom);
