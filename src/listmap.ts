@@ -14,7 +14,7 @@ import { readysymbol } from "./readysymbol";
 import render from "./render-vdom-to-real";
 import { isArray } from "./util";
 import Virtualdom from "./VirtualElement";
-export { listmap };
+export { listmap as listMap };
 const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");

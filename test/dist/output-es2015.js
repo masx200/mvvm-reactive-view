@@ -143,13 +143,109 @@
         console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
         throw new TypeError;
     }
+    var Reflect$1 = window$1.Reflect;
+    var {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, set: set} = Reflect$1;
+    function isclassextendsHTMLElement(initclass) {
+        return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
+    }
+    function createcostumelemet(initclass, propsjson, children) {
+        if (isclassextendsHTMLElement(initclass)) {
+            RandomDefineCustomElement(initclass);
+            return construct(initclass, [ propsjson, children ]);
+        } else {
+            console.error(initclass);
+            console.error(invalid_custom_element_class);
+            throw TypeError();
+        }
+    }
+    var invalid_custom_element_class = "invalid custom element class !";
+    if (!isobject(window$1.customElements)) {
+        console.error(" customElements  not supported !");
+        throw new TypeError;
+    }
+    function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
+        var outputentrie = Object$1.entries(table).find(v => {
+            return v[1] === Componentstatusname;
+        });
+        return outputentrie ? outputentrie[0] : undefined;
+    }
+    window$1.CustomElementRegistry = get(getPrototypeOf(window$1.customElements), "constructor");
+    var elementset = Symbol.for("elementset");
+    var elementmap = Symbol.for("elementmap");
+    var {CustomElementRegistry: CustomElementRegistry} = window$1;
+    var customElements$1$1 = window$1.customElements;
+    if (!has(customElements$1$1, elementset)) {
+        set(customElements$1$1, elementset, new Set$1);
+    }
+    if (!has(customElements$1$1, elementmap)) {
+        set(customElements$1$1, elementmap, {});
+    }
+    var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
+    function RandomDefineCustomElement$1(initclass, extendsname) {
+        var length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+        if (!isclassextendsHTMLElement(initclass)) {
+            console.error(initclass);
+            console.error(invalid_custom_element_class);
+            throw TypeError();
+        }
+        if (!get(customElements$1$1, elementset).has(initclass)) {
+            var elementname = getrandomstringandnumber(length);
+            if (customElements$1$1.get(elementname)) {
+                return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
+            } else {
+                if (extendsname) {
+                    customElements$1$1.define(elementname, initclass, {
+                        extends: extendsname
+                    });
+                } else {
+                    customElements$1$1.define(elementname, initclass);
+                }
+            }
+            return elementname;
+        } else {
+            return Usevaluetoquerythekeyfromthetable(get(customElements$1$1, elementmap), initclass);
+        }
+    }
+    customElements$1$1.define = function(name, constructor, options) {
+        if (!isclassextendsHTMLElement(constructor)) {
+            console.error(constructor);
+            console.error(invalid_custom_element_class);
+            throw TypeError();
+        }
+        if (!get(customElements$1$1, elementset).has(constructor)) {
+            if (has(customElements$1$1[elementmap], name)) {
+                RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
+            } else {
+                CustomElementRegistry.prototype.define.call(customElements$1$1, name, constructor, options);
+                customElements$1$1[elementset].add(constructor);
+                customElements$1$1[elementmap][name] = constructor;
+            }
+        }
+    };
+    set(customElements$1$1, Symbol.iterator, () => {
+        var entries = Object$1.entries(customElements$1$1[elementmap]);
+        return entries[Symbol.iterator].call(entries);
+    });
+    var charactorlist = Array$1(26).fill(undefined).map((v, i) => 97 + i).map(n => String$1.fromCharCode(n));
+    var hexnumberlist = Array$1(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
+    var charactorandnumberlist = [ ...new Set$1([ ...hexnumberlist, ...charactorlist ]) ];
+    function getrandomcharactor() {
+        return get(charactorlist, Math$1.floor(Math$1.random() * charactorlist.length));
+    }
+    function getrandomhexnumberandcharactor() {
+        return get(charactorandnumberlist, Math$1.floor(Math$1.random() * charactorandnumberlist.length));
+    }
+    function getrandomstringandnumber() {
+        var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        return Array$1(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array$1(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
+    }
     var hyphenateRE = /\B([A-Z])/g;
     var hyphenate = str => {
         return str.replace(hyphenateRE, "-$1").toLowerCase();
     };
     var String$1$1 = window$1.String;
-    var Reflect$1 = window$1.Reflect;
-    var {get: get, set: set, ownKeys: ownKeys$1} = Reflect$1;
+    var Reflect$2 = window$1.Reflect;
+    var {get: get$1, set: set$1, ownKeys: ownKeys$1$1} = Reflect$2;
     var valuestring = "value";
     function isobject$1(a) {
         return typeof a === "object" && a !== null;
@@ -163,7 +259,7 @@
     function isSet$1(a) {
         return a instanceof Set$1;
     }
-    var isinputcheckbox = ele => "input" === geteletagname(ele) && get(ele, "type") === "checkbox";
+    var isinputcheckbox = ele => "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
     function objtostylestring(obj) {
         obj = JSON.parse(JSON.stringify(obj));
         obj = Object$1.fromEntries(Object$1.entries(obj).map(_ref => {
@@ -194,10 +290,10 @@
             get(target, key) {
                 var isinputtextortextareaflag = isinputtextortextarea(ele);
                 if (isinputcheckbox(ele) && key === "checked") {
-                    return get(ele, "checked");
+                    return get$1(ele, "checked");
                 }
                 if (isinputtextortextareaflag && key === valuestring) {
-                    return get(ele, valuestring);
+                    return get$1(ele, valuestring);
                 } else {
                     var v = getattribute(ele, String$1$1(key));
                     if (v === "") {
@@ -223,14 +319,14 @@
                     throw TypeError();
                 }
                 if (geteletagname(ele) === "input" && key === "checked") {
-                    set(ele, key, v);
+                    set$1(ele, key, v);
                     return true;
                 }
                 if (isinputtextortextareaflag && key === valuestring) {
-                    return set(ele, valuestring, String$1$1(v));
+                    return set$1(ele, valuestring, String$1$1(v));
                 } else if (key === "style") {
                     var csstext = isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1$1(v);
-                    set(get(ele, "style"), "cssText", csstext.trim());
+                    set$1(get$1(ele, "style"), "cssText", csstext.trim());
                     return true;
                 } else if (key === "class" && isobject$1(v)) {
                     var classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? [ ...v ].join(" ") : String$1$1(v);
@@ -253,7 +349,7 @@
                 return true;
             },
             has(target, key) {
-                return ownKeys$1(outputattrs).includes(key);
+                return ownKeys$1$1(outputattrs).includes(key);
             },
             defineProperty() {
                 return false;
@@ -264,7 +360,7 @@
                     configurable: true,
                     writable: true
                 };
-                var myvalue = get(outputattrs, key);
+                var myvalue = get$1(outputattrs, key);
                 if (typeof myvalue !== "undefined") {
                     return _objectSpread2({
                         value: myvalue
@@ -296,7 +392,7 @@
     }
     function isinputtextortextarea(ele) {
         var tagname = geteletagname(ele);
-        return tagname === "textarea" || tagname === "select" || tagname === "input" && get(ele, "type") === "text";
+        return tagname === "textarea" || tagname === "select" || tagname === "input" && get$1(ele, "type") === "text";
     }
     var document$1$1 = window$1.document;
     function seteletext(e, v) {
@@ -359,12 +455,10 @@
     function createanotherhtmldocument() {
         return document$1$1.implementation.createHTMLDocument("");
     }
-    var Reflect$2 = window$1.Reflect;
-    var {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get$1, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1$1, set: set$1} = Reflect$2;
     var attributeChangedCallback = "attributeChangedCallback";
     class AttrChange extends HTMLElement {
         setAttribute(qualifiedName, value) {
-            var callback = get$1(this, attributeChangedCallback);
+            var callback = get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
             if (oldValue !== value) {
                 setAttribute(this, qualifiedName, value);
@@ -374,7 +468,7 @@
             }
         }
         removeAttribute(qualifiedName) {
-            var callback = get$1(this, attributeChangedCallback);
+            var callback = get(this, attributeChangedCallback);
             var oldValue = getAttribute(this, qualifiedName);
             if (null !== oldValue) {
                 removeAttribute$1(this, qualifiedName);
@@ -669,7 +763,7 @@
         }
     }
     function isVirtualdom(a) {
-        return isobject(a) && get$1(a, isvirtualelement) === isvirtualelement;
+        return isobject(a) && get(a, isvirtualelement) === isvirtualelement;
     }
     var isvirtualelement = Symbol("isvirtualelement");
     function createVirtualElement(type) {
@@ -782,100 +876,6 @@
         var eles = toArray(ele).flat(Infinity);
         eles.forEach(e => appendchild(container, e));
         return container;
-    }
-    var invalid_custom_element_class = "invalid custom element class !";
-    if (!isobject(window$1.customElements)) {
-        console.error(" customElements  not supported !");
-        throw new TypeError;
-    }
-    function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
-        var outputentrie = Object$1.entries(table).find(v => {
-            return v[1] === Componentstatusname;
-        });
-        return outputentrie ? outputentrie[0] : undefined;
-    }
-    window$1.CustomElementRegistry = get$1(getPrototypeOf(window$1.customElements), "constructor");
-    var elementset = Symbol.for("elementset");
-    var elementmap = Symbol.for("elementmap");
-    var {CustomElementRegistry: CustomElementRegistry} = window$1;
-    var customElements$1$1 = window$1.customElements;
-    if (!has(customElements$1$1, elementset)) {
-        set$1(customElements$1$1, elementset, new Set$1);
-    }
-    if (!has(customElements$1$1, elementmap)) {
-        set$1(customElements$1$1, elementmap, {});
-    }
-    var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
-    function RandomDefineCustomElement$1(initclass, extendsname) {
-        var length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-        if (!isclassextendsHTMLElement(initclass)) {
-            console.error(initclass);
-            console.error(invalid_custom_element_class);
-            throw TypeError();
-        }
-        if (!get$1(customElements$1$1, elementset).has(initclass)) {
-            var elementname = getrandomstringandnumber(length);
-            if (customElements$1$1.get(elementname)) {
-                return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
-            } else {
-                if (extendsname) {
-                    customElements$1$1.define(elementname, initclass, {
-                        extends: extendsname
-                    });
-                } else {
-                    customElements$1$1.define(elementname, initclass);
-                }
-            }
-            return elementname;
-        } else {
-            return Usevaluetoquerythekeyfromthetable(get$1(customElements$1$1, elementmap), initclass);
-        }
-    }
-    customElements$1$1.define = function(name, constructor, options) {
-        if (!isclassextendsHTMLElement(constructor)) {
-            console.error(constructor);
-            console.error(invalid_custom_element_class);
-            throw TypeError();
-        }
-        if (!get$1(customElements$1$1, elementset).has(constructor)) {
-            if (has(customElements$1$1[elementmap], name)) {
-                RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
-            } else {
-                CustomElementRegistry.prototype.define.call(customElements$1$1, name, constructor, options);
-                customElements$1$1[elementset].add(constructor);
-                customElements$1$1[elementmap][name] = constructor;
-            }
-        }
-    };
-    set$1(customElements$1$1, Symbol.iterator, () => {
-        var entries = Object$1.entries(customElements$1$1[elementmap]);
-        return entries[Symbol.iterator].call(entries);
-    });
-    var charactorlist = Array$1(26).fill(undefined).map((v, i) => 97 + i).map(n => String$1.fromCharCode(n));
-    var hexnumberlist = Array$1(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
-    var charactorandnumberlist = [ ...new Set$1([ ...hexnumberlist, ...charactorlist ]) ];
-    function getrandomcharactor() {
-        return get$1(charactorlist, Math$1.floor(Math$1.random() * charactorlist.length));
-    }
-    function getrandomhexnumberandcharactor() {
-        return get$1(charactorandnumberlist, Math$1.floor(Math$1.random() * charactorandnumberlist.length));
-    }
-    function getrandomstringandnumber() {
-        var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        return Array$1(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array$1(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
-    }
-    function isclassextendsHTMLElement(initclass) {
-        return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-    }
-    function createcostumelemet(initclass, propsjson, children) {
-        if (isclassextendsHTMLElement(initclass)) {
-            RandomDefineCustomElement(initclass);
-            return construct(initclass, [ propsjson, children ]);
-        } else {
-            console.error(initclass);
-            console.error(invalid_custom_element_class);
-            throw TypeError();
-        }
     }
     function isconnected(element) {
         return document$1.documentElement === getancestornode(element);
@@ -1043,7 +1043,7 @@
             if (isfunction(ref)) {
                 apply(ref, undefined, [ ele ]);
             } else if (isobject(ref)) {
-                set$1(ref, "value", ele);
+                set(ref, "value", ele);
             } else {
                 console.log(_vdom);
                 console.error(ref);
@@ -1088,7 +1088,7 @@
     }
     var componentsymbol = Symbol("component");
     function iscomponent(a) {
-        return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
+        return isfunction(a) && get(a, componentsymbol) === componentsymbol;
     }
     var eventlistenerssymbol = Symbol("eventlisteners");
     function onevent(element, eventname, callback) {
@@ -1103,15 +1103,15 @@
                 throw TypeError();
             }
             if (!has(element, eventlistenerssymbol)) {
-                set$1(element, eventlistenerssymbol, []);
+                set(element, eventlistenerssymbol, []);
             }
-            get$1(ele, eventlistenerssymbol).push([ event, call ]);
+            get(ele, eventlistenerssymbol).push([ event, call ]);
             domaddlisten(ele, event, call);
         });
     }
     function removelisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(_ref15 => {
+            get(ele, eventlistenerssymbol).forEach(_ref15 => {
                 var [event, call] = _ref15;
                 domremovelisten(ele, event, call);
             });
@@ -1119,7 +1119,7 @@
     }
     function readdlisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(_ref16 => {
+            get(ele, eventlistenerssymbol).forEach(_ref16 => {
                 var [event, call] = _ref16;
                 domaddlisten(ele, event, call);
             });
@@ -1138,12 +1138,12 @@
         }
         if (isnumber(vdom) || isstring(vdom)) {
             var textnode = createtextnode(vdom);
-            set$1(textnode, virtualdomsymbol, vdom);
+            set(textnode, virtualdomsymbol, vdom);
             return textnode;
         } else if (isReactiveState(vdom)) {
             var reactive = vdom;
             var _textnode = createtextnode(String$1(reactive));
-            set$1(_textnode, virtualdomsymbol, vdom);
+            set(_textnode, virtualdomsymbol, vdom);
             watch(reactive, () => {
                 var state = reactive;
                 if (isconnected(element)) {
@@ -1151,8 +1151,8 @@
                 }
             });
             var element = _textnode;
-            set$1(element, bindstatesymbol, new Set$1);
-            get$1(element, bindstatesymbol).add(reactive);
+            set(element, bindstatesymbol, new Set$1);
+            get(element, bindstatesymbol).add(reactive);
             return _textnode;
         } else if (isVirtualdom(vdom)) {
             var {type: type} = vdom;
@@ -1223,7 +1223,7 @@
             });
             var attribute1 = createeleattragentreadwrite(element);
             Object$1.assign(attribute1, vdom.props);
-            set$1(element, virtualdomsymbol, vdom);
+            set(element, virtualdomsymbol, vdom);
             vdom.element = element;
             Object$1.entries(vdom.bindattr).forEach(_ref19 => {
                 var [key, primitivestate] = _ref19;
@@ -1242,9 +1242,9 @@
         })(element, vdom);
         [ ...Object$1.values(vdom.bindattr), ...Object$1.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
             if (!has(element, bindstatesymbol)) {
-                set$1(element, bindstatesymbol, new Set$1);
+                set(element, bindstatesymbol, new Set$1);
             }
-            get$1(element, bindstatesymbol).add(e);
+            get(element, bindstatesymbol).add(e);
         });
     }
     var invalid_Virtualdom = "invalid Virtualdom ";
@@ -1284,6 +1284,101 @@
     }
     function isNode(a) {
         return a instanceof Node;
+    }
+    function readonlyproxy(target) {
+        return new Proxy(target, {
+            set() {
+                return true;
+            },
+            defineProperty() {
+                return false;
+            },
+            deleteProperty() {
+                return false;
+            },
+            setPrototypeOf() {
+                return false;
+            }
+        });
+    }
+    function computed(state, callback) {
+        if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
+            console.error(state);
+            console.error(callback);
+            console.error(invalid_ReactiveState + invalid_Function);
+            throw TypeError();
+        }
+        var state1array = toArray(state);
+        if (!state1array.length) {
+            console.error("Empty array not allowed");
+            throw new Error;
+        }
+        var state1 = Arraycomputed(state1array, callback);
+        usestste(state1);
+        return state1;
+    }
+    function Arraycomputed(state, callback) {
+        var reactivestate = new ReactiveState;
+        var getter = () => {
+            var value = apply(callback, undefined, state.map(st => st.valueOf()));
+            var possiblevalue = isReactiveState(value) ? value.valueOf() : value;
+            if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
+                return possiblevalue;
+            } else {
+                console.error(possiblevalue);
+                throw TypeError();
+            }
+        };
+        var memorized = getter();
+        defineProperty(reactivestate, "value", {
+            get: getter,
+            configurable: true
+        });
+        state.forEach(state => {
+            watch(state, () => {
+                var newvalue = getter();
+                if (newvalue !== memorized) {
+                    reactivestate[dispatchsymbol]();
+                    memorized = newvalue;
+                }
+            });
+        });
+        return readonlyproxy(getproperyreadproxy(reactivestate));
+    }
+    var __proto__ = "__proto__";
+    function getproperyreadproxy(a) {
+        var target = a;
+        return new Proxy(target, {
+            getOwnPropertyDescriptor(target, key) {
+                if (issymbol(key)) {
+                    return;
+                } else {
+                    return getOwnPropertyDescriptor(target, key);
+                }
+            },
+            ownKeys(target) {
+                var myvalue = get(target, "value");
+                var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+                return Array$1.from(new Set$1([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
+            },
+            has(target, key) {
+                var myvalue = get(target, "value");
+                var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+                return has(target, key) || has(myvalueobj, key);
+            },
+            get(target, key) {
+                if (has(target, key)) {
+                    return get(target, key);
+                } else {
+                    var myvalue = get(target, "value");
+                    var myvalueobj = isobject(myvalue) ? myvalue : Object$1(myvalue);
+                    if (has(myvalueobj, key)) {
+                        var property = get(myvalueobj, key);
+                        return isfunction(property) ? property.bind(myvalueobj) : property;
+                    }
+                }
+            }
+        });
     }
     var Setprototype = Set$1.prototype;
     var Mapprototype = Map.prototype;
@@ -1483,7 +1578,7 @@
         }
         var objproxyhandler = {};
         objproxyhandler.ownKeys = target => {
-            return Array$1.from(new Set$1([ ...ownKeys$1$1(target), ...ownKeys$1$1(get$1(target, "value")) ]));
+            return Array$1.from(new Set$1([ ...ownKeys$1(target), ...ownKeys$1(get(target, "value")) ]));
         };
         objproxyhandler.setPrototypeOf = () => {
             return false;
@@ -1495,7 +1590,7 @@
             if (issymbol(key)) {
                 return;
             }
-            var myvalue = get$1(target, "value");
+            var myvalue = get(target, "value");
             var descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
             if (descripter) {
                 descripter.configurable = true;
@@ -1503,7 +1598,7 @@
             return descripter;
         };
         objproxyhandler.deleteProperty = (target, key) => {
-            var myvalue = get$1(target, "value");
+            var myvalue = get(target, "value");
             if (has(myvalue, key)) {
                 deleteProperty(myvalue, key);
                 target[dispatchsymbol](String$1(key));
@@ -1513,17 +1608,17 @@
             }
         };
         objproxyhandler.has = (target, key) => {
-            var myvalue = get$1(target, "value");
+            var myvalue = get(target, "value");
             return has(target, key) || has(myvalue, key);
         };
         objproxyhandler.get = (target, key) => {
-            var value = get$1(target, "value");
+            var value = get(target, "value");
             if (key === "value" && (isarray(value) || isplainobject(value))) {
-                return observedeepagent(get$1(target, key), (_target_, patharray) => {
+                return observedeepagent(get(target, key), (_target_, patharray) => {
                     target[dispatchsymbol](patharray[0]);
                 });
             } else if (has(target, key)) {
-                return get$1(target, key);
+                return get(target, key);
             } else if (has(value, key)) {
                 if (isSet(value) && (key === "add" || key === "clear" || key === "delete")) {
                     switch (key) {
@@ -1564,11 +1659,11 @@
                         }
                     }
                 } else if (isobject(value)) {
-                    return observedeepagent(get$1(value, key), () => {
+                    return observedeepagent(get(value, key), () => {
                         target[dispatchsymbol](String$1(key));
                     });
                 } else {
-                    return get$1(value, key);
+                    return get(value, key);
                 }
             }
         };
@@ -1576,12 +1671,12 @@
             if (isReactiveState(value)) {
                 value = value.valueOf();
             }
-            var myvalue = get$1(target, "value");
+            var myvalue = get(target, "value");
             if (key === "value" && isobject(value)) {
-                set$1(target, key, value);
+                set(target, key, value);
                 target[dispatchsymbol]();
             } else if (!has(target, key)) {
-                set$1(myvalue, key, value);
+                set(myvalue, key, value);
                 target[dispatchsymbol](String$1(key));
             }
             return true;
@@ -1611,7 +1706,7 @@
                 set(target, key, value) {
                     if (key === "value" && isprimitive(value)) {
                         if (target[key] !== value) {
-                            set$1(target, key, value);
+                            set(target, key, value);
                             target[dispatchsymbol]();
                         }
                         return true;
@@ -1649,7 +1744,7 @@
         var styleelement = render(createElement("style", [ text ]));
         var otherdocument = createanotherhtmldocument();
         appendchild(otherdocument.documentElement, styleelement);
-        return Array$1.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
+        return Array$1.from(get(get(styleelement, "sheet"), "cssRules"));
     }
     function selectoraddprefix(cssstylerule, prefix) {
         var selectorText = cssstylerule.selectorText;
@@ -1731,22 +1826,6 @@
         }));
         return _waitloadallstyle.apply(this, arguments);
     }
-    function readonlyproxy(target) {
-        return new Proxy(target, {
-            set() {
-                return true;
-            },
-            defineProperty() {
-                return false;
-            },
-            deleteProperty() {
-                return false;
-            },
-            setPrototypeOf() {
-                return false;
-            }
-        });
-    }
     var readysymbol = Symbol("readystate");
     function setimmediate(fun) {
         return Promise$1.resolve().then(() => fun());
@@ -1761,8 +1840,8 @@
     function createComponent(custfun) {
         var _a, _b, _c;
         if (isfunction(custfun)) {
-            var defaultProps = get$1(custfun, "defaultProps");
-            var css = get$1(custfun, "css");
+            var defaultProps = get(custfun, "defaultProps");
+            var css = get(custfun, "css");
             class Component extends AttrChange {
                 constructor() {
                     var propsjson = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -1770,14 +1849,14 @@
                     super();
                     this[_a] = {};
                     this[_c] = false;
-                    var css = get$1(this.constructor, "css");
+                    var css = get(this.constructor, "css");
                     if (css) {
                         var prefix = this.tagName.toLowerCase();
                         if (!componentsstylesheet[prefix]) {
                             registercssprefix(css, prefix);
                         }
                     }
-                    var defaultProps = get$1(this.constructor, "defaultProps");
+                    var defaultProps = get(this.constructor, "defaultProps");
                     var attrs = createeleattragentreadwrite(this);
                     if (isobject(defaultProps)) {
                         Object$1.assign(attrs, defaultProps);
@@ -1830,7 +1909,7 @@
                         }
                         if (!_this2[readysymbol]) {
                             _this2[readysymbol] = true;
-                            var _css = get$1(_this2.constructor, "css");
+                            var _css = get(_this2.constructor, "css");
                             var prefix = _this2.tagName.toLowerCase();
                             if (_css && componentsstylesheet[prefix]) {
                                 seteletext(_this2, "");
@@ -1882,18 +1961,18 @@
         } else if (isNode(ele)) {
             readdlisteners(ele);
             if (has(ele, bindstatesymbol)) {
-                get$1(ele, bindstatesymbol).forEach(state => {
+                get(ele, bindstatesymbol).forEach(state => {
                     rewatch(state);
                     state[dispatchsymbol]();
                 });
             }
             if (has(ele, innerstatesymbol)) {
-                get$1(ele, innerstatesymbol).forEach(state => {
+                get(ele, innerstatesymbol).forEach(state => {
                     rewatch(state);
                 });
             }
             if (has(ele, innerwatchrecords)) {
-                var watchrecords = get$1(ele, innerwatchrecords);
+                var watchrecords = get(ele, innerwatchrecords);
                 watchrecords.forEach(_ref25 => {
                     var [state, callback] = _ref25;
                     var eventlistener = state[callbackmap].get(callback);
@@ -1914,12 +1993,12 @@
         } else if (isNode(ele)) {
             removelisteners(ele);
             if (has(ele, innerstatesymbol)) {
-                get$1(ele, innerstatesymbol).forEach(state => {
+                get(ele, innerstatesymbol).forEach(state => {
                     unwatch(state);
                 });
             }
             if (has(ele, innerwatchrecords)) {
-                var watchrecords = get$1(ele, innerwatchrecords);
+                var watchrecords = get(ele, innerwatchrecords);
                 watchrecords.forEach(_ref26 => {
                     var [state, callback] = _ref26;
                     var eventlistener = state[callbackmap].get(callback);
@@ -1961,8 +2040,8 @@
             constructor() {
                 super();
                 this[_b] = false;
-                var optionstrue = get$1(options, "true");
-                var optionsfalse = get$1(options, "false");
+                var optionstrue = get(options, "true");
+                var optionsfalse = get(options, "false");
                 this[truevdomsymbol] = [ optionstrue ].flat(1 / 0).filter(Boolean);
                 this[falsevdomsymbol] = [ optionsfalse ].flat(1 / 0).filter(Boolean);
             }
@@ -2001,10 +2080,10 @@
                         _this4[readysymbol] = true;
                         var attrs = createeleattragentreadwrite(_this4);
                         if (true === attrs["value"]) {
-                            get$1(_this4, handletrue).call(_this4);
+                            get(_this4, handletrue).call(_this4);
                         }
                         if (false === attrs["value"]) {
-                            get$1(_this4, handlefalse).call(_this4);
+                            get(_this4, handlefalse).call(_this4);
                         }
                     }
                     onmounted(_this4);
@@ -2036,84 +2115,34 @@
         });
         return vdom;
     }
-    function computed(state, callback) {
-        if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
-            console.error(state);
-            console.error(callback);
-            console.error(invalid_ReactiveState + invalid_Function);
+    extenddirectives({
+        value(value, element, vdom) {
+            model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+        },
+        checked(value, element, vdom) {
+            model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
+        }
+    });
+    function model(types, bindattribute, domprop, eventnames, value, vdom) {
+        if (!isReactiveState(value)) {
+            console.error(value);
+            console.error(invalid_ReactiveState + invalid_Virtualdom);
             throw TypeError();
         }
-        var state1array = toArray(state);
-        if (!state1array.length) {
-            console.error("Empty array not allowed");
-            throw new Error;
-        }
-        var state1 = Arraycomputed(state1array, callback);
-        usestste(state1);
-        return state1;
-    }
-    function Arraycomputed(state, callback) {
-        var reactivestate = new ReactiveState;
-        var getter = () => {
-            var value = apply(callback, undefined, state.map(st => st.valueOf()));
-            var possiblevalue = isReactiveState(value) ? value.valueOf() : value;
-            if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
-                return possiblevalue;
-            } else {
-                console.error(possiblevalue);
-                throw TypeError();
-            }
-        };
-        var memorized = getter();
-        defineProperty(reactivestate, "value", {
-            get: getter,
-            configurable: true
-        });
-        state.forEach(state => {
-            watch(state, () => {
-                var newvalue = getter();
-                if (newvalue !== memorized) {
-                    reactivestate[dispatchsymbol]();
-                    memorized = newvalue;
-                }
+        if (types.includes(vdom.type)) {
+            set(vdom.bindattr, bindattribute, value);
+            eventnames.forEach(eventname => {
+                var origin = vdom.onevent[eventname];
+                var eventsarray = toArray(origin);
+                set(vdom.onevent, eventname, [ ...eventsarray, e => {
+                    return value.value = get(e.target, domprop);
+                } ].filter(Boolean));
             });
-        });
-        return readonlyproxy(getproperyreadproxy(reactivestate));
-    }
-    var __proto__ = "__proto__";
-    function getproperyreadproxy(a) {
-        var target = a;
-        return new Proxy(target, {
-            getOwnPropertyDescriptor(target, key) {
-                if (issymbol(key)) {
-                    return;
-                } else {
-                    return getOwnPropertyDescriptor(target, key);
-                }
-            },
-            ownKeys(target) {
-                var myvalue = get$1(target, "value");
-                var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-                return Array$1.from(new Set$1([ ...ownKeys$1$1(target), ...ownKeys$1$1(myvalueobj) ]));
-            },
-            has(target, key) {
-                var myvalue = get$1(target, "value");
-                var myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-                return has(target, key) || has(myvalueobj, key);
-            },
-            get(target, key) {
-                if (has(target, key)) {
-                    return get$1(target, key);
-                } else {
-                    var myvalue = get$1(target, "value");
-                    var myvalueobj = isobject(myvalue) ? myvalue : Object$1(myvalue);
-                    if (has(myvalueobj, key)) {
-                        var property = get$1(myvalueobj, key);
-                        return isfunction(property) ? property.bind(myvalueobj) : property;
-                    }
-                }
-            }
-        });
+        } else {
+            console.error(vdom);
+            console.error(invalid_ReactiveState + invalid_Virtualdom);
+            throw TypeError();
+        }
     }
     function createRef(value) {
         return {
@@ -2199,35 +2228,6 @@
         return createElement(ListMap, {
             value: list
         });
-    }
-    extenddirectives({
-        value(value, element, vdom) {
-            model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
-        },
-        checked(value, element, vdom) {
-            model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
-        }
-    });
-    function model(types, bindattribute, domprop, eventnames, value, vdom) {
-        if (!isReactiveState(value)) {
-            console.error(value);
-            console.error(invalid_ReactiveState + invalid_Virtualdom);
-            throw TypeError();
-        }
-        if (types.includes(vdom.type)) {
-            set$1(vdom.bindattr, bindattribute, value);
-            eventnames.forEach(eventname => {
-                var origin = vdom.onevent[eventname];
-                var eventsarray = toArray(origin);
-                set$1(vdom.onevent, eventname, [ ...eventsarray, e => {
-                    return value.value = get$1(e.target, domprop);
-                } ].filter(Boolean));
-            });
-        } else {
-            console.error(vdom);
-            console.error(invalid_ReactiveState + invalid_Virtualdom);
-            throw TypeError();
-        }
     }
     console.log([ createElement, createElement ]);
     function useMousePosition() {

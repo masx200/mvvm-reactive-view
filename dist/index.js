@@ -53,6 +53,124 @@ if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElemen
     throw new TypeError;
 }
 
+const Reflect$1 = window.Reflect;
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, set: set} = Reflect$1;
+
+function isclassextendsHTMLElement(initclass) {
+    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
+}
+
+function createcostumelemet(initclass, propsjson, children) {
+    if (isclassextendsHTMLElement(initclass)) {
+        RandomDefineCustomElement(initclass);
+        return construct(initclass, [ propsjson, children ]);
+    } else {
+        console.error(initclass);
+        console.error(invalid_custom_element_class);
+        throw TypeError();
+    }
+}
+
+const invalid_custom_element_class = "invalid custom element class !";
+
+if (!isobject(window.customElements)) {
+    console.error(" customElements  not supported !");
+    throw new TypeError;
+}
+
+function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
+    const outputentrie = Object.entries(table).find(v => {
+        return v[1] === Componentstatusname;
+    });
+    return outputentrie ? outputentrie[0] : undefined;
+}
+
+window.CustomElementRegistry = get(getPrototypeOf(window.customElements), "constructor");
+
+const elementset = Symbol.for("elementset");
+
+const elementmap = Symbol.for("elementmap");
+
+const {CustomElementRegistry: CustomElementRegistry} = window;
+
+const customElements$1 = window.customElements;
+
+if (!has(customElements$1, elementset)) {
+    set(customElements$1, elementset, new Set);
+}
+
+if (!has(customElements$1, elementmap)) {
+    set(customElements$1, elementmap, {});
+}
+
+var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
+
+function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
+    if (!isclassextendsHTMLElement(initclass)) {
+        console.error(initclass);
+        console.error(invalid_custom_element_class);
+        throw TypeError();
+    }
+    if (!get(customElements$1, elementset).has(initclass)) {
+        const elementname = getrandomstringandnumber(length);
+        if (customElements$1.get(elementname)) {
+            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
+        } else {
+            if (extendsname) {
+                customElements$1.define(elementname, initclass, {
+                    extends: extendsname
+                });
+            } else {
+                customElements$1.define(elementname, initclass);
+            }
+        }
+        return elementname;
+    } else {
+        return Usevaluetoquerythekeyfromthetable(get(customElements$1, elementmap), initclass);
+    }
+}
+
+customElements$1.define = function(name, constructor, options) {
+    if (!isclassextendsHTMLElement(constructor)) {
+        console.error(constructor);
+        console.error(invalid_custom_element_class);
+        throw TypeError();
+    }
+    if (!get(customElements$1, elementset).has(constructor)) {
+        if (has(customElements$1[elementmap], name)) {
+            RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
+        } else {
+            CustomElementRegistry.prototype.define.call(customElements$1, name, constructor, options);
+            customElements$1[elementset].add(constructor);
+            customElements$1[elementmap][name] = constructor;
+        }
+    }
+};
+
+set(customElements$1, Symbol.iterator, () => {
+    const entries = Object.entries(customElements$1[elementmap]);
+    return entries[Symbol.iterator].call(entries);
+});
+
+const charactorlist = Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n));
+
+const hexnumberlist = Array(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
+
+const charactorandnumberlist = [ ...new Set([ ...hexnumberlist, ...charactorlist ]) ];
+
+function getrandomcharactor() {
+    return get(charactorlist, Math.floor(Math.random() * charactorlist.length));
+}
+
+function getrandomhexnumberandcharactor() {
+    return get(charactorandnumberlist, Math.floor(Math.random() * charactorandnumberlist.length));
+}
+
+function getrandomstringandnumber(length = 1) {
+    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
+}
+
 const hyphenateRE = /\B([A-Z])/g;
 
 const hyphenate = str => {
@@ -61,9 +179,9 @@ const hyphenate = str => {
 
 const String$1 = window.String;
 
-const Reflect$1 = window.Reflect;
+const Reflect$2 = window.Reflect;
 
-const {get: get, set: set, ownKeys: ownKeys} = Reflect$1;
+const {get: get$1, set: set$1, ownKeys: ownKeys$1} = Reflect$2;
 
 const valuestring = "value";
 
@@ -83,7 +201,7 @@ function isSet$1(a) {
     return a instanceof Set;
 }
 
-const isinputcheckbox = ele => "input" === geteletagname(ele) && get(ele, "type") === "checkbox";
+const isinputcheckbox = ele => "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
 
 function objtostylestring(obj) {
     obj = JSON.parse(JSON.stringify(obj));
@@ -111,10 +229,10 @@ function createeleattragentreadwrite(ele) {
         get(target, key) {
             const isinputtextortextareaflag = isinputtextortextarea(ele);
             if (isinputcheckbox(ele) && key === "checked") {
-                return get(ele, "checked");
+                return get$1(ele, "checked");
             }
             if (isinputtextortextareaflag && key === valuestring) {
-                return get(ele, valuestring);
+                return get$1(ele, valuestring);
             } else {
                 const v = getattribute(ele, String$1(key));
                 if (v === "") {
@@ -140,14 +258,14 @@ function createeleattragentreadwrite(ele) {
                 throw TypeError();
             }
             if (geteletagname(ele) === "input" && key === "checked") {
-                set(ele, key, v);
+                set$1(ele, key, v);
                 return true;
             }
             if (isinputtextortextareaflag && key === valuestring) {
-                return set(ele, valuestring, String$1(v));
+                return set$1(ele, valuestring, String$1(v));
             } else if (key === "style") {
                 const csstext = isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v);
-                set(get(ele, "style"), "cssText", csstext.trim());
+                set$1(get$1(ele, "style"), "cssText", csstext.trim());
                 return true;
             } else if (key === "class" && isobject$1(v)) {
                 const classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? [ ...v ].join(" ") : String$1(v);
@@ -170,7 +288,7 @@ function createeleattragentreadwrite(ele) {
             return true;
         },
         has(target, key) {
-            return ownKeys(outputattrs).includes(key);
+            return ownKeys$1(outputattrs).includes(key);
         },
         defineProperty() {
             return false;
@@ -181,7 +299,7 @@ function createeleattragentreadwrite(ele) {
                 configurable: true,
                 writable: true
             };
-            const myvalue = get(outputattrs, key);
+            const myvalue = get$1(outputattrs, key);
             if (typeof myvalue !== "undefined") {
                 return {
                     value: myvalue,
@@ -220,7 +338,7 @@ function removeAttribute(ele, key) {
 
 function isinputtextortextarea(ele) {
     const tagname = geteletagname(ele);
-    return tagname === "textarea" || tagname === "select" || tagname === "input" && get(ele, "type") === "text";
+    return tagname === "textarea" || tagname === "select" || tagname === "input" && get$1(ele, "type") === "text";
 }
 
 const document$1 = window.document;
@@ -306,15 +424,11 @@ function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
 }
 
-const Reflect$2 = window.Reflect;
-
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get$1, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, set: set$1} = Reflect$2;
-
 const attributeChangedCallback = "attributeChangedCallback";
 
 class AttrChange extends HTMLElement {
     setAttribute(qualifiedName, value) {
-        const callback = get$1(this, attributeChangedCallback);
+        const callback = get(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);
         if (oldValue !== value) {
             setAttribute(this, qualifiedName, value);
@@ -324,7 +438,7 @@ class AttrChange extends HTMLElement {
         }
     }
     removeAttribute(qualifiedName) {
-        const callback = get$1(this, attributeChangedCallback);
+        const callback = get(this, attributeChangedCallback);
         const oldValue = getAttribute(this, qualifiedName);
         if (null !== oldValue) {
             removeAttribute$1(this, qualifiedName);
@@ -707,7 +821,7 @@ class ReactiveState {
 }
 
 function isVirtualdom(a) {
-    return isobject(a) && get$1(a, isvirtualelement) === isvirtualelement;
+    return isobject(a) && get(a, isvirtualelement) === isvirtualelement;
 }
 
 const isvirtualelement = Symbol("isvirtualelement");
@@ -808,120 +922,6 @@ function mount(ele, container, clear = true) {
     const eles = toArray(ele).flat(Infinity);
     eles.forEach(e => appendchild(container, e));
     return container;
-}
-
-const invalid_custom_element_class = "invalid custom element class !";
-
-if (!isobject(window.customElements)) {
-    console.error(" customElements  not supported !");
-    throw new TypeError;
-}
-
-function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
-    const outputentrie = Object.entries(table).find(v => {
-        return v[1] === Componentstatusname;
-    });
-    return outputentrie ? outputentrie[0] : undefined;
-}
-
-window.CustomElementRegistry = get$1(getPrototypeOf(window.customElements), "constructor");
-
-const elementset = Symbol.for("elementset");
-
-const elementmap = Symbol.for("elementmap");
-
-const {CustomElementRegistry: CustomElementRegistry} = window;
-
-const customElements$1 = window.customElements;
-
-if (!has(customElements$1, elementset)) {
-    set$1(customElements$1, elementset, new Set);
-}
-
-if (!has(customElements$1, elementmap)) {
-    set$1(customElements$1, elementmap, {});
-}
-
-var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
-
-function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
-    if (!isclassextendsHTMLElement(initclass)) {
-        console.error(initclass);
-        console.error(invalid_custom_element_class);
-        throw TypeError();
-    }
-    if (!get$1(customElements$1, elementset).has(initclass)) {
-        const elementname = getrandomstringandnumber(length);
-        if (customElements$1.get(elementname)) {
-            return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
-        } else {
-            if (extendsname) {
-                customElements$1.define(elementname, initclass, {
-                    extends: extendsname
-                });
-            } else {
-                customElements$1.define(elementname, initclass);
-            }
-        }
-        return elementname;
-    } else {
-        return Usevaluetoquerythekeyfromthetable(get$1(customElements$1, elementmap), initclass);
-    }
-}
-
-customElements$1.define = function(name, constructor, options) {
-    if (!isclassextendsHTMLElement(constructor)) {
-        console.error(constructor);
-        console.error(invalid_custom_element_class);
-        throw TypeError();
-    }
-    if (!get$1(customElements$1, elementset).has(constructor)) {
-        if (has(customElements$1[elementmap], name)) {
-            RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
-        } else {
-            CustomElementRegistry.prototype.define.call(customElements$1, name, constructor, options);
-            customElements$1[elementset].add(constructor);
-            customElements$1[elementmap][name] = constructor;
-        }
-    }
-};
-
-set$1(customElements$1, Symbol.iterator, () => {
-    const entries = Object.entries(customElements$1[elementmap]);
-    return entries[Symbol.iterator].call(entries);
-});
-
-const charactorlist = Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n));
-
-const hexnumberlist = Array(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
-
-const charactorandnumberlist = [ ...new Set([ ...hexnumberlist, ...charactorlist ]) ];
-
-function getrandomcharactor() {
-    return get$1(charactorlist, Math.floor(Math.random() * charactorlist.length));
-}
-
-function getrandomhexnumberandcharactor() {
-    return get$1(charactorandnumberlist, Math.floor(Math.random() * charactorandnumberlist.length));
-}
-
-function getrandomstringandnumber(length = 1) {
-    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
-}
-
-function isclassextendsHTMLElement(initclass) {
-    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-}
-
-function createcostumelemet(initclass, propsjson, children) {
-    if (isclassextendsHTMLElement(initclass)) {
-        RandomDefineCustomElement(initclass);
-        return construct(initclass, [ propsjson, children ]);
-    } else {
-        console.error(initclass);
-        console.error(invalid_custom_element_class);
-        throw TypeError();
-    }
 }
 
 function isconnected(element) {
@@ -1117,7 +1117,7 @@ const directive = {
         if (isfunction(ref)) {
             apply(ref, undefined, [ ele ]);
         } else if (isobject(ref)) {
-            set$1(ref, "value", ele);
+            set(ref, "value", ele);
         } else {
             console.log(_vdom);
             console.error(ref);
@@ -1166,7 +1166,7 @@ function createhtmlandtextdirective(seteletext, errorname) {
 const componentsymbol = Symbol("component");
 
 function iscomponent(a) {
-    return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
+    return isfunction(a) && get(a, componentsymbol) === componentsymbol;
 }
 
 const eventlistenerssymbol = Symbol("eventlisteners");
@@ -1184,16 +1184,16 @@ function firstaddlisteners(ele, event, callarray) {
             throw TypeError();
         }
         if (!has(element, eventlistenerssymbol)) {
-            set$1(element, eventlistenerssymbol, []);
+            set(element, eventlistenerssymbol, []);
         }
-        get$1(ele, eventlistenerssymbol).push([ event, call ]);
+        get(ele, eventlistenerssymbol).push([ event, call ]);
         domaddlisten(ele, event, call);
     });
 }
 
 function removelisteners(ele) {
     if (has(ele, eventlistenerssymbol)) {
-        get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
+        get(ele, eventlistenerssymbol).forEach(([event, call]) => {
             domremovelisten(ele, event, call);
         });
     }
@@ -1201,7 +1201,7 @@ function removelisteners(ele) {
 
 function readdlisteners(ele) {
     if (has(ele, eventlistenerssymbol)) {
-        get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
+        get(ele, eventlistenerssymbol).forEach(([event, call]) => {
             domaddlisten(ele, event, call);
         });
     }
@@ -1223,12 +1223,12 @@ function render(vdom, namespace) {
     }
     if (isnumber(vdom) || isstring(vdom)) {
         const textnode = createtextnode(vdom);
-        set$1(textnode, virtualdomsymbol, vdom);
+        set(textnode, virtualdomsymbol, vdom);
         return textnode;
     } else if (isReactiveState(vdom)) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
-        set$1(textnode, virtualdomsymbol, vdom);
+        set(textnode, virtualdomsymbol, vdom);
         watch(reactive, () => {
             const state = reactive;
             if (isconnected(element)) {
@@ -1236,8 +1236,8 @@ function render(vdom, namespace) {
             }
         });
         const element = textnode;
-        set$1(element, bindstatesymbol, new Set);
-        get$1(element, bindstatesymbol).add(reactive);
+        set(element, bindstatesymbol, new Set);
+        get(element, bindstatesymbol).add(reactive);
         return textnode;
     } else if (isVirtualdom(vdom)) {
         const {type: type} = vdom;
@@ -1313,7 +1313,7 @@ function handleprops(element, vdom) {
         });
         const attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
-        set$1(element, virtualdomsymbol, vdom);
+        set(element, virtualdomsymbol, vdom);
         vdom.element = element;
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
@@ -1330,9 +1330,9 @@ function handleprops(element, vdom) {
     })(element, vdom);
     [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
         if (!has(element, bindstatesymbol)) {
-            set$1(element, bindstatesymbol, new Set);
+            set(element, bindstatesymbol, new Set);
         }
-        get$1(element, bindstatesymbol).add(e);
+        get(element, bindstatesymbol).add(e);
     });
 }
 
@@ -1376,6 +1376,106 @@ function isNodeArray(arr) {
 
 function isNode(a) {
     return a instanceof Node;
+}
+
+function readonlyproxy(target) {
+    return new Proxy(target, {
+        set() {
+            return true;
+        },
+        defineProperty() {
+            return false;
+        },
+        deleteProperty() {
+            return false;
+        },
+        setPrototypeOf() {
+            return false;
+        }
+    });
+}
+
+function computed(state, callback) {
+    if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError();
+    }
+    const state1array = toArray(state);
+    if (!state1array.length) {
+        console.error("Empty array not allowed");
+        throw new Error;
+    }
+    const state1 = Arraycomputed(state1array, callback);
+    usestste(state1);
+    return state1;
+}
+
+function Arraycomputed(state, callback) {
+    const reactivestate = new ReactiveState;
+    const getter = () => {
+        const value = apply(callback, undefined, state.map(st => st.valueOf()));
+        const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
+        if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
+            return possiblevalue;
+        } else {
+            console.error(possiblevalue);
+            throw TypeError();
+        }
+    };
+    let memorized = getter();
+    defineProperty(reactivestate, "value", {
+        get: getter,
+        configurable: true
+    });
+    state.forEach(state => {
+        watch(state, () => {
+            let newvalue = getter();
+            if (newvalue !== memorized) {
+                reactivestate[dispatchsymbol]();
+                memorized = newvalue;
+            }
+        });
+    });
+    return readonlyproxy(getproperyreadproxy(reactivestate));
+}
+
+const __proto__ = "__proto__";
+
+function getproperyreadproxy(a) {
+    const target = a;
+    return new Proxy(target, {
+        getOwnPropertyDescriptor(target, key) {
+            if (issymbol(key)) {
+                return;
+            } else {
+                return getOwnPropertyDescriptor(target, key);
+            }
+        },
+        ownKeys(target) {
+            let myvalue = get(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
+        },
+        has(target, key) {
+            const myvalue = get(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return has(target, key) || has(myvalueobj, key);
+        },
+        get(target, key) {
+            if (has(target, key)) {
+                return get(target, key);
+            } else {
+                const myvalue = get(target, "value");
+                const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
+                if (has(myvalueobj, key)) {
+                    const property = get(myvalueobj, key);
+                    return isfunction(property) ? property.bind(myvalueobj) : property;
+                }
+            }
+        }
+    });
 }
 
 const Setprototype = Set.prototype;
@@ -1588,7 +1688,7 @@ function handleobjectstate(init) {
     }
     const objproxyhandler = {};
     objproxyhandler.ownKeys = target => {
-        return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(get$1(target, "value")) ]));
+        return Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
     };
     objproxyhandler.setPrototypeOf = () => {
         return false;
@@ -1600,7 +1700,7 @@ function handleobjectstate(init) {
         if (issymbol(key)) {
             return;
         }
-        const myvalue = get$1(target, "value");
+        const myvalue = get(target, "value");
         const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
         if (descripter) {
             descripter.configurable = true;
@@ -1608,7 +1708,7 @@ function handleobjectstate(init) {
         return descripter;
     };
     objproxyhandler.deleteProperty = (target, key) => {
-        const myvalue = get$1(target, "value");
+        const myvalue = get(target, "value");
         if (has(myvalue, key)) {
             deleteProperty(myvalue, key);
             target[dispatchsymbol](String(key));
@@ -1618,17 +1718,17 @@ function handleobjectstate(init) {
         }
     };
     objproxyhandler.has = (target, key) => {
-        const myvalue = get$1(target, "value");
+        const myvalue = get(target, "value");
         return has(target, key) || has(myvalue, key);
     };
     objproxyhandler.get = (target, key) => {
-        const value = get$1(target, "value");
+        const value = get(target, "value");
         if (key === "value" && (isarray(value) || isplainobject(value))) {
-            return observedeepagent(get$1(target, key), (_target_, patharray) => {
+            return observedeepagent(get(target, key), (_target_, patharray) => {
                 target[dispatchsymbol](patharray[0]);
             });
         } else if (has(target, key)) {
-            return get$1(target, key);
+            return get(target, key);
         } else if (has(value, key)) {
             if (isSet(value) && (key === "add" || key === "clear" || key === "delete")) {
                 switch (key) {
@@ -1669,11 +1769,11 @@ function handleobjectstate(init) {
                     }
                 }
             } else if (isobject(value)) {
-                return observedeepagent(get$1(value, key), () => {
+                return observedeepagent(get(value, key), () => {
                     target[dispatchsymbol](String(key));
                 });
             } else {
-                return get$1(value, key);
+                return get(value, key);
             }
         }
     };
@@ -1681,12 +1781,12 @@ function handleobjectstate(init) {
         if (isReactiveState(value)) {
             value = value.valueOf();
         }
-        const myvalue = get$1(target, "value");
+        const myvalue = get(target, "value");
         if (key === "value" && isobject(value)) {
-            set$1(target, key, value);
+            set(target, key, value);
             target[dispatchsymbol]();
         } else if (!has(target, key)) {
-            set$1(myvalue, key, value);
+            set(myvalue, key, value);
             target[dispatchsymbol](String(key));
         }
         return true;
@@ -1719,7 +1819,7 @@ function createstate$1(init) {
             set(target, key, value) {
                 if (key === "value" && isprimitive(value)) {
                     if (target[key] !== value) {
-                        set$1(target, key, value);
+                        set(target, key, value);
                         target[dispatchsymbol]();
                     }
                     return true;
@@ -1762,7 +1862,7 @@ function parsecsstext(text) {
     const styleelement = render(createElement("style", [ text ]));
     const otherdocument = createanotherhtmldocument();
     appendchild(otherdocument.documentElement, styleelement);
-    return Array.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
+    return Array.from(get(get(styleelement, "sheet"), "cssRules"));
 }
 
 function selectoraddprefix(cssstylerule, prefix) {
@@ -1849,23 +1949,6 @@ async function waitloadallstyle(prefix, _this) {
     await Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
 }
 
-function readonlyproxy(target) {
-    return new Proxy(target, {
-        set() {
-            return true;
-        },
-        defineProperty() {
-            return false;
-        },
-        deleteProperty() {
-            return false;
-        },
-        setPrototypeOf() {
-            return false;
-        }
-    });
-}
-
 const readysymbol = Symbol("readystate");
 
 function setimmediate(fun) {
@@ -1889,21 +1972,21 @@ const unmountedsymbol = Symbol("unmounted");
 function createComponent(custfun) {
     var _a, _b, _c;
     if (isfunction(custfun)) {
-        const defaultProps = get$1(custfun, "defaultProps");
-        const css = get$1(custfun, "css");
+        const defaultProps = get(custfun, "defaultProps");
+        const css = get(custfun, "css");
         class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
                 this[_a] = {};
                 this[_c] = false;
-                const css = get$1(this.constructor, "css");
+                const css = get(this.constructor, "css");
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
                         registercssprefix(css, prefix);
                     }
                 }
-                const defaultProps = get$1(this.constructor, "defaultProps");
+                const defaultProps = get(this.constructor, "defaultProps");
                 const attrs = createeleattragentreadwrite(this);
                 if (isobject(defaultProps)) {
                     Object.assign(attrs, defaultProps);
@@ -1948,7 +2031,7 @@ function createComponent(custfun) {
                 }
                 if (!this[readysymbol]) {
                     this[readysymbol] = true;
-                    const css = get$1(this.constructor, "css");
+                    const css = get(this.constructor, "css");
                     const prefix = this.tagName.toLowerCase();
                     if (css && componentsstylesheet[prefix]) {
                         seteletext(this, "");
@@ -1997,18 +2080,18 @@ function onmounted(ele) {
     } else if (isNode(ele)) {
         readdlisteners(ele);
         if (has(ele, bindstatesymbol)) {
-            get$1(ele, bindstatesymbol).forEach(state => {
+            get(ele, bindstatesymbol).forEach(state => {
                 rewatch(state);
                 state[dispatchsymbol]();
             });
         }
         if (has(ele, innerstatesymbol)) {
-            get$1(ele, innerstatesymbol).forEach(state => {
+            get(ele, innerstatesymbol).forEach(state => {
                 rewatch(state);
             });
         }
         if (has(ele, innerwatchrecords)) {
-            const watchrecords = get$1(ele, innerwatchrecords);
+            const watchrecords = get(ele, innerwatchrecords);
             watchrecords.forEach(([state, callback]) => {
                 const eventlistener = state[callbackmap].get(callback);
                 if (!eventlistener) {
@@ -2029,12 +2112,12 @@ function onunmounted(ele) {
     } else if (isNode(ele)) {
         removelisteners(ele);
         if (has(ele, innerstatesymbol)) {
-            get$1(ele, innerstatesymbol).forEach(state => {
+            get(ele, innerstatesymbol).forEach(state => {
                 unwatch(state);
             });
         }
         if (has(ele, innerwatchrecords)) {
-            const watchrecords = get$1(ele, innerwatchrecords);
+            const watchrecords = get(ele, innerwatchrecords);
             watchrecords.forEach(([state, callback]) => {
                 const eventlistener = state[callbackmap].get(callback);
                 if (!eventlistener) {
@@ -2083,8 +2166,8 @@ function conditon(conditon, iftrue, iffalse) {
         constructor() {
             super();
             this[_b] = false;
-            const optionstrue = get$1(options, "true");
-            const optionsfalse = get$1(options, "false");
+            const optionstrue = get(options, "true");
+            const optionsfalse = get(options, "false");
             this[truevdomsymbol] = [ optionstrue ].flat(1 / 0).filter(Boolean);
             this[falsevdomsymbol] = [ optionsfalse ].flat(1 / 0).filter(Boolean);
         }
@@ -2121,10 +2204,10 @@ function conditon(conditon, iftrue, iffalse) {
                 this[readysymbol] = true;
                 const attrs = createeleattragentreadwrite(this);
                 if (true === attrs["value"]) {
-                    get$1(this, handletrue).call(this);
+                    get(this, handletrue).call(this);
                 }
                 if (false === attrs["value"]) {
-                    get$1(this, handlefalse).call(this);
+                    get(this, handlefalse).call(this);
                 }
             }
             onmounted(this);
@@ -2153,87 +2236,35 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
-function computed(state, callback) {
-    if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
-        console.error(state);
-        console.error(callback);
-        console.error(invalid_ReactiveState + invalid_Function);
+extenddirectives({
+    value(value, element, vdom) {
+        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+    },
+    checked(value, element, vdom) {
+        model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
+    }
+});
+
+function model(types, bindattribute, domprop, eventnames, value, vdom) {
+    if (!isReactiveState(value)) {
+        console.error(value);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
         throw TypeError();
     }
-    const state1array = toArray(state);
-    if (!state1array.length) {
-        console.error("Empty array not allowed");
-        throw new Error;
-    }
-    const state1 = Arraycomputed(state1array, callback);
-    usestste(state1);
-    return state1;
-}
-
-function Arraycomputed(state, callback) {
-    const reactivestate = new ReactiveState;
-    const getter = () => {
-        const value = apply(callback, undefined, state.map(st => st.valueOf()));
-        const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
-        if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
-            return possiblevalue;
-        } else {
-            console.error(possiblevalue);
-            throw TypeError();
-        }
-    };
-    let memorized = getter();
-    defineProperty(reactivestate, "value", {
-        get: getter,
-        configurable: true
-    });
-    state.forEach(state => {
-        watch(state, () => {
-            let newvalue = getter();
-            if (newvalue !== memorized) {
-                reactivestate[dispatchsymbol]();
-                memorized = newvalue;
-            }
+    if (types.includes(vdom.type)) {
+        set(vdom.bindattr, bindattribute, value);
+        eventnames.forEach(eventname => {
+            const origin = vdom.onevent[eventname];
+            const eventsarray = toArray(origin);
+            set(vdom.onevent, eventname, [ ...eventsarray, e => {
+                return value.value = get(e.target, domprop);
+            } ].filter(Boolean));
         });
-    });
-    return readonlyproxy(getproperyreadproxy(reactivestate));
-}
-
-const __proto__ = "__proto__";
-
-function getproperyreadproxy(a) {
-    const target = a;
-    return new Proxy(target, {
-        getOwnPropertyDescriptor(target, key) {
-            if (issymbol(key)) {
-                return;
-            } else {
-                return getOwnPropertyDescriptor(target, key);
-            }
-        },
-        ownKeys(target) {
-            let myvalue = get$1(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
-        },
-        has(target, key) {
-            const myvalue = get$1(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return has(target, key) || has(myvalueobj, key);
-        },
-        get(target, key) {
-            if (has(target, key)) {
-                return get$1(target, key);
-            } else {
-                const myvalue = get$1(target, "value");
-                const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
-                if (has(myvalueobj, key)) {
-                    const property = get$1(myvalueobj, key);
-                    return isfunction(property) ? property.bind(myvalueobj) : property;
-                }
-            }
-        }
-    });
+    } else {
+        console.error(vdom);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
+        throw TypeError();
+    }
 }
 
 function createRef(value) {
@@ -2320,36 +2351,5 @@ function listmap(list, mapfun) {
     });
 }
 
-extenddirectives({
-    value(value, element, vdom) {
-        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
-    },
-    checked(value, element, vdom) {
-        model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
-    }
-});
-
-function model(types, bindattribute, domprop, eventnames, value, vdom) {
-    if (!isReactiveState(value)) {
-        console.error(value);
-        console.error(invalid_ReactiveState + invalid_Virtualdom);
-        throw TypeError();
-    }
-    if (types.includes(vdom.type)) {
-        set$1(vdom.bindattr, bindattribute, value);
-        eventnames.forEach(eventname => {
-            const origin = vdom.onevent[eventname];
-            const eventsarray = toArray(origin);
-            set$1(vdom.onevent, eventname, [ ...eventsarray, e => {
-                return value.value = get$1(e.target, domprop);
-            } ].filter(Boolean));
-        });
-    } else {
-        console.error(vdom);
-        console.error(invalid_ReactiveState + invalid_Virtualdom);
-        throw TypeError();
-    }
-}
-
-export { MountElement, computed, conditon as condition, createComponent, createElement, createRef, createstate as createState, extenddirectives as extendDirectives, createElement as h, html$1 as html, listmap, render, useMounted, useUnMounted, watch };
+export { conditon as Condition, extenddirectives as Directives, listmap as ListMap, MountElement, computed, createComponent, createElement, createRef, createstate as createState, createElement as h, html$1 as html, render, useMounted, useUnMounted, watch };
 //# sourceMappingURL=index.js.map

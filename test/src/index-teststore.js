@@ -12,9 +12,11 @@ import {
 console.log([h, createElement]);
 const number = createState(10);
 function increment() {
+  // @ts-ignore
   number.value++;
 }
 function decrement() {
+  // @ts-ignore
   number.value--;
 }
 const store = { number, increment, decrement };

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  listmap,
+  ListMap,
   computed,
   createElement,
   createRef,
@@ -46,7 +46,7 @@ const vdom = (
         liststate.unshift(Math.random());
       }}
     />
-    {listmap(liststate, (value, index) =>
+    {ListMap(liststate, (value, index) =>
       createElement("div", ["item", "value", value, "index", index])
     )}
   </div>

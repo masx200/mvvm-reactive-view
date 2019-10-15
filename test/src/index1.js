@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  condition,
+  Condition,
   createElement,
   //   createElement,
   createRef,
@@ -21,7 +21,7 @@ console.log([h, createElement]);
   createElement,
   createState,
   watch,
-  condition,
+  Condition,
   createComponent,
   useMounted,
   useUnMounted
@@ -31,17 +31,17 @@ console.log([h, createElement]);
   var mystate = createState(true);
   //   watch(mystate, console.log);
   console.log("mystatetest", mystate);
-  var vdom = condition(
+  var vdom = Condition(
     mystate,
     "testtrue",
     createElement("div", undefined, "testfalese")
   );
-  var vdom2 = condition(
+  var vdom2 = Condition(
     mystate,
     undefined,
     createElement("div", undefined, "testwwwwwwwwwfalese")
   );
-  var vdom3 = condition(
+  var vdom3 = Condition(
     mystate,
     createElement("div", undefined, "testwwwwwwwtrueeeeeeeeee"),
     undefined
