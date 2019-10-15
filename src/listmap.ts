@@ -9,20 +9,31 @@ import { appendchild, getdomchildren, removeNode } from "./dom";
 import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { componentsymbol } from "./iscomponent";
 import mount from "./mount-real-element";
-import ReactiveState from "./reactivestate";
+import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
 import render from "./render-vdom-to-real";
-import { isArray } from "./util";
+import { isArray, isfunction, isSet } from "./util";
 import Virtualdom from "./VirtualElement";
+import { get, set } from "./reflect";
 export { listmap as listMap };
 const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
+const cached_vdom_symbol = Symbol("cached_vdom");
+const cached_realele = Symbol("cached_realele");
 function listmap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
   mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
 ): Virtualdom<Htmlelementconstructor> {
+  if (!isArray(list) && !isSet(list) && !isReactiveState(list)) {
+    console.error(list);
+    throw new TypeError();
+  }
+  if (!isfunction(mapfun)) {
+    console.error(mapfun);
+    throw new TypeError();
+  }
   const itemclass = createComponent(props => {
     const myprops = props as {
       value: ReactiveState<any>;
@@ -36,6 +47,11 @@ function listmap(
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
+    [cached_vdom_symbol]: Record<
+      number,
+      Virtualdom<Htmlelementconstructor>
+    > = {};
+    [cached_realele]: Record<number, Element> = {};
     [listvalueattr] = createstate([]);
     // [listlengthsymbol]: number;
     [listinnerelement]: Array<Element | Node>;
@@ -64,14 +80,34 @@ function listmap(
               .map((v, i) => i)
               .slice(oldlength);
 
-            const vdomstoadd = numindexs.map(index =>
-              ITEMfactory(
-                computed(this[listvalueattr], v => (v as any[])[index] as any),
+            const vdomstoadd = numindexs.map(index => {
+              const cached_vdom1 = get(this[cached_vdom_symbol], index);
+              if (cached_vdom1) {
+                return cached_vdom1;
+              } else {
+                const vdom = ITEMfactory(
+                  computed(
+                    this[listvalueattr],
+                    v => (v as any[])[index] as any
+                  ),
 
-                index
-              )
-            );
-            const realelementstoadd = render(vdomstoadd);
+                  index
+                );
+                set(this[cached_vdom_symbol], index, vdom);
+                return vdom;
+              }
+            });
+            const realelementstoadd = vdomstoadd.map(vdom => {
+              const index = vdom.props.index;
+              const cached_element = get(this[cached_realele], index);
+              if (cached_element) {
+                return cached_element;
+              } else {
+                const element = render(vdom);
+                set(this[cached_realele], index, element);
+                return element;
+              }
+            });
             this[listinnervdom].push(...vdomstoadd);
             this[listinnerelement].push(...realelementstoadd);
             realelementstoadd.forEach(element => appendchild(this, element));
@@ -110,6 +146,9 @@ function listmap(
           )
         );
         this[listinnerelement] = render(this[listinnervdom]);
+
+        Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
+        Object.assign(this[cached_realele], this[listinnerelement]);
         mount(this[listinnerelement], this);
         // this[listlengthsymbol] = value.length;
       }

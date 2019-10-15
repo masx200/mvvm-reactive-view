@@ -3,10 +3,11 @@ import debounce from "lodash/debounce";
 import isprimitive, { Primitivetype } from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
+import { cached_callback_eventlistner } from "./cached-map";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 // import { Primitive } from 'lodash';
-export const callbackmap = Symbol("callbackmap");
+// export const callbackmap = Symbol("callbackmap");
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
@@ -34,7 +35,7 @@ deleteProperty(forkarray.prototype, "length"); */
 
 export default class ReactiveState<T extends UnwrapedState> {
   value: T extends Primitivetype ? Primitivetype : Exclude<object, Function>;
-  [callbackmap] = new Map<Function, EventListener>();
+  //   [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
 
@@ -141,14 +142,14 @@ export default class ReactiveState<T extends UnwrapedState> {
     /*, eventname?: string*/
   ) {
     let eventlistener: EventListener;
-    const possiblecallback = this[callbackmap].get(callback);
+    const possiblecallback = cached_callback_eventlistner.get(callback);
     if (possiblecallback) {
       eventlistener = possiblecallback;
     } else {
       //自动解包
-      eventlistener = () => callback(this.valueOf());
+      eventlistener = () => callback(/* this.valueOf() */);
 
-      this[callbackmap].set(callback, eventlistener);
+      cached_callback_eventlistner.set(callback, eventlistener);
     }
     // this[eventtargetsymbol].addEventListener("value", callback);
     // const name = eventname ? String(eventname) : "value";
@@ -156,12 +157,14 @@ export default class ReactiveState<T extends UnwrapedState> {
     this[memlisteners].add(eventlistener);
   }
   [cancelsubscribe](callback: Function) {
-    const eventlistener = this[callbackmap].get(callback);
-    if (!eventlistener) {
+    const eventlistener = cached_callback_eventlistner.get(callback);
+    /*  if (!eventlistener) {
       throw new Error();
+    } */
+    if (eventlistener) {
+      this[memlisteners].delete(eventlistener);
+      this[removeonelistner](eventlistener);
     }
-    this[memlisteners].delete(eventlistener);
-    this[removeonelistner](eventlistener);
   }
 
   [Symbol.toPrimitive]() {

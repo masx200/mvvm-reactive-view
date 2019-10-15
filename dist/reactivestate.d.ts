@@ -2,7 +2,6 @@ import { Primitivetype } from "./isprimitive";
 import { UnwrapedState } from "./watch";
 export declare const addonelistner: unique symbol;
 export declare const removeonelistner: unique symbol;
-export declare const callbackmap: unique symbol;
 export declare const cancelsubscribe: unique symbol;
 declare const debouncedispatch: unique symbol;
 export declare const invalid_primitive_or_object_state = "invalid primitive or object state";
@@ -16,7 +15,6 @@ export declare const removeallistenerssymbol: unique symbol;
 export declare const addallistenerssymbol: unique symbol;
 export default class ReactiveState<T extends UnwrapedState> {
     value: T extends Primitivetype ? Primitivetype : Exclude<object, Function>;
-    [callbackmap]: Map<Function, EventListener>;
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
     [debouncedispatch]: (eventname?: string | undefined) => void;

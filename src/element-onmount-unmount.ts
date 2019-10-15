@@ -4,7 +4,7 @@ import { readdlisteners, removelisteners } from "./handle-onevent";
 import { isNode } from "./MountElement";
 import ReactiveState, {
   addonelistner,
-  callbackmap,
+  //   callbackmap,
   removeonelistner,
   dispatchsymbol
 } from "./reactivestate";
@@ -12,6 +12,7 @@ import { get, has } from "./reflect";
 import { bindstatesymbol } from "./render-vdom-to-real";
 import { isArray } from "./util";
 import { rewatch /* , unwatch */, unwatch } from "./watch";
+import { cached_callback_eventlistner } from "./cached-map";
 
 export function onmounted(ele: Element | Node | Array<Node>) {
   if (isArray(ele)) {
@@ -61,11 +62,13 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         Function
       ][];
       watchrecords.forEach(([state, callback]) => {
-        const eventlistener = state[callbackmap].get(callback);
-        if (!eventlistener) {
+        const eventlistener = cached_callback_eventlistner.get(callback);
+        /*   if (!eventlistener) {
           throw new Error();
+        } */
+        if (eventlistener) {
+          state[addonelistner](eventlistener);
         }
-        state[addonelistner](eventlistener);
       });
     }
     onmounted(getdomchildren(ele));
@@ -113,11 +116,13 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
         Function
       ][];
       watchrecords.forEach(([state, callback]) => {
-        const eventlistener = state[callbackmap].get(callback);
-        if (!eventlistener) {
+        const eventlistener = cached_callback_eventlistner.get(callback);
+        /*  if (!eventlistener) {
           throw new Error();
+        } */
+        if (eventlistener) {
+          state[removeonelistner](eventlistener);
         }
-        state[removeonelistner](eventlistener);
       });
     }
     onunmounted(getdomchildren(ele));

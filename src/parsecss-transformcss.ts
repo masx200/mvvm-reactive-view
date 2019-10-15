@@ -100,9 +100,9 @@ export function prefixcssrules(
     .filter(Boolean) as Array<CSSRule>;
 }
 
-const componentsstylesheet: Record<string, Set<string>> =
-  // { [key: string]: Set<string> }
-  {};
+const componentsstylesheet: Record<string, Set<string>> = {};
+// { [key: string]: Set<string> }
+
 export { componentsstylesheet };
 export function savestyleblob(
   tagname: string,

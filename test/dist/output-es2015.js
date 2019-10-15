@@ -666,10 +666,11 @@
         return debounced;
     }
     var debounce_1 = debounce;
-    var _a, _b, _c;
+    var cached_callback_eventlistner = new Map;
+    var cached_create_componet = new Map;
+    var _a, _b;
     var addonelistner = Symbol("addonelistner");
     var removeonelistner = Symbol("removeonelistner");
-    var callbackmap = Symbol("callbackmap");
     var cancelsubscribe = Symbol("cancelsubscribe");
     var debouncedispatch = Symbol("debouncedispatch");
     var invalid_primitive_or_object_state = "invalid primitive or object state";
@@ -684,10 +685,9 @@
     var addallistenerssymbol = Symbol("addallisteners");
     class ReactiveState {
         constructor(init) {
-            this[_a] = new Map;
             this[Symbol.toStringTag] = "ReactiveState";
-            this[_b] = new EventTarget;
-            this[_c] = new Set$1;
+            this[_a] = new EventTarget;
+            this[_b] = new Set$1;
             this.valueOf = () => {
                 return this.value;
             };
@@ -713,7 +713,7 @@
                 debouncedfun(eventname);
             };
         }
-        [(_a = callbackmap, removeallistenerssymbol)]() {
+        [removeallistenerssymbol]() {
             this[memlisteners].forEach(callback => {
                 this[removeonelistner](callback);
             });
@@ -735,27 +735,26 @@
             var value = this.valueOf();
             return isprimitive(value) ? String$1(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
         }
-        [(_b = eventtargetsymbol, _c = memlisteners, dispatchsymbol)](eventname) {
+        [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
             this[debouncedispatch](eventname);
         }
         [subscribesymbol](callback) {
             var eventlistener;
-            var possiblecallback = this[callbackmap].get(callback);
+            var possiblecallback = cached_callback_eventlistner.get(callback);
             if (possiblecallback) {
                 eventlistener = possiblecallback;
             } else {
-                eventlistener = () => callback(this.valueOf());
-                this[callbackmap].set(callback, eventlistener);
+                eventlistener = () => callback();
+                cached_callback_eventlistner.set(callback, eventlistener);
             }
             this[memlisteners].add(eventlistener);
         }
         [cancelsubscribe](callback) {
-            var eventlistener = this[callbackmap].get(callback);
-            if (!eventlistener) {
-                throw new Error;
+            var eventlistener = cached_callback_eventlistner.get(callback);
+            if (eventlistener) {
+                this[memlisteners].delete(eventlistener);
+                this[removeonelistner](eventlistener);
             }
-            this[memlisteners].delete(eventlistener);
-            this[removeonelistner](eventlistener);
         }
         [Symbol.toPrimitive]() {
             var value = this.valueOf();
@@ -1840,6 +1839,10 @@
     function createComponent(custfun) {
         var _a, _b, _c;
         if (isfunction(custfun)) {
+            var cached_class = cached_create_componet.get(custfun);
+            if (cached_class) {
+                return cached_class;
+            }
             var defaultProps = get(custfun, "defaultProps");
             var css = get(custfun, "css");
             class Component extends AttrChange {
@@ -1946,6 +1949,7 @@
             Component[_b] = componentsymbol;
             Component.css = isstring(css) && css ? css : undefined;
             Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
+            cached_create_componet.set(custfun, Component);
             return Component;
         } else {
             console.error(custfun);
@@ -1975,11 +1979,10 @@
                 var watchrecords = get(ele, innerwatchrecords);
                 watchrecords.forEach(_ref25 => {
                     var [state, callback] = _ref25;
-                    var eventlistener = state[callbackmap].get(callback);
-                    if (!eventlistener) {
-                        throw new Error;
+                    var eventlistener = cached_callback_eventlistner.get(callback);
+                    if (eventlistener) {
+                        state[addonelistner](eventlistener);
                     }
-                    state[addonelistner](eventlistener);
                 });
             }
             onmounted(getdomchildren(ele));
@@ -2001,11 +2004,10 @@
                 var watchrecords = get(ele, innerwatchrecords);
                 watchrecords.forEach(_ref26 => {
                     var [state, callback] = _ref26;
-                    var eventlistener = state[callbackmap].get(callback);
-                    if (!eventlistener) {
-                        throw new Error;
+                    var eventlistener = cached_callback_eventlistner.get(callback);
+                    if (eventlistener) {
+                        state[removeonelistner](eventlistener);
                     }
-                    state[removeonelistner](eventlistener);
                 });
             }
             onunmounted(getdomchildren(ele));
@@ -2152,8 +2154,18 @@
     var listvalueattr = Symbol("listvalueattr");
     var listinnervdom = Symbol("listinnervdom");
     var listinnerelement = Symbol("listinnerelement");
+    var cached_vdom_symbol = Symbol("cached_vdom");
+    var cached_realele = Symbol("cached_realele");
     function listmap(list, mapfun) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
+        if (!isarray(list) && !isSet(list) && !isReactiveState(list)) {
+            console.error(list);
+            throw new TypeError;
+        }
+        if (!isfunction(mapfun)) {
+            console.error(mapfun);
+            throw new TypeError;
+        }
         var itemclass = createComponent(props => {
             var myprops = props;
             var value = myprops.value;
@@ -2167,10 +2179,13 @@
         class ListMap extends AttrChange {
             constructor() {
                 super(...arguments);
-                this[_a] = createstate([]);
-                this[_c] = false;
+                this[_a] = {};
+                this[_b] = {};
+                this[_c] = createstate([]);
+                this[_e] = false;
             }
-            [(_a = listvalueattr, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
+            [(_a = cached_vdom_symbol, _b = cached_realele, _c = listvalueattr, _d = componentsymbol, 
+            _e = readysymbol, attributeChangedCallback)](name) {
                 if (this[readysymbol]) {
                     if (name === "value") {
                         var attrs = createeleattragentreadwrite(this);
@@ -2185,8 +2200,27 @@
                         var oldlength = domchildren.length;
                         if (newlength > oldlength) {
                             var numindexs = Array$1(newlength).fill(undefined).map((v, i) => i).slice(oldlength);
-                            var vdomstoadd = numindexs.map(index => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
-                            var realelementstoadd = render(vdomstoadd);
+                            var vdomstoadd = numindexs.map(index => {
+                                var cached_vdom1 = get(this[cached_vdom_symbol], index);
+                                if (cached_vdom1) {
+                                    return cached_vdom1;
+                                } else {
+                                    var vdom = ITEMfactory(computed(this[listvalueattr], v => v[index]), index);
+                                    set(this[cached_vdom_symbol], index, vdom);
+                                    return vdom;
+                                }
+                            });
+                            var realelementstoadd = vdomstoadd.map(vdom => {
+                                var index = vdom.props.index;
+                                var cached_element = get(this[cached_realele], index);
+                                if (cached_element) {
+                                    return cached_element;
+                                } else {
+                                    var element = render(vdom);
+                                    set(this[cached_realele], index, element);
+                                    return element;
+                                }
+                            });
                             this[listinnervdom].push(...vdomstoadd);
                             this[listinnerelement].push(...realelementstoadd);
                             realelementstoadd.forEach(element => appendchild(this, element));
@@ -2218,13 +2252,15 @@
                         _this7[listvalueattr]["value"] = value;
                         _this7[listinnervdom] = value.map((v, index) => ITEMfactory(computed(_this7[listvalueattr], v => v[index]), index));
                         _this7[listinnerelement] = render(_this7[listinnervdom]);
+                        Object$1.assign(_this7[cached_vdom_symbol], _this7[listinnervdom]);
+                        Object$1.assign(_this7[cached_realele], _this7[listinnerelement]);
                         mount(_this7[listinnerelement], _this7);
                     }
                     onmounted(_this7);
                 }))();
             }
         }
-        ListMap[_b] = componentsymbol;
+        ListMap[_d] = componentsymbol;
         return createElement(ListMap, {
             value: list
         });

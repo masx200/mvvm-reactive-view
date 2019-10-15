@@ -57,9 +57,14 @@ export interface Htmlelementconstructor {
   defaultProps?: Record<string, any>;
   css?: string;
 }
-
+import { cached_create_componet } from "./cached-map";
 export function createComponent(custfun: Custom): Htmlelementconstructor {
   if (isfunction(custfun)) {
+    const cached_class = cached_create_componet.get(custfun);
+    if (cached_class) {
+      return cached_class;
+    }
+
     const defaultProps = get(custfun, "defaultProps"); //custfun["defaultProps"];
     const css = get(custfun, "css");
     class Component extends AttrChange {
@@ -280,7 +285,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         }
       }
     }
-
+    cached_create_componet.set(custfun, Component);
     return Component;
   } else {
     console.error(custfun);
