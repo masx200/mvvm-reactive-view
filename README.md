@@ -975,6 +975,3 @@ interface Virtualdom<T extends Class | string | Function> {
 }
 ```
 
-# 懒加载
-
-尚在开发中
