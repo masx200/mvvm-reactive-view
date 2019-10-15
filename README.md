@@ -407,6 +407,7 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 ## 函数`watch`的回调函数已经自动使用`lodash`的`debounce`方法包装成防抖函数了，确保短时间内回调函数只执行一次
 
 ```js
+var mystate = createState("aaeeqtt");
 const mycom = createComponent(
   Object.assign(
     (props, children) => {
@@ -446,7 +447,7 @@ const mycom = createComponent(
 const myclasscomponent = mycom;
 const vdom = createElement(
   myclasscomponent,
-  {
+  {cccccc:mystate,
     aaaaaa: 222222222,
     tttttt: "dddddddddd"
   },
@@ -455,7 +456,8 @@ const vdom = createElement(
 console.log(vdom);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
-  vdom.element.setAttribute("cccccc", "bbbbbbbbbbnnnnnnnnnnnnn");
+mystate.value=
+  "bbbbbbbbbbnnnnnnnnnnnnn";
 }, 5000);
 ```
 
