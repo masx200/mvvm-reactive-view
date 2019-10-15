@@ -40,8 +40,9 @@ function listmap(
         if (name === "value") {
           const attrs = createeleattr(this);
           const value = attrs["value"];
-          console.log(value);
+
           if (!isArray(value)) {
+            console.log(value);
             throw new TypeError();
           }
         }
@@ -56,8 +57,9 @@ function listmap(
 
         const attrs = createeleattr(this);
         const value: any[] = attrs["value"];
-        console.log(value);
+
         if (!isArray(value)) {
+          console.log(value);
           throw new TypeError();
         }
         this[listinnervdom] = value.map((v, i) => ITEMfactory(v, i));
