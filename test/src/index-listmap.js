@@ -2,17 +2,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ListMap,
+  // @ts-ignore
   computed,
+  // @ts-ignore
   createElement,
   createRef,
   createState,
+  // @ts-ignore
   h,
   MountElement,
+  // @ts-ignore
   watch
 } from "../../dist/index.js";
+const refarray = [];
 const liststate = createState(
   Array(10)
     .fill(undefined)
+    // @ts-ignore
     .map((v, i) => i)
 );
 const vdom = (
@@ -46,10 +52,18 @@ const vdom = (
         liststate.unshift(Math.random());
       }}
     />
-    {ListMap(liststate, (value, index) =>
-      createElement("div", ["item", "value", value, "index", index])
-    )}
+    {ListMap(liststate, (value, index) => (
+      <div
+        _ref={ele => {
+          // @ts-ignore
+          refarray.length = liststate.length;
+          refarray[index] = ele;
+        }}
+      >
+        {["item:", "value:", value, "index:", index]}
+      </div>
+    ))}
   </div>
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
-console.log(vdom);
+console.log(vdom, refarray, liststate);

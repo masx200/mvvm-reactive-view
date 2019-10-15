@@ -447,17 +447,13 @@ const mycom = createComponent(
 const myclasscomponent = mycom;
 const vdom = createElement(
   myclasscomponent,
-  {cccccc:mystate,
-    aaaaaa: 222222222,
-    tttttt: "dddddddddd"
-  },
+  { cccccc: mystate, aaaaaa: 222222222, tttttt: "dddddddddd" },
   ["children"]
 );
 console.log(vdom);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
-mystate.value=
-  "bbbbbbbbbbnnnnnnnnnnnnn";
+  mystate.value = "bbbbbbbbbbnnnnnnnnnnnnn";
 }, 5000);
 ```
 
@@ -649,6 +645,7 @@ MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
 ```jsx
+const refarray = [];
 const liststate = createState(
   Array(10)
     .fill(undefined)
@@ -656,9 +653,16 @@ const liststate = createState(
 );
 const vdom = (
   <>
-    {ListMap(liststate, (value, index) =>
-      createElement("div", ["item", "value", value, "index", index])
-    )}
+    {ListMap(liststate, (value, index) => (
+      <div
+        _ref={ele => {
+          refarray.length = liststate.length;
+          refarray[index] = ele;
+        }}
+      >
+        {["item:", "value:", value, "index:", index]}
+      </div>
+    ))}
 
     <button
       _text="push"
@@ -976,4 +980,3 @@ interface Virtualdom<T extends Class | string | Function> {
   bindattr: Record<string, ReactiveState<any>>;
 }
 ```
-
