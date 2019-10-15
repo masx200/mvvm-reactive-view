@@ -12,13 +12,11 @@
 
 ## 有着面向未来的函数式`API`，提供与`React Hooks`相同级别的逻辑组合功能，方便复用逻辑和重用，抛弃`mixin`(`混入`)和`hoc`(`高阶组件`)，`Render Props`
 
-
 ## 支持组件局部`css`样式，仅在组件内有效，不会全局生效
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
 ### 浏览器要求原生支持`Proxy`和`ECMASCRIPT2015+`
-
 
 # 安装 `npm` 模块
 
@@ -80,12 +78,13 @@ https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
 ```js
 import {
+  ListMap,
   computed,
   createComponent,
   useMounted,
   useUnMounted,
-  condition,
-  extendDirectives,
+  Condition,
+  Directives,
   watch,
   html,
   h,
@@ -103,12 +102,13 @@ import {
 
 ```js
 import {
+  ListMap,
   computed,
   createComponent,
   useMounted,
   useUnMounted,
-  condition,
-  extendDirectives,
+  Condition,
+  Directives,
   watch,
   html,
   h,
@@ -280,11 +280,11 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 # 条件渲染
 
-使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
+使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
 
 ```jsx
 var mystate = createState(true);
-var vdom = condition(
+var vdom = Condition(
   mystate,
   createElement("p", null, ["testtrue"]),
   createElement("div", undefined, "testfalese")
@@ -298,7 +298,6 @@ setTimeout(() => {
 # 组件化
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
 
 一个简单的`helloworld`示例如下
 
@@ -351,10 +350,10 @@ If you don't want to write CSS in JS, you can use `to-string-loader` of webpack,
 }
 ```
 
-If your CSS file starts with "_", CSS will use `to-string-loader`, such as:
+If your CSS file starts with "\_", CSS will use `to-string-loader`, such as:
 
 ```js
-const css = require('./_index.css')
+const css = require("./_index.css");
 ```
 
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后给`selectorText`添加前缀,再转换成 `css` 文本
@@ -402,7 +401,6 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 与`React hooks`不同，该组件初始化函数仅被调用一次
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的函数,只能在组件初始化函数里面使用
-
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
@@ -631,6 +629,65 @@ document.body.appendChild(
 );
 ```
 
+# 列表渲染
+
+## 1.不变的列表，没有响应性
+
+```tsx
+const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map(number => {
+  return <li>{number}</li>;
+});
+
+MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
+```
+
+## 2.可变的列表，有响应式
+
+使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
+
+```jsx
+const liststate = createState(
+  Array(10)
+    .fill(undefined)
+    .map((v, i) => i)
+);
+const vdom = (
+  <>
+    {ListMap(liststate, (value, index) =>
+      createElement("div", ["item", "value", value, "index", index])
+    )}
+
+    <button
+      _text="push"
+      onclick={() => {
+        liststate.push(Math.random());
+      }}
+    />
+    <button
+      _text="pop"
+      onclick={() => {
+        liststate.pop();
+      }}
+    />
+
+    <button
+      _text="shift"
+      onclick={() => {
+        liststate.shift();
+      }}
+    />
+    <button
+      _text="unshift"
+      onclick={() => {
+        liststate.unshift(Math.random());
+      }}
+    />
+  </>
+);
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
 # 支持元素的 `class` 属性赋值 `Set` 类型,自动转成 字符串
 
 `class`属性支持的类型有
@@ -771,7 +828,7 @@ console.log(ref.value);
 # 扩展自定义指令
 
 ```js
-extendDirectives({
+Directives({
   myfocus(value, element, vdom) {
     console.log(value, element, vdom);
   }
@@ -811,7 +868,13 @@ const vdomobj = html`
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
+## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
+
+## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
+
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
+
+## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
@@ -822,13 +885,7 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-export type UnwrapedState =
-  | string
-  | number
-  | boolean
-  | undefined
-  | object
-  | bigint;
+type UnwrapedState = string | number | boolean | undefined | object | bigint;
 class ReactiveState<T extends UnwrapedState> {
   constructor(init?: T);
   readonly [Symbol.toStringTag] = "ReactiveState";
@@ -845,9 +902,7 @@ class ReactiveState<T extends UnwrapedState> {
 
 ### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
 
-## 使用`condition`函数来实现条件渲染,返回值是`虚拟dom`
-
-## 使用`extendDirectives`函数来扩展指令,返回已有的指令合集
+## 使用`Directives`函数来扩展指令,返回已有的指令合集
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
@@ -921,22 +976,5 @@ interface Virtualdom<T extends Class | string | Function> {
 ```
 
 # 懒加载
-
-尚在开发中
-
-# 列表渲染
-
-1.不变的列表，没有响应性
-
-```tsx
-const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map(number => {
-  return <li>{number}</li>;
-});
-
-MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
-```
-
-2.可变的列表，有响应式
 
 尚在开发中
