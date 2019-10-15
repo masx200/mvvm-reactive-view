@@ -11,7 +11,10 @@ import { componentsymbol } from "./iscomponent";
 import { onunmounted, onmounted } from "./element-onmount-unmount";
 import { isArray } from "./util";
 import render from "./render-vdom-to-real";
+import computed from "./computed";
+import createstate from "./createstate";
 export { listmap };
+const listvalueattr = Symbol("listvalueattr");
 const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
@@ -28,10 +31,11 @@ function listmap(
     const index = myprops.index.valueOf() as number;
     return mapfun(value, index);
   });
-  const ITEMfactory = (value: any, index: number) =>
+  const ITEMfactory = (value: ReactiveState<any>, index: number) =>
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
+    [listvalueattr] = createstate(createeleattr(this)["value"]);
     [listlengthsymbol]: number;
     [listinnerelement]: Element | Node[];
     [listinnervdom]: Virtualdom<Htmlelementconstructor>[];
@@ -48,6 +52,7 @@ function listmap(
             throw new TypeError();
           }
           this[listlengthsymbol] = value.length;
+          this[listvalueattr]["value"] = value;
           // if(){}
         }
       }
@@ -67,7 +72,13 @@ function listmap(
           throw new TypeError();
         }
 
-        this[listinnervdom] = value.map((v, i) => ITEMfactory(v, i));
+        this[listinnervdom] = value.map((v, i) =>
+          ITEMfactory(
+            computed(this[listvalueattr], v => (v as any[])[i] as any),
+
+            i
+          )
+        );
         this[listinnerelement] = render(this[listinnervdom]);
         mount(this[listinnerelement], this);
         this[listlengthsymbol] = value.length;

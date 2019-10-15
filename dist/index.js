@@ -2235,6 +2235,8 @@ function createRef(value) {
     };
 }
 
+const listlengthsymbol = Symbol("listlength");
+
 const listinnervdom = Symbol("listinnervdom");
 
 const listinnerelement = Symbol("listinnerelement");
@@ -2261,10 +2263,11 @@ function listmap(list, mapfun) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);
                     const value = attrs["value"];
-                    console.log(value);
                     if (!isarray(value)) {
+                        console.log(value);
                         throw new TypeError;
                     }
+                    this[listlengthsymbol] = value.length;
                 }
             }
         }
@@ -2276,13 +2279,14 @@ function listmap(list, mapfun) {
                 this[readysymbol] = true;
                 const attrs = createeleattragentreadwrite(this);
                 const value = attrs["value"];
-                console.log(value);
                 if (!isarray(value)) {
+                    console.log(value);
                     throw new TypeError;
                 }
-                this[listinnervdom] = value.map((v, i) => ITEMfactory(v, i));
+                this[listinnervdom] = value.map((v, i) => ITEMfactory(computed(value, v => v[i]), i));
                 this[listinnerelement] = render(this[listinnervdom]);
                 mount(this[listinnerelement], this);
+                this[listlengthsymbol] = value.length;
             }
             onmounted(this);
         }
