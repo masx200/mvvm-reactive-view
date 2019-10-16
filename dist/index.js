@@ -1947,7 +1947,6 @@ function transformcsstext(text, prefix) {
     const css = text;
     const cssomold = parsecsstext(css);
     const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
-    console.log(cssomnew);
     const cssnewtext = cssrulestocsstext(cssomnew);
     return cssnewtext;
 }

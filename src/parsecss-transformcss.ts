@@ -147,7 +147,7 @@ export function transformcsstext(text: string, prefix: string): string {
   const css = text;
   const cssomold = parsecsstext(css);
   const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
-  console.log(cssomnew);
+  //   console.log(cssomnew);
   //   console.log([css, prefix, cssomold, cssomnew]);
   const cssnewtext = cssrulestocsstext(cssomnew);
   //   console.log([text, cssomold, cssomnew, cssnewtext]);
