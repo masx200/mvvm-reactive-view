@@ -939,6 +939,22 @@ type VaildVDom =
   | ReactiveState<any>;
 ```
 
+## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+
+```ts
+function createComponent(custfun: Custom): Htmlelementconstructor;
+interface Custom {
+  (
+    props?: Record<string, ReactiveState<any>>,
+    children?: Vdomchildren
+  ): VaildVDom;
+  defaultProps?: Record<string, any>;
+  css?: string;
+}
+```
+
+## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,
+
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
