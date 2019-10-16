@@ -1,8 +1,8 @@
 # mvvm-reactive-view
 
-## 面向未来的,轻量级,响应式,`mvvm`,构建视图,声明式,组件化,基于 `webcomponent` ,
+## 面向未来的,轻量级,响应式,`mvvm`,构建视图,声明式,组件化,基于 `webcomponent` ,基于`虚拟 dom`
 
-## 基于 `Proxy`,基于`虚拟 dom`,支持 `jsx` 和 `hyperscript`,前端 `javascript` 库
+## 基于 `Proxy`,支持 `jsx` 和 `hyperscript`,前端 `javascript` 库,完全使用`TypeScript`编写
 
 ## 虽然使用了`虚拟dom`，但是，与`react`，`vue`等之类的前端框架有本质上的不同，不使用`diff`算法，响应式状态直接与元素绑定，高效更新，性能更强
 
