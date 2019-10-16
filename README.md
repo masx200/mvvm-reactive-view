@@ -771,15 +771,19 @@ html`
 
 # 使用指令
 
-1.属性名为'\*'+指令名称,属性值为值
+1.属性名为'\*'+指令名称
 
 2.使用"\_"+指令名称
+
+3..使用"\$"+指令名称
 
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
 ### 指令`ref`用来获取元素的引用,值可以是`object`或者`Function`
 
 `*ref=${ref}`
+
+<hr></hr>
 
 ```ts
 const ref = createRef();
@@ -791,12 +795,38 @@ var vdom = html`
 console.log(ref.value);
 ```
 
+<hr></hr>
+
 ```tsx
 const ref = createRef();
 
 var vdom = <div _ref={ele => (ref.value = ele)} />;
 
 console.log(ref.value);
+```
+
+<hr></hr>
+
+```jsx
+const lirefs = [];
+var list = Array(10)
+  .fill(undefined)
+  .map((v, i) => i);
+const vdom = (
+  <ul>
+    {list.map((a, index) => (
+      <li
+        $ref={ele => {
+          lirefs[index] = ele;
+          lirefs.length = list.length;
+        }}
+      >
+        item{a}
+      </li>
+    ))}
+  </ul>
+);
+console.log(lirefs);
 ```
 
 ### 指令`html`用来设置元素的`innerHTML`

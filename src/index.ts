@@ -36,3 +36,5 @@ export { watch };
 export { Directives };
 export { Condition };
 export { ListMap };
+/* import { version } from "../package.json";
+export { version }; */

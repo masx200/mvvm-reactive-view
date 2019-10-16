@@ -68,7 +68,7 @@ function createVirtualElement<T extends Class | string | Function>(
     onevent: Object.fromEntries(
       merge_entries([
         ...propsentries
-          .filter(([key]) => /\@/.test(key[0]))
+          .filter(([key]) => "@" == key[0])
           .map(([key, value]) => [
             key
               .slice(1)
@@ -89,7 +89,7 @@ function createVirtualElement<T extends Class | string | Function>(
     ),
     directives: Object.fromEntries(
       propsentriesNOTevents
-        .filter(([key]) => key[0] === "*" || key[0] === "_")
+        .filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$")
         .map(([key, value]) => [
           key
             .slice(1)

@@ -9,6 +9,7 @@ import {
   watch
 } from "../../dist/index.js";
 console.log([h, createElement]);
+const lirefs = [];
 // console.log()
 // export{vdom}
 const temp_ref = createRef();
@@ -36,8 +37,15 @@ var vdom = (
       <input type="checkbox" _checked={notcheck} />,
       <>
         <ul>
-          {list.map(a => (
-            <li>item{a}</li>
+          {list.map((a, index) => (
+            <li
+              $ref={ele => {
+                lirefs[index] = ele;
+                lirefs.length = list.length;
+              }}
+            >
+              item{a}
+            </li>
           ))}
         </ul>
         <header
@@ -476,5 +484,5 @@ var vdom = (
     ]}
   </>
 );
-console.log(vdom, temp_ref);
+console.log(vdom, temp_ref, lirefs);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));

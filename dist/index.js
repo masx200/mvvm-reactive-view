@@ -853,8 +853,8 @@ function createVirtualElement(type, props = {}, children = []) {
         bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
         props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
         children: children,
-        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => /\@/.test(key[0])).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
     });
     defineProperty(thisarg, Symbol.toStringTag, {
         value: "VirtualElement"

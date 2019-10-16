@@ -801,7 +801,7 @@
             children: children,
             onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(_ref7 => {
                 var [key] = _ref7;
-                return /\@/.test(key[0]);
+                return "@" == key[0];
             }).map(_ref8 => {
                 var [key, value] = _ref8;
                 return [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ];
@@ -814,7 +814,7 @@
             }) ])),
             directives: Object$1.fromEntries(propsentriesNOTevents.filter(_ref11 => {
                 var [key] = _ref11;
-                return key[0] === "*" || key[0] === "_";
+                return key[0] === "*" || key[0] === "_" || key[0] === "$";
             }).map(_ref12 => {
                 var [key, value] = _ref12;
                 return [ key.slice(1).toLowerCase().trim(), value ];
@@ -2700,6 +2700,7 @@
         });
     }, 1e4);
     console.log([ createElement, createElement ]);
+    var lirefs = [];
     var temp_ref = createRef();
     var check = createstate(false);
     var check2 = createstate(true);
@@ -2734,7 +2735,12 @@
     }), createElement("input", {
         type: "checkbox",
         _checked: notcheck
-    }), createElement("", null, createElement("ul", null, list.map(a => createElement("li", null, "item", a))), createElement("header", {
+    }), createElement("", null, createElement("ul", null, list.map((a, index) => createElement("li", {
+        $ref: ele => {
+            lirefs[index] = ele;
+            lirefs.length = list.length;
+        }
+    }, "item", a))), createElement("header", {
         class: "common-header fixed noborder floating",
         id: "git-header-nav",
         _ref: temp_ref
@@ -3157,7 +3163,7 @@
     }, createElement("div", {
         class: "mayun-icon my-ic-exit my-ic-exit-dims"
     }), "\u9000\u51fa"))), createElement("script", null)))))) ]);
-    console.log(vdom$5, temp_ref);
+    console.log(vdom$5, temp_ref, lirefs);
     document.body.appendChild(MountElement(vdom$5, document.createElement("div")));
     console.log([ createElement, createElement ]);
     (() => {
