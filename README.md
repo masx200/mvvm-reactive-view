@@ -910,7 +910,34 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
 ## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
+```ts
+function listMap(
+  list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
+  mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
+): Virtualdom<Htmlelementconstructor>;
+```
+
 ## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
+
+```ts
+function Condition(
+  conditon: ReactiveState<any> | boolean,
+  iftrue?: VaildVDom,
+  iffalse?: VaildVDom
+): Virtualdom<Htmlelementconstructor>;
+interface Htmlelementconstructor {
+  new (): HTMLElement;
+  prototype: HTMLElement;
+  defaultProps?: Record<string, any>;
+  css?: string;
+}
+type VaildVDom =
+  | Virtualdom<any>
+  | string
+  | number
+  | Vdomchildren
+  | ReactiveState<any>;
+```
 
 ## 函数`render`把`虚拟dom`转换成真实`dom`元素
 
