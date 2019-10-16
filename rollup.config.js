@@ -5,7 +5,7 @@ import sourcemaps from "rollup-plugin-sourcemaps";
 import { terser } from "rollup-plugin-terser";
 import typescriptplugin from "rollup-plugin-typescript2";
 import typescriptlib from "typescript";
-const banner = `const {Event,CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map,window,clearTimeout,setTimeout,parseInt,globalThis ,self ,global }=Function('return this')();`;
+const banner = `const {Date,RegExp,Event,CustomEvent,requestAnimationFrame,URL,Blob,Element,Node,String,Array,document,Object,Reflect,Proxy,Symbol,Boolean,Promise,Set,Math,Error,TypeError,EventTarget,JSON,Map,window,clearTimeout,setTimeout,parseInt,globalThis ,self ,global }=Function('return this')();`;
 const myterserplugin = terser({
   sourcemap: true,
   toplevel: true,
