@@ -24,3 +24,4 @@ export declare function setAttribute(ele: Element, name: string, value: any): vo
 export declare function removeAttribute(ele: Element, name: string): void;
 export declare function insertfirst(container: HTMLElement | Element, ele: HTMLElement): void;
 export declare function createanotherhtmldocument(): Document;
+export declare function querySelectorAll(selector: string): Element[];

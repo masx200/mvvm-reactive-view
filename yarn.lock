@@ -687,8 +687,8 @@
   resolved "https://gitee.com/masx200/deep-observe-agent-proxy.git#e2e4549c55daa34cd804c3ee0e0e4282a922452f"
 
 "@masx200/dom-element-attribute-agent-proxy@https://gitee.com/masx200/dom-element-attribute-agent-proxy.git":
-  version "1.1.16"
-  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#d0f76b1af1ebcd47b6b7008a89fde1878d45a6f1"
+  version "1.1.18"
+  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#36023323e75f43ff2f64cd2d184ce40d6afcc5dc"
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
@@ -4576,10 +4576,10 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@^3.6.3:
-  version "3.6.3"
-  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.6.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.6.3.tgz#fea942fabb20f7e1ca7164ff626f1a9f3f70b4da"
-  integrity sha1-/qlC+rsg9+HKcWT/Ym8anz9wtNo=
+typescript@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.6.4.tgz?cache=0&sync_timestamp=1571206721446&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.6.4.tgz#b18752bb3792bc1a0281335f7f6ebf1bbfc5b91d"
+  integrity sha1-sYdSuzeSvBoCgTNff26/G7/FuR0=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

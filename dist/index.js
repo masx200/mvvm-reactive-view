@@ -1,4 +1,4 @@
-const {CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
+const {Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
@@ -201,7 +201,7 @@ function isSet$1(a) {
     return a instanceof Set;
 }
 
-const isinputcheckbox = ele => "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
+const isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "type") === "checkbox" || get$1(ele, "type") === "radio");
 
 function objtostylestring(obj) {
     obj = JSON.parse(JSON.stringify(obj));
@@ -270,9 +270,15 @@ function createeleattragentreadwrite(ele) {
             } else if (key === "class" && isobject$1(v)) {
                 const classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? [ ...v ].join(" ") : String$1(v);
                 setattribute(ele, String$1(key), classtext);
+                return true;
             } else {
+                if (false === v) {
+                    removeAttribute(ele, String$1(key));
+                    return true;
+                }
                 if (isSet$1(v)) {
                     setattribute(ele, String$1(key), JSON.stringify([ ...v ]));
+                    return true;
                 } else {
                     if (v === true) {
                         v = "";
@@ -281,7 +287,6 @@ function createeleattragentreadwrite(ele) {
                     return true;
                 }
             }
-            return true;
         },
         deleteProperty(t, k) {
             removeAttribute(ele, String$1(k));
@@ -403,7 +408,7 @@ function domremovelisten(ele, event, call) {
 }
 
 function getdomchildren(ele) {
-    return Array.from(ele.childNodes);
+    return [ ...ele.childNodes ];
 }
 
 function getAttribute(ele, name) {
@@ -422,6 +427,10 @@ const HTMLElementprototype = HTMLElement.prototype;
 
 function createanotherhtmldocument() {
     return document$1.implementation.createHTMLDocument("");
+}
+
+function querySelectorAll(selector) {
+    return [ ...document$1.querySelectorAll(selector) ];
 }
 
 const attributeChangedCallback = "attributeChangedCallback";
@@ -2248,7 +2257,20 @@ extenddirectives({
         model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
     },
     checked(value, element, vdom) {
-        model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
+        model([ "input" ], "checked", "checked", [ "change", "click" ], value, vdom);
+        const eventname = "click";
+        const origin = toArray(vdom.onevent[eventname]);
+        const eventsarray = origin;
+        const dispatchallsamename = event => {
+            const inputelement = event.target;
+            const name = event.target.name;
+            if (name) {
+                querySelectorAll(`input[name=${name}]`).filter(ele => ele !== inputelement).forEach(element => {
+                    element.dispatchEvent(new Event("change"));
+                });
+            }
+        };
+        set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
     }
 });
 
@@ -2263,9 +2285,9 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
         eventnames.forEach(eventname => {
             const origin = vdom.onevent[eventname];
             const eventsarray = toArray(origin);
-            set(vdom.onevent, eventname, [ ...eventsarray, e => {
+            set(vdom.onevent, eventname, toArray([ ...eventsarray, e => {
                 return value.value = get(e.target, domprop);
-            } ].filter(Boolean));
+            } ]).filter(Boolean));
         });
     } else {
         console.error(vdom);

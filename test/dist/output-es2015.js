@@ -103,7 +103,7 @@
         }
         return target;
     }
-    var {CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise$1, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window$1, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
+    var {Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise$1, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window$1, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
     function isprimitive(a) {
         return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
     }
@@ -259,7 +259,7 @@
     function isSet$1(a) {
         return a instanceof Set$1;
     }
-    var isinputcheckbox = ele => "input" === geteletagname(ele) && get$1(ele, "type") === "checkbox";
+    var isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "type") === "checkbox" || get$1(ele, "type") === "radio");
     function objtostylestring(obj) {
         obj = JSON.parse(JSON.stringify(obj));
         obj = Object$1.fromEntries(Object$1.entries(obj).map(_ref => {
@@ -331,9 +331,15 @@
                 } else if (key === "class" && isobject$1(v)) {
                     var classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? [ ...v ].join(" ") : String$1$1(v);
                     setattribute(ele, String$1$1(key), classtext);
+                    return true;
                 } else {
+                    if (false === v) {
+                        removeAttribute(ele, String$1$1(key));
+                        return true;
+                    }
                     if (isSet$1(v)) {
                         setattribute(ele, String$1$1(key), JSON.stringify([ ...v ]));
+                        return true;
                     } else {
                         if (v === true) {
                             v = "";
@@ -342,7 +348,6 @@
                         return true;
                     }
                 }
-                return true;
             },
             deleteProperty(t, k) {
                 removeAttribute(ele, String$1$1(k));
@@ -440,7 +445,7 @@
         ele.removeEventListener(event, call);
     }
     function getdomchildren(ele) {
-        return Array$1.from(ele.childNodes);
+        return [ ...ele.childNodes ];
     }
     function getAttribute(ele, name) {
         return HTMLElementprototype.getAttribute.call(ele, name);
@@ -454,6 +459,9 @@
     var HTMLElementprototype = HTMLElement.prototype;
     function createanotherhtmldocument() {
         return document$1$1.implementation.createHTMLDocument("");
+    }
+    function querySelectorAll(selector) {
+        return [ ...document$1$1.querySelectorAll(selector) ];
     }
     var attributeChangedCallback = "attributeChangedCallback";
     class AttrChange extends HTMLElement {
@@ -2126,7 +2134,20 @@
             model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
         },
         checked(value, element, vdom) {
-            model([ "input" ], "checked", "checked", [ "change", "input" ], value, vdom);
+            model([ "input" ], "checked", "checked", [ "change", "click" ], value, vdom);
+            var eventname = "click";
+            var origin = toArray(vdom.onevent[eventname]);
+            var eventsarray = origin;
+            var dispatchallsamename = event => {
+                var inputelement = event.target;
+                var name = event.target.name;
+                if (name) {
+                    querySelectorAll("input[name=".concat(name, "]")).filter(ele => ele !== inputelement).forEach(element => {
+                        element.dispatchEvent(new Event("change"));
+                    });
+                }
+            };
+            set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
         }
     });
     function model(types, bindattribute, domprop, eventnames, value, vdom) {
@@ -2140,9 +2161,9 @@
             eventnames.forEach(eventname => {
                 var origin = vdom.onevent[eventname];
                 var eventsarray = toArray(origin);
-                set(vdom.onevent, eventname, [ ...eventsarray, e => {
+                set(vdom.onevent, eventname, toArray([ ...eventsarray, e => {
                     return value.value = get(e.target, domprop);
-                } ].filter(Boolean));
+                } ]).filter(Boolean));
             });
         } else {
             console.error(vdom);
@@ -2540,8 +2561,10 @@
             type: "text/javascript",
             src: "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/chunk.main.b9c7ffd191cff11a9b96.js"
         })), createElement("div", {
+            contenteditable: false
+        }, "\u4e0d\u53ef\u4ee5\u7f16\u8f91\u7684\u533a\u57df"), createElement("div", {
             contenteditable: true
-        })), createElement("h1", null, createElement("svg", {
+        }, "\u53ef\u4ee5\u7f16\u8f91\u7684\u533a\u57df")), createElement("h1", null, createElement("svg", {
             xmlns: "http://www.w3.org/2000/svg",
             "xmlns:xlink": "http://www.w3.org/1999/xlink",
             version: "1.1",
@@ -2679,11 +2702,33 @@
     console.log([ createElement, createElement ]);
     var temp_ref = createRef();
     var check = createstate(false);
+    var check2 = createstate(true);
+    watch(check2, a => console.log(a));
+    var check3 = createstate(true);
+    watch(check3, a => console.log(a));
+    var check4 = createstate(true);
+    watch(check4, a => console.log(a));
     var notcheck = computed(check, a => !a);
     var list = Array(10).fill(undefined).map((v, i) => i);
     watch(check, a => console.log(a));
     watch(notcheck, a => console.log(a));
-    var vdom$5 = createElement("", null, [ createElement("input", {
+    var vdom$5 = createElement("", null, createElement("input", {
+        type: "radio",
+        _checked: check,
+        name: "myname1"
+    }), createElement("input", {
+        type: "radio",
+        _checked: check3,
+        name: "myname1"
+    }), createElement("input", {
+        type: "radio",
+        _checked: check2,
+        name: "myname2"
+    }), createElement("input", {
+        type: "radio",
+        _checked: check4,
+        name: "myname2"
+    }), [ createElement("input", {
         type: "checkbox",
         _checked: check
     }), createElement("input", {
@@ -2710,7 +2755,8 @@
     }, createElement("div", {
         class: "gitee-nav__avatar-box"
     }, createElement("a", {
-        href: "/masx200"
+        href: "/masx200",
+        onclick: e => e.preventDefault()
     }, createElement("img", {
         alt: "1081296_masx200",
         class: "ui avatar image masx200-avatar",

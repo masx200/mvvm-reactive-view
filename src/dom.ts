@@ -75,7 +75,7 @@ export function domremovelisten(
   ele.removeEventListener(event, call);
 }
 export function getdomchildren(ele: Element | Node) {
-  return Array.from(ele.childNodes);
+  return [...ele.childNodes];
 }
 export function getAttribute(ele: Element, name: string) {
   return HTMLElementprototype.getAttribute.call(ele, name);
@@ -101,3 +101,6 @@ export function createanotherhtmldocument() {
   return ele.parentNode ? ele.parentNode : ele;
 }
  */
+export function querySelectorAll(selector: string) {
+  return [...document.querySelectorAll(selector)];
+}

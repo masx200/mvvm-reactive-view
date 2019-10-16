@@ -13,6 +13,12 @@ console.log([h, createElement]);
 // export{vdom}
 const temp_ref = createRef();
 const check = createState(false);
+const check2 = createState(true);
+watch(check2, a => console.log(a));
+const check3 = createState(true);
+watch(check3, a => console.log(a));
+const check4 = createState(true);
+watch(check4, a => console.log(a));
 const notcheck = computed(check, a => !a);
 var list = Array(10)
   .fill(undefined)
@@ -21,6 +27,10 @@ watch(check, a => console.log(a));
 watch(notcheck, a => console.log(a));
 var vdom = (
   <>
+    <input type="radio" _checked={check} name="myname1" />
+    <input type="radio" _checked={check3} name="myname1" />
+    <input type="radio" _checked={check2} name="myname2" />
+    <input type="radio" _checked={check4} name="myname2" />
     {[
       <input type="checkbox" _checked={check} />,
       <input type="checkbox" _checked={notcheck} />,
@@ -44,7 +54,7 @@ var vdom = (
                 <div class="gitee-nav__sidebar-container">
                   <div class="gitee-nav__sidebar-top">
                     <div class="gitee-nav__avatar-box">
-                      <a href="/masx200">
+                      <a href="/masx200" onclick={e => e.preventDefault()}>
                         <img
                           alt="1081296_masx200"
                           class="ui avatar image masx200-avatar"

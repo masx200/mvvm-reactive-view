@@ -308,8 +308,12 @@ const mycomapp = createComponent(() => {
           src="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/chunk.main.b9c7ffd191cff11a9b96.js"
         ></script>
       </div>
-
-      <div contenteditable></div>
+      <div contenteditable=${false}>
+        不可以编辑的区域
+      </div>
+      <div contenteditable>
+        可以编辑的区域
+      </div>
     </div>
     <h1>
       <svg
