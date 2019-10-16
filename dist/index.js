@@ -1879,16 +1879,27 @@ function parsecsstext(text) {
 }
 
 function selectoraddprefix(cssstylerule, prefix) {
-    const selectorText = cssstylerule.selectorText;
-    const selectorarray = selectorText.split(",");
-    cssstylerule.selectorText = selectorarray.map(selectorText => {
-        let prefixselector = prefix + " " + selectorText;
-        if (selectorText.startsWith("*")) {
-            prefixselector = prefixselector + "," + selectorText.replace("*", prefix);
+    const selectorold = cssstylerule.selectorText;
+    const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+    const selectorTextss = selectorold;
+    const selectorarray = selectorTextss.split(",");
+    const selectoraftertransform = selectorarray.map(selectorTextone => {
+        let prefixselector = prefix + " " + selectorTextone;
+        if (selectorTextone.startsWith("*")) {
+            prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
         }
         return prefixselector;
     }).join(",");
-    return cssstylerule;
+    cssstylerule.selectorText = selectoraftertransform;
+    if (cssstylerule.selectorText.startsWith(prefix)) {
+        return cssstylerule;
+    } else {
+        return {
+            cssText: selectoraftertransform + stylebodyold,
+            selectorText: selectoraftertransform,
+            [Symbol.toStringTag]: "CSSStyleRule"
+        };
+    }
 }
 
 function prefixcssrules(cssRulesarray, prefix) {
@@ -1896,7 +1907,7 @@ function prefixcssrules(cssRulesarray, prefix) {
         if (isCSSStyleRule(cssrule)) {
             return selectoraddprefix(cssrule, prefix);
         } else if (isCSSMediaRule(cssrule)) {
-            prefixcssrules(Array.from(cssrule.cssRules), prefix);
+            prefixcssrules([ ...cssrule.cssRules ], prefix);
             return cssrule;
         } else if (isCSSImportRule(cssrule)) {
             savestyleblob(prefix, undefined, cssrule.href);
@@ -1936,6 +1947,7 @@ function transformcsstext(text, prefix) {
     const css = text;
     const cssomold = parsecsstext(css);
     const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
+    console.log(cssomnew);
     const cssnewtext = cssrulestocsstext(cssomnew);
     return cssnewtext;
 }

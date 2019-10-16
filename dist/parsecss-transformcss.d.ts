@@ -2,7 +2,11 @@ export declare function isCSSStyleRule(a: any): a is CSSStyleRule;
 export declare function isCSSMediaRule(a: any): a is CSSMediaRule;
 export declare function isCSSImportRule(a: any): a is CSSImportRule;
 export declare function parsecsstext(text: string): Array<CSSRule>;
-export declare function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string): CSSStyleRule;
+export declare function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string): CSSStyleRule | {
+    cssText: string;
+    selectorText: string;
+    [Symbol.toStringTag]: string;
+};
 export declare function prefixcssrules(cssRulesarray: Array<CSSRule>, prefix: string): Array<CSSRule>;
 declare const componentsstylesheet: Record<string, Set<string>>;
 export { componentsstylesheet };

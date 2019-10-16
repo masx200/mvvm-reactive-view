@@ -41,20 +41,35 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
   //css 选择器可能有多个
   //h1,p,h3,div
-  const selectorText = cssstylerule.selectorText;
+  const selectorold = cssstylerule.selectorText;
+  const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+  const selectorTextss = selectorold;
 
-  const selectorarray = selectorText.split(",");
-  cssstylerule.selectorText = selectorarray
-    .map(selectorText => {
-      let prefixselector = prefix + " " + selectorText;
+  const selectorarray = selectorTextss.split(",");
+  const selectoraftertransform = selectorarray
+    .map(selectorTextone => {
+      let prefixselector = prefix + " " + selectorTextone;
 
-      if (selectorText.startsWith("*")) {
+      if (selectorTextone.startsWith("*")) {
         prefixselector =
-          prefixselector + "," + selectorText.replace("*", prefix);
+          prefixselector + "," + selectorTextone.replace("*", prefix);
       }
       return prefixselector;
     })
     .join(",");
+
+  cssstylerule.selectorText = selectoraftertransform;
+  if (cssstylerule.selectorText.startsWith(prefix)) {
+    return cssstylerule;
+  } else {
+    // console.trace();
+    return {
+      cssText: selectoraftertransform + stylebodyold,
+      selectorText: selectoraftertransform,
+      [Symbol.toStringTag]: "CSSStyleRule"
+    };
+  }
+
   /*
   const prefixselector = prefix + " " + selectorText;
   if (selectorText.startsWith("*")) {
@@ -76,7 +91,6 @@ q-9 p { color: blue !important; }
     cssstylerule.selectorText = prefixselector;
   }
 */
-  return cssstylerule;
 }
 
 export function prefixcssrules(
@@ -88,7 +102,7 @@ export function prefixcssrules(
       if (isCSSStyleRule(cssrule)) {
         return selectoraddprefix(cssrule, prefix);
       } else if (isCSSMediaRule(cssrule)) {
-        prefixcssrules(Array.from(cssrule.cssRules), prefix);
+        prefixcssrules([...cssrule.cssRules], prefix);
         return cssrule;
       } else if (isCSSImportRule(cssrule)) {
         //把url放入
@@ -133,6 +147,7 @@ export function transformcsstext(text: string, prefix: string): string {
   const css = text;
   const cssomold = parsecsstext(css);
   const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
+  console.log(cssomnew);
   //   console.log([css, prefix, cssomold, cssomnew]);
   const cssnewtext = cssrulestocsstext(cssomnew);
   //   console.log([text, cssomold, cssomnew, cssnewtext]);

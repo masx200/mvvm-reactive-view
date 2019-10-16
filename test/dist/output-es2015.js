@@ -1758,23 +1758,34 @@
         return Array$1.from(get(get(styleelement, "sheet"), "cssRules"));
     }
     function selectoraddprefix(cssstylerule, prefix) {
-        var selectorText = cssstylerule.selectorText;
-        var selectorarray = selectorText.split(",");
-        cssstylerule.selectorText = selectorarray.map(selectorText => {
-            var prefixselector = prefix + " " + selectorText;
-            if (selectorText.startsWith("*")) {
-                prefixselector = prefixselector + "," + selectorText.replace("*", prefix);
+        var selectorold = cssstylerule.selectorText;
+        var stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+        var selectorTextss = selectorold;
+        var selectorarray = selectorTextss.split(",");
+        var selectoraftertransform = selectorarray.map(selectorTextone => {
+            var prefixselector = prefix + " " + selectorTextone;
+            if (selectorTextone.startsWith("*")) {
+                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
             }
             return prefixselector;
         }).join(",");
-        return cssstylerule;
+        cssstylerule.selectorText = selectoraftertransform;
+        if (cssstylerule.selectorText.startsWith(prefix)) {
+            return cssstylerule;
+        } else {
+            return {
+                cssText: selectoraftertransform + stylebodyold,
+                selectorText: selectoraftertransform,
+                [Symbol.toStringTag]: "CSSStyleRule"
+            };
+        }
     }
     function prefixcssrules(cssRulesarray, prefix) {
         return cssRulesarray.map(cssrule => {
             if (isCSSStyleRule(cssrule)) {
                 return selectoraddprefix(cssrule, prefix);
             } else if (isCSSMediaRule(cssrule)) {
-                prefixcssrules(Array$1.from(cssrule.cssRules), prefix);
+                prefixcssrules([ ...cssrule.cssRules ], prefix);
                 return cssrule;
             } else if (isCSSImportRule(cssrule)) {
                 savestyleblob(prefix, undefined, cssrule.href);
@@ -1809,6 +1820,7 @@
         var css = text;
         var cssomold = parsecsstext(css);
         var cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
+        console.log(cssomnew);
         var cssnewtext = cssrulestocsstext(cssomnew);
         return cssnewtext;
     }
