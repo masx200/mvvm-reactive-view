@@ -38,6 +38,7 @@ export function parsecsstext(text: string): Array<CSSRule> {
 }
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
+  /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
   //css 选择器可能有多个
   //h1,p,h3,div
   const selectorText = cssstylerule.selectorText;
