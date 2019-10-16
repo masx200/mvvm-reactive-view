@@ -825,10 +825,14 @@ console.log(ref.value);
 <select _value={state}></select>
 ```
 
-### 指令`checked`只是一个简单的`checkbox`表单`input`元素的`checked`值双向绑定语法糖
+### 指令`checked`只是一个简单的`checkbox`或者`radio`表单`input`元素的`checked`值双向绑定语法糖
 
 ```jsx
 <input type="checkbox" _checked={state} />
+```
+
+```jsx
+<input type="radio" _checked={state} />
 ```
 
 # 扩展自定义指令
