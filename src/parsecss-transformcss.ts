@@ -58,17 +58,38 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
     })
     .join(",");
 
-  cssstylerule.selectorText = selectoraftertransform;
+  /*   cssstylerule.selectorText = selectoraftertransform;
   if (cssstylerule.selectorText.startsWith(prefix)) {
     return cssstylerule;
-  } else {
-    // console.trace();
-    return {
-      cssText: selectoraftertransform + stylebodyold,
-      selectorText: selectoraftertransform,
-      [Symbol.toStringTag]: "CSSStyleRule"
-    };
-  }
+  } else { */
+  // console.trace();
+  return {
+    get type() {
+      return;
+    },
+    get parentRule() {
+      return;
+    },
+    get parentStyleSheet() {
+      return;
+    },
+    get style() {
+      return;
+    },
+    get styleMap() {
+      return;
+    },
+    get selectorText() {
+      return selectoraftertransform;
+    },
+    get cssText() {
+      return selectoraftertransform + stylebodyold;
+    },
+    // cssText: selectoraftertransform + stylebodyold,
+    // selectorText: selectoraftertransform,
+    [Symbol.toStringTag]: "CSSStyleRule"
+  };
+  // }
 
   /*
   const prefixselector = prefix + " " + selectorText;
