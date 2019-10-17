@@ -266,26 +266,29 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         // if (!this[attributessymbol]) {
         //   this[attributessymbol] = {};
         // }
-
-        const propreactivestate = this[attributessymbol][name];
-        const attributes = createeleattragentreadwrite(this) as Record<
-          string,
-          any
-        >;
-        if (propreactivestate) {
-          propreactivestate["value"] = attributes[name];
-          /* 当属性改变时要跟ReactiveState同步状态 */
-          /*   set(
+        if (this[readysymbol]) {
+          {
+            const propreactivestate = this[attributessymbol][name];
+            const attributes = createeleattragentreadwrite(this) as Record<
+              string,
+              any
+            >;
+            if (propreactivestate) {
+              propreactivestate["value"] = attributes[name];
+              /* 当属性改变时要跟ReactiveState同步状态 */
+              /*   set(
             get(this, attributessymbol)[name],
             "value,",
             (createeleattragentreadwrite(this) as { [key: string]: any })[
               name
             ] as any */
-          //   );
-          /*   this[attributessymbol][name].value = createeleattragentreadwrite(
+              //   );
+              /*   this[attributessymbol][name].value = createeleattragentreadwrite(
             this
           )[name]; */
-          //   this[attributessymbol][name][dispatchsymbol]();
+              //   this[attributessymbol][name][dispatchsymbol]();
+            }
+          }
         }
       }
     }
