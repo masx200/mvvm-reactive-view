@@ -1,3 +1,4 @@
+const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
 import { ElementAttrs } from "./createelement";
 import { Class } from "./customclass";
 //// import { Class } from "./rendervdomtoreal";
@@ -27,13 +28,13 @@ function createVirtualElement<T extends Class | string | Function>(
 ): Virtualdom<T> {
   props = Object.assign({}, props);
   children = children.flat(1 / 0);
-  const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
+
   const propsentries = Object.entries(props);
   const propsentriesNOTevents = propsentries.filter(
     ([key]) => !(key.startsWith("@") || key.startsWith("on"))
   );
-  const 字母开头的entries = propsentriesNOTevents.filter(([key]) =>
-    字母大小写.test(key[0])
+  const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(
+    ([key]) => Letter_case_and_Chinese.test(key[0])
   );
   const thisarg: Virtualdom<T> = Object.create(null);
   [
@@ -59,10 +60,10 @@ function createVirtualElement<T extends Class | string | Function>(
   Object.assign(thisarg, {
     type,
     bindattr: Object.fromEntries(
-      字母开头的entries.filter(e => isReactiveState(e[1]))
+      Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))
     ),
     props: Object.fromEntries(
-      字母开头的entries.filter(e => !isReactiveState(e[1]))
+      Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))
     ),
     children,
     onevent: Object.fromEntries(
@@ -141,7 +142,7 @@ export default Virtualdom;
 //   constructor(type: T, props: ElementAttrs = {}, children: Vdomchildren = []) {
 //     //对象浅拷贝
 //     props = { ...props };
-//     const 字母大小写 = /[A-Za-z\u4e00-\u9fa5]/;
+//     const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
 //     // console.log(type, props, children);
 //     //添加支持on开头事件绑定写法
 //     const propsentries = Object.entries(props);
@@ -156,24 +157,24 @@ export default Virtualdom;
 // //   const propsentriesNOTevents = propsentries.filter(
 //       ([key]) => !(key.startsWith("@") || key.startsWith("on"))
 //     );
-//     const 字母开头的entries = propsentriesNOTevents.filter(([key]) =>
-//       字母大小写.test(key[0])
+//     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) =>
+//       Letter_case_and_Chinese.test(key[0])
 //     );
 
 //     Object.assign(this, {
 //       type,
 //       bindattr: Object.fromEntries(
 //         //   propsentriesNOTevents
-//           .filter(([key]) => 字母大小写.test(key[0])) //
-// //    字母开头的entries.filter(
+//           .filter(([key]) => Letter_case_and_Chinese.test(key[0])) //
+// //    Entries_beginning_with_a_letter.filter(
 //           e => isReactiveState(e[1])
 //           // e[1] instanceof ReactiveState
 //         )
 //       ),
 //       props: Object.fromEntries(
 //         //   propsentriesNOTevents
-//           .filter(([key]) => 字母大小写.test(key[0])) //
-// //  字母开头的entries.filter(
+//           .filter(([key]) => Letter_case_and_Chinese.test(key[0])) //
+// //  Entries_beginning_with_a_letter.filter(
 //           e => !isReactiveState(e[1])
 //           //    e[1] instanceof ReactiveState
 //         )

@@ -839,6 +839,8 @@ class ReactiveState {
     }
 }
 
+const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
+
 function isVirtualdom(a) {
     return isobject(a) && get(a, isvirtualelement) === isvirtualelement;
 }
@@ -848,10 +850,9 @@ const isvirtualelement = Symbol("isvirtualelement");
 function createVirtualElement(type, props = {}, children = []) {
     props = Object.assign({}, props);
     children = children.flat(1 / 0);
-    const \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z\u4e00-\u9fa5]/;
     const propsentries = Object.entries(props);
     const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
-    const \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(([key]) => \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]));
+    const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
     const thisarg = Object.create(null);
     [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
         defineProperty(thisarg, key, {
@@ -860,8 +861,8 @@ function createVirtualElement(type, props = {}, children = []) {
     });
     Object.assign(thisarg, {
         type: type,
-        bindattr: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
-        props: Object.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
+        bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
+        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))),
         children: children,
         onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
         directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
