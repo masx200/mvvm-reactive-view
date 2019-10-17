@@ -64,27 +64,27 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   } else { */
   // console.trace();
   return {
-    get type() {
-      return cssstylerule.type;
-    },
-    get parentRule() {
-      return cssstylerule.parentRule;
-    },
-    get parentStyleSheet() {
-      return cssstylerule.parentStyleSheet;
-    },
-    get style() {
-      return cssstylerule.style;
-    },
-    get styleMap() {
-      return cssstylerule["styleMap"];
-    },
-    get selectorText() {
-      return selectoraftertransform;
-    },
-    get cssText() {
-      return selectoraftertransform + stylebodyold;
-    },
+     type:
+       cssstylerule.type
+    ,
+    parentRule:
+      cssstylerule.parentRule
+    ,
+    parentStyleSheet:
+       cssstylerule.parentStyleSheet
+    ,
+     style:
+      cssstylerule.style
+    ,
+    styleMap:
+      get( cssstylerule,"styleMap")
+    ,
+    selectorText:
+       selectoraftertransform
+    ,
+    cssText:
+       selectoraftertransform + stylebodyold
+    ,
     // cssText: selectoraftertransform + stylebodyold,
     // selectorText: selectoraftertransform,
     [Symbol.toStringTag]: "CSSStyleRule"
