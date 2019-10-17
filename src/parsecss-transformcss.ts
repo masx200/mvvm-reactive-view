@@ -65,19 +65,19 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   // console.trace();
   return {
     get type() {
-      return;
+      return cssstylerule.type;
     },
     get parentRule() {
-      return;
+      return cssstylerule.parentRule;
     },
     get parentStyleSheet() {
-      return;
+      return cssstylerule.parentStyleSheet;
     },
     get style() {
-      return;
+      return cssstylerule.style;
     },
     get styleMap() {
-      return;
+      return cssstylerule["styleMap"];
     },
     get selectorText() {
       return selectoraftertransform;
