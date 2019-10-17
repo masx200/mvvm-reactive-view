@@ -64,27 +64,13 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   } else { */
   // console.trace();
   return {
-     type:
-       cssstylerule.type
-    ,
-    parentRule:
-      cssstylerule.parentRule
-    ,
-    parentStyleSheet:
-       cssstylerule.parentStyleSheet
-    ,
-     style:
-      cssstylerule.style
-    ,
-    styleMap:
-      get( cssstylerule,"styleMap")
-    ,
-    selectorText:
-       selectoraftertransform
-    ,
-    cssText:
-       selectoraftertransform + stylebodyold
-    ,
+    type: cssstylerule.type,
+    parentRule: cssstylerule.parentRule,
+    parentStyleSheet: cssstylerule.parentStyleSheet,
+    style: cssstylerule.style,
+    styleMap: get(cssstylerule, "styleMap"),
+    selectorText: selectoraftertransform,
+    cssText: selectoraftertransform + stylebodyold,
     // cssText: selectoraftertransform + stylebodyold,
     // selectorText: selectoraftertransform,
     [Symbol.toStringTag]: "CSSStyleRule"
@@ -121,7 +107,9 @@ export function prefixcssrules(
   return cssRulesarray
     .map((cssrule: CSSRule) => {
       if (isCSSStyleRule(cssrule)) {
-        return selectoraddprefix(cssrule, prefix);
+        const resultoutput = selectoraddprefix(cssrule, prefix);
+        // console.log(resultoutput);
+        return resultoutput;
       } else if (isCSSMediaRule(cssrule)) {
         prefixcssrules([...cssrule.cssRules], prefix);
         return cssrule;

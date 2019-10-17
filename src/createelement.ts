@@ -2,7 +2,10 @@ import { Class } from "./customclass";
 import ReactiveState from "./reactivestate";
 import { apply } from "./reflect";
 import { isarray, isfunction, isplainobject, isstring } from "./util";
-import Virtualdom, { Vdomchildren, createVirtualElement } from "./VirtualElement";
+import Virtualdom, {
+  Vdomchildren,
+  createVirtualElement
+} from "./VirtualElement";
 type styleprop =
   | string
   | object

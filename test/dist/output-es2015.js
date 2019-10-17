@@ -262,11 +262,11 @@
     var isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "type") === "checkbox" || get$1(ele, "type") === "radio");
     function objtostylestring(obj) {
         obj = JSON.parse(JSON.stringify(obj));
-        obj = Object$1.fromEntries(Object$1.entries(obj).map(_ref => {
+        var objentries = Object$1.entries(obj).map(_ref => {
             var [key, value] = _ref;
             return [ hyphenate(key).trim(), value ];
-        }));
-        return Object$1.entries(obj).map(_ref2 => {
+        });
+        return objentries.map(_ref2 => {
             var [key, value] = _ref2;
             return key + ":" + value;
         }).join(";");
@@ -333,7 +333,7 @@
                     setattribute(ele, String$1$1(key), classtext);
                     return true;
                 } else {
-                    if (false === v) {
+                    if (false === v || v === null || v === undefined) {
                         removeAttribute(ele, String$1$1(key));
                         return true;
                     }
@@ -778,6 +778,7 @@
             return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
         }
     }
+    var Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
     function isVirtualdom(a) {
         return isobject(a) && get(a, isvirtualelement) === isvirtualelement;
     }
@@ -787,15 +788,14 @@
         var children = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
         props = Object$1.assign({}, props);
         children = children.flat(1 / 0);
-        var \u5b57\u6bcd\u5927\u5c0f\u5199 = /[A-Za-z\u4e00-\u9fa5]/;
         var propsentries = Object$1.entries(props);
         var propsentriesNOTevents = propsentries.filter(_ref5 => {
             var [key] = _ref5;
             return !(key.startsWith("@") || key.startsWith("on"));
         });
-        var \u5b57\u6bcd\u5f00\u5934\u7684entries = propsentriesNOTevents.filter(_ref6 => {
+        var Entries_beginning_with_a_letter = propsentriesNOTevents.filter(_ref6 => {
             var [key] = _ref6;
-            return \u5b57\u6bcd\u5927\u5c0f\u5199.test(key[0]);
+            return Letter_case_and_Chinese.test(key[0]);
         });
         var thisarg = Object$1.create(null);
         [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
@@ -805,8 +805,8 @@
         });
         Object$1.assign(thisarg, {
             type: type,
-            bindattr: Object$1.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => isReactiveState(e[1]))),
-            props: Object$1.fromEntries(\u5b57\u6bcd\u5f00\u5934\u7684entries.filter(e => !isReactiveState(e[1]))),
+            bindattr: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
+            props: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))),
             children: children,
             onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(_ref7 => {
                 var [key] = _ref7;
@@ -864,6 +864,9 @@
             return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
         }
     }
+    function toArray(a) {
+        return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
+    }
     function isvalidvdom(v) {
         if (isstring(v)) {
             return true;
@@ -880,9 +883,6 @@
             return true;
         }
         return flag;
-    }
-    function toArray(a) {
-        return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
     }
     function mount(ele, container) {
         var clear = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
@@ -1787,21 +1787,22 @@
             }
             return prefixselector;
         }).join(",");
-        cssstylerule.selectorText = selectoraftertransform;
-        if (cssstylerule.selectorText.startsWith(prefix)) {
-            return cssstylerule;
-        } else {
-            return {
-                cssText: selectoraftertransform + stylebodyold,
-                selectorText: selectoraftertransform,
-                [Symbol.toStringTag]: "CSSStyleRule"
-            };
-        }
+        return {
+            type: cssstylerule.type,
+            parentRule: cssstylerule.parentRule,
+            parentStyleSheet: cssstylerule.parentStyleSheet,
+            style: cssstylerule.style,
+            styleMap: get(cssstylerule, "styleMap"),
+            selectorText: selectoraftertransform,
+            cssText: selectoraftertransform + stylebodyold,
+            [Symbol.toStringTag]: "CSSStyleRule"
+        };
     }
     function prefixcssrules(cssRulesarray, prefix) {
         return cssRulesarray.map(cssrule => {
             if (isCSSStyleRule(cssrule)) {
-                return selectoraddprefix(cssrule, prefix);
+                var resultoutput = selectoraddprefix(cssrule, prefix);
+                return resultoutput;
             } else if (isCSSMediaRule(cssrule)) {
                 prefixcssrules([ ...cssrule.cssRules ], prefix);
                 return cssrule;
@@ -1861,8 +1862,8 @@
         return _waitloadallstyle.apply(this, arguments);
     }
     function _waitloadallstyle() {
-        _waitloadallstyle = _asyncToGenerator((function*(prefix, _this) {
-            yield Promise$1.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
+        _waitloadallstyle = _asyncToGenerator((function*(prefix, containerthis) {
+            yield Promise$1.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), containerthis)));
         }));
         return _waitloadallstyle.apply(this, arguments);
     }
@@ -1942,37 +1943,37 @@
                     }
                 }
                 connectedCallback() {
-                    var _this2 = this;
+                    var _this = this;
                     return _asyncToGenerator((function*() {
-                        if (!_this2[elementsymbol]) {
-                            _this2[elementsymbol] = render(_this2[vdomsymbol]).flat(Infinity);
+                        if (!_this[elementsymbol]) {
+                            _this[elementsymbol] = render(_this[vdomsymbol]).flat(Infinity);
                         }
-                        if (!_this2[readysymbol]) {
-                            _this2[readysymbol] = true;
-                            var _css = get(_this2.constructor, "css");
-                            var prefix = _this2.tagName.toLowerCase();
+                        if (!_this[readysymbol]) {
+                            _this[readysymbol] = true;
+                            var _css = get(_this.constructor, "css");
+                            var prefix = _this.tagName.toLowerCase();
                             if (_css && componentsstylesheet[prefix]) {
-                                seteletext(_this2, "");
-                                waitloadallstyle(prefix, _this2).then(() => {
-                                    mount(_this2[elementsymbol], _this2, false);
+                                seteletext(_this, "");
+                                waitloadallstyle(prefix, _this).then(() => {
+                                    mount(_this[elementsymbol], _this, false);
                                 });
                             } else {
-                                mount(_this2[elementsymbol], _this2);
+                                mount(_this[elementsymbol], _this);
                             }
                         }
-                        _this2[mountedsymbol].forEach(f => {
+                        _this[mountedsymbol].forEach(f => {
                             setimmediate(f);
                         });
-                        onmounted(_this2);
+                        onmounted(_this);
                     }))();
                 }
                 disconnectedCallback() {
-                    var _this3 = this;
+                    var _this2 = this;
                     return _asyncToGenerator((function*() {
-                        _this3[unmountedsymbol].forEach(f => {
+                        _this2[unmountedsymbol].forEach(f => {
                             setimmediate(f);
                         });
-                        onunmounted(_this3);
+                        onunmounted(_this2);
                     }))();
                 }
                 [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, attributeChangedCallback)](name) {
@@ -2117,25 +2118,25 @@
                 }
             }
             connectedCallback() {
-                var _this4 = this;
+                var _this3 = this;
                 return _asyncToGenerator((function*() {
-                    if (!_this4[readysymbol]) {
-                        _this4[readysymbol] = true;
-                        var attrs = createeleattragentreadwrite(_this4);
+                    if (!_this3[readysymbol]) {
+                        _this3[readysymbol] = true;
+                        var attrs = createeleattragentreadwrite(_this3);
                         if (true === attrs["value"]) {
-                            get(_this4, handletrue).call(_this4);
+                            get(_this3, handletrue).call(_this3);
                         }
                         if (false === attrs["value"]) {
-                            get(_this4, handlefalse).call(_this4);
+                            get(_this3, handlefalse).call(_this3);
                         }
                     }
-                    onmounted(_this4);
+                    onmounted(_this3);
                 }))();
             }
             disconnectedCallback() {
-                var _this5 = this;
+                var _this4 = this;
                 return _asyncToGenerator((function*() {
-                    onunmounted(_this5);
+                    onunmounted(_this4);
                 }))();
             }
             [attributeChangedCallback](name) {
@@ -2292,30 +2293,30 @@
                 }
             }
             disconnectedCallback() {
-                var _this6 = this;
+                var _this5 = this;
                 return _asyncToGenerator((function*() {
-                    onunmounted(_this6);
+                    onunmounted(_this5);
                 }))();
             }
             connectedCallback() {
-                var _this7 = this;
+                var _this6 = this;
                 return _asyncToGenerator((function*() {
-                    if (!_this7[readysymbol]) {
-                        _this7[readysymbol] = true;
-                        var attrs = createeleattragentreadwrite(_this7);
+                    if (!_this6[readysymbol]) {
+                        _this6[readysymbol] = true;
+                        var attrs = createeleattragentreadwrite(_this6);
                         var value = attrs["value"];
                         if (!isarray(value)) {
                             console.log(value);
                             throw new TypeError;
                         }
-                        _this7[listvalueattr]["value"] = value;
-                        _this7[listinnervdom] = value.map((v, index) => ITEMfactory(computed(_this7[listvalueattr], v => v[index]), index));
-                        _this7[listinnerelement] = render(_this7[listinnervdom]);
-                        Object$1.assign(_this7[cached_vdom_symbol], _this7[listinnervdom]);
-                        Object$1.assign(_this7[cached_realele], _this7[listinnerelement]);
-                        mount(_this7[listinnerelement], _this7);
+                        _this6[listvalueattr]["value"] = value;
+                        _this6[listinnervdom] = value.map((v, index) => ITEMfactory(computed(_this6[listvalueattr], v => v[index]), index));
+                        _this6[listinnerelement] = render(_this6[listinnervdom]);
+                        Object$1.assign(_this6[cached_vdom_symbol], _this6[listinnervdom]);
+                        Object$1.assign(_this6[cached_realele], _this6[listinnerelement]);
+                        mount(_this6[listinnerelement], _this6);
                     }
-                    onmounted(_this7);
+                    onmounted(_this6);
                 }))();
             }
         }

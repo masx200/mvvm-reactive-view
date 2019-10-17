@@ -205,8 +205,8 @@ const isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "ty
 
 function objtostylestring(obj) {
     obj = JSON.parse(JSON.stringify(obj));
-    obj = Object.fromEntries(Object.entries(obj).map(([key, value]) => [ hyphenate(key).trim(), value ]));
-    return Object.entries(obj).map(([key, value]) => key + ":" + value).join(";");
+    const objentries = Object.entries(obj).map(([key, value]) => [ hyphenate(key).trim(), value ]);
+    return objentries.map(([key, value]) => key + ":" + value).join(";");
 }
 
 function asserthtmlelement(ele) {
@@ -272,7 +272,7 @@ function createeleattragentreadwrite(ele) {
                 setattribute(ele, String$1(key), classtext);
                 return true;
             } else {
-                if (false === v) {
+                if (false === v || v === null || v === undefined) {
                     removeAttribute(ele, String$1(key));
                     return true;
                 }
@@ -898,6 +898,10 @@ function createElement$1(type, props = {}, ...children) {
     }
 }
 
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
+}
+
 function html(...inargs) {
     return apply(htm, createElement, inargs);
 }
@@ -921,7 +925,8 @@ function isvalidvdom(v) {
 }
 
 function html$1(...args) {
-    const vdom = html(...args);
+    const prevdom = toArray(html(...args));
+    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
     if (isvalidvdom(vdom)) {
         return vdom;
     } else {
@@ -929,10 +934,6 @@ function html$1(...args) {
         console.error(invalid_Virtualdom);
         throw new TypeError;
     }
-}
-
-function toArray(a) {
-    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
 }
 
 function mount(ele, container, clear = true) {
@@ -1910,22 +1911,23 @@ function selectoraddprefix(cssstylerule, prefix) {
         }
         return prefixselector;
     }).join(",");
-    cssstylerule.selectorText = selectoraftertransform;
-    if (cssstylerule.selectorText.startsWith(prefix)) {
-        return cssstylerule;
-    } else {
-        return {
-            cssText: selectoraftertransform + stylebodyold,
-            selectorText: selectoraftertransform,
-            [Symbol.toStringTag]: "CSSStyleRule"
-        };
-    }
+    return {
+        type: cssstylerule.type,
+        parentRule: cssstylerule.parentRule,
+        parentStyleSheet: cssstylerule.parentStyleSheet,
+        style: cssstylerule.style,
+        styleMap: get(cssstylerule, "styleMap"),
+        selectorText: selectoraftertransform,
+        cssText: selectoraftertransform + stylebodyold,
+        [Symbol.toStringTag]: "CSSStyleRule"
+    };
 }
 
 function prefixcssrules(cssRulesarray, prefix) {
     return cssRulesarray.map(cssrule => {
         if (isCSSStyleRule(cssrule)) {
-            return selectoraddprefix(cssrule, prefix);
+            const resultoutput = selectoraddprefix(cssrule, prefix);
+            return resultoutput;
         } else if (isCSSMediaRule(cssrule)) {
             prefixcssrules([ ...cssrule.cssRules ], prefix);
             return cssrule;
@@ -1989,8 +1991,8 @@ function loadlinkstyle(stylelinkelement, container) {
     });
 }
 
-async function waitloadallstyle(prefix, _this) {
-    await Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), _this)));
+async function waitloadallstyle(prefix, containerthis) {
+    await Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), containerthis)));
 }
 
 const readysymbol = Symbol("readystate");
@@ -2455,7 +2457,7 @@ function listmap(list, mapfun) {
     });
 }
 
-var version = "1.3.9";
+var version = "1.3.10";
 
 export { conditon as Condition, extenddirectives as Directives, listmap as ListMap, MountElement, computed, createComponent, createElement, createRef, createstate as createState, createElement as h, html$1 as html, render, useMounted, useUnMounted, version, watch };
 //# sourceMappingURL=index.js.map

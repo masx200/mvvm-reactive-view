@@ -22,6 +22,7 @@ import h from "./createelement";
 import { isReactiveState } from "./reactivestate";
 import { isArray, isnumber, isstring } from "./util";
 import Virtualdom, { isVirtualdom, Vdomchildren } from "./VirtualElement";
+import { toArray } from "./toArray";
 
 // const html = htm.bind(h);
 // function html(
@@ -80,7 +81,9 @@ export default function(
   ...values: any[]
 ): Virtualdom<any> | Vdomchildren;
 export default function(...args: any[]) {
-  const vdom = html(...args);
+  const prevdom = toArray(html(...args));
+
+  const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
   if (isvalidvdom(vdom)) {
     return vdom;
   } else {

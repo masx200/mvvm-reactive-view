@@ -686,8 +686,8 @@
   resolved "https://gitee.com/masx200/deep-observe-agent-proxy.git#e2e4549c55daa34cd804c3ee0e0e4282a922452f"
 
 "@masx200/dom-element-attribute-agent-proxy@https://gitee.com/masx200/dom-element-attribute-agent-proxy.git":
-  version "1.1.18"
-  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#36023323e75f43ff2f64cd2d184ce40d6afcc5dc"
+  version "1.1.19"
+  resolved "https://gitee.com/masx200/dom-element-attribute-agent-proxy.git#431ccb14071c91aaa73c5f6101434de1d9183413"
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
