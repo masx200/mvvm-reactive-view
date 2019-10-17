@@ -12,6 +12,7 @@ import ReactiveState, {
 import { toArray } from "./toArray";
 //import { requestAnimationFrame } from "./directives";
 import { isarray, isFunction } from "./util";
+import { cached_callback_debounced_watchs } from "./cached-map";
 export type CancelWatchfun = () => void;
 export type UnwrapedState = Primitivetype | Exclude<object, Function>;
 
@@ -36,10 +37,20 @@ export function watch<T extends UnwrapedState>(
     const debouncedcallback = debounce(callback);
     const stateandlisteners: [ReactiveState<any>, Function][] = statearray.map(
       state1 => {
-        const listener = () => {
-          //watch的回调函数自动解包
-          debouncedcallback(...statearray.map(r => r.valueOf()));
-        };
+        const listener: Function = (() => {
+          /* 缓存callback和listener */
+          const cachedfun = cached_callback_debounced_watchs.get(callback);
+          if (cachedfun) {
+            return cachedfun;
+          } else {
+            const listenfun = () => {
+              //watch的回调函数自动解包
+              debouncedcallback(...statearray.map(r => r.valueOf()));
+            };
+            cached_callback_debounced_watchs.set(callback, listenfun);
+            return listenfun;
+          }
+        })();
         watchsingle(
           state1,
 
