@@ -46,7 +46,7 @@ import { toArray } from "./toArray";
 import { isArray, isfunction, isobject, isstring } from "./util";
 // import { Class } from "./rendervdomtoreal";
 import Virtualdom from "./VirtualElement";
-const attributessymbol = Symbol("attributes");
+export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
@@ -95,14 +95,14 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
             // console.log(cssnewtext, componentsstylesheet);
           }
         }
-        const defaultProps = get(this.constructor, "defaultProps");
+        // const defaultProps = get(this.constructor, "defaultProps");
         // this.constructor["defaultProps"];
         const attrs: Record<string, any> = createeleattragentreadwrite(this);
         //   const props = {};
-        if (isobject(defaultProps)) {
+        /*    if (isobject(defaultProps)) {
           Object.assign(attrs, defaultProps);
           // Object.assign(props, this.constructor["defaultProps"]);
-        }
+        } */
         if (isobject(propsjson)) {
           Object.assign(attrs, propsjson);
           // Object.assign(props, propsjson);
@@ -263,6 +263,10 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         name: string /* , oldValue: any, newValue: any */
       ) {
         // console.log(this[attributessymbol]);
+        // if (!this[attributessymbol]) {
+        //   this[attributessymbol] = {};
+        // }
+
         const propreactivestate = this[attributessymbol][name];
         const attributes = createeleattragentreadwrite(this) as Record<
           string,

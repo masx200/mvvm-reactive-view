@@ -1,8 +1,26 @@
 import { getAttribute, removeAttribute, setAttribute } from "./dom";
 import { get } from "./reflect";
-import { isFunction } from "./util";
+import { isFunction, isobject } from "./util";
+import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
+import ReactiveState from "./reactivestate";
+import { attributessymbol } from "./createComponent";
 export const attributeChangedCallback = "attributeChangedCallback";
 export class AttrChange extends HTMLElement {
+  [attributessymbol]: Record<string, ReactiveState<any>>;
+  constructor() {
+    super();
+    const defaultProps = get(this.constructor, "defaultProps");
+    // this.constructor["defaultProps"];
+    const attrs: Record<string, any> = createeleattragentreadwrite(this);
+    //   const props = {};
+    if (isobject(defaultProps)) {
+      if (!this[attributessymbol]) {
+        this[attributessymbol] = {};
+      }
+      Object.assign(attrs, defaultProps);
+      // Object.assign(props, this.constructor["defaultProps"]);
+    }
+  }
   //   [attributeChangedCallback](name?: string): void;
   // prototype!: HTMLElement;
   /*  defaultProps?: { [key: string]: any } | undefined;

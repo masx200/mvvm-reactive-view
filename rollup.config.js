@@ -38,7 +38,7 @@ export default [
       resolve(),
       commonjs(),
       typescriptplugin({
-        tsconfig: "tsconfig.json",
+        tsconfig: "./tsconfig.json",
         typescript: typescriptlib
       }),
       terser({

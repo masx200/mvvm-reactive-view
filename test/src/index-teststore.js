@@ -62,4 +62,4 @@ setTimeout(() => {
     const element = vdom.element;
     document.body.appendChild(element);
   });
-}, 10000);
+}, 5000);

@@ -1,6 +1,7 @@
 export declare const innerwatchrecords: unique symbol;
 export declare const innerstatesymbol: unique symbol;
 import { Custom } from "./customclass";
+export declare const attributessymbol: unique symbol;
 export interface Htmlelementconstructor {
     new (): HTMLElement;
     prototype: HTMLElement;

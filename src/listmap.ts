@@ -5,16 +5,17 @@ import { VaildVDom } from "./conditon";
 import { createComponent, Htmlelementconstructor } from "./createComponent";
 import createElement from "./createelement";
 import createstate from "./createstate";
+import { Custom } from "./customclass";
 import { appendchild, getdomchildren, removeNode } from "./dom";
 import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { componentsymbol } from "./iscomponent";
 import mount from "./mount-real-element";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
+import { get, set } from "./reflect";
 import render from "./render-vdom-to-real";
 import { isArray, isfunction, isSet } from "./util";
 import Virtualdom from "./VirtualElement";
-import { get, set } from "./reflect";
 export { listmap as listMap };
 const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
@@ -34,19 +35,41 @@ function listmap(
     console.error(mapfun);
     throw new TypeError();
   }
-  const itemclass = createComponent(props => {
-    const myprops = props as {
-      value: ReactiveState<any>;
-      index: ReactiveState<any>;
-    };
-    const value = myprops.value;
-    const index = myprops.index.valueOf() as number;
-    return mapfun(value, index);
-  });
+  const itemclass = createComponent(
+    Object.assign(
+      (props: Record<string, ReactiveState<any>>) => {
+        const { value: propvalue, index: propindex } = props as {
+          value: ReactiveState<any>;
+          index: ReactiveState<any>;
+        };
+        // const myprops = {propvalue,}
+        const value = propvalue; //myprops.value;
+        const index = propindex.valueOf() as number; //myprops.index.valueOf() as number;
+        return mapfun(value, index);
+      },
+      { defaultProps: { index: 0, value: undefined } }
+    ) as Custom
+    //,/* {defaultProps:{
+
+    //  value
+    // }} */
+  );
   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
+    constructor() {
+      super();
+      /*    const defaultProps = get(this.constructor, "defaultProps");
+      // this.constructor["defaultProps"];
+      const attrs: Record<string, any> = createeleattragentreadwrite(this);
+      //   const props = {};
+      if (isobject(defaultProps)) {
+        Object.assign(attrs, defaultProps);
+        // Object.assign(props, this.constructor["defaultProps"]);
+      } */
+    }
+    static defaultProps = { value: [] };
     [cached_vdom_symbol]: Record<
       number,
       Virtualdom<Htmlelementconstructor>

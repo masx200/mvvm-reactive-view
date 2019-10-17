@@ -15,3 +15,5 @@ import "./index-x.js";
 import "./index1.js";
 import "./index2.js";
 import "./index3.js";
+
+import "./index-test-all-component.js";
