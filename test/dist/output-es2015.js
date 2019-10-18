@@ -1139,26 +1139,29 @@
         Object$1.assign(thisarg, {
             type: type,
             bindattr: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
-            props: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))),
+            props: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(_ref10 => {
+                var [key, value] = _ref10;
+                return [ key, isstring(value) ? value.trim() : value ];
+            })),
             children: children,
-            onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(_ref10 => {
-                var [key] = _ref10;
+            onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(_ref11 => {
+                var [key] = _ref11;
                 return "@" == key[0];
-            }).map(_ref11 => {
-                var [key, value] = _ref11;
+            }).map(_ref12 => {
+                var [key, value] = _ref12;
                 return [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ];
-            }), ...propsentries.filter(_ref12 => {
-                var [key] = _ref12;
+            }), ...propsentries.filter(_ref13 => {
+                var [key] = _ref13;
                 return key.startsWith("on");
-            }).map(_ref13 => {
-                var [key, value] = _ref13;
+            }).map(_ref14 => {
+                var [key, value] = _ref14;
                 return [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ];
             }) ])),
-            directives: Object$1.fromEntries(propsentriesNOTevents.filter(_ref14 => {
-                var [key] = _ref14;
+            directives: Object$1.fromEntries(propsentriesNOTevents.filter(_ref15 => {
+                var [key] = _ref15;
                 return key[0] === "*" || key[0] === "_" || key[0] === "$";
-            }).map(_ref15 => {
-                var [key, value] = _ref15;
+            }).map(_ref16 => {
+                var [key, value] = _ref16;
                 return [ key.slice(1).toLowerCase().trim(), value ];
             }))
         });
@@ -1306,8 +1309,8 @@
             console.error(options);
             throw new TypeError;
         }
-        Object$1.entries(options).forEach(_ref16 => {
-            var [key, value] = _ref16;
+        Object$1.entries(options).forEach(_ref17 => {
+            var [key, value] = _ref17;
             if (typeof value !== "function") {
                 console.error(value);
                 console.error(invalid_Function);
@@ -1403,16 +1406,16 @@
     }
     function removelisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(_ref17 => {
-                var [event, call] = _ref17;
+            get$1(ele, eventlistenerssymbol).forEach(_ref18 => {
+                var [event, call] = _ref18;
                 domremovelisten(ele, event, call);
             });
         }
     }
     function readdlisteners(ele) {
         if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(_ref18 => {
-                var [event, call] = _ref18;
+            get$1(ele, eventlistenerssymbol).forEach(_ref19 => {
+                var [event, call] = _ref19;
                 domaddlisten(ele, event, call);
             });
         }
@@ -1471,8 +1474,8 @@
                 if (isobject(type["defaultProps"])) {
                     vdom.props = JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props)));
                 }
-                var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(_ref19 => {
-                    var [key, value] = _ref19;
+                var propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(_ref20 => {
+                    var [key, value] = _ref20;
                     return [ key, value.value ];
                 })))));
                 _element = createcostumelemet(type, propsjson, vdom.children);
@@ -1507,8 +1510,8 @@
     }
     function handleprops(element, vdom) {
         ((element, vdom) => {
-            Object$1.entries(vdom.directives).forEach(_ref20 => {
-                var [name, value] = _ref20;
+            Object$1.entries(vdom.directives).forEach(_ref21 => {
+                var [name, value] = _ref21;
                 if (isfunction(directive[name])) {
                     directive[name](value, element, vdom);
                 } else {
@@ -1521,8 +1524,8 @@
             Object$1.assign(attribute1, vdom.props);
             set$1(element, virtualdomsymbol, vdom);
             vdom.element = element;
-            Object$1.entries(vdom.bindattr).forEach(_ref21 => {
-                var [key, primitivestate] = _ref21;
+            Object$1.entries(vdom.bindattr).forEach(_ref22 => {
+                var [key, primitivestate] = _ref22;
                 attribute1[key] = primitivestate.valueOf();
                 watch(primitivestate, () => {
                     var state = primitivestate;
@@ -1531,8 +1534,8 @@
                     }
                 });
             });
-            Object$1.entries(vdom.onevent).forEach(_ref22 => {
-                var [event, callbacks] = _ref22;
+            Object$1.entries(vdom.onevent).forEach(_ref23 => {
+                var [event, callbacks] = _ref23;
                 onevent(element, event, callbacks);
             });
         })(element, vdom);
@@ -1765,13 +1768,13 @@
                     }
                     var props = attrs;
                     openctx();
-                    var thisattributess = Object$1.fromEntries(Object$1.entries(props).map(_ref23 => {
-                        var [key, value] = _ref23;
+                    var thisattributess = Object$1.fromEntries(Object$1.entries(props).map(_ref24 => {
+                        var [key, value] = _ref24;
                         return [ key, createstate(value) ];
                     }));
                     this[attributessymbol] = thisattributess;
-                    var readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(_ref24 => {
-                        var [key, value] = _ref24;
+                    var readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(_ref25 => {
+                        var [key, value] = _ref25;
                         return [ key, readonlyproxy(value) ];
                     })));
                     var possiblyvirtualdom;
@@ -1876,8 +1879,8 @@
             }
             if (has(ele, innerwatchrecords)) {
                 var watchrecords = get$1(ele, innerwatchrecords);
-                watchrecords.forEach(_ref25 => {
-                    var [state, callback] = _ref25;
+                watchrecords.forEach(_ref26 => {
+                    var [state, callback] = _ref26;
                     var eventlistener = cached_callback_eventlistner.get(callback);
                     if (eventlistener) {
                         state[addonelistner](eventlistener);
@@ -1901,8 +1904,8 @@
             }
             if (has(ele, innerwatchrecords)) {
                 var watchrecords = get$1(ele, innerwatchrecords);
-                watchrecords.forEach(_ref26 => {
-                    var [state, callback] = _ref26;
+                watchrecords.forEach(_ref27 => {
+                    var [state, callback] = _ref27;
                     var eventlistener = cached_callback_eventlistner.get(callback);
                     if (eventlistener) {
                         state[removeonelistner](eventlistener);

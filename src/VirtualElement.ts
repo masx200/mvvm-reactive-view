@@ -5,7 +5,7 @@ import { Class } from "./customclass";
 import { merge_entries } from "./merge-entries";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { defineProperty, get } from "./reflect";
-import { isobject } from "./util";
+import { isobject, isstring } from "./util";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
 // }//
@@ -63,7 +63,9 @@ function createVirtualElement<T extends Class | string | Function>(
       Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))
     ),
     props: Object.fromEntries(
-      Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))
+      Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(
+        ([key, value]) => [key, isstring(value) ? value.trim() : value]
+      )
     ),
     children,
     onevent: Object.fromEntries(

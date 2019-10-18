@@ -1,6 +1,6 @@
 const {Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
 
-var version = "1.3.12";
+var version = "1.3.13";
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -1252,7 +1252,7 @@ function createVirtualElement(type, props = {}, children = []) {
     Object.assign(thisarg, {
         type: type,
         bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
-        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1]))),
+        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
         children: children,
         onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
         directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
