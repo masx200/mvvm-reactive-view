@@ -10,7 +10,7 @@ import {
   MountElement,
   useMounted,
   useUnMounted
-} from "../../dist/index.min.js";
+} from "./mvvm-view";
 console.log([h, createElement]);
 function useMousePosition() {
   const x = createState(0);

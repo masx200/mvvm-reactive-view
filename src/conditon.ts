@@ -2,7 +2,9 @@ import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import {
   AttrChange,
   attributeChangedCallback,
-  firstinstalledcallback
+  firstinstalledcallback,
+  connectedCallback,
+  disconnectedCallback
 } from "./attrchange";
 import { Htmlelementconstructor } from "./createComponent";
 import createElement from "./createelement";
@@ -144,7 +146,9 @@ export default function(
       }
     }
     async connectedCallback() {
-      super.connectedCallback();
+      connectedCallback(this);
+      //   super.connectedCallback();
+
       /*   if (!this[readysymbol]) {
         // createApp(this[elementsymbol], this);
         this[readysymbol] = true;
@@ -163,8 +167,9 @@ export default function(
       //
     }
     async disconnectedCallback() {
+      disconnectedCallback(this);
       //   onunmounted(this);
-      super.connectedCallback();
+      //   super.connectedCallback();
     }
 
     [attributeChangedCallback](

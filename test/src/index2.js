@@ -9,7 +9,7 @@ import {
   html,
   MountElement,
   watch
-} from "../../dist/index.min.js";
+} from './mvvm-view';
 console.log([h, createElement]);
 /* console.log([
   condition,

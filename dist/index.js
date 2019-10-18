@@ -1,9 +1,13 @@
 const {Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
 
-var version = "1.3.11";
+var version = "1.3.12";
 
 function isprimitive(a) {
-    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || typeof a === "bigint";
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
+}
+
+function isbigint(a) {
+    return typeof a === "bigint";
 }
 
 function issymbol(a) {
@@ -1284,7 +1288,7 @@ function createElement(type, props = {}, ...children) {
     }
 }
 
-function mount(ele, container, clear = true) {
+function mountrealelement(ele, container, clear = true) {
     if (clear) {
         seteletext(container, "");
     }
@@ -1582,7 +1586,7 @@ function render(vdom, namespace) {
                 element = createmathelement();
             } else if ("" === type || type === "html") {
                 const fragmentnode = createDocumentFragment();
-                mount(render(vdom.children), fragmentnode);
+                mountrealelement(render(vdom.children), fragmentnode);
                 return fragmentnode;
             } else {
                 element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
@@ -1607,7 +1611,7 @@ function render(vdom, namespace) {
         if (type && (isfunction(type) || isstring(type))) {
             if (!iscomponent(type)) {
                 if (element) {
-                    mount(vdom.children.map(e => {
+                    mountrealelement(vdom.children.map(e => {
                         if (type === "svg" && isVirtualdom(e)) {
                             return render(e, svgnamespace);
                         } else if (type === "math" && isVirtualdom(e)) {
@@ -1690,9 +1694,9 @@ function MountElement(vdom, container) {
     }
     const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
-        mount(render(elesarray), container);
+        mountrealelement(render(elesarray), container);
     } else if (isNode(vdom) || isNodeArray(vdom)) {
-        mount(elesarray, container);
+        mountrealelement(elesarray, container);
     } else {
         console.error(vdom);
         console.error(invalid_Virtualdom);
@@ -1964,23 +1968,23 @@ function createComponent(custfun) {
                 if (css && componentsstylesheet[prefix]) {
                     seteletext(this, "");
                     waitloadallstyle(prefix, this).then(() => {
-                        mount(this[elementsymbol], this, false);
+                        mountrealelement(this[elementsymbol], this, false);
                     });
                 } else {
-                    mount(this[elementsymbol], this);
+                    mountrealelement(this[elementsymbol], this);
                 }
             }
             async connectedCallback() {
+                connectedCallback(this);
                 this[mountedsymbol].forEach(f => {
                     setimmediate(f);
                 });
-                super.connectedCallback();
             }
             async disconnectedCallback() {
+                disconnectedCallback(this);
                 this[unmountedsymbol].forEach(f => {
                     setimmediate(f);
                 });
-                super.disconnectedCallback();
             }
             [attributeChangedCallback](name) {
                 if (this[readysymbol]) {
@@ -2067,6 +2071,14 @@ var _a$1;
 const attributeChangedCallback = Symbol("attributeChanged");
 
 const firstinstalledcallback = Symbol("firstinstalled");
+
+function connectedCallback(componentelement) {
+    AttrChange.prototype.connectedCallback.call(componentelement);
+}
+
+function disconnectedCallback(componentelement) {
+    AttrChange.prototype.disconnectedCallback.call(componentelement);
+}
 
 class AttrChange extends HTMLElement {
     constructor() {
@@ -2164,7 +2176,7 @@ function conditon(conditon, iftrue, iffalse) {
                     this[falseelesymbol] = render(this[falsevdomsymbol]);
                 }
                 const elementtomount = this[falseelesymbol];
-                mount(elementtomount, this);
+                mountrealelement(elementtomount, this);
                 onmounted(elementtomount);
                 if (this[trueelesymbol]) {
                     onunmounted(this[trueelesymbol]);
@@ -2178,7 +2190,7 @@ function conditon(conditon, iftrue, iffalse) {
                     this[trueelesymbol] = render(this[truevdomsymbol]);
                 }
                 const elementtomount = this[trueelesymbol];
-                mount(elementtomount, this);
+                mountrealelement(elementtomount, this);
                 onmounted(elementtomount);
                 if (this[falseelesymbol]) {
                     onunmounted(this[falseelesymbol]);
@@ -2195,10 +2207,10 @@ function conditon(conditon, iftrue, iffalse) {
             }
         }
         async connectedCallback() {
-            super.connectedCallback();
+            connectedCallback(this);
         }
         async disconnectedCallback() {
-            super.connectedCallback();
+            disconnectedCallback(this);
         }
         [attributeChangedCallback](name) {
             if (this[readysymbol]) {
@@ -2402,7 +2414,7 @@ function listmap(list, mapfun) {
             }
         }
         async disconnectedCallback() {
-            super.disconnectedCallback();
+            disconnectedCallback(this);
         }
         [firstinstalledcallback]() {
             const attrs = createeleattragentreadwrite(this);
@@ -2416,10 +2428,10 @@ function listmap(list, mapfun) {
             this[listinnerelement] = render(this[listinnervdom]);
             Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
             Object.assign(this[cached_realele], this[listinnerelement]);
-            mount(this[listinnerelement], this);
+            mountrealelement(this[listinnerelement], this);
         }
         async connectedCallback() {
-            super.connectedCallback();
+            connectedCallback(this);
         }
     }
     ListMap.defaultProps = {
@@ -2475,22 +2487,55 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
+const cached_class_element = Symbol("cached_class_element");
+
+const switch_mount_symbol = Symbol("switch_mount");
+
 function switchable(funstate) {
-    var _a, _b;
+    var _a, _b, _c;
+    if (!isReactiveState(funstate)) {
+        console.error(funstate);
+        throw new TypeError;
+    }
     class Switchable extends AttrChange {
         constructor() {
             super(...arguments);
-            this[_b] = false;
+            this[_a] = new Map;
+            this[_c] = false;
         }
         async disconnectedCallback() {
-            super.disconnectedCallback();
+            disconnectedCallback(this);
         }
-        [(_a = componentsymbol, _b = readysymbol, firstinstalledcallback)]() {}
+        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
+            if (!isclassextendsHTMLElement(eleclass)) {
+                console.error(eleclass);
+                throw new TypeError;
+            }
+            const eleme = this[cached_class_element].get(eleclass);
+            if (eleme) {
+                mountrealelement(eleme, this);
+                return;
+            } else {
+                const elementreal = render(h(eleclass));
+                this[cached_class_element].set(eleclass, elementreal);
+                mountrealelement(elementreal, this);
+                return;
+            }
+        }
+        [firstinstalledcallback]() {
+            const callmountswitch = () => {
+                this[switch_mount_symbol](funstate.valueOf());
+            };
+            callmountswitch();
+            watch(funstate, () => {
+                callmountswitch();
+            });
+        }
         async connectedCallback() {
-            super.connectedCallback();
+            connectedCallback(this);
         }
     }
-    Switchable[_a] = componentsymbol;
+    Switchable[_b] = componentsymbol;
     return h(Switchable);
 }
 

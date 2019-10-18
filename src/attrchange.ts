@@ -6,6 +6,28 @@ import { readysymbol } from "./readysymbol";
 import { onunmounted, onmounted } from "./element-onmount-unmount";
 export const attributeChangedCallback = Symbol("attributeChanged");
 export const firstinstalledcallback = Symbol("firstinstalled");
+/* 
+
+ super.disconnectedCallback();
+
+ 被babel转换之后这句就没了?
+
+  connectedCallback() {
+                return _asyncToGenerator((function*() {}
+                ))();
+            }
+            disconnectedCallback() {
+                return _asyncToGenerator((function*() {}
+                ))();
+            }
+*/
+export function connectedCallback(componentelement: HTMLElement) {
+  AttrChange.prototype.connectedCallback.call(componentelement);
+}
+
+export function disconnectedCallback(componentelement: HTMLElement) {
+  AttrChange.prototype.disconnectedCallback.call(componentelement);
+}
 export class AttrChange extends HTMLElement {
   //   abstract [firstinstalledcallback]();
   async disconnectedCallback() {

@@ -7,7 +7,7 @@ import {
   h,
   MountElement,
   watch
-} from "../../dist/index.min.js";
+} from './mvvm-view';
 console.log([h, createElement]);
 const lirefs = [];
 // console.log()

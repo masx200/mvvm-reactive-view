@@ -78,6 +78,7 @@ https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
 ```js
 import {
+  Switchable,
   ListMap,
   computed,
   createComponent,
@@ -102,6 +103,7 @@ import {
 
 ```js
 import {
+  Switchable,
   ListMap,
   computed,
   createComponent,
@@ -205,7 +207,7 @@ https://tc39.es/proposal-flatMap/
     [
       "@babel/plugin-transform-react-jsx",
       {
-        "pragma": "createElement",
+        "pragma": "h",
         "pragmaFrag": "\"\""
       }
     ],
@@ -550,7 +552,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
 ```
 
-## 对于不接收`props`和`children` 参数,且不使用局部`css`的组件,甚至可以不使用`createComponent`
+## 对于不接收`props`和`children` 参数,且不使用局部`css`的组件,没有副作用的纯函数,甚至可以不使用`createComponent`
 
 ```jsx
 function App1() {
@@ -704,6 +706,32 @@ const vdom = (
   </>
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
+# 可自由切换的组件,配合前端路由使用更合适
+
+函数`Switchable`用来生成可自由切换组件的`虚拟DOM`
+
+```jsx
+const com1 = createComponent(() => {
+  return <h1>component 1</h1>;
+});
+const com2 = createComponent(() => {
+  return <h1>component 2</h1>;
+});
+const com3 = createComponent(() => {
+  return <h1>component 3</h1>;
+});
+const mystate = createState(com1);
+const vdom = Switchable(mystate);
+const element = render(vdom);
+document.body.appendChild(element);
+setTimeout(() => {
+  mystate.value = com2;
+  setTimeout(() => {
+    mystate.value = com3;
+  }, 2000);
+}, 2000);
 ```
 
 # 支持元素的 `class` 属性赋值 `Set` 类型,自动转成 字符串
@@ -980,7 +1008,14 @@ interface Custom {
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-type UnwrapedState = string | number | boolean | undefined | object | bigint;
+type UnwrapedState =
+  | string
+  | number
+  | boolean
+  | undefined
+  | object
+  | bigint
+  | Function;
 class ReactiveState<T extends UnwrapedState> {
   constructor(init?: T);
   readonly [Symbol.toStringTag] = "ReactiveState";
@@ -1068,4 +1103,12 @@ interface Virtualdom<T extends Class | string | Function> {
   onevent: Record<string, Array<EventListener>>;
   bindattr: Record<string, ReactiveState<any>>;
 }
+```
+
+## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
+
+```ts
+function Switchable(
+  funstate: ReactiveState<Htmlelementconstructor>
+): Virtualdom<Htmlelementconstructor>;
 ```

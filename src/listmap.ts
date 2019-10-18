@@ -2,7 +2,9 @@ import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import {
   AttrChange,
   attributeChangedCallback,
-  firstinstalledcallback
+  firstinstalledcallback,
+  connectedCallback,
+  disconnectedCallback
 } from "./attrchange";
 import computed from "./computed";
 import { VaildVDom } from "./conditon";
@@ -151,7 +153,8 @@ function listmap(
     }
     async disconnectedCallback() {
       //   onunmounted(this);
-      super.disconnectedCallback();
+      //   super.disconnectedCallback();
+      disconnectedCallback(this);
     }
     [firstinstalledcallback]() {
       const attrs = createeleattr(this);
@@ -185,7 +188,7 @@ function listmap(
         // this[listlengthsymbol] = value.length;
       } */
       //   onmounted(this);
-      super.connectedCallback();
+      connectedCallback(this);
     }
   }
   return createElement(ListMap, { value: list });

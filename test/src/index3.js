@@ -11,7 +11,7 @@ import {
   useMounted,
   useUnMounted,
   watch
-} from "../../dist/index.min.js";
+} from './mvvm-view';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import mycss from "./test.css";

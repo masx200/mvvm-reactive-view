@@ -9,7 +9,7 @@ import {
   html,
   MountElement,
   watch
-} from "../../dist/index.min.js";
+} from './mvvm-view';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";

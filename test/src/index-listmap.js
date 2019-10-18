@@ -13,7 +13,7 @@ import {
   MountElement,
   // @ts-ignore
   watch
-} from "../../dist/index.min.js";
+} from './mvvm-view';
 const refarray = [];
 const liststate = createState(
   Array(10)

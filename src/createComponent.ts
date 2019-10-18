@@ -4,7 +4,9 @@ import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-pr
 import {
   AttrChange,
   attributeChangedCallback,
-  firstinstalledcallback
+  firstinstalledcallback,
+  connectedCallback,
+  disconnectedCallback
 } from "./attrchange";
 import { cached_create_componet } from "./cached-map";
 import {
@@ -245,6 +247,7 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         }
       }
       async connectedCallback() {
+        connectedCallback(this);
         // if (!this[elementsymbol]) {
         //   this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
         // }
@@ -258,15 +261,16 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
           setimmediate(f);
         });
         // onmounted(this);
-        super.connectedCallback();
+        // super.connectedCallback();
       }
       async disconnectedCallback() {
+        disconnectedCallback(this);
         this[unmountedsymbol].forEach(f => {
           setimmediate(f);
         });
 
         // onunmounted(this);
-        super.disconnectedCallback();
+        // super.disconnectedCallback();
       }
       [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */

@@ -40,3 +40,5 @@ export default function<
   );
   return container;
 }
+import mountrealelement from "./mount-real-element";
+export { mountrealelement };
