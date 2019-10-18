@@ -80,8 +80,8 @@ function createstate<T extends UnwrapedState>(
             console.error(value);
             console.error(init);
             console.error(invalid_primitive_or_object_state);
-            //   throw TypeError();
-            return false;
+            throw TypeError();
+            // return false;
           }
         },
         setPrototypeOf() {

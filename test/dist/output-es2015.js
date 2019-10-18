@@ -853,8 +853,11 @@
             if (R(e) || W(e)) return Nn(new v(new Ve(e), {
                 defineProperty: () => !1,
                 deleteProperty: () => !1,
-                set: (t, n, r) => !("value" !== n || !(R(r) && R(e) || W(r) && W(e))) && (t[n] !== r && (rt(t, n, r), 
-                t[Be]()), !0),
+                set(t, n, r) {
+                    if ("value" === n && (R(r) && R(e) || W(r) && W(e))) return t[n] !== r && (rt(t, n, r), 
+                    t[Be]()), !0;
+                    throw E();
+                },
                 setPrototypeOf: () => !1
             }));
             if (We(e)) return t(e.valueOf());
@@ -935,8 +938,10 @@
                     set: (e, n, r) => {
                         We(r) && (r = r.valueOf());
                         var i = X(e, "value");
-                        return "value" === n && K(r) && (F(t) && F(r) || !F(t) && !F(r)) ? (rt(e, n, r), 
-                        e[Be](), !0) : !et(e, n) && (rt(i, n, r), e[Be](a(n)), !0);
+                        if ("value" === n && K(r) && (F(t) && F(r) || !F(t) && !F(r))) return rt(e, n, r), 
+                        e[Be](), !0;
+                        if (et(e, n)) throw E();
+                        return rt(i, n, r), e[Be](a(n)), !0;
                     }
                 };
                 return new v(i, o);

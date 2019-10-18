@@ -1822,7 +1822,7 @@ function handleobjectstate(init) {
             console.error(value);
             console.error(init);
             console.error(invalid_primitive_or_object_state);
-            return false;
+            throw TypeError();
         }
     };
     return new Proxy(reactive, objproxyhandler);
@@ -1856,7 +1856,7 @@ function createstate$1(init) {
                     console.error(value);
                     console.error(init);
                     console.error(invalid_primitive_or_object_state);
-                    return false;
+                    throw TypeError();
                 }
             },
             setPrototypeOf() {
