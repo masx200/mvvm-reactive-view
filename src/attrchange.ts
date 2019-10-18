@@ -1,9 +1,29 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
 import { getAttribute, removeAttribute, setAttribute } from "./dom";
 import { get } from "./reflect";
-import { isFunction, isobject } from "./util";
-export const attributeChangedCallback = "attributeChangedCallback";
+import { isFunction, isobject, isfunction } from "./util";
+import { readysymbol } from "./readysymbol";
+import { onunmounted, onmounted } from "./element-onmount-unmount";
+export const attributeChangedCallback = Symbol("attributeChanged");
+export const firstinstalledcallback = Symbol("firstinstalled");
 export class AttrChange extends HTMLElement {
+  //   abstract [firstinstalledcallback]();
+  async disconnectedCallback() {
+    onunmounted(this);
+  }
+  async connectedCallback() {
+    if (!this[readysymbol]) {
+      this[readysymbol] = true;
+      const callback = get(this, firstinstalledcallback);
+      if (isfunction(callback)) {
+        // get(this,firstinstalledcallback)
+        callback.call(this);
+      }
+    }
+    onmounted(this);
+    // onmounted(this);
+  }
+  [readysymbol] = false;
   // [attributessymbol]: Record<string, ReactiveState<any>>;
   constructor() {
     super();

@@ -1,12 +1,12 @@
 export const { requestAnimationFrame } = window;
 import { setelehtml, seteletext } from "./dom";
-import { ExtendOptions } from "./extend-directive";
+import extenddirectives, { ExtendOptions } from "./extend-directive";
 import { isconnected } from "./isconnected";
 import ReactiveState, { isReactiveState } from "./reactivestate";
+import { apply, set } from "./reflect";
 import { isfunction, isobject, isstring } from "./util";
-import { watch } from "./watch";
-import { set, apply } from "./reflect";
 import Virtualdom from "./VirtualElement";
+import { watch } from "./watch";
 
 const directive: ExtendOptions = {
   ref(ref: object | Function, ele: Element, _vdom: Virtualdom<any>) {
@@ -25,7 +25,6 @@ const directive: ExtendOptions = {
     }
   }
 };
-import extenddirectives from "./extend-directive";
 extenddirectives({
   html(
     html: string | ReactiveState<any>,

@@ -1,7 +1,7 @@
 import { invalid_Function } from "./context-mounted-unmounted";
 import directives from "./directives";
-import Virtualdom from "./VirtualElement";
 import { isplainobject } from "./util";
+import Virtualdom from "./VirtualElement";
 export interface Extendfun {
   (
     value: any,

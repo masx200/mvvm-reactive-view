@@ -1,5 +1,9 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import { AttrChange, attributeChangedCallback } from "./attrchange";
+import {
+  AttrChange,
+  attributeChangedCallback,
+  firstinstalledcallback
+} from "./attrchange";
 import computed from "./computed";
 import { VaildVDom } from "./conditon";
 import { createComponent, Htmlelementconstructor } from "./createComponent";
@@ -7,7 +11,6 @@ import createElement from "./createelement";
 import createstate from "./createstate";
 import { Custom } from "./customclass";
 import { appendchild, getdomchildren, removeNode } from "./dom";
-import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { componentsymbol } from "./iscomponent";
 import mount from "./mount-real-element";
 import ReactiveState, { isReactiveState } from "./reactivestate";
@@ -58,17 +61,17 @@ function listmap(
     createElement(itemclass, { value, index });
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
-    constructor() {
-      super();
-      /*    const defaultProps = get(this.constructor, "defaultProps");
-      // this.constructor["defaultProps"];
-      const attrs: Record<string, any> = createeleattragentreadwrite(this);
-      //   const props = {};
-      if (isobject(defaultProps)) {
-        Object.assign(attrs, defaultProps);
-        // Object.assign(props, this.constructor["defaultProps"]);
-      } */
-    }
+    // /* constructor() {
+    //   super();
+    //   /*    const defaultProps = get(this.constructor, "defaultProps");
+    //   // this.constructor["defaultProps"];
+    //   const attrs: Record<string, any> = createeleattragentreadwrite(this);
+    //   //   const props = {};
+    //   if (isobject(defaultProps)) {
+    //     Object.assign(attrs, defaultProps);
+    //     // Object.assign(props, this.constructor["defaultProps"]);
+    //   } */
+    // } */
     static defaultProps = { value: [] };
     [cached_vdom_symbol]: Record<
       number,
@@ -147,37 +150,42 @@ function listmap(
       }
     }
     async disconnectedCallback() {
-      onunmounted(this);
+      //   onunmounted(this);
+      super.disconnectedCallback();
+    }
+    [firstinstalledcallback]() {
+      const attrs = createeleattr(this);
+      const value: any[] = attrs["value"];
+
+      if (!isArray(value)) {
+        console.log(value);
+        throw new TypeError();
+      }
+      /* 挂载时同步一次 */
+      // this[listvalueattr]["value"] = value;
+      set(this[listvalueattr], "value", value);
+      this[listinnervdom] = value.map((v, index) =>
+        ITEMfactory(
+          computed(this[listvalueattr], v => (v as any[])[index] as any),
+
+          index
+        )
+      );
+      this[listinnerelement] = render(this[listinnervdom]);
+
+      Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
+      Object.assign(this[cached_realele], this[listinnerelement]);
+      mount(this[listinnerelement], this);
     }
     async connectedCallback() {
-      if (!this[readysymbol]) {
+      /*   if (!this[readysymbol]) {
         this[readysymbol] = true;
 
-        const attrs = createeleattr(this);
-        const value: any[] = attrs["value"];
-
-        if (!isArray(value)) {
-          console.log(value);
-          throw new TypeError();
-        }
-        /* 挂载时同步一次 */
-        // this[listvalueattr]["value"] = value;
-        set(this[listvalueattr], "value", value);
-        this[listinnervdom] = value.map((v, index) =>
-          ITEMfactory(
-            computed(this[listvalueattr], v => (v as any[])[index] as any),
-
-            index
-          )
-        );
-        this[listinnerelement] = render(this[listinnervdom]);
-
-        Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
-        Object.assign(this[cached_realele], this[listinnerelement]);
-        mount(this[listinnerelement], this);
+       
         // this[listlengthsymbol] = value.length;
-      }
-      onmounted(this);
+      } */
+      //   onmounted(this);
+      super.connectedCallback();
     }
   }
   return createElement(ListMap, { value: list });

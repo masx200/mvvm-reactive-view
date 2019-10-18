@@ -1,7 +1,12 @@
 export const innerwatchrecords = Symbol("innerwatchrecord");
 export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { AttrChange, attributeChangedCallback } from "./attrchange";
+import {
+  AttrChange,
+  attributeChangedCallback,
+  firstinstalledcallback
+} from "./attrchange";
+import { cached_create_componet } from "./cached-map";
 import {
   closectx,
   getMounted,
@@ -14,7 +19,6 @@ import {
 import createstate from "./createstate";
 import { Custom } from "./customclass";
 import { seteletext } from "./dom";
-import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { isvalidvdom } from "./html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
@@ -24,15 +28,15 @@ import mount from "./mount-real-element";
 import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
 import {
   /* parsecsstext,
-            prefixcssrules,
-            cssrulestocsstext, */
+                prefixcssrules,
+                cssrulestocsstext, */
   //   savestyleblob,
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
   registercssprefix,
   /*  loadlinkstyle,
-            createlinkstylesheet */
+                createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
 } from "./parsecss-transformcss";
@@ -57,7 +61,6 @@ export interface Htmlelementconstructor {
   defaultProps?: Record<string, any>;
   css?: string;
 }
-import { cached_create_componet } from "./cached-map";
 export function createComponent(custfun: Custom): Htmlelementconstructor {
   if (isfunction(custfun)) {
     const cached_class = cached_create_componet.get(custfun);
@@ -198,66 +201,72 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
       [vdomsymbol]: Array<
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
-
-      async connectedCallback() {
+      [firstinstalledcallback]() {
         if (!this[elementsymbol]) {
           this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
         }
-        if (!this[readysymbol]) {
-          this[readysymbol] = true;
-          /* 这段代码只在初始化时执行一次 */
-          //   mount(this[elementsymbol], this, false);
 
-          const css = get(this.constructor, "css");
-          const prefix = this.tagName.toLowerCase();
-          if (css && componentsstylesheet[prefix]) {
-            /* 先清空当前组件 的children */
+        const css = get(this.constructor, "css");
+        const prefix = this.tagName.toLowerCase();
+        if (css && componentsstylesheet[prefix]) {
+          /* 先清空当前组件 的children */
 
-            seteletext(this, "");
-            /* 应该要等待css加载完成之后再渲染出来,否则会有页面跳动 */
-            /* 是css里面的@import导致的 */
-            /* 挂载样式到组件最前面 */
-            //   console.log(componentsstylesheet[prefix]);
-            // if (componentsstylesheet[prefix]) {
-            /* const stylelinkelement = createlinkstylesheet(
+          seteletext(this, "");
+          /* 应该要等待css加载完成之后再渲染出来,否则会有页面跳动 */
+          /* 是css里面的@import导致的 */
+          /* 挂载样式到组件最前面 */
+          //   console.log(componentsstylesheet[prefix]);
+          // if (componentsstylesheet[prefix]) {
+          /* const stylelinkelement = createlinkstylesheet(
               componentsstylesheet[prefix]
             ); */
-            /*   stylelinkelement.onload = () => {
+          /*   stylelinkelement.onload = () => {
               mount(this[elementsymbol], this, false);
             };
             stylelinkelement.onerror = () => {
               mount(this[elementsymbol], this, false);
             }; */
-            // insertfirst(this, stylelinkelement);
-            // }
-            /*  Promise.all(
+          // insertfirst(this, stylelinkelement);
+          // }
+          /*  Promise.all(
               [...componentsstylesheet[prefix]].map(styleurl =>
                 loadlinkstyle(createlinkstylesheet(styleurl), this)
               )
             )
 */
-            waitloadallstyle(prefix, this).then(() => {
-              //   console.log("style load all");
-              //   console.log("mount1");
-              mount(this[elementsymbol], this, false);
-            });
-          } else {
-            // console.log("mount2");
-            mount(this[elementsymbol], this);
-          }
+          waitloadallstyle(prefix, this).then(() => {
+            //   console.log("style load all");
+            //   console.log("mount1");
+            mount(this[elementsymbol], this, false);
+          });
+        } else {
+          // console.log("mount2");
+          mount(this[elementsymbol], this);
         }
+      }
+      async connectedCallback() {
+        // if (!this[elementsymbol]) {
+        //   this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
+        // }
+        //    /*  if (!this[readysymbol]) {
+        //       this[readysymbol] = true;
+        //       /* 这段代码只在初始化时执行一次 */
+        //       //   mount(this[elementsymbol], this, false);
+        //     } */
         //把mounted callback 异步执行
         this[mountedsymbol].forEach(f => {
           setimmediate(f);
         });
-        onmounted(this);
+        // onmounted(this);
+        super.connectedCallback();
       }
       async disconnectedCallback() {
         this[unmountedsymbol].forEach(f => {
           setimmediate(f);
         });
 
-        onunmounted(this);
+        // onunmounted(this);
+        super.disconnectedCallback();
       }
       [attributeChangedCallback](
         name: string /* , oldValue: any, newValue: any */

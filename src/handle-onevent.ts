@@ -1,8 +1,8 @@
 import { invalid_Function } from "./context-mounted-unmounted";
 import { domaddlisten, domremovelisten } from "./dom";
+import { get, has, set } from "./reflect";
 import { toArray } from "./toArray";
 import { /* isArray, */ isfunction } from "./util";
-import { has, set, get } from "./reflect";
 export const eventlistenerssymbol = Symbol("eventlisteners");
 export default function(
   element: Element | Node,

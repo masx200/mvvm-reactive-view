@@ -3,24 +3,20 @@
 > {
   (...args: T[]): any;
 } */
+import computed from "./computed";
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function, usestste } from "./context-mounted-unmounted";
-import ReactiveState, {
-  dispatchsymbol,
-  isReactiveState
-} from "./reactivestate";
+import ReactiveState, { dispatchsymbol, isReactiveState } from "./reactivestate";
 import readonlyproxy from "./readonlyproxy";
 import {
-  apply,
-  //   getPrototypeOf
-  //   set
-  defineProperty,
-  //   deleteProperty,
-  get,
-  getOwnPropertyDescriptor,
-  //   getOwnPropertyDescriptor,
-  has,
-  ownKeys
+apply,
+    //   getPrototypeOf
+    //   set
+    defineProperty,
+    //   deleteProperty,
+    get, getOwnPropertyDescriptor,
+    //   getOwnPropertyDescriptor,
+    has, ownKeys
 } from "./reflect";
 import { toArray } from "./toArray";
 import { isArray, isFunction, isobject, isprimitive, issymbol } from "./util";
@@ -165,3 +161,5 @@ export function getproperyreadproxy(a: object) {
     }
   });
 }
+export { computed };
+

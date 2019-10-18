@@ -1,4 +1,4 @@
-import { isString, isnumber, isboolean, isundefined } from "./util";
+import { isboolean, isnumber, isString, isundefined } from "./util";
 export type Primitivetype = string | number | boolean | undefined | bigint;
 export default function(a: any): a is Primitivetype {
   return (

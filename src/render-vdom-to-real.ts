@@ -2,21 +2,14 @@ import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { createcostumelemet } from "./createcostumelemet";
 import directives from "./directives";
 import {
-  changetext,
-  createDocumentFragment,
-  createElementNS,
-  createmathelement,
-  //   createnonescript,
-  createnativeelement,
-  createsvgelement,
-  createtextnode,
-  mathnamespace,
-  svgnamespace
+changetext, createDocumentFragment, createElementNS, createmathelement,
+    //   createnonescript,
+    createnativeelement, createsvgelement, createtextnode, mathnamespace, svgnamespace
 } from "./dom";
+import onevent /*  eventlistenerssymbol  */ from "./handle-onevent";
 import { iscomponent } from "./iscomponent";
 import { isconnected } from "./isconnected";
 import mount from "./mount-real-element";
-import onevent /*  eventlistenerssymbol  */ from "./handle-onevent";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { get, has, set } from "./reflect";
 import { isArray, isfunction, isnumber, isobject, isstring } from "./util";

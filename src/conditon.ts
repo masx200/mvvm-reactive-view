@@ -1,6 +1,10 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import { AttrChange, attributeChangedCallback } from "./attrchange";
-import { invalid_Virtualdom } from "./MountElement";
+import {
+  AttrChange,
+  attributeChangedCallback,
+  firstinstalledcallback
+} from "./attrchange";
+import { Htmlelementconstructor } from "./createComponent";
 import createElement from "./createelement";
 import { setelehtml } from "./dom";
 // const readysymbol = Symbol("ready");
@@ -8,6 +12,7 @@ import { onmounted, onunmounted } from "./element-onmount-unmount";
 import { isvalidvdom } from "./html";
 import { componentsymbol } from "./iscomponent";
 import mount from "./mount-real-element";
+import { invalid_Virtualdom } from "./MountElement";
 import ReactiveState, { isReactiveState } from "./reactivestate";
 import { readysymbol } from "./readysymbol";
 import { get } from "./reflect";
@@ -16,7 +21,6 @@ import render from "./render-vdom-to-real";
 import { isboolean, isundefined } from "./util";
 // import createElement from "./createelement";
 import Virtualdom, { Vdomchildren } from "./VirtualElement";
-import { Htmlelementconstructor } from "./createComponent";
 export type VaildVDom =
   | Virtualdom<any>
   | string
@@ -50,34 +54,45 @@ export default function(
     }
   });
   const options = { true: iftrue, false: iffalse };
+  const optionstrue = get(options, "true");
+  const optionsfalse = get(options, "false");
   class Condition extends AttrChange {
     // prototype!: HTMLElement;
     // defaultProps?: { [key: string]: any } | undefined;
     // css?: string | undefined;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
-    constructor() /* propsjson?: object, children?: any[], options: object = {} */ {
-      super();
-      // if(){}
-      const optionstrue = get(options, "true");
-      const optionsfalse = get(options, "false");
-      this[truevdomsymbol] =
-        /*isarray(optionstrue)
-        ? optionstrue.filter(Boolean)
-        : */
-        [optionstrue].flat(1 / 0).filter(Boolean);
-      this[falsevdomsymbol] =
-        /* isarray(optionsfalse)
-        ? optionsfalse.filter(Boolean)
-        : */
+    [truevdomsymbol]: any[] = [optionstrue].flat(1 / 0).filter(Boolean);
+    /*isarray(optionstrue)
+    ? optionstrue.filter(Boolean)
+    : */
 
-        [optionsfalse].flat(1 / 0).filter(Boolean);
-      // optionsfalse;
-    }
+    [falsevdomsymbol]: any[] = [optionsfalse].flat(1 / 0).filter(Boolean);
+    /* isarray(optionsfalse)
+    ? optionsfalse.filter(Boolean)
+    : */
+
+    //  /*    constructor() /* propsjson?: object, children?: any[], options: object = {} */ {
+    //       super();
+    //       // if(){}
+
+    //       this[truevdomsymbol] =
+    //         /*isarray(optionstrue)
+    //         ? optionstrue.filter(Boolean)
+    //         : */
+    //         [optionstrue].flat(1 / 0).filter(Boolean);
+    //       this[falsevdomsymbol] =
+    //         /* isarray(optionsfalse)
+    //         ? optionsfalse.filter(Boolean)
+    //         : */
+
+    //         [optionsfalse].flat(1 / 0).filter(Boolean);
+    //       // optionsfalse;
+    //     } */
     [falseelesymbol]: any[];
     [trueelesymbol]: any[];
-    [truevdomsymbol]: any[];
-    [falsevdomsymbol]: any[];
+    // [truevdomsymbol]: any[];
+    // [falsevdomsymbol]: any[];
     //   [readysymbol] = false;
     [handlefalse]() {
       setelehtml(this, "");
@@ -90,9 +105,11 @@ export default function(
         //   mount(this[falseelesymbol], this);
         const elementtomount = this[falseelesymbol];
         mount(elementtomount, this);
-        elementtomount.forEach(e => onmounted(e));
+        // elementtomount.forEach(e => onmounted(e));
+        onmounted(elementtomount);
         if (this[trueelesymbol]) {
-          this[trueelesymbol].forEach(e => onunmounted(e));
+          onunmounted(this[trueelesymbol]);
+          //   this[trueelesymbol].forEach(e => onunmounted(e));
         }
       }
     }
@@ -107,14 +124,28 @@ export default function(
         //   mount(this[trueelesymbol], this);
         const elementtomount = this[trueelesymbol];
         mount(elementtomount, this);
-        elementtomount.forEach(e => onmounted(e));
+        onmounted(elementtomount);
+        // elementtomount.forEach(e => onmounted(e));
         if (this[falseelesymbol]) {
-          this[falseelesymbol].forEach(e => onunmounted(e));
+          onunmounted(this[falseelesymbol]);
+          //   this[falseelesymbol].forEach(e => onunmounted(e));
         }
       }
     }
+    [firstinstalledcallback]() {
+      const attrs: { [key: string]: any } = createeleattr(this);
+      // console.log(attrs);
+      if (true === attrs["value"]) {
+        get(this, handletrue).call(this);
+      }
+      if (false === attrs["value"]) {
+        get(this, handlefalse).call(this);
+        //
+      }
+    }
     async connectedCallback() {
-      if (!this[readysymbol]) {
+      super.connectedCallback();
+      /*   if (!this[readysymbol]) {
         // createApp(this[elementsymbol], this);
         this[readysymbol] = true;
 
@@ -127,12 +158,13 @@ export default function(
           get(this, handlefalse).call(this);
           //
         }
-      }
-      onmounted(this);
+      } */
+      //   onmounted(this);
       //
     }
     async disconnectedCallback() {
-      onunmounted(this);
+      //   onunmounted(this);
+      super.connectedCallback();
     }
 
     [attributeChangedCallback](

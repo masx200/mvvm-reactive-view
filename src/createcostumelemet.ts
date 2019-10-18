@@ -1,9 +1,7 @@
 import { Class } from "./customclass";
 //import setlikearray from "./setlikearay";
 // const customElementsarray = new Set;
-import RandomDefineCustomElement, {
-  invalid_custom_element_class
-} from "./CustomElementRegistry";
+import RandomDefineCustomElement, { invalid_custom_element_class } from "./CustomElementRegistry";
 import { construct } from "./reflect";
 /* function getcustomelementname(initclass: any): string {
   return customElements(initclass);

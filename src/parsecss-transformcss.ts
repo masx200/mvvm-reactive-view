@@ -4,10 +4,7 @@ export function isCSSStyleRule(a: any): a is CSSStyleRule {
 import createElement from "./createelement";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
-import {
-  appendchild,
-  createanotherhtmldocument /* , insertfirst */
-} from "./dom";
+import { appendchild, createanotherhtmldocument /* , insertfirst */ } from "./dom";
 import { get } from "./reflect";
 import render from "./render-vdom-to-real";
 import { gettagtype } from "./util";

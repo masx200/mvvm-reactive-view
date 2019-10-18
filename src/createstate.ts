@@ -3,13 +3,12 @@ import { getproperyreadproxy } from "./computed";
 import { usestste } from "./context-mounted-unmounted";
 import handleobjectstate from "./handleobjectstate";
 import ReactiveState, {
-  dispatchsymbol,
-  // textnodesymbol,
-  isReactiveState,
-  invalid_primitive_or_object_state
+dispatchsymbol, invalid_primitive_or_object_state,
+    // textnodesymbol,
+    isReactiveState
 } from "./reactivestate";
 import { set } from "./reflect";
-import { isobject, isprimitive, isfunction } from "./util";
+import { isfunction, isobject, isprimitive } from "./util";
 import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
 

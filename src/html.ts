@@ -1,5 +1,3 @@
-import { apply } from "./reflect";
-
 // declare const htm: (
 //   strings?: TemplateStringsArray,
 //   ...values: any[]
@@ -16,13 +14,15 @@ import { apply } from "./reflect";
 } */
 import htm from "htm";
 import { VaildVDom } from "./conditon";
+import h from "./createelement";
 // import htm from "../types/htm";
 import { invalid_Virtualdom } from "./MountElement";
-import h from "./createelement";
 import { isReactiveState } from "./reactivestate";
+import { apply } from "./reflect";
+import { toArray } from "./toArray";
 import { isArray, isnumber, isstring } from "./util";
 import Virtualdom, { isVirtualdom, Vdomchildren } from "./VirtualElement";
-import { toArray } from "./toArray";
+
 
 // const html = htm.bind(h);
 // function html(

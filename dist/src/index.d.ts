@@ -1,4 +1,4 @@
-import { version } from "package.json";
+import { version } from "packagejson";
 import "./assetbrowser";
 import computed from "./computed";
 import Condition from "./conditon";
