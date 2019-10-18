@@ -75,6 +75,7 @@ function createstate<T extends UnwrapedState>(
             }
             return true;
           } else {
+console.error(value)
             console.error(init);
             console.error(invalid_primitive_or_object_state);
             //   throw TypeError();
