@@ -41,7 +41,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     ? Function
     : T extends Primitivetype
     ? Primitivetype
-    : undefined;
+    : object;
   //extends Primitivetype ? Primitivetype : Exclude<object, Function>;
   //   [callbackmap] = new Map<Function, EventListener>();
 
