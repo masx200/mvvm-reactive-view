@@ -166,6 +166,7 @@ export default function(init: object): ReactiveState<object> {
       return true;
       //
     } else {
+console.error(value)
       console.error(init);
       console.error(invalid_primitive_or_object_state);
       return false;
