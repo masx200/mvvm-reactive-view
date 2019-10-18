@@ -1256,7 +1256,7 @@
                 if (this[fr] && "value" === t) {
                     var _t12 = Ct(this).value;
                     if (!F(_t12)) throw new E;
-                    this[Ar].value = _t12;
+                    rt(this[Ar], "value", _t12);
                     var _e11 = Ft(this), _n6 = _t12.length, _r7 = _e11.length;
                     if (_n6 > _r7) {
                         var _t13 = f(_n6).fill(void 0).map((t, e) => e).slice(_r7).map(t => {
@@ -1295,7 +1295,7 @@
                         _this6[fr] = !0;
                         var _t14 = Ct(_this6).value;
                         if (!F(_t14)) throw new E;
-                        _this6[Ar].value = _t14, _this6[Rr] = _t14.map((t, e) => u(Rn(_this6[Ar], t => t[e]), e)), 
+                        rt(_this6[Ar], "value", _t14), _this6[Rr] = _t14.map((t, e) => u(Rn(_this6[Ar], t => t[e]), e)), 
                         _this6[Mr] = Ln(_this6[Rr]), h.assign(_this6[Nr], _this6[Rr]), h.assign(_this6[Dr], _this6[Mr]), 
                         rn(_this6[Mr], _this6);
                     }
