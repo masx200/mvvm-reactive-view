@@ -14,7 +14,7 @@ export declare const subscribesymbol: unique symbol;
 export declare const removeallistenerssymbol: unique symbol;
 export declare const addallistenerssymbol: unique symbol;
 export default class ReactiveState<T extends UnwrapedState> {
-    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends Primitivetype ? Primitivetype : undefined;
+    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
     [debouncedispatch]: (eventname?: string | undefined) => void;
@@ -24,7 +24,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     [addallistenerssymbol](): void;
     [eventtargetsymbol]: EventTarget;
     [memlisteners]: Set<EventListener>;
-    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends Primitivetype ? Primitivetype : undefined;
+    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
     toString(): string;
     [dispatchsymbol](eventname?: string): void;
     [subscribesymbol](callback: Function): void;

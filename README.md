@@ -550,6 +550,18 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
 ```
 
+## 对于不接收`props`和`children` 参数的组件,甚至可以不使用`createComponent`
+
+```jsx
+function App1() {
+  return <div>helloworld</div>;
+}
+
+var vdom = <div>{App1()}</div>;
+
+document.body.appendChild(MountElement(vdom, document.createElement("div")));
+```
+
 ## 不建议在组件局部样式 css 中使用`@import`加载外部样式表
 
 如果像如下这样,在组件局部样式 css 中引用外部 css,可能会导致页面闪动
