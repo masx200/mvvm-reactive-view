@@ -1,4 +1,4 @@
-import { render, h } from "../../dist/index.js";
+import { render, h } from "../../dist/index.min.js";
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 setTimeout(() => {
   // @ts-ignore

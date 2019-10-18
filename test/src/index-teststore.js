@@ -8,7 +8,7 @@ import {
   h,
   MountElement,
   watch
-} from "../../dist/index.js";
+} from "../../dist/index.min.js";
 console.log([h, createElement]);
 const number = createState(10);
 function increment() {

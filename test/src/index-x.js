@@ -7,7 +7,7 @@ import {
   h,
   MountElement,
   watch
-} from "../../dist/index.js";
+} from "../../dist/index.min.js";
 console.log([h, createElement]);
 const lirefs = [];
 // console.log()

@@ -9,7 +9,7 @@ import {
   html,
   MountElement,
   watch
-} from "../../dist/index.js";
+} from "../../dist/index.min.js";
 console.log([h, createElement]);
 /* console.log([
   condition,

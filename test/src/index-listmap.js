@@ -13,7 +13,7 @@ import {
   MountElement,
   // @ts-ignore
   watch
-} from "../../dist/index.js";
+} from "../../dist/index.min.js";
 const refarray = [];
 const liststate = createState(
   Array(10)
@@ -21,6 +21,7 @@ const liststate = createState(
     // @ts-ignore
     .map((v, i) => i)
 );
+watch(liststate, a => console.dir([liststate, a]));
 const vdom = (
   <div>
     <button

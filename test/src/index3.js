@@ -11,7 +11,7 @@ import {
   useMounted,
   useUnMounted,
   watch
-} from "../../dist/index.js";
+} from "../../dist/index.min.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import mycss from "./test.css";
