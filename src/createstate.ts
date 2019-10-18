@@ -4,12 +4,12 @@ import { usestste } from "./context-mounted-unmounted";
 import handleobjectstate from "./handleobjectstate";
 import ReactiveState, {
   dispatchsymbol,
-  invalid_primitive_or_object_state,
   // textnodesymbol,
-  isReactiveState
+  isReactiveState,
+  invalid_primitive_or_object_state
 } from "./reactivestate";
 import { set } from "./reflect";
-import { isobject, isprimitive } from "./util";
+import { isobject, isprimitive, isfunction } from "./util";
 import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
 
@@ -38,13 +38,19 @@ function createstate<T extends UnwrapedState>(
 function createstate<T extends UnwrapedState>(
   init: Exclude<T, ReactiveState<any>> | ReactiveState<T> | undefined
 ) {
-  if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
+  /*   if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
     console.error(init);
     console.error(invalid_primitive_or_object_state);
     throw TypeError();
-  }
-
-  if (isprimitive(init)) {
+  } */
+  const inittype = isfunction(init)
+    ? "function"
+    : isprimitive(init)
+    ? "primitive"
+    : isobject(init)
+    ? "object"
+    : void 0;
+  if (isprimitive(init) || isfunction(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
         defineProperty() {
@@ -57,7 +63,11 @@ function createstate<T extends UnwrapedState>(
           /*  if (key === textnodesymbol) {
           return set(target, key, value);
         } */
-          if (key === "value" && isprimitive(value)) {
+          if (
+            key === "value" &&
+            ((isprimitive(value) && inittype === "primitive") ||
+              (isfunction(value) && inittype === "function"))
+          ) {
             if (target[key] !== value) {
               /* 如果相同则不触发事件 */
               set(target, key, value);
@@ -65,6 +75,9 @@ function createstate<T extends UnwrapedState>(
             }
             return true;
           } else {
+            console.error(init);
+            console.error(invalid_primitive_or_object_state);
+            //   throw TypeError();
             return false;
           }
         },

@@ -3,7 +3,8 @@ import deepobserve from "@masx200/deep-observe-agent-proxy";
 import { isplainobject, isarray, isSet, isobject } from "./util";
 import ReactiveState, {
   isReactiveState,
-  dispatchsymbol
+  dispatchsymbol,
+  invalid_primitive_or_object_state
 } from "./reactivestate";
 import {
   defineProperty,
@@ -158,13 +159,18 @@ export default function(init: object): ReactiveState<object> {
       // if (target[key] !== value) {
       set(target, key, value);
       target[dispatchsymbol]();
+      return true;
     } else if (!has(target, key)) {
       set(myvalue, key, value);
       target[dispatchsymbol](String(key));
-
+      return true;
       //
+    } else {
+      console.error(init);
+      console.error(invalid_primitive_or_object_state);
+      return false;
     }
-    return true;
+    // return true;
   };
   return new Proxy(
     reactive,

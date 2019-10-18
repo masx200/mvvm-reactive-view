@@ -1,4 +1,3 @@
-import { Primitivetype } from "./isprimitive";
 import { UnwrapedState } from "./watch";
 export declare const addonelistner: unique symbol;
 export declare const removeonelistner: unique symbol;
@@ -14,7 +13,7 @@ export declare const subscribesymbol: unique symbol;
 export declare const removeallistenerssymbol: unique symbol;
 export declare const addallistenerssymbol: unique symbol;
 export default class ReactiveState<T extends UnwrapedState> {
-    value: T extends Primitivetype ? Primitivetype : Exclude<object, Function>;
+    value: T;
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
     [debouncedispatch]: (eventname?: string | undefined) => void;
@@ -24,11 +23,11 @@ export default class ReactiveState<T extends UnwrapedState> {
     [addallistenerssymbol](): void;
     [eventtargetsymbol]: EventTarget;
     [memlisteners]: Set<EventListener>;
-    valueOf: () => T extends Primitivetype ? Primitivetype : object;
+    valueOf: () => T;
     toString(): string;
     [dispatchsymbol](eventname?: string): void;
     [subscribesymbol](callback: Function): void;
     [cancelsubscribe](callback: Function): void;
-    [Symbol.toPrimitive](): string | ((T extends Primitivetype ? Primitivetype : object) & number) | ((T extends Primitivetype ? Primitivetype : object) & bigint) | ((T extends Primitivetype ? Primitivetype : object) & false) | ((T extends Primitivetype ? Primitivetype : object) & true) | undefined;
+    [Symbol.toPrimitive](): string | T | undefined;
 }
 export {};

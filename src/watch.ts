@@ -1,7 +1,7 @@
 import debounce from "lodash/debounce";
+import { cached_callback_debounced_watchs } from "./cached-map";
 import { invalid_ReactiveState } from "./conditon";
 import { invalid_Function, usewatch } from "./context-mounted-unmounted";
-import { Primitivetype } from "./isprimitive";
 import ReactiveState, {
   addallistenerssymbol,
   cancelsubscribe,
@@ -12,9 +12,8 @@ import ReactiveState, {
 import { toArray } from "./toArray";
 //import { requestAnimationFrame } from "./directives";
 import { isarray, isFunction } from "./util";
-import { cached_callback_debounced_watchs } from "./cached-map";
 export type CancelWatchfun = () => void;
-export type UnwrapedState = Primitivetype | Exclude<object, Function>;
+export type UnwrapedState = any; //Primitivetype | Exclude<object, Function>;
 
 export interface CallbackReactiveState /* <
   

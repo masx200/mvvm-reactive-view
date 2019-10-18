@@ -1,7 +1,6 @@
-import { Primitivetype } from "./isprimitive";
 import ReactiveState from "./reactivestate";
 export declare type CancelWatchfun = () => void;
-export declare type UnwrapedState = Primitivetype | Exclude<object, Function>;
+export declare type UnwrapedState = any;
 export interface CallbackReactiveState {
     (...args: UnwrapedState[]): void;
 }

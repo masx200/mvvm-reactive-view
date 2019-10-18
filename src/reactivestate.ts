@@ -1,9 +1,10 @@
 import debounce from "lodash/debounce";
+import { cached_callback_eventlistner } from "./cached-map";
 // import Reflect from "./reflect";
-import isprimitive, { Primitivetype } from "./isprimitive";
+import isprimitive from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
-import { cached_callback_eventlistner } from "./cached-map";
+import { defineProperty } from "./reflect";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 // import { Primitive } from 'lodash';
@@ -34,7 +35,7 @@ deleteProperty(forkarray.prototype, "length"); */
 /* extends forkarray  */
 
 export default class ReactiveState<T extends UnwrapedState> {
-  value: T extends Primitivetype ? Primitivetype : Exclude<object, Function>;
+  value: T; //extends Primitivetype ? Primitivetype : Exclude<object, Function>;
   //   [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
@@ -43,22 +44,22 @@ export default class ReactiveState<T extends UnwrapedState> {
     //super();
     // this.value = undefined;
 
-    if (isprimitive(init) || isobject(init)) {
-      this.value = init as T extends Primitivetype
+    // if (isprimitive(init) || isobject(init)) {
+    this.value = init as T; /* extends Primitivetype
         ? Primitivetype
-        : Exclude<object, Function>;
-      Object.defineProperty(this, "value", {
-        value: init,
-        configurable: true,
-        writable: true
-      });
+        : Exclude<object, Function>; */
+    defineProperty(this, "value", {
+      value: init,
+      configurable: true,
+      writable: true
+    });
 
-      // this.value = init;
-    } else {
-      console.error(init);
-      console.error(invalid_primitive_or_object_state);
-      throw TypeError();
-    }
+    // this.value = init;
+    // } else {
+    //   console.error(init);
+    //   console.error(invalid_primitive_or_object_state);
+    //   throw TypeError();
+    // }
     // this[eventtargetsymbol] = new EventTarget();
 
     /*
@@ -126,7 +127,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     return isprimitive(value)
       ? String(value)
       : isSet(value)
-      ? JSON.stringify([...value])
+      ? JSON.stringify([...(value as Set<any>)])
       : isobject(value)
       ? JSON.stringify(value)
       : "";

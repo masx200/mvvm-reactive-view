@@ -1,6 +1,6 @@
 //import "../polyfill/custom-elements.min.js";
-import "../../polyfill/Array-prototype-flat.js";
-import "../../polyfill/Object-fromEntries.js";
+/* import "../../polyfill/Array-prototype-flat.js";
+import "../../polyfill/Object-fromEntries.js"; */
 import "./index-compositionapi.js";
 /* navigator.serviceWorker
   .register("./service-worker.js")
@@ -17,3 +17,4 @@ import "./index2.js";
 import "./index3.js";
 
 import "./index-test-all-component.js";
+import "./index-fun-state";

@@ -768,18 +768,12 @@ class ReactiveState {
         this.valueOf = () => {
             return this.value;
         };
-        if (isprimitive(init) || isobject(init)) {
-            this.value = init;
-            Object.defineProperty(this, "value", {
-                value: init,
-                configurable: true,
-                writable: true
-            });
-        } else {
-            console.error(init);
-            console.error(invalid_primitive_or_object_state);
-            throw TypeError();
-        }
+        this.value = init;
+        defineProperty(this, "value", {
+            value: init,
+            configurable: true,
+            writable: true
+        });
         const debouncedfun = debounce_1(eventname => {
             const name = eventname ? String(eventname) : "value";
             this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
@@ -1819,11 +1813,16 @@ function handleobjectstate(init) {
         if (key === "value" && isobject(value)) {
             set(target, key, value);
             target[dispatchsymbol]();
+            return true;
         } else if (!has(target, key)) {
             set(myvalue, key, value);
             target[dispatchsymbol](String(key));
+            return true;
+        } else {
+            console.error(init);
+            console.error(invalid_primitive_or_object_state);
+            return false;
         }
-        return true;
     };
     return new Proxy(reactive, objproxyhandler);
 }
@@ -1837,12 +1836,8 @@ function createstate(init) {
 }
 
 function createstate$1(init) {
-    if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
-        console.error(init);
-        console.error(invalid_primitive_or_object_state);
-        throw TypeError();
-    }
-    if (isprimitive(init)) {
+    const inittype = isfunction(init) ? "function" : isprimitive(init) ? "primitive" : isobject(init) ? "object" : void 0;
+    if (isprimitive(init) || isfunction(init)) {
         return getproperyreadproxy(new Proxy(new ReactiveState(init), {
             defineProperty() {
                 return false;
@@ -1851,13 +1846,15 @@ function createstate$1(init) {
                 return false;
             },
             set(target, key, value) {
-                if (key === "value" && isprimitive(value)) {
+                if (key === "value" && (isprimitive(value) && inittype === "primitive" || isfunction(value) && inittype === "function")) {
                     if (target[key] !== value) {
                         set(target, key, value);
                         target[dispatchsymbol]();
                     }
                     return true;
                 } else {
+                    console.error(init);
+                    console.error(invalid_primitive_or_object_state);
                     return false;
                 }
             },
@@ -2457,7 +2454,7 @@ function listmap(list, mapfun) {
     });
 }
 
-var version = "1.3.10";
+var version = "1.3.11";
 
 export { conditon as Condition, extenddirectives as Directives, listmap as ListMap, MountElement, computed, createComponent, createElement, createRef, createstate as createState, createElement as h, html$1 as html, render, useMounted, useUnMounted, version, watch };
 //# sourceMappingURL=index.js.map
