@@ -1819,6 +1819,7 @@ function handleobjectstate(init) {
             target[dispatchsymbol](String(key));
             return true;
         } else {
+            console.error(value);
             console.error(init);
             console.error(invalid_primitive_or_object_state);
             return false;
@@ -1853,6 +1854,7 @@ function createstate$1(init) {
                     }
                     return true;
                 } else {
+                    console.error(value);
                     console.error(init);
                     console.error(invalid_primitive_or_object_state);
                     return false;
@@ -2385,7 +2387,7 @@ function listmap(list, mapfun) {
                         console.log(value);
                         throw new TypeError;
                     }
-                    this[listvalueattr]["value"] = value;
+                    set(this[listvalueattr], "value", value);
                     const domchildren = getdomchildren(this);
                     const newlength = value.length;
                     const oldlength = domchildren.length;
@@ -2435,7 +2437,7 @@ function listmap(list, mapfun) {
                     console.log(value);
                     throw new TypeError;
                 }
-                this[listvalueattr]["value"] = value;
+                set(this[listvalueattr], "value", value);
                 this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
                 this[listinnerelement] = render(this[listinnervdom]);
                 Object.assign(this[cached_vdom_symbol], this[listinnervdom]);

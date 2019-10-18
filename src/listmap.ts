@@ -93,7 +93,8 @@ function listmap(
           }
           // this[listlengthsymbol] = value.length;
           /* 状态变化时同步一次 */
-          this[listvalueattr]["value"] = value;
+          set(this[listvalueattr], "value", value);
+          //  [] = ;
           const domchildren = getdomchildren(this);
           const newlength = value.length;
           const oldlength = domchildren.length;
@@ -160,7 +161,8 @@ function listmap(
           throw new TypeError();
         }
         /* 挂载时同步一次 */
-        this[listvalueattr]["value"] = value;
+        // this[listvalueattr]["value"] = value;
+        set(this[listvalueattr], "value", value);
         this[listinnervdom] = value.map((v, index) =>
           ITEMfactory(
             computed(this[listvalueattr], v => (v as any[])[index] as any),

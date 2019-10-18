@@ -75,7 +75,7 @@ function createstate<T extends UnwrapedState>(
             }
             return true;
           } else {
-console.error(value)
+            console.error(value);
             console.error(init);
             console.error(invalid_primitive_or_object_state);
             //   throw TypeError();
@@ -92,7 +92,7 @@ console.error(value)
     // init instanceof ReactiveState
   ) {
     // 如果init是个 ReactiveState，则对其解包，并生成新的 ReactiveState
-    return createstate(init.valueOf());
+    return createstate(init.valueOf() as any);
   } else if (isobject(init)) {
     //如果在 ReactiveState属性中包含 ReactiveState，则转换成语法糖
     //ReactiveState1=createstate( {aaaaa:ReactiveState2})

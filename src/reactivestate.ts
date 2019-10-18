@@ -1,7 +1,7 @@
 import debounce from "lodash/debounce";
 import { cached_callback_eventlistner } from "./cached-map";
 // import Reflect from "./reflect";
-import isprimitive from "./isprimitive";
+import isprimitive, { Primitivetype } from "./isprimitive";
 import { gettagtype, isobject, isSet } from "./util";
 import { UnwrapedState } from "./watch";
 import { defineProperty } from "./reflect";
@@ -35,7 +35,14 @@ deleteProperty(forkarray.prototype, "length"); */
 /* extends forkarray  */
 
 export default class ReactiveState<T extends UnwrapedState> {
-  value: T; //extends Primitivetype ? Primitivetype : Exclude<object, Function>;
+  value: T extends Array<any>
+    ? Array<any>
+    : T extends Function
+    ? Function
+    : T extends Primitivetype
+    ? Primitivetype
+    : undefined;
+  //extends Primitivetype ? Primitivetype : Exclude<object, Function>;
   //   [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
@@ -45,9 +52,9 @@ export default class ReactiveState<T extends UnwrapedState> {
     // this.value = undefined;
 
     // if (isprimitive(init) || isobject(init)) {
-    this.value = init as T; /* extends Primitivetype
-        ? Primitivetype
-        : Exclude<object, Function>; */
+    this.value = init as any; //as T; /* extends Primitivetype
+    //  ? Primitivetype
+    //  : Exclude<object, Function>; */
     defineProperty(this, "value", {
       value: init,
       configurable: true,
@@ -168,7 +175,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     }
   }
 
-  [Symbol.toPrimitive]() {
+  [Symbol.toPrimitive](): string | undefined | Primitivetype {
     //return this.value;
     const value = this.valueOf();
     return isprimitive(value)
