@@ -43,13 +43,13 @@ function createstate<T extends UnwrapedState>(
     console.error(invalid_primitive_or_object_state);
     throw TypeError();
   } */
-  const inittype = isfunction(init)
-    ? "function"
-    : isprimitive(init)
-    ? "primitive"
-    : isobject(init)
-    ? "object"
-    : void 0;
+  // /*   const inittype = isfunction(init)
+  //     ? "function"
+  //     : isprimitive(init)
+  //     ? "primitive"
+  //     : /* isobject(init)
+  //     ? "object" */
+  //       /* : */ void 0; */
   if (isprimitive(init) || isfunction(init)) {
     return getproperyreadproxy(
       new Proxy(new ReactiveState(init), {
@@ -63,10 +63,12 @@ function createstate<T extends UnwrapedState>(
           /*  if (key === textnodesymbol) {
           return set(target, key, value);
         } */
+
+          /* 若初始值函数,则只能赋值函数 */
           if (
             key === "value" &&
-            ((isprimitive(value) && inittype === "primitive") ||
-              (isfunction(value) && inittype === "function"))
+            ((isprimitive(value) && isprimitive(init)) ||
+              (isfunction(value) && isfunction(init)))
           ) {
             if (target[key] !== value) {
               /* 如果相同则不触发事件 */

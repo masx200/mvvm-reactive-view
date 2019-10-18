@@ -1,4 +1,4 @@
-import { issymbol } from "./util";
+import { issymbol, isArray } from "./util";
 import deepobserve from "@masx200/deep-observe-agent-proxy";
 import { isplainobject, isarray, isSet, isobject } from "./util";
 import ReactiveState, {
@@ -38,6 +38,13 @@ export default function(init: object): ReactiveState<object> {
       });
     });
   }
+  //   const inittype = isfunction(init)
+  //   ? "function"
+  //   : isprimitive(init)
+  //   ? "primitive"
+  //   : /* isobject(init)
+  //   ? "object" */
+  //     /* : */ void 0;
   const reactive: ReactiveState<object> = new ReactiveState(initobj);
   if (containReactiveState) {
     state_entries.forEach(([key, state]) => {
@@ -155,7 +162,12 @@ export default function(init: object): ReactiveState<object> {
       value = value.valueOf();
     }
     const myvalue = get(target, "value");
-    if (key === "value" && isobject(value)) {
+    /* 若初始值数组,则只能赋值数组 */
+    if (
+      key === "value" &&
+      isobject(value) &&
+      ((isArray(init) && isarray(value)) || (!isArray(init) && !isarray(value)))
+    ) {
       // if (target[key] !== value) {
       set(target, key, value);
       target[dispatchsymbol]();

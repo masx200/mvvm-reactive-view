@@ -1810,7 +1810,7 @@ function handleobjectstate(init) {
             value = value.valueOf();
         }
         const myvalue = get(target, "value");
-        if (key === "value" && isobject(value)) {
+        if (key === "value" && isobject(value) && (isarray(init) && isarray(value) || !isarray(init) && !isarray(value))) {
             set(target, key, value);
             target[dispatchsymbol]();
             return true;
@@ -1837,7 +1837,6 @@ function createstate(init) {
 }
 
 function createstate$1(init) {
-    const inittype = isfunction(init) ? "function" : isprimitive(init) ? "primitive" : isobject(init) ? "object" : void 0;
     if (isprimitive(init) || isfunction(init)) {
         return getproperyreadproxy(new Proxy(new ReactiveState(init), {
             defineProperty() {
@@ -1847,7 +1846,7 @@ function createstate$1(init) {
                 return false;
             },
             set(target, key, value) {
-                if (key === "value" && (isprimitive(value) && inittype === "primitive" || isfunction(value) && inittype === "function")) {
+                if (key === "value" && (isprimitive(value) && isprimitive(init) || isfunction(value) && isfunction(init))) {
                     if (target[key] !== value) {
                         set(target, key, value);
                         target[dispatchsymbol]();

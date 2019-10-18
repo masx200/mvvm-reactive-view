@@ -550,7 +550,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
 ```
 
-## 对于不接收`props`和`children` 参数的组件,甚至可以不使用`createComponent`
+## 对于不接收`props`和`children` 参数,且不使用局部`css`的组件,甚至可以不使用`createComponent`
 
 ```jsx
 function App1() {
