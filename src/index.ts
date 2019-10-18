@@ -1,14 +1,13 @@
+import { version } from "package.json";
 import "./assetbrowser";
-import "./CustomElementRegistry";
-import "./model-input-textarea-value-directive-binding";
 import computed from "./computed";
 import Condition from "./conditon";
 import { useMounted, useUnMounted } from "./context-mounted-unmounted";
-import { createComponent } from "./createComponent";
+import createComponent from "./createComponent";
 import createElement from "./createelement";
 import createRef from "./createref";
 import createState from "./createstate";
-
+import "./CustomElementRegistry";
 import Directives from "./extend-directive";
 import html from "./html";
 //请自行使用babel-preset-env和core-js 3
@@ -17,11 +16,12 @@ import html from "./html";
 //import "./array-prototype-flat";
 // export const Fragment = "";
 // import { isobject, isfunction } from "./util";
-import { listMap as ListMap } from "./listmap";
-
+import ListMap from "./listmap";
+import "./model-input-textarea-value-directive-binding";
 import MountElement from "./MountElement";
 import render from "./render-vdom-to-real";
-import { watch } from "./watch";
+import Switchable from "./switchable";
+import watch from "./watch";
 
 export { render };
 export { computed };
@@ -36,5 +36,5 @@ export { watch };
 export { Directives };
 export { Condition };
 export { ListMap };
-import { version } from "package.json";
 export { version };
+export { Switchable };

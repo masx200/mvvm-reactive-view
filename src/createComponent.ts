@@ -300,3 +300,5 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
     throw TypeError();
   }
 }
+
+export default createComponent;

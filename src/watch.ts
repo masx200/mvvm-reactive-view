@@ -121,3 +121,4 @@ export function unwatch(state: ReactiveState<any>): void {
 export function rewatch(state: ReactiveState<any>): void {
   state[addallistenerssymbol]();
 }
+export default watch;

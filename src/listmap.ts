@@ -182,3 +182,4 @@ function listmap(
   }
   return createElement(ListMap, { value: list });
 }
+export default listmap;

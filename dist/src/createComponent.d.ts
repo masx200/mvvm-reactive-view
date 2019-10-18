@@ -9,3 +9,4 @@ export interface Htmlelementconstructor {
     css?: string;
 }
 export declare function createComponent(custfun: Custom): Htmlelementconstructor;
+export default createComponent;
