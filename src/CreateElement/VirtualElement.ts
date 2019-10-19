@@ -6,6 +6,7 @@ import { merge_entries } from "../UtilTools/merge-entries";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import { defineProperty, get } from "../UtilTools/reflect";
 import { isobject, isstring } from "../UtilTools/util";
+import { VaildVDom } from "./isvalidvdom";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
 // }//
@@ -17,9 +18,7 @@ export function isVirtualdom(a: any): a is Virtualdom<any> {
   );
 }
 export const isvirtualelement = Symbol("isvirtualelement");
-export type Vdomchildren = Array<
-  Virtualdom<any> | string | ReactiveState<any> | number
->;
+export type Vdomchildren = Array<VaildVDom>;
 export { createVirtualElement };
 function createVirtualElement<T extends Class | string | Function>(
   type: T,

@@ -28,7 +28,7 @@ const myterserplugin = terser({
 });
 export default [
   {
-    input: "./src/index.ts",
+    input: "./index.ts",
     output: [
       {
         banner,

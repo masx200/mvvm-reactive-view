@@ -56,6 +56,7 @@ import { isArray, isfunction, isobject, isstring } from "../UtilTools/util";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { isvalidvdom } from "src/CreateElement/isvalidvdom";
 import { componentsymbol } from "./iscomponent";
+import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
@@ -319,3 +320,14 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
 }
 
 export default createComponent;
+export function autocreateclass(
+  custfun: Custom | Htmlelementconstructor
+): Htmlelementconstructor {
+  if (isclassextendsHTMLElement(custfun)) {
+    return custfun;
+  } else if (isfunction(custfun)) {
+    return createComponent(custfun);
+  } else {
+    throw TypeError();
+  }
+}

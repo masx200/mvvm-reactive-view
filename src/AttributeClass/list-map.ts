@@ -7,7 +7,7 @@ import {
   disconnectedCallback
 } from "./attr-change";
 import computed from "../Reactivity/computed";
-import { VaildVDom } from "./conditon";
+// import { VaildVDom } from "./conditon";
 import { createComponent, Htmlelementconstructor } from "./createComponent";
 import createElement from "../CreateElement/create-element";
 import createstate from "../Reactivity/create-state";
@@ -21,14 +21,16 @@ import { get, set } from "../UtilTools/reflect";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { isArray, isfunction, isSet } from "../UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
-export { listmap as listMap };
+import { VaildVDom } from "src/CreateElement/isvalidvdom";
+export { ListMap };
+export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
 const cached_vdom_symbol = Symbol("cached_vdom");
 const cached_realele = Symbol("cached_realele");
-function listmap(
+function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
   mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
 ): Virtualdom<Htmlelementconstructor> {
@@ -201,4 +203,3 @@ function listmap(
   }
   return createElement(ListMap, { value: list });
 }
-export default listmap;

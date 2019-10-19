@@ -1,7 +1,16 @@
-import { isArray, isnumber, isstring } from "src/UtilTools/util";
-import { VaildVDom } from "src/AttributeClass/conditon";
-import { isVirtualdom } from "src/CreateElement/VirtualElement";
-import { isReactiveState } from "src/Reactivity/ReactiveState";
+export type VaildVDom =
+  | Virtualdom<any>
+  | string
+  | number
+  | Vdomchildren
+  | ReactiveState<any>;
+// import { VaildVDom } from "./isvalidvdom";
+import Virtualdom, {
+  isVirtualdom,
+  Vdomchildren
+} from "../CreateElement/VirtualElement";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import { isArray, isnumber, isstring } from "../UtilTools/util";
 
 export function isvalidvdom(v: any): v is VaildVDom {
   if (isstring(v)) {

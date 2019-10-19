@@ -4,7 +4,7 @@ import {
   connectedCallback,
   disconnectedCallback
 } from "./attr-change";
-import { Htmlelementconstructor } from "./createComponent";
+import { Htmlelementconstructor, autocreateclass } from "./createComponent";
 import { h } from "../CreateElement/create-element";
 import { componentsymbol } from "./iscomponent";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
@@ -16,13 +16,14 @@ import { mountrealelement } from "../MountElement/mount-real-element";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { isfunction } from "../UtilTools/util";
 import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
+import { Custom } from "../CustomClass/customclass";
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
 const current_element_class = Symbol("current_element_class");
 export { Switchable };
 function Switchable(
-  funstate: ReactiveState<Htmlelementconstructor>
+  funstate: ReactiveState<Htmlelementconstructor | Custom>
 ): Virtualdom<Htmlelementconstructor> {
   if (!isReactiveState(funstate)) {
     console.error(funstate);
@@ -42,7 +43,8 @@ function Switchable(
     [cancel_watch_symbol]: CancelWatchfun;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
-    [switch_mount_symbol](eleclass: Function) {
+    [switch_mount_symbol](eleclass: Custom | Htmlelementconstructor) {
+      eleclass = autocreateclass(eleclass);
       if (!isclassextendsHTMLElement(eleclass)) {
         console.error(eleclass);
         throw new TypeError();
@@ -62,7 +64,9 @@ function Switchable(
     }
     [firstinstalledcallback]() {
       const callmountswitch = () => {
-        this[switch_mount_symbol](funstate.valueOf());
+        this[switch_mount_symbol](funstate.valueOf() as
+          | Custom
+          | Htmlelementconstructor);
       };
       callmountswitch();
       this[cancel_watch_symbol] = watch(funstate, () => {

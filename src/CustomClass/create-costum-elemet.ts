@@ -1,4 +1,4 @@
-import { Class } from "./customclass";
+import { Class, Custom } from "./customclass";
 //import setlikearray from "./setlikearay";
 // const customElementsarray = new Set;
 import RandomDefineCustomElement, {
@@ -6,17 +6,25 @@ import RandomDefineCustomElement, {
 } from "./CustomElementRegistry";
 import { construct } from "../UtilTools/reflect";
 import { isclassextendsHTMLElement } from "./isclassextendsHTMLElement";
+import { autocreateclass } from "src/AttributeClass/createComponent";
+import { isfunction } from "src/UtilTools/util";
 
 // import Reflect from "./reflect";
 
 // import { Class } from "./rendervdomtoreal";
 
 export function createcostumelemet(
-  initclass: Class | Function,
+  initclass: Class | Custom,
   propsjson?: object,
   children?: any[]
   //   options?: any
 ): HTMLElement {
+  let type = initclass;
+  if (isfunction(type)) {
+    type = autocreateclass(type);
+    // debugger;
+  }
+  initclass = type;
   if (isclassextendsHTMLElement(initclass)) {
     // customElementsarray.push(initclass);
     /*   const elementname =

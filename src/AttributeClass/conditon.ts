@@ -1,38 +1,33 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import {
-  AttrChange,
-  attributeChangedCallback,
-  firstinstalledcallback,
-  connectedCallback,
-  disconnectedCallback
-} from "./attr-change";
-import { Htmlelementconstructor } from "./createComponent";
+import { isvalidvdom, VaildVDom } from "src/CreateElement/isvalidvdom";
 import createElement from "../CreateElement/create-element";
-import { setelehtml } from "../UtilTools/dom";
+// import createElement from "./createelement";
+import Virtualdom from "../CreateElement/VirtualElement";
 // const readysymbol = Symbol("ready");
 import {
   onmounted,
   onunmounted
 } from "../mounted-unmounted/element-onmount-unmount";
-// import { isvalidvdom } from "../CreateElement/html";
-import { componentsymbol } from "./iscomponent";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
-import { readysymbol } from "./readysymbol";
-import { get } from "../UtilTools/reflect";
 import render from "../RenderVirtual/render-vdom-to-real";
+import { setelehtml } from "../UtilTools/dom";
+import { get } from "../UtilTools/reflect";
 // import mount from "./mount";
 import { isboolean, isundefined } from "../UtilTools/util";
-// import createElement from "./createelement";
-import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
-import { isvalidvdom } from "src/CreateElement/isvalidvdom";
-export type VaildVDom =
-  | Virtualdom<any>
-  | string
-  | number
-  | Vdomchildren
-  | ReactiveState<any>;
+import {
+  AttrChange,
+  attributeChangedCallback,
+  connectedCallback,
+  disconnectedCallback,
+  firstinstalledcallback
+} from "./attr-change";
+import { Htmlelementconstructor } from "./createComponent";
+// import { isvalidvdom } from "../CreateElement/html";
+import { componentsymbol } from "./iscomponent";
+import { readysymbol } from "./readysymbol";
+
 // import { readysymbol } from "./createComponent";
 export const invalid_ReactiveState = "invalid ReactiveState";
 const truevdomsymbol = Symbol("truevdom");
@@ -43,7 +38,7 @@ const handletrue = Symbol("handletrue");
 const handlefalse = Symbol("handlefalse");
 
 export default function(
-  conditon: ReactiveState<any> | boolean,
+  conditon: ReactiveState<boolean> | boolean,
   iftrue?: VaildVDom,
   iffalse?: VaildVDom
 ): Virtualdom<Htmlelementconstructor> {

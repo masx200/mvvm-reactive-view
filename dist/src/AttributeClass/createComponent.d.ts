@@ -10,3 +10,4 @@ export interface Htmlelementconstructor {
 }
 export declare function createComponent(custfun: Custom): Htmlelementconstructor;
 export default createComponent;
+export declare function autocreateclass(custfun: Custom | Htmlelementconstructor): Htmlelementconstructor;

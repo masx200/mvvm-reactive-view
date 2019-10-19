@@ -26,8 +26,12 @@ import {
   isobject,
   isstring
 } from "../UtilTools/util";
-import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
+import Virtualdom, {
+  isVirtualdom,
+  Vdomchildren
+} from "../CreateElement/VirtualElement";
 import handleprops from "./handle-props";
+import { autocreateclass } from "src/AttributeClass/createComponent";
 
 export const bindstatesymbol = Symbol("bindstate");
 
@@ -48,7 +52,7 @@ export default function render(
   namespace?: string
 ): Node;
 export default function render(
-  vdom: Array<Virtualdom<any> | string | ReactiveState<any> | number>,
+  vdom: Vdomchildren,
   namespace?: string
 ): Array<Node | Element>;
 export default function render(
@@ -64,12 +68,7 @@ export default function render(
   namespace?: string
 ): Array<Node>;
 export default function render(
-  vdom:
-    | Virtualdom<any>
-    | string
-    | number
-    | ReactiveState<any>
-    | Array<Virtualdom<any> | string | ReactiveState<any> | number>,
+  vdom: Virtualdom<any> | string | number | ReactiveState<any> | Vdomchildren,
   namespace?: string
 ): Array<Node | Element> | Element | Node {
   if (isArray(vdom)) {
@@ -114,7 +113,11 @@ export default function render(
     isVirtualdom(vdom)
     //vdom instanceof Virtualdom && "type" in vdom
   ) {
-    const { type } = vdom;
+    let { type } = vdom;
+    if (isfunction(type)) {
+      type = autocreateclass(type);
+      // debugger;
+    }
     let element:
       | Element
       | HTMLElement

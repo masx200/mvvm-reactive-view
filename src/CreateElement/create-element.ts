@@ -1,6 +1,6 @@
 import h from "./create-element";
 export { h };
-import { Class } from "../CustomClass/customclass";
+import { Class, Custom } from "../CustomClass/customclass";
 import ReactiveState from "../Reactivity/ReactiveState";
 import { apply } from "../UtilTools/reflect";
 import {
@@ -13,6 +13,10 @@ import Virtualdom, {
   createVirtualElement,
   Vdomchildren
 } from "./VirtualElement";
+import {
+  autocreateclass,
+  Htmlelementconstructor
+} from "../AttributeClass/createComponent";
 type styleprop =
   | string
   | object
@@ -30,7 +34,7 @@ export interface ElementAttrs {
   [key: string]: any;
 }
 
-export default function<T extends Function | string>(
+export default function<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   propsorchildren?: Vdomchildren,
   ...children: Vdomchildren
@@ -45,7 +49,7 @@ export default function<T extends Vdomchildren>(
   props?: ElementAttrs,
   ...children: T
 ): T;
-export default function<T extends Function | string>(
+export default function<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   props?: ElementAttrs,
   ...children: Vdomchildren
@@ -57,10 +61,15 @@ h(type,children)
 */
 
 export default function(
-  type?: Function | string | "" | Class,
+  type?: Htmlelementconstructor | string | Custom,
   propsorchildren?: Vdomchildren | ElementAttrs,
   ...children: Vdomchildren
 ) {
+  if (isfunction(type)) {
+    type = autocreateclass(type);
+    // debugger;
+  }
+
   if (isarray(propsorchildren)) {
     return apply(createElement, undefined, [
       type,
@@ -73,7 +82,11 @@ export default function(
       [...propsorchildren, ...children].flat(1 / 0)
     ); */
   } else {
-    return apply(createElement, undefined, arguments); // createElement(...arguments);
+    return apply(createElement, undefined, [
+      type,
+      propsorchildren,
+      ...children
+    ]); // createElement(...arguments);
   }
 }
 function createElement<T extends Vdomchildren>(
@@ -94,7 +107,7 @@ function createElement<T extends Function | string>(
 ): T; */
 
 function createElement<T extends Function | string | Class>(
-  type: T,
+  type?: T,
   props: ElementAttrs = {},
   ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {

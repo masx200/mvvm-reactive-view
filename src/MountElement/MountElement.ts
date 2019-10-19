@@ -1,12 +1,12 @@
 export const invalid_Virtualdom = "invalid Virtualdom ";
-import { VaildVDom } from "../AttributeClass/conditon";
+// import { VaildVDom } from "../AttributeClass/conditon";
 // import document from "./UtilTools/dom";
 // import { isvalidvdom } from "./CreateElement/html";
 import mount from "./mount-real-element";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { toArray } from "../UtilTools/toArray";
 import { isArray } from "../UtilTools/util";
-import { isvalidvdom } from "../CreateElement/isvalidvdom";
+import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import { isNode, isNodeArray } from "./isNodeArray";
 export default function MountElement<T extends Element>(
   vdom: VaildVDom | Node | Element | Array<Node | Element>,

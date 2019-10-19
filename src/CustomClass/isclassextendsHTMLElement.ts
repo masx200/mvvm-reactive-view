@@ -1,5 +1,5 @@
-import { Class } from "src/CustomClass/customclass";
-import { isfunction } from "src/UtilTools/util";
+import { Class } from "../CustomClass/customclass";
+import { isfunction } from "../UtilTools/util";
 
 export function isclassextendsHTMLElement(initclass: {
   prototype: any;

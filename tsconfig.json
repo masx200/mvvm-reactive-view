@@ -43,7 +43,8 @@
     "src/UtilTools/*.ts",
     "src/CreateElement/*.ts",
     "src/CustomClass/*.ts",
-    "src/MountElement/*.ts"
+    "src/MountElement/*.ts",
+    "./package.json"
   ],
   "exclude": []
 }

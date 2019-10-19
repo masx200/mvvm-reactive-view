@@ -1,4 +1,3 @@
-import { version } from "package.json";
 import "./assetbrowser";
 import Condition from "./AttributeClass/conditon";
 import createComponent from "./AttributeClass/createComponent";
@@ -16,6 +15,7 @@ import "./Directives/model-input-textarea-value-directive-binding";
 import MountElement from "./MountElement/MountElement";
 import render from "./RenderVirtual/render-vdom-to-real";
 import watch from "./Reactivity/watch";
+import version from "./version";
 export { render };
 export { computed };
 export { useMounted, useUnMounted };

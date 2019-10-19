@@ -1,6 +1,6 @@
-import { Htmlelementconstructor } from "./createComponent";
+import { VaildVDom } from "src/CreateElement/isvalidvdom";
+import Virtualdom from "../CreateElement/VirtualElement";
 import ReactiveState from "../Reactivity/ReactiveState";
-import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
-export declare type VaildVDom = Virtualdom<any> | string | number | Vdomchildren | ReactiveState<any>;
+import { Htmlelementconstructor } from "./createComponent";
 export declare const invalid_ReactiveState = "invalid ReactiveState";
-export default function (conditon: ReactiveState<any> | boolean, iftrue?: VaildVDom, iffalse?: VaildVDom): Virtualdom<Htmlelementconstructor>;
+export default function (conditon: ReactiveState<boolean> | boolean, iftrue?: VaildVDom, iffalse?: VaildVDom): Virtualdom<Htmlelementconstructor>;

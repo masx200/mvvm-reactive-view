@@ -1,10 +1,10 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import ReactiveState, { isReactiveState } from "src/Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import watch from "src/Reactivity/watch";
 import { isconnected } from "src/UtilTools/isconnected";
 import { get, has, set } from "src/UtilTools/reflect";
 import { isfunction } from "src/UtilTools/util";
-import Virtualdom from "src/CreateElement/VirtualElement";
+import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
 import { bindstatesymbol, virtualdomsymbol } from "./render-vdom-to-real";

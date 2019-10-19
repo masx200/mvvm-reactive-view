@@ -301,6 +301,10 @@ setTimeout(() => {
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
+### 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
+
+## 可以给组件设置默认属性,设置组件初始化函数的`defaultProps`属性即可
+
 一个简单的`helloworld`示例如下
 
 ```jsx
@@ -328,11 +332,9 @@ document.body.appendChild(
 );
 ```
 
-### 在组件初始化函数里面可以使用`useMounted`,`useUnMounted`,`watch`,`createState`等函数
+## 更新:可以不使用`createComponent`,创建组件了,内部会自动使用`createComponent`,自动转换
 
-## 可以给组件设置默认属性,设置组件初始化函数的`defaultProps`属性即可
-
-组件初始化函数需要返回一个`虚拟DOM`
+## 组件初始化函数需要返回一个`虚拟DOM`
 
 最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
 
@@ -708,7 +710,7 @@ const vdom = (
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
 
-# 可自由切换的组件,配合前端路由使用更合适
+# 可自由切换的组件,可配合前端路由使用
 
 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`
 
@@ -1054,7 +1056,7 @@ interface ElementAttrs {
   class?: classprop;
   [key: string]: any;
 }
-function createElement<T extends Function | string>(
+function createElement<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   propsorchildren?: Vdomchildren,
   ...children: Vdomchildren
@@ -1069,7 +1071,7 @@ function createElement<T extends Vdomchildren>(
   props?: ElementAttrs,
   ...children: T
 ): T;
-function createElement<T extends Function | string>(
+function createElement<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   props?: ElementAttrs,
   ...children: Vdomchildren
@@ -1109,6 +1111,6 @@ interface Virtualdom<T extends Class | string | Function> {
 
 ```ts
 function Switchable(
-  funstate: ReactiveState<Htmlelementconstructor>
+  funstate: ReactiveState<Htmlelementconstructor | Custom>
 ): Virtualdom<Htmlelementconstructor>;
 ```

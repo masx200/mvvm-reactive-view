@@ -1,4 +1,4 @@
-import { Class } from "src/CustomClass/customclass";
+import { Class } from "../CustomClass/customclass";
 export declare function isclassextendsHTMLElement(initclass: {
     prototype: any;
 }): initclass is Class;
