@@ -724,16 +724,47 @@ const com2 = createComponent(() => {
 const com3 = createComponent(() => {
   return <h1>component 3</h1>;
 });
+const com4 = () => {
+  return <h1>component 4</h1>;
+};
 const mystate = createState(com1);
 const vdom = Switchable(mystate);
 const element = render(vdom);
 document.body.appendChild(element);
-setTimeout(() => {
-  mystate.value = com2;
-  setTimeout(() => {
-    mystate.value = com3;
-  }, 2000);
-}, 2000);
+document.body.appendChild(
+  render(
+    h(() =>
+      h("div", [
+        <>
+          <button
+            $text="component 1"
+            onclick={() => {
+              mystate.value = com1;
+            }}
+          />
+          <button
+            $text="component 2"
+            onclick={() => {
+              mystate.value = com2;
+            }}
+          />
+          <button
+            $text="component 3"
+            onclick={() => {
+              mystate.value = com3;
+            }}
+          />
+          <button
+            $text="component 4"
+            onclick={() => {
+              mystate.value = com4;
+            }}
+          />
+        </>
+      ])
+    )
+  )
+);
 ```
 
 # 支持元素的 `class` 属性赋值 `Set` 类型,自动转成 字符串

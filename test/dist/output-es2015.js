@@ -3705,5 +3705,26 @@
     watch(mystate, state => {
         console.log([ state, element$1 ]);
     });
+    document.body.appendChild(render(h(() => h("div", [ h("", null, h("button", {
+        $text: "component 1",
+        onclick: () => {
+            mystate.value = com1;
+        }
+    }), h("button", {
+        $text: "component 2",
+        onclick: () => {
+            mystate.value = com2;
+        }
+    }), h("button", {
+        $text: "component 3",
+        onclick: () => {
+            mystate.value = com3;
+        }
+    }), h("button", {
+        $text: "component 4",
+        onclick: () => {
+            mystate.value = com4;
+        }
+    })) ]))));
 })();
 //# sourceMappingURL=output-es2015.js.map
