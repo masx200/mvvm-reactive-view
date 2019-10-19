@@ -1,5 +1,5 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import { isvalidvdom, VaildVDom } from "src/CreateElement/isvalidvdom";
+import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import createElement from "../CreateElement/create-element";
 // import createElement from "./createelement";
 import Virtualdom from "../CreateElement/VirtualElement";

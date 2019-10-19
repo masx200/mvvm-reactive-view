@@ -8,6 +8,8 @@ export interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-export declare function createComponent(custfun: Custom): Htmlelementconstructor;
-export default createComponent;
+import createcomponent from "./createComponent";
+export { createcomponent as createComponent };
+declare const _default: (custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
+export default _default;
 export declare function autocreateclass(custfun: Custom | Htmlelementconstructor): Htmlelementconstructor;

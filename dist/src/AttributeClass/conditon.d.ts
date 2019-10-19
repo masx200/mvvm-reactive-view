@@ -1,4 +1,4 @@
-import { VaildVDom } from "src/CreateElement/isvalidvdom";
+import { VaildVDom } from "../CreateElement/isvalidvdom";
 import Virtualdom from "../CreateElement/VirtualElement";
 import ReactiveState from "../Reactivity/ReactiveState";
 import { Htmlelementconstructor } from "./createComponent";

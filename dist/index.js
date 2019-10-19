@@ -2101,6 +2101,8 @@ function createComponent(custfun) {
     }
 }
 
+var createComponent$1 = custfun => autocreateclass(custfun);
+
 function autocreateclass(custfun) {
     if (isclassextendsHTMLElement(custfun)) {
         return custfun;
@@ -2308,7 +2310,7 @@ function ListMap(list, mapfun) {
         console.error(mapfun);
         throw new TypeError;
     }
-    const itemclass = createComponent(Object.assign((props, children) => {
+    const itemclass = createComponent$1(Object.assign((props, children) => {
         const {value: propvalue} = props;
         const value = propvalue;
         const [propindex = 0] = children;
@@ -2566,9 +2568,9 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.1";
+var version = "1.4.2";
 
 const version1 = version;
 
-export { conditon as Condition, extenddirectives as Directives, ListMap, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createstate as createState, h, html$1 as html, render, useMounted, useUnMounted, version1 as version, watch };
+export { conditon as Condition, extenddirectives as Directives, ListMap, MountElement, Switchable, computed, createComponent$1 as createComponent, h as createElement, createRef, createstate as createState, h, html$1 as html, render, useMounted, useUnMounted, version1 as version, watch };
 //# sourceMappingURL=index.js.map

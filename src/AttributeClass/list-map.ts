@@ -21,7 +21,7 @@ import { get, set } from "../UtilTools/reflect";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { isArray, isfunction, isSet } from "../UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
-import { VaildVDom } from "src/CreateElement/isvalidvdom";
+import { VaildVDom } from "../CreateElement/isvalidvdom";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");

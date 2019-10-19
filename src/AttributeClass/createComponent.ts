@@ -68,7 +68,7 @@ export interface Htmlelementconstructor {
   defaultProps?: Record<string, any>;
   css?: string;
 }
-export function createComponent(custfun: Custom): Htmlelementconstructor {
+function createComponent(custfun: Custom): Htmlelementconstructor {
   if (isfunction(custfun)) {
     const cached_class = cached_create_componet.get(custfun);
     if (cached_class) {
@@ -318,8 +318,10 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
     throw TypeError();
   }
 }
-
-export default createComponent;
+import createcomponent from "./createComponent";
+export { createcomponent as createComponent };
+export default (custfun: Custom | Htmlelementconstructor) =>
+  autocreateclass(custfun);
 export function autocreateclass(
   custfun: Custom | Htmlelementconstructor
 ): Htmlelementconstructor {
