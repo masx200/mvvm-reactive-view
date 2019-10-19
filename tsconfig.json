@@ -39,7 +39,8 @@
     "src/Directives/*.ts",
     "src/ScopedCSS/*.ts",
     "src/ScopedCSS/*.ts",
-    "src/UtilTools/*.ts"
+    "src/UtilTools/*.ts",
+    "src/CreateElement/*.ts"
   ],
   "exclude": []
 }

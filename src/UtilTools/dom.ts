@@ -1,4 +1,4 @@
-const document = window.document;
+// const document = window.document;
 //import { seteletext, setelehtml } from "./directives";
 //export { seteletext, setelehtml };
 
@@ -36,7 +36,7 @@ export const svgnamespace = "http://www.w3.org/2000/svg";
 export function changetext(textnode: Text, value: string) {
   textnode.nodeValue = String(value);
 }
-export default document;
+// export default document;
 
 export const mathnamespace = "http://www.w3.org/1998/Math/MathML";
 

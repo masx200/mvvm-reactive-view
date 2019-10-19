@@ -1,7 +1,7 @@
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
   return gettagtype(a) === "CSSStyleRule";
 }
-import createElement from "../createelement";
+import createElement from "../CreateElement/createelement";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
 import {

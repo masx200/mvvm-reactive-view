@@ -28,14 +28,16 @@ import {
 } from "./UtilTools/util";
 import Virtualdom, { isVirtualdom } from "./VirtualElement";
 import { watch } from "./Reactivity/watch";
+import { invalid_Virtualdom } from "./MountElement";
 
 export const bindstatesymbol = Symbol("bindstate");
 
-export const reactivestatesymbol = Symbol("reactive");
+// export const reactivestatesymbol = Symbol("reactive");
 export const virtualdomsymbol = Symbol("virtualelement");
 function throwinvalideletype(type?: any) {
   console.error(type);
   console.error("invalid element type!");
+  console.error(invalid_Virtualdom);
   throw TypeError(/*"invalid element type!"*/);
 }
 export default function render(

@@ -9,7 +9,7 @@ import {
 import computed from "../Reactivity/computed";
 import { VaildVDom } from "./conditon";
 import { createComponent, Htmlelementconstructor } from "./createComponent";
-import createElement from "../createelement";
+import createElement from "../CreateElement/createelement";
 import createstate from "../Reactivity/createstate";
 import { Custom } from "../customclass";
 import { appendchild, getdomchildren, removeNode } from "../UtilTools/dom";

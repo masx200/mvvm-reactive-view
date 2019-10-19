@@ -1,7 +1,7 @@
 export const invalid_Virtualdom = "invalid Virtualdom ";
 import { VaildVDom } from "./AttributeClass/conditon";
-import document from "./UtilTools/dom";
-import { isvalidvdom } from "./html";
+// import document from "./UtilTools/dom";
+import { isvalidvdom } from "./CreateElement/html";
 import mount from "./mount-real-element";
 import render from "./render-vdom-to-real";
 import { toArray } from "./UtilTools/toArray";

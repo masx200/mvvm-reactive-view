@@ -1,5 +1,5 @@
 const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
-import { ElementAttrs } from "./createelement";
+import { ElementAttrs } from "./CreateElement/createelement";
 import { Class } from "./customclass";
 //// import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "./UtilTools/merge-entries";

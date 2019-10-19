@@ -1,13 +1,13 @@
 import h from "./createelement";
 export { h };
-import { Class } from "./customclass";
-import ReactiveState from "./Reactivity/reactivestate";
-import { apply } from "./UtilTools/reflect";
-import { isarray, isfunction, isplainobject, isstring } from "./UtilTools/util";
+import { Class } from "../customclass";
+import ReactiveState from "../Reactivity/reactivestate";
+import { apply } from "../UtilTools/reflect";
+import { isarray, isfunction, isplainobject, isstring } from "../UtilTools/util";
 import Virtualdom, {
   createVirtualElement,
   Vdomchildren
-} from "./VirtualElement";
+} from "../VirtualElement";
 type styleprop =
   | string
   | object

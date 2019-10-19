@@ -5,7 +5,7 @@ import {
   disconnectedCallback
 } from "./attrchange";
 import { Htmlelementconstructor } from "./createComponent";
-import { h } from "../createelement";
+import { h } from "../CreateElement/createelement";
 import { componentsymbol } from "../iscomponent";
 import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
 import { readysymbol } from "../readysymbol";

@@ -21,7 +21,7 @@ import {
 import createstate from "../Reactivity/createstate";
 import { Custom } from "../customclass";
 import { seteletext } from "../UtilTools/dom";
-import { isvalidvdom } from "../html";
+import { isvalidvdom } from "../CreateElement/html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
 import { componentsymbol } from "../iscomponent";

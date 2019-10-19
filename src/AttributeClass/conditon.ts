@@ -7,11 +7,11 @@ import {
   disconnectedCallback
 } from "./attrchange";
 import { Htmlelementconstructor } from "./createComponent";
-import createElement from "../createelement";
+import createElement from "../CreateElement/createelement";
 import { setelehtml } from "../UtilTools/dom";
 // const readysymbol = Symbol("ready");
 import { onmounted, onunmounted } from "../element-onmount-unmount";
-import { isvalidvdom } from "../html";
+import { isvalidvdom } from "../CreateElement/html";
 import { componentsymbol } from "../iscomponent";
 import mount from "../mount-real-element";
 import { invalid_Virtualdom } from "../MountElement";
