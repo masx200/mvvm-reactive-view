@@ -3,22 +3,25 @@ import {
   firstinstalledcallback,
   connectedCallback,
   disconnectedCallback
-} from "./attrchange";
+} from "./attr-change";
 import { Htmlelementconstructor } from "./createComponent";
-import { h } from "../CreateElement/createelement";
-import { componentsymbol } from "../iscomponent";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
-import { readysymbol } from "../readysymbol";
-import Virtualdom from "../VirtualElement";
+import { h } from "../CreateElement/create-element";
+import { componentsymbol } from "./iscomponent";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import { readysymbol } from "./readysymbol";
+import Virtualdom from "../CreateElement/VirtualElement";
 import { watch, CancelWatchfun } from "../Reactivity/watch";
-import { isclassextendsHTMLElement } from "../createcostumelemet";
-import { mountrealelement } from "../mount-real-element";
-import render from "../render-vdom-to-real";
+// import { isclassextendsHTMLElement } from "../CustomElement/create-costum-elemet";
+import { mountrealelement } from "../MountElement/mount-real-element";
+import render from "../RenderVirtual/render-vdom-to-real";
 import { isfunction } from "../UtilTools/util";
+import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
-function switchable(
+const current_element_class = Symbol("current_element_class");
+export { Switchable };
+function Switchable(
   funstate: ReactiveState<Htmlelementconstructor>
 ): Virtualdom<Htmlelementconstructor> {
   if (!isReactiveState(funstate)) {
@@ -26,6 +29,7 @@ function switchable(
     throw new TypeError();
   }
   class Switchable extends AttrChange {
+    [current_element_class]: Htmlelementconstructor;
     [cached_class_element] = new Map<Htmlelementconstructor, Element>();
     async disconnectedCallback() {
       //   onunmounted(this);
@@ -43,16 +47,17 @@ function switchable(
         console.error(eleclass);
         throw new TypeError();
       }
+      this[current_element_class] = eleclass;
       const eleme = this[cached_class_element].get(eleclass);
       if (eleme) {
         mountrealelement(eleme, this);
-        return;
+        // return;
       } else {
         const elementreal = render(h(eleclass));
 
         this[cached_class_element].set(eleclass, elementreal);
         mountrealelement(elementreal, this);
-        return;
+        // return;
       }
     }
     [firstinstalledcallback]() {
@@ -74,4 +79,4 @@ function switchable(
   }
   return h(Switchable);
 }
-export default switchable;
+export default Switchable;

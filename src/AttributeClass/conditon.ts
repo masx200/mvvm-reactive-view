@@ -5,24 +5,28 @@ import {
   firstinstalledcallback,
   connectedCallback,
   disconnectedCallback
-} from "./attrchange";
+} from "./attr-change";
 import { Htmlelementconstructor } from "./createComponent";
-import createElement from "../CreateElement/createelement";
+import createElement from "../CreateElement/create-element";
 import { setelehtml } from "../UtilTools/dom";
 // const readysymbol = Symbol("ready");
-import { onmounted, onunmounted } from "../element-onmount-unmount";
-import { isvalidvdom } from "../CreateElement/html";
-import { componentsymbol } from "../iscomponent";
-import mount from "../mount-real-element";
-import { invalid_Virtualdom } from "../MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
-import { readysymbol } from "../readysymbol";
+import {
+  onmounted,
+  onunmounted
+} from "../mounted-unmounted/element-onmount-unmount";
+// import { isvalidvdom } from "../CreateElement/html";
+import { componentsymbol } from "./iscomponent";
+import mount from "../MountElement/mount-real-element";
+import { invalid_Virtualdom } from "../MountElement/MountElement";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import { readysymbol } from "./readysymbol";
 import { get } from "../UtilTools/reflect";
-import render from "../render-vdom-to-real";
+import render from "../RenderVirtual/render-vdom-to-real";
 // import mount from "./mount";
 import { isboolean, isundefined } from "../UtilTools/util";
 // import createElement from "./createelement";
-import Virtualdom, { Vdomchildren } from "../VirtualElement";
+import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
+import { isvalidvdom } from "src/CreateElement/isvalidvdom";
 export type VaildVDom =
   | Virtualdom<any>
   | string

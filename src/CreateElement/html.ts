@@ -1,24 +1,10 @@
-// declare const htm: (
-//   strings?: TemplateStringsArray,
-//   ...values: any[]
-// ) => Virtualdom<any>;
-/* declare module "htm/dist/htm.module" {
-  const htm: (
-    strings?: TemplateStringsArray,
-    ...values: any[]
-  ) => Virtualdom<any>;
-  export default htm;
-} */
-/* interface HTM {
-  (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
-} */
 import htm from "htm";
 // import htm from "../types/htm";
-import { invalid_Virtualdom } from "../MountElement";
+import { invalid_Virtualdom } from "../MountElement/MountElement";
 import { apply } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
-import Virtualdom, { Vdomchildren } from "../VirtualElement";
-import h from "./createelement";
+import Virtualdom, { Vdomchildren } from "./VirtualElement";
+import h from "./create-element";
 import { isvalidvdom } from "./isvalidvdom";
 
 // const html = htm.bind(h);
@@ -50,3 +36,18 @@ export default function(...args: any[]) {
     throw new TypeError();
   }
 }
+
+// declare const htm: (
+//   strings?: TemplateStringsArray,
+//   ...values: any[]
+// ) => Virtualdom<any>;
+/* declare module "htm/dist/htm.module" {
+  const htm: (
+    strings?: TemplateStringsArray,
+    ...values: any[]
+  ) => Virtualdom<any>;
+  export default htm;
+} */
+/* interface HTM {
+  (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
+} */

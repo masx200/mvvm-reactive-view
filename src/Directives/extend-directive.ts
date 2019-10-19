@@ -1,7 +1,7 @@
-import { invalid_Function } from "../context-mounted-unmounted";
+import { invalid_Function } from "../mounted-unmounted/Component-context";
 import directives from "./directives";
 import { isplainobject } from "../UtilTools/util";
-import Virtualdom from "../VirtualElement";
+import Virtualdom from "../CreateElement/VirtualElement";
 export interface Extendfun {
   (
     value: any,
@@ -13,6 +13,7 @@ export interface Extendfun {
 export interface ExtendOptions {
   [s: string]: Extendfun;
 }
+export { extenddirectives };
 export default function extenddirectives(options: ExtendOptions = {}) {
   if (!isplainobject(options)) {
     console.error(options);

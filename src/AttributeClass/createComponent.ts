@@ -7,7 +7,7 @@ import {
   firstinstalledcallback,
   connectedCallback,
   disconnectedCallback
-} from "./attrchange";
+} from "./attr-change";
 import { cached_create_componet } from "../cached-map";
 import {
   closectx,
@@ -17,17 +17,19 @@ import {
   getwatchrecords,
   invalid_Function,
   openctx
-} from "../context-mounted-unmounted";
-import createstate from "../Reactivity/createstate";
-import { Custom } from "../customclass";
+} from "../mounted-unmounted/Component-context";
+import createstate from "../Reactivity/create-state";
+import { Custom } from "../CustomClass/customclass";
 import { seteletext } from "../UtilTools/dom";
-import { isvalidvdom } from "../CreateElement/html";
+// import { isvalidvdom } from "../CreateElement/html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
-import { componentsymbol } from "../iscomponent";
+// import { componentsymbol } from "./iscomponent";
 // import { insertfirst } from "./dom";
-import mount from "../mount-real-element";
-import { /* createApp, */ invalid_Virtualdom } from "../MountElement";
+import mount from "../MountElement/mount-real-element";
+import {
+  /* createApp, */ invalid_Virtualdom
+} from "../MountElement/MountElement";
 import {
   /* parsecsstext,
                 prefixcssrules,
@@ -42,19 +44,21 @@ import {
   //   savestyleblob
   waitloadallstyle
 } from "../ScopedCSS/parsecss-transformcss";
-import ReactiveState /* , { dispatchsymbol } */ from "../Reactivity/reactivestate";
-import readonlyproxy from "../Reactivity/readonlyproxy";
-import { readysymbol } from "../readysymbol";
+import ReactiveState /* , { dispatchsymbol } */ from "../Reactivity/ReactiveState";
+import readonlyproxy from "../Reactivity/readonly-proxy";
+import { readysymbol } from "./readysymbol";
 import { apply, get } from "../UtilTools/reflect";
-import render from "../render-vdom-to-real";
+import render from "../RenderVirtual/render-vdom-to-real";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
 import { isArray, isfunction, isobject, isstring } from "../UtilTools/util";
 // import { Class } from "./rendervdomtoreal";
-import Virtualdom, { Vdomchildren } from "../VirtualElement";
+import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
+import { isvalidvdom } from "src/CreateElement/isvalidvdom";
+import { componentsymbol } from "./iscomponent";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
-const vdomsymbol = Symbol("innervdom");
+const inner_vdom_symbol = Symbol("innervdom");
 const mountedsymbol = Symbol("mounted");
 const unmountedsymbol = Symbol("unmounted");
 export interface Htmlelementconstructor {
@@ -164,13 +168,13 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
             .filter(Boolean);
         }
         if (isvalidvdom(possiblyvirtualdom)) {
-          const thisvdomsymbol /* isArray(possiblyvirtualdom)
+          const vdomarray /* isArray(possiblyvirtualdom)
                 ? possiblyvirtualdom
                 : [possiblyvirtualdom]; */ = toArray(
             possiblyvirtualdom
           );
           //
-          this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+          this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
           this[mountedsymbol] = getMounted();
           this[unmountedsymbol] = getUnMounted();
           this[innerstatesymbol] = getstates();
@@ -200,12 +204,12 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
         : undefined;
 
       [elementsymbol]: Array<Node>;
-      [vdomsymbol]: Array<
+      [inner_vdom_symbol]: Array<
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
       [firstinstalledcallback]() {
         if (!this[elementsymbol]) {
-          this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
+          this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
         }
 
         const css = get(this.constructor, "css");

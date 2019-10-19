@@ -1,7 +1,7 @@
 import { isArray, isnumber, isstring } from "src/UtilTools/util";
 import { VaildVDom } from "src/AttributeClass/conditon";
-import { isVirtualdom } from "src/VirtualElement";
-import { isReactiveState } from "src/Reactivity/reactivestate";
+import { isVirtualdom } from "src/CreateElement/VirtualElement";
+import { isReactiveState } from "src/Reactivity/ReactiveState";
 
 export function isvalidvdom(v: any): v is VaildVDom {
   if (isstring(v)) {

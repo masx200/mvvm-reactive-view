@@ -1,6 +1,14 @@
-const {Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, window: window, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, globalThis: globalThis, self: self, global: global} = Function("return this")();
+const globalThis = Function("return this")();
 
-var version = "1.3.13";
+const self = globalThis;
+
+const window = globalThis;
+
+const global = globalThis;
+
+const {Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
+
+var version = "1.4.0";
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -234,8 +242,6 @@ function isinputtextortextarea(ele) {
     return tagname === "textarea" || tagname === "select" || tagname === "input" && get(ele, "type") === "text";
 }
 
-const document$1 = window.document;
-
 function seteletext(e, v) {
     e.textContent = v;
 }
@@ -253,19 +259,19 @@ function createsvgelement() {
 }
 
 function createDocumentFragment() {
-    return document$1.createDocumentFragment();
+    return document.createDocumentFragment();
 }
 
 function createnativeelement(type) {
-    return document$1.createElement(type);
+    return document.createElement(type);
 }
 
 function createElementNS(namespace, name) {
-    return document$1.createElementNS(namespace, name);
+    return document.createElementNS(namespace, name);
 }
 
 function createtextnode(data) {
-    return document$1.createTextNode(String(data));
+    return document.createTextNode(String(data));
 }
 
 const svgnamespace = "http://www.w3.org/2000/svg";
@@ -314,11 +320,11 @@ function removeAttribute$1(ele, name) {
 const HTMLElementprototype = HTMLElement.prototype;
 
 function createanotherhtmldocument() {
-    return document$1.implementation.createHTMLDocument("");
+    return document.implementation.createHTMLDocument("");
 }
 
 function querySelectorAll(selector) {
-    return [ ...document$1.querySelectorAll(selector) ];
+    return [ ...document.querySelectorAll(selector) ];
 }
 
 const Reflect$2 = window.Reflect;
@@ -1004,9 +1010,7 @@ function handleobjectstate(init) {
         return isReactiveState(a);
     });
     if (containReactiveState) {
-        initobj = {
-            ...init
-        };
+        initobj = Object.assign({}, init);
         state_entries.forEach(([key, state]) => {
             defineProperty(initobj, key, {
                 enumerable: true,
@@ -1139,6 +1143,42 @@ function handleobjectstate(init) {
     return new Proxy(reactive, objproxyhandler);
 }
 
+function getproperyreadproxy(a) {
+    const __proto__ = "__proto__";
+    const target = a;
+    return new Proxy(target, {
+        getOwnPropertyDescriptor(target, key) {
+            if (issymbol(key)) {
+                return;
+            } else {
+                return getOwnPropertyDescriptor(target, key);
+            }
+        },
+        ownKeys(target) {
+            let myvalue = get$1(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
+        },
+        has(target, key) {
+            const myvalue = get$1(target, "value");
+            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+            return has(target, key) || has(myvalueobj, key);
+        },
+        get(target, key) {
+            if (has(target, key)) {
+                return get$1(target, key);
+            } else {
+                const myvalue = get$1(target, "value");
+                const myvalueobj = Object(myvalue);
+                if (has(myvalueobj, key)) {
+                    const property = get$1(myvalueobj, key);
+                    return isfunction(property) ? property.bind(myvalueobj) : property;
+                }
+            }
+        }
+    });
+}
+
 const set_prototype = Set.prototype;
 
 function createstate(init) {
@@ -1183,111 +1223,6 @@ function createstate$1(init) {
     }
 }
 
-var n = function(t, r, u, e) {
-    for (var p = 1; p < r.length; p++) {
-        var s = r[p], h = "number" == typeof s ? u[s] : s, a = r[++p];
-        1 === a ? e[0] = h : 3 === a ? e[1] = Object.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
-    }
-    return e;
-}, t = function(n) {
-    for (var t, r, u = 1, e = "", p = "", s = [ 0 ], h = function(n) {
-        1 === u && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? s.push(n || e, 0) : 3 === u && (n || e) ? (s.push(n || e, 1), 
-        u = 2) : 2 === u && "..." === e && n ? s.push(n, 3) : 2 === u && e && !n ? s.push(!0, 5, e) : u >= 5 && ((e || !n && 5 === u) && (s.push(e, u, r), 
-        u = 6), n && (s.push(n, u, r), u = 6)), e = "";
-    }, a = 0; a < n.length; a++) {
-        a && (1 === u && h(), h(a));
-        for (var f = 0; f < n[a].length; f++) t = n[a][f], 1 === u ? "<" === t ? (h(), s = [ s ], 
-        u = 3) : e += t : 4 === u ? "--" === e && ">" === t ? (u = 1, e = "") : e = t + e[0] : p ? t === p ? p = "" : e += t : '"' === t || "'" === t ? p = t : ">" === t ? (h(), 
-        u = 1) : u && ("=" === t ? (u = 5, r = e, e = "") : "/" === t && (u < 5 || ">" === n[a][f + 1]) ? (h(), 
-        3 === u && (s = s[0]), u = s, (s = s[0]).push(u, 2), u = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (h(), 
-        u = 2) : e += t), 3 === u && "!--" === e && (u = 4, s = s[0]);
-    }
-    return h(), s;
-}, r = "function" == typeof Map, u = r ? new Map : {}, e = r ? function(n) {
-    var r = u.get(n);
-    return r || u.set(n, r = t(n)), r;
-} : function(n) {
-    for (var r = "", e = 0; e < n.length; e++) r += n[e].length + "-" + n[e];
-    return u[r] || (u[r] = t(n));
-};
-
-function htm(t) {
-    var r = n(this, e(t), arguments, []);
-    return r.length > 1 ? r : r[0];
-}
-
-function merge_entries(a) {
-    const m = {};
-    a.forEach(([key, value]) => {
-        if (!m[key]) {
-            m[key] = new Set;
-        }
-        value.forEach(v => {
-            m[key].add(v);
-        });
-    });
-    return Object.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
-}
-
-const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
-
-function isVirtualdom(a) {
-    return isobject(a) && get$1(a, isvirtualelement) === isvirtualelement;
-}
-
-const isvirtualelement = Symbol("isvirtualelement");
-
-function createVirtualElement(type, props = {}, children = []) {
-    props = Object.assign({}, props);
-    children = children.flat(1 / 0);
-    const propsentries = Object.entries(props);
-    const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
-    const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
-    const thisarg = Object.create(null);
-    [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
-        defineProperty(thisarg, key, {
-            writable: true
-        });
-    });
-    Object.assign(thisarg, {
-        type: type,
-        bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
-        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
-        children: children,
-        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
-    });
-    defineProperty(thisarg, Symbol.toStringTag, {
-        value: "VirtualElement"
-    });
-    defineProperty(thisarg, isvirtualelement, {
-        value: isvirtualelement
-    });
-    return thisarg;
-}
-
-function h(type, propsorchildren, ...children) {
-    if (isarray(propsorchildren)) {
-        return apply(createElement, undefined, [ type, undefined, [ ...propsorchildren, ...children ].flat(1 / 0) ]);
-    } else {
-        return apply(createElement, undefined, arguments);
-    }
-}
-
-function createElement(type, props = {}, ...children) {
-    let typenormalized = isstring(type) || isfunction(type) ? type : "";
-    const propsnormalized = isplainobject(props) ? props : {};
-    const childrennormalized = children.flat(Infinity).map(a => a === 0 ? "0" : a).filter(a => !!a);
-    if (isstring(typenormalized)) {
-        typenormalized = typenormalized.trim().toLowerCase();
-    }
-    if ("" === typenormalized) {
-        return childrennormalized;
-    } else {
-        return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
-    }
-}
-
 function mountrealelement(ele, container, clear = true) {
     if (clear) {
         seteletext(container, "");
@@ -1295,6 +1230,28 @@ function mountrealelement(ele, container, clear = true) {
     const eles = toArray(ele).flat(Infinity);
     eles.forEach(e => appendchild(container, e));
     return container;
+}
+
+const charactorlist = Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n));
+
+const hexnumberlist = Array(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
+
+const charactorandnumberlist = [ ...new Set([ ...hexnumberlist, ...charactorlist ]) ];
+
+function getrandomcharactor() {
+    return get$1(charactorlist, Math.floor(Math.random() * charactorlist.length));
+}
+
+function getrandomhexnumberandcharactor() {
+    return get$1(charactorandnumberlist, Math.floor(Math.random() * charactorandnumberlist.length));
+}
+
+function getrandomstringandnumber(length = 1) {
+    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
+}
+
+function isclassextendsHTMLElement(initclass) {
+    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
 }
 
 const invalid_custom_element_class = "invalid custom element class !";
@@ -1378,28 +1335,6 @@ set$1(customElements$1, Symbol.iterator, () => {
     return entries[Symbol.iterator].call(entries);
 });
 
-const charactorlist = Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n));
-
-const hexnumberlist = Array(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
-
-const charactorandnumberlist = [ ...new Set([ ...hexnumberlist, ...charactorlist ]) ];
-
-function getrandomcharactor() {
-    return get$1(charactorlist, Math.floor(Math.random() * charactorlist.length));
-}
-
-function getrandomhexnumberandcharactor() {
-    return get$1(charactorandnumberlist, Math.floor(Math.random() * charactorandnumberlist.length));
-}
-
-function getrandomstringandnumber(length = 1) {
-    return Array(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
-}
-
-function isclassextendsHTMLElement(initclass) {
-    return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
-}
-
 function createcostumelemet(initclass, propsjson, children) {
     if (isclassextendsHTMLElement(initclass)) {
         RandomDefineCustomElement(initclass);
@@ -1409,6 +1344,98 @@ function createcostumelemet(initclass, propsjson, children) {
         console.error(invalid_custom_element_class);
         throw TypeError();
     }
+}
+
+const componentsymbol = Symbol("component");
+
+function iscomponent(a) {
+    return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
+}
+
+function isconnected(element) {
+    return document.documentElement === getancestornode(element);
+}
+
+function getancestornode(node) {
+    while (node && node.parentNode && node.parentNode !== document) {
+        node = node.parentNode;
+    }
+    return node;
+}
+
+function merge_entries(a) {
+    const m = {};
+    a.forEach(([key, value]) => {
+        if (!m[key]) {
+            m[key] = new Set;
+        }
+        value.forEach(v => {
+            m[key].add(v);
+        });
+    });
+    return Object.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
+}
+
+const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
+
+function isVirtualdom(a) {
+    return isobject(a) && get$1(a, isvirtualelement) === isvirtualelement;
+}
+
+const isvirtualelement = Symbol("isvirtualelement");
+
+function createVirtualElement(type, props = {}, children = []) {
+    props = Object.assign({}, props);
+    children = children.flat(1 / 0);
+    const propsentries = Object.entries(props);
+    const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
+    const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
+    const thisarg = Object.create(null);
+    [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
+        defineProperty(thisarg, key, {
+            writable: true
+        });
+    });
+    Object.assign(thisarg, {
+        type: type,
+        bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
+        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
+        children: children,
+        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+    });
+    defineProperty(thisarg, Symbol.toStringTag, {
+        value: "VirtualElement"
+    });
+    defineProperty(thisarg, isvirtualelement, {
+        value: isvirtualelement
+    });
+    return thisarg;
+}
+
+function createhtmlandtextdirective(seteletext, errorname) {
+    return function(ele, text) {
+        const element = ele;
+        if (isstring(text)) {
+            requestAnimationFrame(() => {
+                seteletext(ele, text);
+            });
+        } else if (isReactiveState(text)) {
+            watch(text, () => {
+                const state = text;
+                if (isconnected(element)) {
+                    seteletext(ele, String(state));
+                }
+            });
+            requestAnimationFrame(() => {
+                seteletext(ele, String(text));
+            });
+        } else {
+            console.error(text);
+            console.error("invalid " + errorname);
+            throw TypeError();
+        }
+    };
 }
 
 function extenddirectives(options = {}) {
@@ -1433,19 +1460,6 @@ function extenddirectives(options = {}) {
     });
     return directive;
 }
-
-function isconnected(element) {
-    return document.documentElement === getancestornode(element);
-}
-
-function getancestornode(node) {
-    while (node && node.parentNode && node.parentNode !== document) {
-        node = node.parentNode;
-    }
-    return node;
-}
-
-const {requestAnimationFrame: requestAnimationFrame$1} = window;
 
 const directive = {
     ref(ref, ele, _vdom) {
@@ -1472,31 +1486,6 @@ extenddirectives({
         createhtmlandtextdirective(seteletext, "text")(ele, text);
     }
 });
-
-function createhtmlandtextdirective(seteletext, errorname) {
-    return function(ele, text) {
-        const element = ele;
-        if (isstring(text)) {
-            requestAnimationFrame$1(() => {
-                seteletext(ele, text);
-            });
-        } else if (isReactiveState(text)) {
-            watch(text, () => {
-                const state = text;
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
-            });
-            requestAnimationFrame$1(() => {
-                seteletext(ele, String(text));
-            });
-        } else {
-            console.error(text);
-            console.error("invalid " + errorname);
-            throw TypeError();
-        }
-    };
-}
 
 const eventlistenerssymbol = Symbol("eventlisteners");
 
@@ -1536,10 +1525,40 @@ function readdlisteners(ele) {
     }
 }
 
-const componentsymbol = Symbol("component");
-
-function iscomponent(a) {
-    return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
+function handleprops(element, vdom) {
+    ((element, vdom) => {
+        Object.entries(vdom.directives).forEach(([name, value]) => {
+            if (isfunction(directive[name])) {
+                directive[name](value, element, vdom);
+            } else {
+                console.error(vdom.directives);
+                console.error("invalid directives " + name);
+                throw new Error;
+            }
+        });
+        const attribute1 = createeleattragentreadwrite(element);
+        Object.assign(attribute1, vdom.props);
+        set$1(element, virtualdomsymbol, vdom);
+        vdom.element = element;
+        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+            attribute1[key] = primitivestate.valueOf();
+            watch(primitivestate, () => {
+                const state = primitivestate;
+                if (isconnected(element)) {
+                    attribute1[key] = state.valueOf();
+                }
+            });
+        });
+        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
+            onevent(element, event, callbacks);
+        });
+    })(element, vdom);
+    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
+        if (!has(element, bindstatesymbol)) {
+            set$1(element, bindstatesymbol, new Set);
+        }
+        get$1(element, bindstatesymbol).add(e);
+    });
 }
 
 const bindstatesymbol = Symbol("bindstate");
@@ -1549,6 +1568,7 @@ const virtualdomsymbol = Symbol("virtualelement");
 function throwinvalideletype(type) {
     console.error(type);
     console.error("invalid element type!");
+    console.error(invalid_Virtualdom);
     throw TypeError();
 }
 
@@ -1635,88 +1655,6 @@ function render(vdom, namespace) {
     throw new Error;
 }
 
-function handleprops(element, vdom) {
-    ((element, vdom) => {
-        Object.entries(vdom.directives).forEach(([name, value]) => {
-            if (isfunction(directive[name])) {
-                directive[name](value, element, vdom);
-            } else {
-                console.error(vdom.directives);
-                console.error("invalid directives " + name);
-                throw new Error;
-            }
-        });
-        const attribute1 = createeleattragentreadwrite(element);
-        Object.assign(attribute1, vdom.props);
-        set$1(element, virtualdomsymbol, vdom);
-        vdom.element = element;
-        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
-            attribute1[key] = primitivestate.valueOf();
-            watch(primitivestate, () => {
-                const state = primitivestate;
-                if (isconnected(element)) {
-                    attribute1[key] = state.valueOf();
-                }
-            });
-        });
-        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
-            onevent(element, event, callbacks);
-        });
-    })(element, vdom);
-    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
-        if (!has(element, bindstatesymbol)) {
-            set$1(element, bindstatesymbol, new Set);
-        }
-        get$1(element, bindstatesymbol).add(e);
-    });
-}
-
-const invalid_Virtualdom = "invalid Virtualdom ";
-
-function MountElement(vdom, container) {
-    if (isarray(vdom)) {
-        vdom = vdom.flat(Infinity);
-        if (!vdom.length) {
-            console.error("Empty array not allowed");
-            throw new TypeError;
-        }
-    }
-    const el = container;
-    if (!(el instanceof HTMLElement)) {
-        console.error(el);
-        console.error("invalid container HTMLElement!");
-        throw TypeError();
-    }
-    if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
-        console.error(el);
-        console.error("Do not mount  to <html> or <body> <head>.");
-        throw Error();
-    }
-    const elesarray = toArray(vdom);
-    if (isvalidvdom(vdom)) {
-        mountrealelement(render(elesarray), container);
-    } else if (isNode(vdom) || isNodeArray(vdom)) {
-        mountrealelement(elesarray, container);
-    } else {
-        console.error(vdom);
-        console.error(invalid_Virtualdom);
-        throw TypeError();
-    }
-    return container;
-}
-
-function isNodeArray(arr) {
-    return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
-}
-
-function isNode(a) {
-    return a instanceof Node;
-}
-
-function html(...inargs) {
-    return apply(htm, h, inargs);
-}
-
 function isvalidvdom(v) {
     if (isstring(v)) {
         return true;
@@ -1735,15 +1673,67 @@ function isvalidvdom(v) {
     return flag;
 }
 
-function html$1(...args) {
-    const prevdom = toArray(html(...args));
-    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
+function isNodeArray(arr) {
+    return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
+}
+
+function isNode(a) {
+    return a instanceof Node;
+}
+
+const invalid_Virtualdom = "invalid Virtualdom ";
+
+function MountElement(vdom, container) {
+    if (isarray(vdom)) {
+        vdom = vdom.flat(Infinity);
+        if (!vdom.length) {
+            console.error("Empty array not allowed");
+            throw new TypeError;
+        }
+    }
+    const el = container;
+    if (!(el instanceof HTMLElement)) {
+        console.error(el);
+        console.error("invalid container HTMLElement!");
+        throw TypeError();
+    }
+    if (el === document.body || el === document.documentElement || el === document.head) {
+        console.error(el);
+        console.error("Do not mount  to <html> or <body> <head>.");
+        throw Error();
+    }
+    const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
-        return vdom;
+        mountrealelement(render(elesarray), container);
+    } else if (isNode(vdom) || isNodeArray(vdom)) {
+        mountrealelement(elesarray, container);
     } else {
         console.error(vdom);
         console.error(invalid_Virtualdom);
-        throw new TypeError;
+        throw TypeError();
+    }
+    return container;
+}
+
+function h(type, propsorchildren, ...children) {
+    if (isarray(propsorchildren)) {
+        return apply(createElement, undefined, [ type, undefined, [ ...propsorchildren, ...children ].flat(1 / 0) ]);
+    } else {
+        return apply(createElement, undefined, arguments);
+    }
+}
+
+function createElement(type, props = {}, ...children) {
+    let typenormalized = isstring(type) || isfunction(type) ? type : "";
+    const propsnormalized = isplainobject(props) ? props : {};
+    const childrennormalized = children.flat(Infinity).map(a => a === 0 ? "0" : a).filter(a => !!a);
+    if (isstring(typenormalized)) {
+        typenormalized = typenormalized.trim().toLowerCase();
+    }
+    if ("" === typenormalized) {
+        return childrennormalized;
+    } else {
+        return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
     }
 }
 
@@ -1763,13 +1753,6 @@ function isCSSMediaRule(a) {
 
 function isCSSImportRule(a) {
     return gettagtype(a) === "CSSImportRule";
-}
-
-function parsecsstext(text) {
-    const styleelement = render(h("style", [ text ]));
-    const otherdocument = createanotherhtmldocument();
-    appendchild(otherdocument.documentElement, styleelement);
-    return Array.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
 }
 
 function selectoraddprefix(cssstylerule, prefix) {
@@ -1811,6 +1794,13 @@ function prefixcssrules(cssRulesarray, prefix) {
             return cssrule;
         }
     }).filter(Boolean);
+}
+
+function parsecsstext(text) {
+    const styleelement = render(h("style", [ text ]));
+    const otherdocument = createanotherhtmldocument();
+    appendchild(otherdocument.documentElement, styleelement);
+    return Array.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
 }
 
 const componentsstylesheet = {};
@@ -1897,7 +1887,7 @@ const attributessymbol = Symbol("attributes");
 
 const elementsymbol = Symbol("innerelement");
 
-const vdomsymbol = Symbol("innervdom");
+const inner_vdom_symbol = Symbol("innervdom");
 
 const mountedsymbol = Symbol("mounted");
 
@@ -1945,8 +1935,8 @@ function createComponent(custfun) {
                     possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
                 }
                 if (isvalidvdom(possiblyvirtualdom)) {
-                    const thisvdomsymbol = toArray(possiblyvirtualdom);
-                    this[vdomsymbol] = thisvdomsymbol.flat(Infinity).filter(Boolean);
+                    const vdomarray = toArray(possiblyvirtualdom);
+                    this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
                     this[mountedsymbol] = getMounted();
                     this[unmountedsymbol] = getUnMounted();
                     this[innerstatesymbol] = getstates();
@@ -1961,7 +1951,7 @@ function createComponent(custfun) {
             }
             [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
                 if (!this[elementsymbol]) {
-                    this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
+                    this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
                 }
                 const css = get$1(this.constructor, "css");
                 const prefix = this.tagName.toLowerCase();
@@ -2279,49 +2269,6 @@ function Arraycomputed(state, callback) {
     return readonlyproxy(getproperyreadproxy(reactivestate));
 }
 
-const __proto__ = "__proto__";
-
-function getproperyreadproxy(a) {
-    const target = a;
-    return new Proxy(target, {
-        getOwnPropertyDescriptor(target, key) {
-            if (issymbol(key)) {
-                return;
-            } else {
-                return getOwnPropertyDescriptor(target, key);
-            }
-        },
-        ownKeys(target) {
-            let myvalue = get$1(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
-        },
-        has(target, key) {
-            const myvalue = get$1(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return has(target, key) || has(myvalueobj, key);
-        },
-        get(target, key) {
-            if (has(target, key)) {
-                return get$1(target, key);
-            } else {
-                const myvalue = get$1(target, "value");
-                const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
-                if (has(myvalueobj, key)) {
-                    const property = get$1(myvalueobj, key);
-                    return isfunction(property) ? property.bind(myvalueobj) : property;
-                }
-            }
-        }
-    });
-}
-
-function createRef(value) {
-    return {
-        value: value
-    };
-}
-
 const listvalueattr = Symbol("listvalueattr");
 
 const listinnervdom = Symbol("listinnervdom");
@@ -2342,21 +2289,20 @@ function listmap(list, mapfun) {
         console.error(mapfun);
         throw new TypeError;
     }
-    const itemclass = createComponent(Object.assign(props => {
-        const {value: propvalue, index: propindex} = props;
+    const itemclass = createComponent(Object.assign((props, children) => {
+        const {value: propvalue} = props;
         const value = propvalue;
-        const index = propindex.valueOf();
+        const [propindex = 0] = children;
+        const index = Number(propindex);
         return mapfun(value, index);
     }, {
         defaultProps: {
-            index: 0,
             value: undefined
         }
     }));
     const ITEMfactory = (value, index) => h(itemclass, {
-        value: value,
-        index: index
-    });
+        value: value
+    }, index);
     class ListMap extends AttrChange {
         constructor() {
             super(...arguments);
@@ -2392,7 +2338,7 @@ function listmap(list, mapfun) {
                             }
                         });
                         const realelementstoadd = vdomstoadd.map(vdom => {
-                            const index = vdom.props.index;
+                            const index = Number(vdom.children[0]);
                             const cached_element = get$1(this[cached_realele], index);
                             if (cached_element) {
                                 return cached_element;
@@ -2443,6 +2389,119 @@ function listmap(list, mapfun) {
     });
 }
 
+const cancel_watch_symbol = Symbol("cancel_watch");
+
+const cached_class_element = Symbol("cached_class_element");
+
+const switch_mount_symbol = Symbol("switch_mount");
+
+const current_element_class = Symbol("current_element_class");
+
+function Switchable(funstate) {
+    var _a, _b, _c;
+    if (!isReactiveState(funstate)) {
+        console.error(funstate);
+        throw new TypeError;
+    }
+    class Switchable extends AttrChange {
+        constructor() {
+            super(...arguments);
+            this[_a] = new Map;
+            this[_c] = false;
+        }
+        async disconnectedCallback() {
+            disconnectedCallback(this);
+            if (isfunction(this[cancel_watch_symbol])) {
+                this[cancel_watch_symbol]();
+            }
+        }
+        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
+            if (!isclassextendsHTMLElement(eleclass)) {
+                console.error(eleclass);
+                throw new TypeError;
+            }
+            this[current_element_class] = eleclass;
+            const eleme = this[cached_class_element].get(eleclass);
+            if (eleme) {
+                mountrealelement(eleme, this);
+            } else {
+                const elementreal = render(h(eleclass));
+                this[cached_class_element].set(eleclass, elementreal);
+                mountrealelement(elementreal, this);
+            }
+        }
+        [firstinstalledcallback]() {
+            const callmountswitch = () => {
+                this[switch_mount_symbol](funstate.valueOf());
+            };
+            callmountswitch();
+            this[cancel_watch_symbol] = watch(funstate, () => {
+                callmountswitch();
+            });
+        }
+        async connectedCallback() {
+            connectedCallback(this);
+        }
+    }
+    Switchable[_b] = componentsymbol;
+    return h(Switchable);
+}
+
+function createRef(value) {
+    return {
+        value: value
+    };
+}
+
+var n = function(t, r, u, e) {
+    for (var p = 1; p < r.length; p++) {
+        var s = r[p], h = "number" == typeof s ? u[s] : s, a = r[++p];
+        1 === a ? e[0] = h : 3 === a ? e[1] = Object.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
+    }
+    return e;
+}, t = function(n) {
+    for (var t, r, u = 1, e = "", p = "", s = [ 0 ], h = function(n) {
+        1 === u && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? s.push(n || e, 0) : 3 === u && (n || e) ? (s.push(n || e, 1), 
+        u = 2) : 2 === u && "..." === e && n ? s.push(n, 3) : 2 === u && e && !n ? s.push(!0, 5, e) : u >= 5 && ((e || !n && 5 === u) && (s.push(e, u, r), 
+        u = 6), n && (s.push(n, u, r), u = 6)), e = "";
+    }, a = 0; a < n.length; a++) {
+        a && (1 === u && h(), h(a));
+        for (var f = 0; f < n[a].length; f++) t = n[a][f], 1 === u ? "<" === t ? (h(), s = [ s ], 
+        u = 3) : e += t : 4 === u ? "--" === e && ">" === t ? (u = 1, e = "") : e = t + e[0] : p ? t === p ? p = "" : e += t : '"' === t || "'" === t ? p = t : ">" === t ? (h(), 
+        u = 1) : u && ("=" === t ? (u = 5, r = e, e = "") : "/" === t && (u < 5 || ">" === n[a][f + 1]) ? (h(), 
+        3 === u && (s = s[0]), u = s, (s = s[0]).push(u, 2), u = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (h(), 
+        u = 2) : e += t), 3 === u && "!--" === e && (u = 4, s = s[0]);
+    }
+    return h(), s;
+}, r = "function" == typeof Map, u = r ? new Map : {}, e = r ? function(n) {
+    var r = u.get(n);
+    return r || u.set(n, r = t(n)), r;
+} : function(n) {
+    for (var r = "", e = 0; e < n.length; e++) r += n[e].length + "-" + n[e];
+    return u[r] || (u[r] = t(n));
+};
+
+function htm(t) {
+    var r = n(this, e(t), arguments, []);
+    return r.length > 1 ? r : r[0];
+}
+
+function html(...inargs) {
+    return apply(htm, h, inargs);
+}
+
+function html$1(...args) {
+    const prevdom = toArray(html(...args));
+    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
+    if (isvalidvdom(vdom)) {
+        return vdom;
+    } else {
+        console.error(vdom);
+        console.error(invalid_Virtualdom);
+        throw new TypeError;
+    }
+}
+
 extenddirectives({
     value(value, element, vdom) {
         model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
@@ -2487,57 +2546,5 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-const cached_class_element = Symbol("cached_class_element");
-
-const switch_mount_symbol = Symbol("switch_mount");
-
-function switchable(funstate) {
-    var _a, _b, _c;
-    if (!isReactiveState(funstate)) {
-        console.error(funstate);
-        throw new TypeError;
-    }
-    class Switchable extends AttrChange {
-        constructor() {
-            super(...arguments);
-            this[_a] = new Map;
-            this[_c] = false;
-        }
-        async disconnectedCallback() {
-            disconnectedCallback(this);
-        }
-        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
-            if (!isclassextendsHTMLElement(eleclass)) {
-                console.error(eleclass);
-                throw new TypeError;
-            }
-            const eleme = this[cached_class_element].get(eleclass);
-            if (eleme) {
-                mountrealelement(eleme, this);
-                return;
-            } else {
-                const elementreal = render(h(eleclass));
-                this[cached_class_element].set(eleclass, elementreal);
-                mountrealelement(elementreal, this);
-                return;
-            }
-        }
-        [firstinstalledcallback]() {
-            const callmountswitch = () => {
-                this[switch_mount_symbol](funstate.valueOf());
-            };
-            callmountswitch();
-            watch(funstate, () => {
-                callmountswitch();
-            });
-        }
-        async connectedCallback() {
-            connectedCallback(this);
-        }
-    }
-    Switchable[_b] = componentsymbol;
-    return h(Switchable);
-}
-
-export { conditon as Condition, extenddirectives as Directives, listmap as ListMap, MountElement, switchable as Switchable, computed, createComponent, h as createElement, createRef, createstate as createState, h, html$1 as html, render, useMounted, useUnMounted, version, watch };
+export { conditon as Condition, extenddirectives as Directives, listmap as ListMap, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createstate as createState, h, html$1 as html, render, useMounted, useUnMounted, version, watch };
 //# sourceMappingURL=index.js.map

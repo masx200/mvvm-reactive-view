@@ -39,9 +39,11 @@
     "src/Reactivity/*.ts",
     "src/Directives/*.ts",
     "src/ScopedCSS/*.ts",
-
+    "src/RenderVirtual/*.ts",
     "src/UtilTools/*.ts",
-    "src/CreateElement/*.ts"
+    "src/CreateElement/*.ts",
+    "src/CustomClass/*.ts",
+    "src/MountElement/*.ts"
   ],
   "exclude": []
 }

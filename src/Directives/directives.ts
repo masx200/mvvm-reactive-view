@@ -1,13 +1,12 @@
 export const { requestAnimationFrame } = window;
+import ReactiveState from "../Reactivity/ReactiveState";
 import { setelehtml, seteletext } from "../UtilTools/dom";
-import extenddirectives, { ExtendOptions } from "./extend-directive";
-import { isconnected } from "../UtilTools/isconnected";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
 import { apply, set } from "../UtilTools/reflect";
-import { isfunction, isobject, isstring } from "../UtilTools/util";
-import Virtualdom from "../VirtualElement";
-import { watch } from "../Reactivity/watch";
-
+import { isfunction, isobject } from "../UtilTools/util";
+import Virtualdom from "../CreateElement/VirtualElement";
+import { createhtmlandtextdirective } from "./create-html-and-text-directive";
+import extenddirectives, { ExtendOptions } from "./extend-directive";
+export { directive };
 const directive: ExtendOptions = {
   ref(ref: object | Function, ele: Element, _vdom: Virtualdom<any>) {
     if (isfunction(ref)) {
@@ -109,44 +108,5 @@ extenddirectives({
     */
   }
 });
-function createhtmlandtextdirective(seteletext: Function, errorname: string) {
-  return function(ele: Element, text: string | ReactiveState<any>) {
-    const element = ele;
-    if (
-      isstring(text)
-      //typeof text == "string"
-    ) {
-      requestAnimationFrame(() => {
-        seteletext(ele, text);
-        /*    ele.textContent = text;*/
-        //   console.log(ele.outerHTML);
-      });
-    } else if (
-      isReactiveState(text)
-      //  text instanceof ReactiveState
-    ) {
-      //   const ReactiveState = text;
-      watch(text, (/* state: { value: any } */) => {
-        const state = text;
-        if (isconnected(element)) {
-          seteletext(ele, String(state));
-        }
-        /* ele.textContent = String(state);*/
-      });
-      //   ReactiveState[subscribesymbol]((state: { value: any }) => {
-      //     ele.textContent = String(state.value);
-      //   });
-      requestAnimationFrame(() => {
-        // console.log("text");
-        seteletext(ele, String(text));
 
-        /*  ele.textContent = String(text);*/
-      });
-    } else {
-      console.error(text);
-      console.error("invalid " + errorname);
-      throw TypeError();
-    }
-  };
-}
 export default directive;

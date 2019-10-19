@@ -1,14 +1,17 @@
 import debounce from "lodash/debounce";
 import { cached_callback_debounced_watchs } from "../cached-map";
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
-import { invalid_Function, usewatch } from "../context-mounted-unmounted";
+import {
+  invalid_Function,
+  usewatch
+} from "../mounted-unmounted/Component-context";
 import ReactiveState, {
   addallistenerssymbol,
   cancelsubscribe,
   isReactiveState,
   removeallistenerssymbol,
   subscribesymbol
-} from "./reactivestate";
+} from "./ReactiveState";
 import { toArray } from "../UtilTools/toArray";
 //import { requestAnimationFrame } from "./directives";
 import { isarray, isFunction } from "../UtilTools/util";

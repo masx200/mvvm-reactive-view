@@ -4,7 +4,10 @@
   (...args: T[]): any;
 } */
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
-import { invalid_Function, usestste } from "../context-mounted-unmounted";
+import {
+  invalid_Function,
+  usestste
+} from "../mounted-unmounted/Component-context";
 import {
   apply,
   //   getPrototypeOf
@@ -14,12 +17,12 @@ import {
 import { toArray } from "../UtilTools/toArray";
 import { isArray, isFunction, isobject, isprimitive } from "../UtilTools/util";
 import computed from "./computed";
-import { getproperyreadproxy } from "./getproperyreadproxy";
+import { getproperyreadproxy } from "./getproperyread-proxy";
 import ReactiveState, {
   dispatchsymbol,
   isReactiveState
-} from "./reactivestate";
-import readonlyproxy from "./readonlyproxy";
+} from "./ReactiveState";
+import readonlyproxy from "./readonly-proxy";
 import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
 
 //const { defineProperty } = Object;
