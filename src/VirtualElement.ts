@@ -2,10 +2,10 @@ const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
 import { ElementAttrs } from "./createelement";
 import { Class } from "./customclass";
 //// import { Class } from "./rendervdomtoreal";
-import { merge_entries } from "./merge-entries";
-import ReactiveState, { isReactiveState } from "./reactivestate";
-import { defineProperty, get } from "./reflect";
-import { isobject, isstring } from "./util";
+import { merge_entries } from "./UtilTools/merge-entries";
+import ReactiveState, { isReactiveState } from "./Reactivity/reactivestate";
+import { defineProperty, get } from "./UtilTools/reflect";
+import { isobject, isstring } from "./UtilTools/util";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
 // }//

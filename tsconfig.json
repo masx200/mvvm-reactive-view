@@ -31,6 +31,15 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true
   },
-  "include": ["./src/*.ts"],
+  "include": [
+    "./src/*/*.ts",
+    "./src/*.ts",
+    "src/AttributeClass/*.ts",
+    "src/Reactivity/*.ts",
+    "src/Directives/*.ts",
+    "src/ScopedCSS/*.ts",
+    "src/ScopedCSS/*.ts",
+    "src/UtilTools/*.ts"
+  ],
   "exclude": []
 }

@@ -1,7 +1,7 @@
 export const invalid_custom_element_class = "invalid custom element class !";
 import { isclassextendsHTMLElement } from "./createcostumelemet";
-import { get, getPrototypeOf, has, set } from "./reflect";
-import { isobject } from "./util";
+import { get, getPrototypeOf, has, set } from "./UtilTools/reflect";
+import { isobject } from "./UtilTools/util";
 if (
   //   typeof Proxy !== "function" ||
   !isobject(window.customElements) //||

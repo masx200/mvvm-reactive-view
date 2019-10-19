@@ -8,7 +8,7 @@ import {
   connectedCallback,
   disconnectedCallback
 } from "./attrchange";
-import { cached_create_componet } from "./cached-map";
+import { cached_create_componet } from "../cached-map";
 import {
   closectx,
   getMounted,
@@ -17,17 +17,17 @@ import {
   getwatchrecords,
   invalid_Function,
   openctx
-} from "./context-mounted-unmounted";
-import createstate from "./createstate";
-import { Custom } from "./customclass";
-import { seteletext } from "./dom";
-import { isvalidvdom } from "./html";
+} from "../context-mounted-unmounted";
+import createstate from "../Reactivity/createstate";
+import { Custom } from "../customclass";
+import { seteletext } from "../UtilTools/dom";
+import { isvalidvdom } from "../html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
-import { componentsymbol } from "./iscomponent";
+import { componentsymbol } from "../iscomponent";
 // import { insertfirst } from "./dom";
-import mount from "./mount-real-element";
-import { /* createApp, */ invalid_Virtualdom } from "./MountElement";
+import mount from "../mount-real-element";
+import { /* createApp, */ invalid_Virtualdom } from "../MountElement";
 import {
   /* parsecsstext,
                 prefixcssrules,
@@ -41,17 +41,17 @@ import {
                 createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
-} from "./parsecss-transformcss";
-import ReactiveState /* , { dispatchsymbol } */ from "./reactivestate";
-import readonlyproxy from "./readonlyproxy";
-import { readysymbol } from "./readysymbol";
-import { apply, get } from "./reflect";
-import render from "./render-vdom-to-real";
-import { setimmediate } from "./setimmediate";
-import { toArray } from "./toArray";
-import { isArray, isfunction, isobject, isstring } from "./util";
+} from "../ScopedCSS/parsecss-transformcss";
+import ReactiveState /* , { dispatchsymbol } */ from "../Reactivity/reactivestate";
+import readonlyproxy from "../Reactivity/readonlyproxy";
+import { readysymbol } from "../readysymbol";
+import { apply, get } from "../UtilTools/reflect";
+import render from "../render-vdom-to-real";
+import { setimmediate } from "../UtilTools/setimmediate";
+import { toArray } from "../UtilTools/toArray";
+import { isArray, isfunction, isobject, isstring } from "../UtilTools/util";
 // import { Class } from "./rendervdomtoreal";
-import Virtualdom from "./VirtualElement";
+import Virtualdom, { Vdomchildren } from "../VirtualElement";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const vdomsymbol = Symbol("innervdom");
@@ -79,8 +79,8 @@ export function createComponent(custfun: Custom): Htmlelementconstructor {
 
       //   constructor(...args: any[]);
       constructor(
-        propsjson: object = {},
-        children: any[] = [] /* , options?: any */ //   : HTMLElement;
+        propsjson: Record<string, any> = {},
+        children: Vdomchildren = [] /* , options?: any */ //   : HTMLElement;
       ) {
         super();
         // this[attributessymbol] = {};

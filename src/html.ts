@@ -13,16 +13,15 @@
   (strings?: TemplateStringsArray, ...values: any[]): Virtualdom<any>;
 } */
 import htm from "htm";
-import { VaildVDom } from "./conditon";
+import { VaildVDom } from "./AttributeClass/conditon";
 import h from "./createelement";
 // import htm from "../types/htm";
 import { invalid_Virtualdom } from "./MountElement";
-import { isReactiveState } from "./reactivestate";
-import { apply } from "./reflect";
-import { toArray } from "./toArray";
-import { isArray, isnumber, isstring } from "./util";
+import { isReactiveState } from "./Reactivity/reactivestate";
+import { apply } from "./UtilTools/reflect";
+import { toArray } from "./UtilTools/toArray";
+import { isArray, isnumber, isstring } from "./UtilTools/util";
 import Virtualdom, { isVirtualdom, Vdomchildren } from "./VirtualElement";
-
 
 // const html = htm.bind(h);
 // function html(

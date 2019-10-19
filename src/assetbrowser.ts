@@ -1,4 +1,4 @@
-import { isfunction, isobject } from "./util";
+import { isfunction, isobject } from "./UtilTools/util";
 const { HTMLElement, customElements, Proxy } = window;
 if (
   !isfunction(HTMLElement) ||

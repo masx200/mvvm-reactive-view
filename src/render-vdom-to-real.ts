@@ -1,20 +1,33 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { createcostumelemet } from "./createcostumelemet";
-import directives from "./directives";
+import directives from "./Directives/directives";
 import {
-changetext, createDocumentFragment, createElementNS, createmathelement,
-    //   createnonescript,
-    createnativeelement, createsvgelement, createtextnode, mathnamespace, svgnamespace
-} from "./dom";
+  changetext,
+  createDocumentFragment,
+  createElementNS,
+  createmathelement,
+  //   createnonescript,
+  createnativeelement,
+  createsvgelement,
+  createtextnode,
+  mathnamespace,
+  svgnamespace
+} from "./UtilTools/dom";
 import onevent /*  eventlistenerssymbol  */ from "./handle-onevent";
 import { iscomponent } from "./iscomponent";
-import { isconnected } from "./isconnected";
+import { isconnected } from "./UtilTools/isconnected";
 import mount from "./mount-real-element";
-import ReactiveState, { isReactiveState } from "./reactivestate";
-import { get, has, set } from "./reflect";
-import { isArray, isfunction, isnumber, isobject, isstring } from "./util";
+import ReactiveState, { isReactiveState } from "./Reactivity/reactivestate";
+import { get, has, set } from "./UtilTools/reflect";
+import {
+  isArray,
+  isfunction,
+  isnumber,
+  isobject,
+  isstring
+} from "./UtilTools/util";
 import Virtualdom, { isVirtualdom } from "./VirtualElement";
-import { watch } from "./watch";
+import { watch } from "./Reactivity/watch";
 
 export const bindstatesymbol = Symbol("bindstate");
 

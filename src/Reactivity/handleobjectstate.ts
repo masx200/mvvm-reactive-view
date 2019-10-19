@@ -1,8 +1,27 @@
 import deepobserve from "@masx200/deep-observe-agent-proxy";
 import { set_prototype } from "./createstate";
-import ReactiveState, { dispatchsymbol, invalid_primitive_or_object_state, isReactiveState } from "./reactivestate";
-import { defineProperty, deleteProperty, get, getOwnPropertyDescriptor, has, ownKeys, set } from "./reflect";
-import { isArray, isarray, isobject, isplainobject, isSet, issymbol } from "./util";
+import ReactiveState, {
+  dispatchsymbol,
+  invalid_primitive_or_object_state,
+  isReactiveState
+} from "./reactivestate";
+import {
+  defineProperty,
+  deleteProperty,
+  get,
+  getOwnPropertyDescriptor,
+  has,
+  ownKeys,
+  set
+} from "../UtilTools/reflect";
+import {
+  isArray,
+  isarray,
+  isobject,
+  isplainobject,
+  isSet,
+  issymbol
+} from "../UtilTools/util";
 import { watch } from "./watch";
 
 export default function(init: object): ReactiveState<object> {

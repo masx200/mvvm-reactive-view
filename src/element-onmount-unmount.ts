@@ -1,17 +1,21 @@
 import { cached_callback_eventlistner } from "./cached-map";
-import { innerstatesymbol, innerwatchrecords } from "./createComponent";
-import { getdomchildren } from "./dom";
+import {
+  innerstatesymbol,
+  innerwatchrecords
+} from "./AttributeClass/createComponent";
+import { getdomchildren } from "./UtilTools/dom";
 import { readdlisteners, removelisteners } from "./handle-onevent";
 import { isNode } from "./MountElement";
 import ReactiveState, {
-addonelistner, dispatchsymbol,
-    //   callbackmap,
-    removeonelistner
-} from "./reactivestate";
-import { get, has } from "./reflect";
+  addonelistner,
+  dispatchsymbol,
+  //   callbackmap,
+  removeonelistner
+} from "./Reactivity/reactivestate";
+import { get, has } from "./UtilTools/reflect";
 import { bindstatesymbol } from "./render-vdom-to-real";
-import { isArray } from "./util";
-import { rewatch /* , unwatch */, unwatch } from "./watch";
+import { isArray } from "./UtilTools/util";
+import { rewatch /* , unwatch */, unwatch } from "./Reactivity/watch";
 
 export function onmounted(ele: Element | Node | Array<Node>) {
   if (isArray(ele)) {

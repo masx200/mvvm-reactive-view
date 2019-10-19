@@ -1,9 +1,9 @@
 import debounce from "lodash/debounce";
-import { cached_callback_eventlistner } from "./cached-map";
+import { cached_callback_eventlistner } from "../cached-map";
 // import Reflect from "./reflect";
-import isprimitive, { Primitivetype } from "./isprimitive";
-import { defineProperty } from "./reflect";
-import { gettagtype, isobject, isSet } from "./util";
+import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
+import { defineProperty } from "../UtilTools/reflect";
+import { gettagtype, isobject, isSet } from "../UtilTools/util";
 import { UnwrapedState } from "./watch";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");

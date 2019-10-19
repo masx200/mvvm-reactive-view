@@ -1,9 +1,9 @@
 import h from "./createelement";
 export { h };
 import { Class } from "./customclass";
-import ReactiveState from "./reactivestate";
-import { apply } from "./reflect";
-import { isarray, isfunction, isplainobject, isstring } from "./util";
+import ReactiveState from "./Reactivity/reactivestate";
+import { apply } from "./UtilTools/reflect";
+import { isarray, isfunction, isplainobject, isstring } from "./UtilTools/util";
 import Virtualdom, {
   createVirtualElement,
   Vdomchildren

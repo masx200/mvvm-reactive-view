@@ -3,23 +3,23 @@
 > {
   (...args: T[]): any;
 } */
-import computed from "./computed";
-import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function, usestste } from "./context-mounted-unmounted";
-import ReactiveState, { dispatchsymbol, isReactiveState } from "./reactivestate";
-import readonlyproxy from "./readonlyproxy";
+import { invalid_ReactiveState } from "../AttributeClass/conditon";
+import { invalid_Function, usestste } from "../context-mounted-unmounted";
 import {
-apply,
-    //   getPrototypeOf
-    //   set
-    defineProperty,
-    //   deleteProperty,
-    get, getOwnPropertyDescriptor,
-    //   getOwnPropertyDescriptor,
-    has, ownKeys
-} from "./reflect";
-import { toArray } from "./toArray";
-import { isArray, isFunction, isobject, isprimitive, issymbol } from "./util";
+  apply,
+  //   getPrototypeOf
+  //   set
+  defineProperty
+} from "../UtilTools/reflect";
+import { toArray } from "../UtilTools/toArray";
+import { isArray, isFunction, isobject, isprimitive } from "../UtilTools/util";
+import computed from "./computed";
+import { getproperyreadproxy } from "./getproperyreadproxy";
+import ReactiveState, {
+  dispatchsymbol,
+  isReactiveState
+} from "./reactivestate";
+import readonlyproxy from "./readonlyproxy";
 import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
 
 //const { defineProperty } = Object;
@@ -107,59 +107,7 @@ function Arraycomputed<T extends UnwrapedState>(
 
   return readonlyproxy(getproperyreadproxy(reactivestate));
 }
-const __proto__ = "__proto__";
-export function getproperyreadproxy<T extends object>(a: T): T;
-export function getproperyreadproxy(a: object) {
-  /* 把基本类型原型的属性 也加上*/
-  //   const target = isobject(a) ? a : getPrototypeOf(a);
-  const target = a;
-  return new Proxy(target, {
-    getOwnPropertyDescriptor(target, key) {
-      //对于symbol属性，返回undefined
-      if (issymbol(key)) {
-        return;
-      } else {
-        return getOwnPropertyDescriptor(target, key);
-      }
-    },
-    ownKeys(target) {
-      let myvalue = get(target, "value");
-      const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-      //   return ownKeys(target);
-      return Array.from(new Set([...ownKeys(target), ...ownKeys(myvalueobj)]));
 
-      /* Array.from(
-        new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
-      ); */
-    },
-    has(target, key) {
-      const myvalue = get(target, "value");
-      const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-      return has(target, key) || has(myvalueobj, key);
-    },
-    get(target, key) {
-      if (has(target, key)) {
-        return get(target, key);
-      } else {
-        const myvalue = get(target, "value");
-        const myvalueobj = isobject(myvalue) ? myvalue : Object(myvalue);
+// export function getproperyreadproxy<T extends object>(a: T): T;
 
-        if (has(myvalueobj, key)) {
-          /* 对于string,number等原始类型,返回的函数要绑定this */
-          const property = get(myvalueobj, key);
-          return isFunction(property) ? property.bind(myvalueobj) : property;
-        }
-      }
-      //   return get(target, key);
-      /*  const myvalue = get(target, "value");
-
-      if (has(target, key)) {
-        return get(target, key);
-      } else if (has(myvalue, key)) {
-        return get(myvalue, key);
-      } */
-    }
-  });
-}
 export { computed };
-

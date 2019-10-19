@@ -1,9 +1,9 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { getAttribute, removeAttribute, setAttribute } from "./dom";
-import { get } from "./reflect";
-import { isFunction, isobject, isfunction } from "./util";
-import { readysymbol } from "./readysymbol";
-import { onunmounted, onmounted } from "./element-onmount-unmount";
+import { getAttribute, removeAttribute, setAttribute } from "../UtilTools/dom";
+import { get } from "../UtilTools/reflect";
+import { isFunction, isobject, isfunction } from "../UtilTools/util";
+import { readysymbol } from "../readysymbol";
+import { onunmounted, onmounted } from "../element-onmount-unmount";
 export const attributeChangedCallback = Symbol("attributeChanged");
 export const firstinstalledcallback = Symbol("firstinstalled");
 /* 

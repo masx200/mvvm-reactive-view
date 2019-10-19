@@ -1,15 +1,17 @@
 // import deepobserve from "deep-observe-agent-proxy";
-import { getproperyreadproxy } from "./computed";
-import { usestste } from "./context-mounted-unmounted";
+import { usestste } from "../context-mounted-unmounted";
+import { set } from "../UtilTools/reflect";
+import { isfunction, isobject, isprimitive } from "../UtilTools/util";
+// import { getproperyreadproxy } from "./computed";
 import handleobjectstate from "./handleobjectstate";
 import ReactiveState, {
-dispatchsymbol, invalid_primitive_or_object_state,
-    // textnodesymbol,
-    isReactiveState
+  dispatchsymbol,
+  invalid_primitive_or_object_state,
+  // textnodesymbol,
+  isReactiveState
 } from "./reactivestate";
-import { set } from "./reflect";
-import { isfunction, isobject, isprimitive } from "./util";
 import { UnwrapedState } from "./watch";
+import { getproperyreadproxy } from "./getproperyreadproxy";
 export const set_prototype = Set.prototype;
 
 export default function<T extends UnwrapedState>(

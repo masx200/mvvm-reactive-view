@@ -1,13 +1,16 @@
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
   return gettagtype(a) === "CSSStyleRule";
 }
-import createElement from "./createelement";
+import createElement from "../createelement";
 import { createcssBlob } from "./cssurlblob";
 // import { RegExp } from "core-js";
-import { appendchild, createanotherhtmldocument /* , insertfirst */ } from "./dom";
-import { get } from "./reflect";
-import render from "./render-vdom-to-real";
-import { gettagtype } from "./util";
+import {
+  appendchild,
+  createanotherhtmldocument /* , insertfirst */
+} from "../UtilTools/dom";
+import { get } from "../UtilTools/reflect";
+import render from "../render-vdom-to-real";
+import { gettagtype } from "../UtilTools/util";
 export function isCSSMediaRule(a: any): a is CSSMediaRule {
   return gettagtype(a) === "CSSMediaRule";
 }

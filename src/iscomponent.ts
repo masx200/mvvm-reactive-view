@@ -1,5 +1,5 @@
-import { get } from "./reflect";
-import { isFunction } from "./util";
+import { get } from "./UtilTools/reflect";
+import { isFunction } from "./UtilTools/util";
 const componentsymbol = Symbol("component");
 export { componentsymbol };
 export function iscomponent(a: any) {

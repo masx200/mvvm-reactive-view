@@ -5,15 +5,17 @@ import {
   disconnectedCallback
 } from "./attrchange";
 import { Htmlelementconstructor } from "./createComponent";
-import { h } from "./createelement";
-import { componentsymbol } from "./iscomponent";
-import ReactiveState, { isReactiveState } from "./reactivestate";
-import { readysymbol } from "./readysymbol";
-import Virtualdom from "./VirtualElement";
-import { watch } from "./watch";
-import { isclassextendsHTMLElement } from "./createcostumelemet";
-import { mountrealelement } from "./mount-real-element";
-import render from "./render-vdom-to-real";
+import { h } from "../createelement";
+import { componentsymbol } from "../iscomponent";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
+import { readysymbol } from "../readysymbol";
+import Virtualdom from "../VirtualElement";
+import { watch, CancelWatchfun } from "../Reactivity/watch";
+import { isclassextendsHTMLElement } from "../createcostumelemet";
+import { mountrealelement } from "../mount-real-element";
+import render from "../render-vdom-to-real";
+import { isfunction } from "../UtilTools/util";
+const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
 function switchable(
@@ -29,7 +31,11 @@ function switchable(
       //   onunmounted(this);
       //   super.disconnectedCallback();
       disconnectedCallback(this);
+      if (isfunction(this[cancel_watch_symbol])) {
+        this[cancel_watch_symbol]();
+      }
     }
+    [cancel_watch_symbol]: CancelWatchfun;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     [switch_mount_symbol](eleclass: Function) {
@@ -54,7 +60,7 @@ function switchable(
         this[switch_mount_symbol](funstate.valueOf());
       };
       callmountswitch();
-      watch(funstate, () => {
+      this[cancel_watch_symbol] = watch(funstate, () => {
         callmountswitch();
       });
     }

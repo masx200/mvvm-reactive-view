@@ -1,14 +1,14 @@
-import { invalid_ReactiveState } from "./conditon";
-import { querySelectorAll } from "./dom";
+import { invalid_ReactiveState } from "../AttributeClass/conditon";
+import { querySelectorAll } from "../UtilTools/dom";
 import directives from "./extend-directive";
-import { invalid_Virtualdom } from "./MountElement";
+import { invalid_Virtualdom } from "../MountElement";
 import ReactiveState, {
-    // ReactiveState,
-    isReactiveState
-} from "./reactivestate";
-import { get, set } from "./reflect";
-import { toArray } from "./toArray";
-import Virtualdom from "./VirtualElement";
+  // ReactiveState,
+  isReactiveState
+} from "../Reactivity/reactivestate";
+import { get, set } from "../UtilTools/reflect";
+import { toArray } from "../UtilTools/toArray";
+import Virtualdom from "../VirtualElement";
 directives({
   value(value, element, vdom) {
     model(

@@ -3,8 +3,8 @@ let watchrecord: [ReactiveState<any>, Function][] = [];
 组件卸载时removeeventlistener,
 组件挂载时addeventlistener
 */
-import ReactiveState from "./reactivestate";
-import { isFunction } from "./util";
+import ReactiveState from "./Reactivity/reactivestate";
+import { isFunction } from "./UtilTools/util";
 export function getwatchrecords() {
   return [...watchrecord];
 }

@@ -1,12 +1,12 @@
 export const { requestAnimationFrame } = window;
-import { setelehtml, seteletext } from "./dom";
+import { setelehtml, seteletext } from "../UtilTools/dom";
 import extenddirectives, { ExtendOptions } from "./extend-directive";
-import { isconnected } from "./isconnected";
-import ReactiveState, { isReactiveState } from "./reactivestate";
-import { apply, set } from "./reflect";
-import { isfunction, isobject, isstring } from "./util";
-import Virtualdom from "./VirtualElement";
-import { watch } from "./watch";
+import { isconnected } from "../UtilTools/isconnected";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
+import { apply, set } from "../UtilTools/reflect";
+import { isfunction, isobject, isstring } from "../UtilTools/util";
+import Virtualdom from "../VirtualElement";
+import { watch } from "../Reactivity/watch";
 
 const directive: ExtendOptions = {
   ref(ref: object | Function, ele: Element, _vdom: Virtualdom<any>) {

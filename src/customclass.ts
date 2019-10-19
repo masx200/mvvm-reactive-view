@@ -1,6 +1,6 @@
-import { VaildVDom } from "./conditon";
-import { Htmlelementconstructor } from "./createComponent";
-import ReactiveState from "./reactivestate";
+import { VaildVDom } from "./AttributeClass/conditon";
+import { Htmlelementconstructor } from "./AttributeClass/createComponent";
+import ReactiveState from "./Reactivity/reactivestate";
 import { Vdomchildren } from "./VirtualElement";
 export { Htmlelementconstructor as Class };
 

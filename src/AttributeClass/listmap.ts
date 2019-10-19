@@ -6,21 +6,21 @@ import {
   connectedCallback,
   disconnectedCallback
 } from "./attrchange";
-import computed from "./computed";
+import computed from "../Reactivity/computed";
 import { VaildVDom } from "./conditon";
 import { createComponent, Htmlelementconstructor } from "./createComponent";
-import createElement from "./createelement";
-import createstate from "./createstate";
-import { Custom } from "./customclass";
-import { appendchild, getdomchildren, removeNode } from "./dom";
-import { componentsymbol } from "./iscomponent";
-import mount from "./mount-real-element";
-import ReactiveState, { isReactiveState } from "./reactivestate";
-import { readysymbol } from "./readysymbol";
-import { get, set } from "./reflect";
-import render from "./render-vdom-to-real";
-import { isArray, isfunction, isSet } from "./util";
-import Virtualdom from "./VirtualElement";
+import createElement from "../createelement";
+import createstate from "../Reactivity/createstate";
+import { Custom } from "../customclass";
+import { appendchild, getdomchildren, removeNode } from "../UtilTools/dom";
+import { componentsymbol } from "../iscomponent";
+import mount from "../mount-real-element";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate";
+import { readysymbol } from "../readysymbol";
+import { get, set } from "../UtilTools/reflect";
+import render from "../render-vdom-to-real";
+import { isArray, isfunction, isSet } from "../UtilTools/util";
+import Virtualdom from "../VirtualElement";
 export { listmap as listMap };
 const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
@@ -42,17 +42,21 @@ function listmap(
   }
   const itemclass = createComponent(
     Object.assign(
-      (props: Record<string, ReactiveState<any>>) => {
-        const { value: propvalue, index: propindex } = props as {
+      (
+        props: Record<string, ReactiveState<any>>,
+        children: [(0 | undefined)?]
+      ) => {
+        const { value: propvalue /* , index: propindex */ } = props as {
           value: ReactiveState<any>;
-          index: ReactiveState<any>;
+          //   index: ReactiveState<any>;
         };
         // const myprops = {propvalue,}
         const value = propvalue; //myprops.value;
-        const index = propindex.valueOf() as number; //myprops.index.valueOf() as number;
+        const [propindex = 0] = children;
+        const index = Number(propindex); //myprops.index.valueOf() as number;
         return mapfun(value, index);
       },
-      { defaultProps: { index: 0, value: undefined } }
+      { defaultProps: { /*  index: 0, */ value: undefined } }
     ) as Custom
     //,/* {defaultProps:{
 
@@ -60,7 +64,7 @@ function listmap(
     // }} */
   );
   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
-    createElement(itemclass, { value, index });
+    createElement(itemclass, { value }, index);
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
     // /* constructor() {

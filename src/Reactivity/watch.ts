@@ -1,11 +1,17 @@
 import debounce from "lodash/debounce";
-import { cached_callback_debounced_watchs } from "./cached-map";
-import { invalid_ReactiveState } from "./conditon";
-import { invalid_Function, usewatch } from "./context-mounted-unmounted";
-import ReactiveState, { addallistenerssymbol, cancelsubscribe, isReactiveState, removeallistenerssymbol, subscribesymbol } from "./reactivestate";
-import { toArray } from "./toArray";
+import { cached_callback_debounced_watchs } from "../cached-map";
+import { invalid_ReactiveState } from "../AttributeClass/conditon";
+import { invalid_Function, usewatch } from "../context-mounted-unmounted";
+import ReactiveState, {
+  addallistenerssymbol,
+  cancelsubscribe,
+  isReactiveState,
+  removeallistenerssymbol,
+  subscribesymbol
+} from "./reactivestate";
+import { toArray } from "../UtilTools/toArray";
 //import { requestAnimationFrame } from "./directives";
-import { isarray, isFunction } from "./util";
+import { isarray, isFunction } from "../UtilTools/util";
 export type CancelWatchfun = () => void;
 export type UnwrapedState = any; //Primitivetype | Exclude<object, Function>;
 
@@ -19,7 +25,7 @@ export function watch<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
 
   callback: CallbackReactiveState
-) {
+): CancelWatchfun {
   if (isarray(state) || isReactiveState(state)) {
     const statearray: ReactiveState<any>[] = toArray(state);
     if (!statearray.length) {
