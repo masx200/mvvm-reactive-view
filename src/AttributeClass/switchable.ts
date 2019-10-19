@@ -20,7 +20,7 @@ import { Custom } from "../CustomClass/customclass";
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
-const current_element_class = Symbol("current_element_class");
+// const current_element_class = Symbol("current_element_class");
 export { Switchable };
 function Switchable(
   funstate: ReactiveState<Htmlelementconstructor | Custom>
@@ -30,8 +30,8 @@ function Switchable(
     throw new TypeError();
   }
   class Switchable extends AttrChange {
-    [current_element_class]: Htmlelementconstructor;
-    [cached_class_element] = new Map<Htmlelementconstructor, Element>();
+    // [current_element_class]: Htmlelementconstructor;
+    [cached_class_element] = new WeakMap<Htmlelementconstructor, Element>();
     async disconnectedCallback() {
       //   onunmounted(this);
       //   super.disconnectedCallback();
@@ -49,7 +49,7 @@ function Switchable(
         console.error(eleclass);
         throw new TypeError();
       }
-      this[current_element_class] = eleclass;
+      //   this[current_element_class] = eleclass;
       const eleme = this[cached_class_element].get(eleclass);
       if (eleme) {
         mountrealelement(eleme, this);

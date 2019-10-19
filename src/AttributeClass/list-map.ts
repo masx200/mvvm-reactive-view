@@ -1,3 +1,5 @@
+import { querySelectorAll } from "../UtilTools/dom";
+import RandomDefineCustomElement from "../CustomClass/CustomElementRegistry";
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import {
   AttrChange,
@@ -65,6 +67,7 @@ function ListMap(
     //  value
     // }} */
   );
+  const itemtagname = RandomDefineCustomElement(itemclass);
   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
     createElement(itemclass, { value }, index);
   //   console.log(ITEMfactory);
@@ -165,6 +168,9 @@ function ListMap(
       //   onunmounted(this);
       //   super.disconnectedCallback();
       disconnectedCallback(this);
+      if (itemtagname) {
+        querySelectorAll(itemtagname).forEach(e => removeNode(e));
+      }
     }
     [firstinstalledcallback]() {
       const attrs = createeleattr(this);

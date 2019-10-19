@@ -6,7 +6,7 @@ const window = globalThis;
 
 const global = globalThis;
 
-const {Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
+const {WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -467,11 +467,11 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-const cached_callback_eventlistner = new Map;
+const cached_callback_eventlistner = new WeakMap;
 
-const cached_create_componet = new Map;
+const cached_create_componet = new WeakMap;
 
-const cached_callback_debounced_watchs = new Map;
+const cached_callback_debounced_watchs = new WeakMap;
 
 const Reflect$2 = window.Reflect;
 
@@ -1104,7 +1104,12 @@ function MountElement(vdom, container) {
 }
 
 function isconnected(element) {
-    return document.documentElement === getancestornode(element);
+    const isConnectedstate = element.isConnected;
+    if (isboolean(isConnectedstate)) {
+        return isConnectedstate;
+    } else {
+        return document.documentElement === getancestornode(element);
+    }
 }
 
 function getancestornode(node) {
@@ -2212,8 +2217,7 @@ function conditon(conditon, iftrue, iffalse) {
             const attrs = createeleattragentreadwrite(this);
             if (true === attrs["value"]) {
                 get$1(this, handletrue).call(this);
-            }
-            if (false === attrs["value"]) {
+            } else if (!attrs["value"]) {
                 get$1(this, handlefalse).call(this);
             }
         }
@@ -2229,8 +2233,7 @@ function conditon(conditon, iftrue, iffalse) {
                     const attrs = createeleattragentreadwrite(this);
                     if (true === attrs["value"]) {
                         this[handletrue]();
-                    }
-                    if (false === attrs["value"]) {
+                    } else if (!attrs["value"]) {
                         this[handlefalse]();
                     }
                 }
@@ -2321,6 +2324,7 @@ function ListMap(list, mapfun) {
             value: undefined
         }
     }));
+    const itemtagname = RandomDefineCustomElement(itemclass);
     const ITEMfactory = (value, index) => h(itemclass, {
         value: value
     }, index);
@@ -2382,6 +2386,9 @@ function ListMap(list, mapfun) {
         }
         async disconnectedCallback() {
             disconnectedCallback(this);
+            if (itemtagname) {
+                querySelectorAll(itemtagname).forEach(e => removeNode(e));
+            }
         }
         [firstinstalledcallback]() {
             const attrs = createeleattragentreadwrite(this);
@@ -2416,8 +2423,6 @@ const cached_class_element = Symbol("cached_class_element");
 
 const switch_mount_symbol = Symbol("switch_mount");
 
-const current_element_class = Symbol("current_element_class");
-
 function Switchable(funstate) {
     var _a, _b, _c;
     if (!isReactiveState(funstate)) {
@@ -2427,7 +2432,7 @@ function Switchable(funstate) {
     class Switchable extends AttrChange {
         constructor() {
             super(...arguments);
-            this[_a] = new Map;
+            this[_a] = new WeakMap;
             this[_c] = false;
         }
         async disconnectedCallback() {
@@ -2442,7 +2447,6 @@ function Switchable(funstate) {
                 console.error(eleclass);
                 throw new TypeError;
             }
-            this[current_element_class] = eleclass;
             const eleme = this[cached_class_element].get(eleclass);
             if (eleme) {
                 mountrealelement(eleme, this);
@@ -2568,7 +2572,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.2";
+var version = "1.4.3";
 
 const version1 = version;
 

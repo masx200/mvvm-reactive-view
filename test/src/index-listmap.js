@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  Condition,
   ListMap,
   // @ts-ignore
   computed,
@@ -13,7 +14,7 @@ import {
   MountElement,
   // @ts-ignore
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 const refarray = [];
 const liststate = createState(
   Array(10)
@@ -22,7 +23,7 @@ const liststate = createState(
     .map((v, i) => i)
 );
 watch(liststate, a => console.dir([liststate, a]));
-const vdom = (
+const testlistvdom = (
   <div>
     <button
       _text="push"
@@ -66,5 +67,19 @@ const vdom = (
     ))}
   </div>
 );
+const weathercondition = createState(true);
+const vdom = [
+  Condition(weathercondition, testlistvdom),
+  <>
+    <button
+      onclick={() => {
+        weathercondition.value = !weathercondition.value;
+      }}
+    >
+      condition toggle
+    </button>
+  </>
+];
+
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 console.log(vdom, refarray, liststate);

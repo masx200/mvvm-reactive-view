@@ -1,5 +1,5 @@
 {
-    "version": "1.4.2",
+    "version": "1.4.3",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/@masx200"
     },
@@ -11,7 +11,7 @@
     "scripts": {
         "build": "rollup -c rollup.config.js",
         "test": "rollup -c ./test/rollup.config.js",
-        "serve": "live-server",
+        "serve": "live-server test",
         "prettier": "prettier --parser=typescript --write ./src/*.ts"
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",

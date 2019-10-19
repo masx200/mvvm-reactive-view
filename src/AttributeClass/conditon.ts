@@ -138,8 +138,10 @@ export default function(
       // console.log(attrs);
       if (true === attrs["value"]) {
         get(this, handletrue).call(this);
-      }
-      if (false === attrs["value"]) {
+      } else if (!attrs["value"]) {
+        /* "@masx200/dom-element-attribute-agent-proxy"
+      如果属性设置为false,则获取到的是undefined
+      */
         get(this, handlefalse).call(this);
         //
       }
@@ -182,8 +184,7 @@ export default function(
           if (true === attrs["value"]) {
             this[handletrue]();
             //
-          }
-          if (false === attrs["value"]) {
+          } else if (!attrs["value"]) {
             this[handlefalse]();
             //
           }
