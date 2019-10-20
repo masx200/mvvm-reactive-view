@@ -7,7 +7,7 @@ import {
   h,
   MountElement,
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 console.log([h, createElement]);
 const lirefs = [];
 // console.log()
@@ -20,7 +20,16 @@ const check3 = createState(true);
 watch(check3, a => console.log(a));
 const check4 = createState(true);
 watch(check4, a => console.log(a));
-const notcheck = computed(check, a => !a);
+const notcheck = computed(
+  check,
+  a => !a,
+  v => {
+    // console.log(v);
+    console.log(notcheck, check, v);
+    // check3.value = v;
+    check.value = !v;
+  }
+);
 var list = Array(10)
   .fill(undefined)
   .map((v, i) => i);
@@ -28,7 +37,7 @@ watch(check, a => console.log(a));
 watch(notcheck, a => console.log(a));
 var vdom = (
   <>
-    <input type="radio" _checked={check} name="myname1" />
+    <input type="radio" _checked={check4} name="myname1" />
     <input type="radio" _checked={check3} name="myname1" />
     <input type="radio" _checked={check2} name="myname2" />
     <input type="radio" _checked={check4} name="myname2" />

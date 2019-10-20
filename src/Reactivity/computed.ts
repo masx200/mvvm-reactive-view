@@ -15,20 +15,26 @@ import {
   defineProperty
 } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
-import { isArray, isFunction, isobject, isprimitive } from "../UtilTools/util";
+import {
+  isArray,
+  isFunction,
+  isobject,
+  isprimitive,
+  isfunction
+} from "../UtilTools/util";
 import computed from "./computed";
 import { getproperyreadproxy } from "./getproperyread-proxy";
 import ReactiveState, {
   dispatchsymbol,
   isReactiveState
 } from "./ReactiveState";
-import readonlyproxy from "./readonly-proxy";
 import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
 
 //const { defineProperty } = Object;
 export default function<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState
+  callback: CallbackReactiveState,
+  setter?: SetterFun
 ): ReactiveState<any> {
   if (
     !(
@@ -61,14 +67,15 @@ export default function<T extends UnwrapedState>(
   //   } else {
   //     state1array = Array.from(state);
   //   }
-  const state1 = Arraycomputed(state1array, callback);
+  const state1 = Arraycomputed(state1array, callback, setter);
   usestste(state1);
   return state1;
 }
-
+type SetterFun = (v: any) => void;
 function Arraycomputed<T extends UnwrapedState>(
   state: ReactiveState<T>[],
-  callback: CallbackReactiveState
+  callback: CallbackReactiveState,
+  setter?: SetterFun
 ): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
@@ -92,6 +99,7 @@ function Arraycomputed<T extends UnwrapedState>(
   //   throw new TypeError();
   // }
   defineProperty(reactivestate, "value", {
+    set: isfunction(setter) ? setter : undefined,
     get: getter,
     configurable: true
   });
@@ -108,7 +116,7 @@ function Arraycomputed<T extends UnwrapedState>(
     });
   });
 
-  return readonlyproxy(getproperyreadproxy(reactivestate));
+  return getproperyreadproxy(reactivestate);
 }
 
 // export function getproperyreadproxy<T extends object>(a: T): T;

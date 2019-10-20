@@ -2253,7 +2253,7 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
-function computed(state, callback) {
+function computed(state, callback, setter) {
     if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
@@ -2265,12 +2265,12 @@ function computed(state, callback) {
         console.error("Empty array not allowed");
         throw new Error;
     }
-    const state1 = Arraycomputed(state1array, callback);
+    const state1 = Arraycomputed(state1array, callback, setter);
     usestste(state1);
     return state1;
 }
 
-function Arraycomputed(state, callback) {
+function Arraycomputed(state, callback, setter) {
     const reactivestate = new ReactiveState;
     const getter = () => {
         const value = apply(callback, undefined, state.map(st => st.valueOf()));
@@ -2284,6 +2284,7 @@ function Arraycomputed(state, callback) {
     };
     let memorized = getter();
     defineProperty(reactivestate, "value", {
+        set: isfunction(setter) ? setter : undefined,
         get: getter,
         configurable: true
     });
@@ -2296,7 +2297,7 @@ function Arraycomputed(state, callback) {
             }
         });
     });
-    return readonlyproxy(getproperyreadproxy(reactivestate));
+    return getproperyreadproxy(reactivestate);
 }
 
 const listvalueattr = Symbol("listvalueattr");
@@ -2539,7 +2540,7 @@ extenddirectives({
         model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
     },
     checked(value, element, vdom) {
-        model([ "input" ], "checked", "checked", [ "change", "click" ], value, vdom);
+        model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
         const eventname = "click";
         const origin = toArray(vdom.onevent[eventname]);
         const eventsarray = origin;
@@ -2578,7 +2579,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.4";
+var version = "1.4.5";
 
 const version1 = version;
 

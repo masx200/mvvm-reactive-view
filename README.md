@@ -168,11 +168,9 @@ MountElement(vdom, document.getElementById("root"));
 
 ## 为什么选择`jsx`？而不是`template`？
 
-
 在体积方面，`template`编译器远大于`jsx`编译器。
 
-浏览器中运行的`JSX`编译器`HTM (Hyperscript Tagged Markup)`体积小于1KB
-
+浏览器中运行的`JSX`编译器`HTM (Hyperscript Tagged Markup)`体积小于 1KB
 
 `jsx`的表现能力明显强于`template`，`template`中无法写函数与对象，只能写字符串，
 
@@ -242,7 +240,6 @@ https://tc39.es/proposal-flatMap/
 ```
 
 # 响应式状态对象 `ReactiveState`,可以独立于组件存在,可以在任何地方使用,
-
 
 ### `ReactiveState`状态改变触发`Event`,触发函数也已经用 `lodash`的`debounce`函数包装成防抖函数，保证了短时间内只能触发一次事件
 
@@ -476,9 +473,9 @@ setTimeout(() => {
 
 ## 您可以通过简单地将其导出为函数来重用组件逻辑的任何部分
 
-## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用
+## 计算属性,当一个状态依赖于另一个状态时可以使用`computed`,并且可以缓存计算结果,回调函数作为计算属性的`getter`使用,也可定义计算属性的`setter`函数
 
-### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性是只读的!计算属性其实也是个语法糖
+### 当依赖项发生变化时,计算属性也会发生变化,计算属性还带有缓存计算结果的功能,计算属性其实也是个语法糖
 
 ### 例子：跟踪鼠标的位置
 
@@ -1073,6 +1070,15 @@ class ReactiveState<T extends UnwrapedState> {
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
 ### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
+
+```ts
+function computed<T extends UnwrapedState>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
+  callback: CallbackReactiveState,
+  setter?: SetterFun
+): ReactiveState<any>;
+declare type SetterFun = (v: any) => void;
+```
 
 ## 使用`Directives`函数来扩展指令,返回已有的指令合集
 

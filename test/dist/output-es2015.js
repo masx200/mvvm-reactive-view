@@ -2146,7 +2146,7 @@
         });
         return vdom;
     }
-    function computed(state, callback) {
+    function computed(state, callback, setter) {
         if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
             console.error(state);
             console.error(callback);
@@ -2158,11 +2158,11 @@
             console.error("Empty array not allowed");
             throw new Error;
         }
-        var state1 = Arraycomputed(state1array, callback);
+        var state1 = Arraycomputed(state1array, callback, setter);
         usestste(state1);
         return state1;
     }
-    function Arraycomputed(state, callback) {
+    function Arraycomputed(state, callback, setter) {
         var reactivestate = new ReactiveState;
         var getter = () => {
             var value = apply(callback, undefined, state.map(st => st.valueOf()));
@@ -2176,6 +2176,7 @@
         };
         var memorized = getter();
         defineProperty(reactivestate, "value", {
+            set: isfunction(setter) ? setter : undefined,
             get: getter,
             configurable: true
         });
@@ -2188,7 +2189,7 @@
                 }
             });
         });
-        return readonlyproxy(getproperyreadproxy(reactivestate));
+        return getproperyreadproxy(reactivestate);
     }
     var listvalueattr = Symbol("listvalueattr");
     var listinnervdom = Symbol("listinnervdom");
@@ -2383,7 +2384,7 @@
             model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
         },
         checked(value, element, vdom) {
-            model([ "input" ], "checked", "checked", [ "change", "click" ], value, vdom);
+            model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
             var eventname = "click";
             var origin = toArray(vdom.onevent[eventname]);
             var eventsarray = origin;
@@ -2846,13 +2847,16 @@
     watch(check3, a => console.log(a));
     var check4 = createstate(true);
     watch(check4, a => console.log(a));
-    var notcheck = computed(check, a => !a);
+    var notcheck = computed(check, a => !a, v => {
+        console.log(notcheck, check, v);
+        check.value = !v;
+    });
     var list = Array(10).fill(undefined).map((v, i) => i);
     watch(check, a => console.log(a));
     watch(notcheck, a => console.log(a));
     var vdom$5 = h("", null, h("input", {
         type: "radio",
-        _checked: check,
+        _checked: check4,
         name: "myname1"
     }), h("input", {
         type: "radio",
