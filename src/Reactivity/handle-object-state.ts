@@ -185,13 +185,19 @@ export default function(init: object): ReactiveState<object> {
       isobject(value) &&
       ((isArray(init) && isarray(value)) || (!isArray(init) && !isarray(value)))
     ) {
-      // if (target[key] !== value) {
+       if (target[key] !== value) {
+
       set(target, key, value);
       target[dispatchsymbol]();
+}
       return true;
     } else if (!has(target, key)) {
+
+if (myvalue[key] !== value) {
+
       set(myvalue, key, value);
       target[dispatchsymbol](String(key));
+}
       return true;
       //
     } else {
