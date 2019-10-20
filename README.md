@@ -178,7 +178,9 @@ MountElement(vdom, document.getElementById("root"));
 
 类似`vue`和`angular`的模板`DSL`会让人很难理解，模板`dsl`不如`jsx`灵活
 
-`React`非常流行，使用过`react-jsx`的人可以轻松使用，学习成本比较低
+`JSX`非常流行，使用过`react-jsx`的人可以轻松使用，学习成本比较低
+
+但是与`react-jsx`有一些不同，例如 属性名不使用驼峰命名等等
 
 ## 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
 
