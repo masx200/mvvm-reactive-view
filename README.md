@@ -168,6 +168,12 @@ MountElement(vdom, document.getElementById("root"));
 
 ## 为什么选择`jsx`？而不是`template`？
 
+
+在体积方面，`template`编译器远大于`jsx`编译器。
+
+浏览器中运行的`JSX`编译器`HTM (Hyperscript Tagged Markup)`体积小于1KB
+
+
 `jsx`的表现能力明显强于`template`，`template`中无法写函数与对象，只能写字符串，
 
 类似`vue`和`angular`的模板`DSL`会让人很难理解，模板`dsl`不如`jsx`灵活
@@ -235,9 +241,12 @@ https://tc39.es/proposal-flatMap/
 
 # 响应式状态对象 `ReactiveState`,可以独立于组件存在,可以在任何地方使用,
 
+
 ### `ReactiveState`状态改变触发`Event`,触发函数也已经用 `lodash`的`debounce`函数包装成防抖函数，保证了短时间内只能触发一次事件
 
 ## `ReactiveState`,基于 `EventTarget` 和 `Proxy`,
+
+## 基于`Proxy`的深层数据劫持监听，对于数组`Array`和普通对象`Plain Object`理论上无限层次的数据观察代理
 
 ### 如果状态跟视图绑定，则状态改变引起界面刷新是异步的
 
