@@ -24,7 +24,7 @@ directives({
     model(["input"], "checked", "checked", ["change", "click"], value, vdom);
 
     /* 对于name相同的input,radio,单选框,如果一个改变,其他全都要触发change事件 */
-    const eventname = "click";
+    const eventname = "change";
     const origin = toArray(vdom.onevent[eventname]);
     const eventsarray = origin;
     const dispatchallsamename: EventListener = (event: Event) => {
