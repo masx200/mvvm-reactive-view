@@ -1686,57 +1686,63 @@ function handleobjectstate(init) {
     };
     objproxyhandler.get = (target, key) => {
         const value = get$1(target, "value");
-        if (key === "value" && (isarray(value) || isplainobject(value))) {
+        const deepflage = isarray(value) || isplainobject(value);
+        if (key === "value" && deepflage) {
             return observedeepagent(get$1(target, key), (_target_, patharray) => {
                 target[dispatchsymbol](patharray[0]);
             });
         } else if (has(target, key)) {
             return get$1(target, key);
         } else if (has(value, key)) {
-            if (isSet(value) && (key === "add" || key === "clear" || key === "delete")) {
-                switch (key) {
-                  case "add":
-                    {
-                        return (add => {
-                            if (!set_prototype.has.call(value, add)) {
-                                const returnvalue = set_prototype[key].call(value, add);
-                                target[dispatchsymbol]();
-                                return returnvalue;
-                            }
-                            return;
-                        }).bind(value);
-                    }
+            const resultvalue = get$1(value, key);
+            if (isSet(value)) {
+                if (key === "add" || key === "clear" || key === "delete") {
+                    switch (key) {
+                      case "add":
+                        {
+                            return (add => {
+                                if (!set_prototype.has.call(value, add)) {
+                                    const returnvalue = set_prototype[key].call(value, add);
+                                    target[dispatchsymbol]();
+                                    return returnvalue;
+                                }
+                                return;
+                            }).bind(value);
+                        }
 
-                  case "delete":
-                    {
-                        return (dele => {
-                            if (set_prototype.has.call(value, dele)) {
-                                const returnvalue = set_prototype[key].call(value, dele);
-                                target[dispatchsymbol]();
-                                return returnvalue;
-                            }
-                            return;
-                        }).bind(value);
-                    }
+                      case "delete":
+                        {
+                            return (dele => {
+                                if (set_prototype.has.call(value, dele)) {
+                                    const returnvalue = set_prototype[key].call(value, dele);
+                                    target[dispatchsymbol]();
+                                    return returnvalue;
+                                }
+                                return;
+                            }).bind(value);
+                        }
 
-                  case "clear":
-                    {
-                        return (() => {
-                            if (value.size) {
-                                const returnvalue = set_prototype[key].call(value);
-                                target[dispatchsymbol]();
-                                return returnvalue;
-                            }
-                            return;
-                        }).bind(value);
+                      case "clear":
+                        {
+                            return (() => {
+                                if (value.size) {
+                                    const returnvalue = set_prototype[key].call(value);
+                                    target[dispatchsymbol]();
+                                    return returnvalue;
+                                }
+                                return;
+                            }).bind(value);
+                        }
                     }
+                } else {
+                    return isfunction(resultvalue) ? resultvalue.bind(value) : resultvalue;
                 }
-            } else if (isobject(value)) {
-                return observedeepagent(get$1(value, key), () => {
+            } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
+                return observedeepagent(resultvalue, () => {
                     target[dispatchsymbol](String(key));
                 });
             } else {
-                return get$1(value, key);
+                return resultvalue;
             }
         }
     };
@@ -2572,7 +2578,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.3";
+var version = "1.4.4";
 
 const version1 = version;
 

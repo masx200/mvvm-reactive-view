@@ -1588,57 +1588,63 @@
         };
         objproxyhandler.get = (target, key) => {
             var value = get$1(target, "value");
-            if (key === "value" && (isarray(value) || isplainobject(value))) {
+            var deepflage = isarray(value) || isplainobject(value);
+            if (key === "value" && deepflage) {
                 return observedeepagent(get$1(target, key), (_target_, patharray) => {
                     target[dispatchsymbol](patharray[0]);
                 });
             } else if (has(target, key)) {
                 return get$1(target, key);
             } else if (has(value, key)) {
-                if (isSet(value) && (key === "add" || key === "clear" || key === "delete")) {
-                    switch (key) {
-                      case "add":
-                        {
-                            return (add => {
-                                if (!set_prototype.has.call(value, add)) {
-                                    var returnvalue = set_prototype[key].call(value, add);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
+                var resultvalue = get$1(value, key);
+                if (isSet(value)) {
+                    if (key === "add" || key === "clear" || key === "delete") {
+                        switch (key) {
+                          case "add":
+                            {
+                                return (add => {
+                                    if (!set_prototype.has.call(value, add)) {
+                                        var returnvalue = set_prototype[key].call(value, add);
+                                        target[dispatchsymbol]();
+                                        return returnvalue;
+                                    }
+                                    return;
+                                }).bind(value);
+                            }
 
-                      case "delete":
-                        {
-                            return (dele => {
-                                if (set_prototype.has.call(value, dele)) {
-                                    var returnvalue = set_prototype[key].call(value, dele);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
+                          case "delete":
+                            {
+                                return (dele => {
+                                    if (set_prototype.has.call(value, dele)) {
+                                        var returnvalue = set_prototype[key].call(value, dele);
+                                        target[dispatchsymbol]();
+                                        return returnvalue;
+                                    }
+                                    return;
+                                }).bind(value);
+                            }
 
-                      case "clear":
-                        {
-                            return (() => {
-                                if (value.size) {
-                                    var returnvalue = set_prototype[key].call(value);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
+                          case "clear":
+                            {
+                                return (() => {
+                                    if (value.size) {
+                                        var returnvalue = set_prototype[key].call(value);
+                                        target[dispatchsymbol]();
+                                        return returnvalue;
+                                    }
+                                    return;
+                                }).bind(value);
+                            }
                         }
+                    } else {
+                        return isfunction(resultvalue) ? resultvalue.bind(value) : resultvalue;
                     }
-                } else if (isobject(value)) {
-                    return observedeepagent(get$1(value, key), () => {
+                } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
+                    return observedeepagent(resultvalue, () => {
                         target[dispatchsymbol](String$1(key));
                     });
                 } else {
-                    return get$1(value, key);
+                    return resultvalue;
                 }
             }
         };
@@ -3716,7 +3722,7 @@
     watch(mystate, state => {
         console.log([ state, element$1 ]);
     });
-    document.body.appendChild(render(h(() => h("div", [ h("", null, h("button", {
+    document.body.appendChild(render(h(() => h("div", null, h("button", {
         $text: "component 1",
         onclick: () => {
             mystate.value = com1;
@@ -3736,6 +3742,6 @@
         onclick: () => {
             mystate.value = com4;
         }
-    })) ]))));
+    })))));
 })();
 //# sourceMappingURL=output-es2015.js.map

@@ -20,7 +20,8 @@ import {
   isobject,
   isplainobject,
   isSet,
-  issymbol
+  issymbol,
+  isfunction
 } from "../UtilTools/util";
 import { watch } from "./watch";
 
@@ -108,58 +109,67 @@ export default function(init: object): ReactiveState<object> {
   };
   objproxyhandler.get = (target: ReactiveState<object>, key) => {
     const value = get(target, "value");
-    if (key === "value" && (isarray(value) || isplainobject(value))) {
+    const deepflage = isarray(value) || isplainobject(value);
+    if (key === "value" && deepflage) {
       return deepobserve(get(target, key), (_target_, patharray) => {
         target[dispatchsymbol](patharray[0]);
       });
     } else if (has(target, key)) {
       return get(target, key);
     } else if (has(value, key)) {
-      if (
-        isSet(value) &&
-        (key === "add" || key === "clear" || key === "delete")
-      ) {
-        switch (key) {
-          case "add": {
-            return ((add: any) => {
-              if (!set_prototype.has.call(value, add)) {
-                const returnvalue = set_prototype[key].call(value, add);
-                target[dispatchsymbol]();
-                return returnvalue;
-              }
-              return;
-            }).bind(value);
+      const resultvalue = get(value, key);
+      if (isSet(value)) {
+        if (key === "add" || key === "clear" || key === "delete") {
+          switch (key) {
+            case "add": {
+              return ((add: any) => {
+                if (!set_prototype.has.call(value, add)) {
+                  const returnvalue = set_prototype[key].call(value, add);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
+                return;
+              }).bind(value);
+            }
+            // break;
+            case "delete": {
+              return ((dele: any) => {
+                if (set_prototype.has.call(value, dele)) {
+                  const returnvalue = set_prototype[key].call(value, dele);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
+                return;
+              }).bind(value);
+            }
+            // break;
+            case "clear": {
+              return (() => {
+                if (value.size) {
+                  const returnvalue = set_prototype[key].call(value);
+                  target[dispatchsymbol]();
+                  return returnvalue;
+                }
+                return;
+              }).bind(value);
+            }
+            // break;
           }
-          // break;
-          case "delete": {
-            return ((dele: any) => {
-              if (set_prototype.has.call(value, dele)) {
-                const returnvalue = set_prototype[key].call(value, dele);
-                target[dispatchsymbol]();
-                return returnvalue;
-              }
-              return;
-            }).bind(value);
-          }
-          // break;
-          case "clear": {
-            return (() => {
-              if (value.size) {
-                const returnvalue = set_prototype[key].call(value);
-                target[dispatchsymbol]();
-                return returnvalue;
-              }
-              return;
-            }).bind(value);
-          }
-          // break;
+        } else {
+          /* VM1933:1 Uncaught TypeError: Method Set.prototype.values called on incompatible receiver [object Object] */
+          return isfunction(resultvalue)
+            ? resultvalue.bind(value)
+            : resultvalue;
         }
-      } else if (isobject(value)) {
-        return deepobserve(get(value, key), () => {
+      } else if (
+        deepflage &&
+        (isarray(resultvalue) || isplainobject(resultvalue))
+      ) {
+        return deepobserve(resultvalue, () => {
           target[dispatchsymbol](String(key));
         });
       } else {
-        return get(value, key);
+        return resultvalue;
       }
     }
   };

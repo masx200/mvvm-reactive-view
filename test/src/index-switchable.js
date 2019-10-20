@@ -39,35 +39,33 @@ watch(mystate, state => {
 
 document.body.appendChild(
   render(
-    h(() =>
-      h("div", [
-        <>
-          <button
-            $text="component 1"
-            onclick={() => {
-              mystate.value = com1;
-            }}
-          />
-          <button
-            $text="component 2"
-            onclick={() => {
-              mystate.value = com2;
-            }}
-          />
-          <button
-            $text="component 3"
-            onclick={() => {
-              mystate.value = com3;
-            }}
-          />
-          <button
-            $text="component 4"
-            onclick={() => {
-              mystate.value = com4;
-            }}
-          />
-        </>
-      ])
-    )
+    h(() => (
+      <div>
+        <button
+          $text="component 1"
+          onclick={() => {
+            mystate.value = com1;
+          }}
+        />
+        <button
+          $text="component 2"
+          onclick={() => {
+            mystate.value = com2;
+          }}
+        />
+        <button
+          $text="component 3"
+          onclick={() => {
+            mystate.value = com3;
+          }}
+        />
+        <button
+          $text="component 4"
+          onclick={() => {
+            mystate.value = com4;
+          }}
+        />
+      </div>
+    ))
   )
 );
