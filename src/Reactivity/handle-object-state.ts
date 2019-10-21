@@ -27,7 +27,7 @@ import { watch } from "./watch";
 
 export default function(init: object): ReactiveState<object> {
 
-const reactive: ReactiveState<object> = new ReactiveState();
+const reactive: ReactiveState<object> = new ReactiveState(init);
  
  let initobj = init;
   const containReactiveState =
