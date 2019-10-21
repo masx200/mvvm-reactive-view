@@ -1,4 +1,4 @@
-import { get } from "src/UtilTools/reflect";
+// import { get } from "src/UtilTools/reflect";
 
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
@@ -27,11 +27,12 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
     } else { */
   // console.trace();
   return {
-    type: cssstylerule.type,
-    parentRule: cssstylerule.parentRule,
-    parentStyleSheet: cssstylerule.parentStyleSheet,
-    style: cssstylerule.style,
-    styleMap: get(cssstylerule, "styleMap"),
+    /* 没有用到的变量,消耗性能 */
+    // type: cssstylerule.type,
+    // parentRule: cssstylerule.parentRule,
+    // parentStyleSheet: cssstylerule.parentStyleSheet,
+    // style: cssstylerule.style,
+    // styleMap: get(cssstylerule, "styleMap"),
     selectorText: selectoraftertransform,
     cssText: selectoraftertransform + stylebodyold,
     // cssText: selectoraftertransform + stylebodyold,

@@ -1623,6 +1623,7 @@ function observedeepagent(target, callback) {
 }
 
 function handleobjectstate(init) {
+    const reactive = new ReactiveState(init);
     let initobj = init;
     const containReactiveState = isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
     const state_entries = Object.entries(init).filter(e => {
@@ -1637,11 +1638,13 @@ function handleobjectstate(init) {
                 get() {
                     return state.valueOf();
                 },
+                set: nvalue => {
+                    state.value = nvalue;
+                },
                 configurable: true
             });
         });
     }
-    const reactive = new ReactiveState(initobj);
     if (containReactiveState) {
         state_entries.forEach(([key, state]) => {
             watch(state, () => {
@@ -1649,6 +1652,7 @@ function handleobjectstate(init) {
             });
         });
     }
+    reactive.value = initobj;
     const objproxyhandler = {};
     objproxyhandler.ownKeys = target => {
         return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(get$1(target, "value")) ]));
@@ -1752,12 +1756,16 @@ function handleobjectstate(init) {
         }
         const myvalue = get$1(target, "value");
         if (key === "value" && isobject(value) && (isarray(init) && isarray(value) || !isarray(init) && !isarray(value))) {
-            set$1(target, key, value);
-            target[dispatchsymbol]();
+            if (target[key] !== value) {
+                set$1(target, key, value);
+                target[dispatchsymbol]();
+            }
             return true;
         } else if (!has(target, key)) {
-            set$1(myvalue, key, value);
-            target[dispatchsymbol](String(key));
+            if (myvalue[key] !== value) {
+                set$1(myvalue, key, value);
+                target[dispatchsymbol](String(key));
+            }
             return true;
         } else {
             console.error(value);
@@ -1880,11 +1888,6 @@ function selectoraddprefix(cssstylerule, prefix) {
         return prefixselector;
     }).join(",");
     return {
-        type: cssstylerule.type,
-        parentRule: cssstylerule.parentRule,
-        parentStyleSheet: cssstylerule.parentStyleSheet,
-        style: cssstylerule.style,
-        styleMap: get$1(cssstylerule, "styleMap"),
         selectorText: selectoraftertransform,
         cssText: selectoraftertransform + stylebodyold,
         [Symbol.toStringTag]: "CSSStyleRule"
@@ -2579,7 +2582,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.5";
+var version = "1.4.6";
 
 const version1 = version;
 

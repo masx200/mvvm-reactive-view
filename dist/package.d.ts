@@ -1,5 +1,6 @@
 declare const _exports: {
     "version": string;
+    "files": string[];
     "publishConfig": {
         "registry": string;
     };

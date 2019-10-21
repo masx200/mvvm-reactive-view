@@ -1523,6 +1523,7 @@
         }
     }
     function handleobjectstate(init) {
+        var reactive = new ReactiveState(init);
         var initobj = init;
         var containReactiveState = isplainobject(init) && Object$1.values(init).some(a => isReactiveState(a));
         var state_entries = Object$1.entries(init).filter(e => {
@@ -1538,11 +1539,13 @@
                     get() {
                         return state.valueOf();
                     },
+                    set: nvalue => {
+                        state.value = nvalue;
+                    },
                     configurable: true
                 });
             });
         }
-        var reactive = new ReactiveState(initobj);
         if (containReactiveState) {
             state_entries.forEach(_ref25 => {
                 var [key, state] = _ref25;
@@ -1551,6 +1554,7 @@
                 });
             });
         }
+        reactive.value = initobj;
         var objproxyhandler = {};
         objproxyhandler.ownKeys = target => {
             return Array$1.from(new Set$1([ ...ownKeys$1$1(target), ...ownKeys$1$1(get$1(target, "value")) ]));
@@ -1654,12 +1658,16 @@
             }
             var myvalue = get$1(target, "value");
             if (key === "value" && isobject(value) && (isarray(init) && isarray(value) || !isarray(init) && !isarray(value))) {
-                set$1(target, key, value);
-                target[dispatchsymbol]();
+                if (target[key] !== value) {
+                    set$1(target, key, value);
+                    target[dispatchsymbol]();
+                }
                 return true;
             } else if (!has(target, key)) {
-                set$1(myvalue, key, value);
-                target[dispatchsymbol](String$1(key));
+                if (myvalue[key] !== value) {
+                    set$1(myvalue, key, value);
+                    target[dispatchsymbol](String$1(key));
+                }
                 return true;
             } else {
                 console.error(value);
@@ -1773,11 +1781,6 @@
             return prefixselector;
         }).join(",");
         return {
-            type: cssstylerule.type,
-            parentRule: cssstylerule.parentRule,
-            parentStyleSheet: cssstylerule.parentStyleSheet,
-            style: cssstylerule.style,
-            styleMap: get$1(cssstylerule, "styleMap"),
             selectorText: selectoraftertransform,
             cssText: selectoraftertransform + stylebodyold,
             [Symbol.toStringTag]: "CSSStyleRule"

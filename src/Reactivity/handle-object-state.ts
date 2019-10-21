@@ -26,10 +26,9 @@ import {
 import { watch } from "./watch";
 
 export default function(init: object): ReactiveState<object> {
+  const reactive: ReactiveState<object> = new ReactiveState(init);
 
-const reactive: ReactiveState<object> = new ReactiveState(init);
- 
- let initobj = init;
+  let initobj = init;
   const containReactiveState =
     isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
   const state_entries = Object.entries(init).filter(e => {
@@ -45,9 +44,9 @@ const reactive: ReactiveState<object> = new ReactiveState(init);
         get() {
           return state.valueOf();
         },
-set:(nvalue)=>{
-state.value=nvalue
-},
+        set: nvalue => {
+          state.value = nvalue;
+        },
         configurable: true
       });
     });
@@ -59,7 +58,7 @@ state.value=nvalue
   //   : /* isobject(init)
   //   ? "object" */
   //     /* : */ void 0;
-    if (containReactiveState) {
+  if (containReactiveState) {
     state_entries.forEach(([key, state]) => {
       watch(state, () => {
         reactive[dispatchsymbol](String(key));
@@ -67,7 +66,7 @@ state.value=nvalue
     });
     // console.log(reactive);
   }
-reactive.value=initobj
+  reactive.value = initobj;
 
   const objproxyhandler: ProxyHandler<object> = {};
   objproxyhandler.ownKeys = target => {
@@ -192,19 +191,16 @@ reactive.value=initobj
       isobject(value) &&
       ((isArray(init) && isarray(value)) || (!isArray(init) && !isarray(value)))
     ) {
-       if (target[key] !== value) {
-
-      set(target, key, value);
-      target[dispatchsymbol]();
-}
+      if (target[key] !== value) {
+        set(target, key, value);
+        target[dispatchsymbol]();
+      }
       return true;
     } else if (!has(target, key)) {
-
-if (myvalue[key] !== value) {
-
-      set(myvalue, key, value);
-      target[dispatchsymbol](String(key));
-}
+      if (myvalue[key] !== value) {
+        set(myvalue, key, value);
+        target[dispatchsymbol](String(key));
+      }
       return true;
       //
     } else {
