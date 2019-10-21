@@ -26,7 +26,10 @@ import {
 import { watch } from "./watch";
 
 export default function(init: object): ReactiveState<object> {
-  let initobj = init;
+
+const reactive: ReactiveState<object> = new ReactiveState();
+ 
+ let initobj = init;
   const containReactiveState =
     isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
   const state_entries = Object.entries(init).filter(e => {
@@ -44,7 +47,7 @@ export default function(init: object): ReactiveState<object> {
         },
 set:(nvalue)=>{
 state.value=nvalue
-}
+},
         configurable: true
       });
     });
@@ -56,8 +59,7 @@ state.value=nvalue
   //   : /* isobject(init)
   //   ? "object" */
   //     /* : */ void 0;
-  const reactive: ReactiveState<object> = new ReactiveState(initobj);
-  if (containReactiveState) {
+    if (containReactiveState) {
     state_entries.forEach(([key, state]) => {
       watch(state, () => {
         reactive[dispatchsymbol](String(key));
@@ -65,6 +67,8 @@ state.value=nvalue
     });
     // console.log(reactive);
   }
+reactive.value=initobj
+
   const objproxyhandler: ProxyHandler<object> = {};
   objproxyhandler.ownKeys = target => {
     return Array.from(
