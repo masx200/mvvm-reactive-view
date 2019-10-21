@@ -42,7 +42,7 @@ export default function(init: object): ReactiveState<object> {
         get() {
           return state.valueOf();
         },
-set(nvalue)=>{
+set:(nvalue)=>{
 state.value=nvalue
 }
         configurable: true
