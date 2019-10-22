@@ -674,11 +674,8 @@ function createmathelement() {
     return createElementNS(mathnamespace, "math");
 }
 
-function removeNode(node) {
-    let parentNode = node.parentNode;
-    if (parentNode) {
-        parentNode.removeChild(node);
-    }
+function removeElement(element) {
+    element.remove();
 }
 
 function domaddlisten(ele, event, call) {
@@ -689,7 +686,11 @@ function domremovelisten(ele, event, call) {
     ele.removeEventListener(event, call);
 }
 
-function getdomchildren(ele) {
+function getchildren(ele) {
+    return [ ...ele.children ];
+}
+
+function getchildNodes(ele) {
     return [ ...ele.childNodes ];
 }
 
@@ -1350,7 +1351,7 @@ function onmounted(ele) {
                 }
             });
         }
-        onmounted(getdomchildren(ele));
+        onmounted(getchildNodes(ele));
     }
 }
 
@@ -1375,7 +1376,7 @@ function onunmounted(ele) {
                 }
             });
         }
-        onunmounted(getdomchildren(ele));
+        onunmounted(getchildNodes(ele));
     }
 }
 
@@ -1418,7 +1419,9 @@ class AttrChange extends HTMLElement {
                 this[readysymbol] = true;
                 const callback = get$1(this, firstinstalledcallback);
                 if (isfunction(callback)) {
-                    callback.call(this);
+                    setimmediate(() => {
+                        callback.call(this);
+                    });
                 }
             }
             onmounted(this);
@@ -1995,6 +1998,8 @@ function readonlyproxy(target) {
     });
 }
 
+const waittranformcsssymbol = Symbol("waittranformcss");
+
 const innerwatchrecords = Symbol("innerwatchrecord");
 
 const innerstatesymbol = Symbol("innerstate");
@@ -2027,7 +2032,11 @@ function createComponent(custfun) {
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
                     if (!componentsstylesheet[prefix]) {
-                        registercssprefix(css, prefix);
+                        this[waittranformcsssymbol] = () => {
+                            return setimmediate(() => {
+                                registercssprefix(css, prefix);
+                            });
+                        };
                     }
                 }
                 const attrs = createeleattragentreadwrite(this);
@@ -2071,25 +2080,34 @@ function createComponent(custfun) {
                 }
                 const css = get$1(this.constructor, "css");
                 const prefix = this.tagName.toLowerCase();
-                if (css && componentsstylesheet[prefix]) {
-                    seteletext(this, "");
-                    waitloadallstyle(prefix, this).then(() => {
-                        mountrealelement(this[elementsymbol], this, false);
-                    });
+                if (css) {
+                    const waitcallback = this[waittranformcsssymbol];
+                    if (waitcallback) {
+                        waitcallback().then(() => {
+                            seteletext(this, "");
+                            waitloadallstyle(prefix, this).then(() => {
+                                mountrealelement(this[elementsymbol], this, false);
+                            });
+                        });
+                    }
                 } else {
                     mountrealelement(this[elementsymbol], this);
                 }
             }
             connectedCallback() {
-                connectedCallback(this);
-                this[mountedsymbol].forEach(f => {
-                    setimmediate(f);
+                setimmediate(() => {
+                    connectedCallback(this);
+                    this[mountedsymbol].forEach(f => {
+                        setimmediate(f);
+                    });
                 });
             }
             disconnectedCallback() {
-                disconnectedCallback(this);
-                this[unmountedsymbol].forEach(f => {
-                    setimmediate(f);
+                setimmediate(() => {
+                    disconnectedCallback(this);
+                    this[unmountedsymbol].forEach(f => {
+                        setimmediate(f);
+                    });
                 });
             }
             [attributeChangedCallback](name) {
@@ -2324,21 +2342,7 @@ function ListMap(list, mapfun) {
         console.error(mapfun);
         throw new TypeError;
     }
-    const itemclass = createComponent$1(Object.assign((props, children) => {
-        const {value: propvalue} = props;
-        const value = propvalue;
-        const [propindex = 0] = children;
-        const index = Number(propindex);
-        return mapfun(value, index);
-    }, {
-        defaultProps: {
-            value: undefined
-        }
-    }));
-    const itemtagname = RandomDefineCustomElement(itemclass);
-    const ITEMfactory = (value, index) => h(itemclass, {
-        value: value
-    }, index);
+    const ITEMfactory = (value, index) => mapfun(value, index);
     class ListMap extends AttrChange {
         constructor() {
             super(...arguments);
@@ -2358,7 +2362,7 @@ function ListMap(list, mapfun) {
                         throw new TypeError;
                     }
                     set$1(this[listvalueattr], "value", value);
-                    const domchildren = getdomchildren(this);
+                    const domchildren = getchildren(this);
                     const newlength = value.length;
                     const oldlength = domchildren.length;
                     if (newlength > oldlength) {
@@ -2373,8 +2377,8 @@ function ListMap(list, mapfun) {
                                 return vdom;
                             }
                         });
-                        const realelementstoadd = vdomstoadd.map(vdom => {
-                            const index = Number(vdom.children[0]);
+                        const realelementstoadd = vdomstoadd.map((vdom, i) => {
+                            const index = i + oldlength;
                             const cached_element = get$1(this[cached_realele], index);
                             if (cached_element) {
                                 return cached_element;
@@ -2390,7 +2394,7 @@ function ListMap(list, mapfun) {
                     } else if (newlength < oldlength) {
                         this[listinnervdom] = this[listinnervdom].slice(0, newlength);
                         this[listinnerelement] = this[listinnerelement].slice(0, newlength);
-                        getdomchildren(this).slice(newlength).forEach(element => removeNode(element));
+                        getchildren(this).slice(newlength).forEach(element => removeElement(element));
                     }
                 }
             }
@@ -2398,9 +2402,6 @@ function ListMap(list, mapfun) {
         disconnectedCallback() {
             setimmediate(() => {
                 disconnectedCallback(this);
-                if (itemtagname) {
-                    querySelectorAll(itemtagname).forEach(e => removeNode(e));
-                }
             });
         }
         [firstinstalledcallback]() {
@@ -2587,7 +2588,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.7";
+var version = "1.4.8";
 
 const version1 = version;
 

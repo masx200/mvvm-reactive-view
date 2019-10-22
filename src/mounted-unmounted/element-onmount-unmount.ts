@@ -17,7 +17,7 @@ import {
   removelisteners
 } from "../RenderVirtual/handle-onevent";
 import { bindstatesymbol } from "../RenderVirtual/render-vdom-to-real";
-import { getdomchildren } from "../UtilTools/dom";
+import { getchildNodes } from "../UtilTools/dom";
 import { get, has } from "../UtilTools/reflect";
 import { isArray } from "../UtilTools/util";
 
@@ -78,7 +78,7 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         }
       });
     }
-    onmounted(getdomchildren(ele));
+    onmounted(getchildNodes(ele));
   }
 
   //
@@ -132,6 +132,6 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
         }
       });
     }
-    onunmounted(getdomchildren(ele));
+    onunmounted(getchildNodes(ele));
   }
 }

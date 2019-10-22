@@ -992,7 +992,7 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 ```ts
 function listMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-  mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
+  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any>
 ): Virtualdom<Htmlelementconstructor>;
 ```
 

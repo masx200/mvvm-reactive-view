@@ -1,30 +1,26 @@
-import { querySelectorAll } from "../UtilTools/dom";
-import RandomDefineCustomElement from "../CustomClass/CustomElementRegistry";
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
+import { setimmediate } from "src/UtilTools/setimmediate";
+import createElement from "../CreateElement/create-element";
+import Virtualdom from "../CreateElement/VirtualElement";
+import mount from "../MountElement/mount-real-element";
+import computed from "../Reactivity/computed";
+import createstate from "../Reactivity/create-state";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import render from "../RenderVirtual/render-vdom-to-real";
+import { appendchild, getchildren, removeElement } from "../UtilTools/dom";
+import { get, set } from "../UtilTools/reflect";
+import { isArray, isfunction, isSet } from "../UtilTools/util";
 import {
   AttrChange,
   attributeChangedCallback,
-  firstinstalledcallback,
   connectedCallback,
-  disconnectedCallback
+  disconnectedCallback,
+  firstinstalledcallback
 } from "./attr-change";
-import computed from "../Reactivity/computed";
 // import { VaildVDom } from "./conditon";
-import { createComponent, Htmlelementconstructor } from "./createComponent";
-import createElement from "../CreateElement/create-element";
-import createstate from "../Reactivity/create-state";
-import { Custom } from "../CustomClass/customclass";
-import { appendchild, getdomchildren, removeNode } from "../UtilTools/dom";
+import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
-import mount from "../MountElement/mount-real-element";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import { readysymbol } from "./readysymbol";
-import { get, set } from "../UtilTools/reflect";
-import render from "../RenderVirtual/render-vdom-to-real";
-import { isArray, isfunction, isSet } from "../UtilTools/util";
-import Virtualdom from "../CreateElement/VirtualElement";
-import { VaildVDom } from "../CreateElement/isvalidvdom";
-import { setimmediate } from "src/UtilTools/setimmediate";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
@@ -35,7 +31,7 @@ const cached_vdom_symbol = Symbol("cached_vdom");
 const cached_realele = Symbol("cached_realele");
 function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-  mapfun: (value: ReactiveState<any>, index: number) => VaildVDom
+  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any>
 ): Virtualdom<Htmlelementconstructor> {
   if (!isArray(list) && !isSet(list) && !isReactiveState(list)) {
     console.error(list);
@@ -45,32 +41,37 @@ function ListMap(
     console.error(mapfun);
     throw new TypeError();
   }
-  const itemclass = createComponent(
-    Object.assign(
-      (
-        props: Record<string, ReactiveState<any>>,
-        children: [(0 | undefined)?]
-      ) => {
-        const { value: propvalue /* , index: propindex */ } = props as {
-          value: ReactiveState<any>;
-          //   index: ReactiveState<any>;
-        };
-        // const myprops = {propvalue,}
-        const value = propvalue; //myprops.value;
-        const [propindex = 0] = children;
-        const index = Number(propindex); //myprops.index.valueOf() as number;
-        return mapfun(value, index);
-      },
-      { defaultProps: { /*  index: 0, */ value: undefined } }
-    ) as Custom
-    //,/* {defaultProps:{
 
-    //  value
-    // }} */
-  );
-  const itemtagname = RandomDefineCustomElement(itemclass);
   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
-    createElement(itemclass, { value }, index);
+    mapfun(value, index);
+
+  //   const itemclass = createComponent(
+  //     Object.assign(
+  //       (
+  //         props: Record<string, ReactiveState<any>>,
+  //         children: [(0 | undefined)?]
+  //       ) => {
+  //         const { value: propvalue /* , index: propindex */ } = props as {
+  //           value: ReactiveState<any>;
+  //           //   index: ReactiveState<any>;
+  //         };
+  //         // const myprops = {propvalue,}
+  //         const value = propvalue; //myprops.value;
+  //         const [propindex = 0] = children;
+  //         const index = Number(propindex); //myprops.index.valueOf() as number;
+  //         return mapfun(value, index);
+  //       },
+  //       { defaultProps: { /*  index: 0, */ value: undefined } }
+  //     ) as Custom
+  //     //,/* {defaultProps:{
+
+  //     //  value
+  //     // }} */
+  //   );
+  /* 没有必要创建一个class */
+  //   const itemtagname = RandomDefineCustomElement(itemclass);
+  //   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
+  //     createElement(itemclass, { value }, index);
   //   console.log(ITEMfactory);
   class ListMap extends AttrChange {
     // /* constructor() {
@@ -85,15 +86,12 @@ function ListMap(
     //   } */
     // } */
     static defaultProps = { value: [] };
-    [cached_vdom_symbol]: Record<
-      number,
-      Virtualdom<Htmlelementconstructor>
-    > = {};
+    [cached_vdom_symbol]: Record<number, Virtualdom<any>> = {};
     [cached_realele]: Record<number, Element> = {};
     [listvalueattr] = createstate([]);
     // [listlengthsymbol]: number;
     [listinnerelement]: Array<Element | Node>;
-    [listinnervdom]: Virtualdom<Htmlelementconstructor>[];
+    [listinnervdom]: Array<Virtualdom<any>>; //Virtualdom<Htmlelementconstructor>[];
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     [attributeChangedCallback](name: string) {
@@ -110,7 +108,7 @@ function ListMap(
           /* 状态变化时同步一次 */
           set(this[listvalueattr], "value", value);
           //  [] = ;
-          const domchildren = getdomchildren(this);
+          const domchildren = getchildren(this);
           const newlength = value.length;
           const oldlength = domchildren.length;
           if (newlength > oldlength) {
@@ -119,9 +117,7 @@ function ListMap(
               .map((v, i) => i)
               .slice(oldlength);
 
-            const vdomstoadd: Virtualdom<
-              Htmlelementconstructor
-            >[] = numindexs.map(index => {
+            const vdomstoadd: Array<Virtualdom<any>> = numindexs.map(index => {
               const cached_vdom1 = get(this[cached_vdom_symbol], index);
               if (cached_vdom1) {
                 return cached_vdom1;
@@ -138,8 +134,10 @@ function ListMap(
                 return vdom;
               }
             });
-            const realelementstoadd: Element[] = vdomstoadd.map(vdom => {
-              const index = Number(vdom.children[0]);
+            const realelementstoadd: Element[] = vdomstoadd.map((vdom, i) => {
+              const index = i + oldlength;
+              //   const index = Number(vdom.children[0]);
+
               //   const index = vdom.props.index;
 
               const cached_element = get(this[cached_realele], index);
@@ -158,9 +156,9 @@ function ListMap(
             /* 把旧的清除掉 */
             this[listinnervdom] = this[listinnervdom].slice(0, newlength);
             this[listinnerelement] = this[listinnerelement].slice(0, newlength);
-            getdomchildren(this)
+            getchildren(this)
               .slice(newlength)
-              .forEach(element => removeNode(element));
+              .forEach(element => removeElement(element));
           }
         }
       }
@@ -171,9 +169,9 @@ function ListMap(
 
       setimmediate(() => {
         disconnectedCallback(this);
-        if (itemtagname) {
+        /* if (itemtagname) {
           querySelectorAll(itemtagname).forEach(e => removeNode(e));
-        }
+        } */
       });
     }
     [firstinstalledcallback]() {

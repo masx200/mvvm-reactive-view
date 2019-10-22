@@ -1,7 +1,6 @@
-import { Htmlelementconstructor } from "./createComponent";
-import ReactiveState from "../Reactivity/ReactiveState";
 import Virtualdom from "../CreateElement/VirtualElement";
-import { VaildVDom } from "../CreateElement/isvalidvdom";
+import ReactiveState from "../Reactivity/ReactiveState";
+import { Htmlelementconstructor } from "./createComponent";
 export { ListMap };
 export default ListMap;
-declare function ListMap(list: any[] | Set<any> | ReactiveState<any[] | Set<any>>, mapfun: (value: ReactiveState<any>, index: number) => VaildVDom): Virtualdom<Htmlelementconstructor>;
+declare function ListMap(list: any[] | Set<any> | ReactiveState<any[] | Set<any>>, mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any>): Virtualdom<Htmlelementconstructor>;

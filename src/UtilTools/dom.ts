@@ -46,7 +46,11 @@ export function createmathelement() {
 export function createComment() {
   return document.createComment("");
 }
+export function removeElement(element: Element) {
+  element.remove();
+}
 export function removeNode(node: Element | Node) {
+  //   node.remove();
   let parentNode = node.parentNode;
   if (parentNode) {
     parentNode.removeChild(node);
@@ -74,7 +78,10 @@ export function domremovelisten(
 ) {
   ele.removeEventListener(event, call);
 }
-export function getdomchildren(ele: Element | Node) {
+export function getchildren(ele: Element) {
+  return [...ele.children];
+}
+export function getchildNodes(ele: Element | Node) {
   return [...ele.childNodes];
 }
 export function getAttribute(ele: Element, name: string) {

@@ -1,3 +1,4 @@
+const waittranformcsssymbol = Symbol("waittranformcss");
 export const innerwatchrecords = Symbol("innerwatchrecord");
 export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
@@ -83,6 +84,8 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
       // new (propsjson?: object | undefined, children?: any[] | undefined): HTMLElement
 
       //   constructor(...args: any[]);
+
+      [waittranformcsssymbol]: undefined | (() => Promise<void>);
       constructor(
         propsjson: Record<string, any> = {},
         children: Vdomchildren = [] /* , options?: any */ //   : HTMLElement;
@@ -94,7 +97,13 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         if (css) {
           const prefix = this.tagName.toLowerCase();
           if (!componentsstylesheet[prefix]) {
-            registercssprefix(css, prefix);
+            /* 改成异步解析css转换 */
+            this[waittranformcsssymbol] = () => {
+              return setimmediate(() => {
+                registercssprefix(css, prefix);
+              });
+            };
+
             /* 把css文本先解析成cssom ,然后添加前缀,然后转成字符串,生成blob,再生成link-stylesheet,添加*/
             /* const cssomold = parsecsstext(css);
                 const cssomnew = prefixcssrules(cssomold, prefix);
@@ -215,10 +224,22 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
 
         const css = get(this.constructor, "css");
         const prefix = this.tagName.toLowerCase();
-        if (css && componentsstylesheet[prefix]) {
+        if (css /*  && componentsstylesheet[prefix] */) {
+          const waitcallback = this[waittranformcsssymbol];
+          if (waitcallback) {
+            waitcallback().then(() => {
+              /* 异步解析转换css */
+              seteletext(this, "");
+              waitloadallstyle(prefix, this).then(() => {
+                //   console.log("style load all");
+                //   console.log("mount1");
+                mount(this[elementsymbol], this, false);
+              });
+            });
+          }
+
           /* 先清空当前组件 的children */
 
-          seteletext(this, "");
           /* 应该要等待css加载完成之后再渲染出来,否则会有页面跳动 */
           /* 是css里面的@import导致的 */
           /* 挂载样式到组件最前面 */
@@ -241,37 +262,37 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
               )
             )
 */
-          waitloadallstyle(prefix, this).then(() => {
-            //   console.log("style load all");
-            //   console.log("mount1");
-            mount(this[elementsymbol], this, false);
-          });
         } else {
           // console.log("mount2");
           mount(this[elementsymbol], this);
         }
       }
       connectedCallback() {
-        connectedCallback(this);
-        // if (!this[elementsymbol]) {
-        //   this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
-        // }
-        //    /*  if (!this[readysymbol]) {
-        //       this[readysymbol] = true;
-        //       /* 这段代码只在初始化时执行一次 */
-        //       //   mount(this[elementsymbol], this, false);
-        //     } */
-        //把mounted callback 异步执行
-        this[mountedsymbol].forEach(f => {
-          setimmediate(f);
+        setimmediate(() => {
+          connectedCallback(this);
+          // if (!this[elementsymbol]) {
+          //   this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
+          // }
+          //    /*  if (!this[readysymbol]) {
+          //       this[readysymbol] = true;
+          //       /* 这段代码只在初始化时执行一次 */
+          //       //   mount(this[elementsymbol], this, false);
+          //     } */
+          //把mounted callback 异步执行
+          this[mountedsymbol].forEach(f => {
+            setimmediate(f);
+          });
         });
+
         // onmounted(this);
         // super.connectedCallback();
       }
       disconnectedCallback() {
-        disconnectedCallback(this);
-        this[unmountedsymbol].forEach(f => {
-          setimmediate(f);
+        setimmediate(() => {
+          disconnectedCallback(this);
+          this[unmountedsymbol].forEach(f => {
+            setimmediate(f);
+          });
         });
 
         // onunmounted(this);

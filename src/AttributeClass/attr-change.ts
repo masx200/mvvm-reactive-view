@@ -46,7 +46,9 @@ export class AttrChange extends HTMLElement {
         const callback = get(this, firstinstalledcallback);
         if (isfunction(callback)) {
           // get(this,firstinstalledcallback)
-          callback.call(this);
+          setimmediate(() => {
+            callback.call(this);
+          });
         }
       }
       onmounted(this);
