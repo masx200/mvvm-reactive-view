@@ -7,6 +7,7 @@ import {
   onunmounted,
   onmounted
 } from "../mounted-unmounted/element-onmount-unmount";
+import { setimmediate } from "src/UtilTools/setimmediate";
 export const attributeChangedCallback = Symbol("attributeChanged");
 export const firstinstalledcallback = Symbol("firstinstalled");
 /* 
@@ -16,11 +17,11 @@ export const firstinstalledcallback = Symbol("firstinstalled");
  被babel转换之后这句就没了?
 
   connectedCallback() {
-                return _asyncToGenerator((function*() {}
+            //    return _asyncToGenerator((function*() {}
                 ))();
             }
             disconnectedCallback() {
-                return _asyncToGenerator((function*() {}
+               // return _asyncToGenerator((function*() {}
                 ))();
             }
 */
@@ -33,19 +34,24 @@ export function disconnectedCallback(componentelement: HTMLElement) {
 }
 export class AttrChange extends HTMLElement {
   //   abstract [firstinstalledcallback]();
-  async disconnectedCallback() {
-    onunmounted(this);
+  disconnectedCallback() {
+    setimmediate(() => {
+      onunmounted(this);
+    });
   }
-  async connectedCallback() {
-    if (!this[readysymbol]) {
-      this[readysymbol] = true;
-      const callback = get(this, firstinstalledcallback);
-      if (isfunction(callback)) {
-        // get(this,firstinstalledcallback)
-        callback.call(this);
+  connectedCallback() {
+    setimmediate(() => {
+      if (!this[readysymbol]) {
+        this[readysymbol] = true;
+        const callback = get(this, firstinstalledcallback);
+        if (isfunction(callback)) {
+          // get(this,firstinstalledcallback)
+          callback.call(this);
+        }
       }
-    }
-    onmounted(this);
+      onmounted(this);
+    });
+
     // onmounted(this);
   }
   [readysymbol] = false;

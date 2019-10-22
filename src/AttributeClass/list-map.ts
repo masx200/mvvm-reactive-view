@@ -24,6 +24,7 @@ import render from "../RenderVirtual/render-vdom-to-real";
 import { isArray, isfunction, isSet } from "../UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
 import { VaildVDom } from "../CreateElement/isvalidvdom";
+import { setimmediate } from "src/UtilTools/setimmediate";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
@@ -164,13 +165,16 @@ function ListMap(
         }
       }
     }
-    async disconnectedCallback() {
+    disconnectedCallback() {
       //   onunmounted(this);
       //   super.disconnectedCallback();
-      disconnectedCallback(this);
-      if (itemtagname) {
-        querySelectorAll(itemtagname).forEach(e => removeNode(e));
-      }
+
+      setimmediate(() => {
+        disconnectedCallback(this);
+        if (itemtagname) {
+          querySelectorAll(itemtagname).forEach(e => removeNode(e));
+        }
+      });
     }
     [firstinstalledcallback]() {
       const attrs = createeleattr(this);
@@ -196,7 +200,7 @@ function ListMap(
       Object.assign(this[cached_realele], this[listinnerelement]);
       mount(this[listinnerelement], this);
     }
-    async connectedCallback() {
+    connectedCallback() {
       /*   if (!this[readysymbol]) {
         this[readysymbol] = true;
 

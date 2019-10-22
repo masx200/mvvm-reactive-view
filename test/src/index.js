@@ -1,3 +1,8 @@
+/* const timelabel = "第一次加载完成";
+// console.time(timelabel);
+requestAnimationFrame(() => {
+  console.timeEnd(timelabel);
+}); */
 //import "../polyfill/custom-elements.min.js";
 /* import "../../polyfill/Array-prototype-flat.js";
 import "../../polyfill/Object-fromEntries.js"; */

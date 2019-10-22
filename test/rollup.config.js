@@ -40,7 +40,19 @@ export default [
             {
               corejs: 3,
               // useBuiltIns: 'usage',
-              targets: { esmodules: true }
+              targets: [
+                "last 1 edge version",
+                "last 1 safari version",
+                "last 1 chrome version",
+                "last 1 firefox version"
+              ]
+              /*  {
+                /* esmodules: true */
+              // firefox: "last 1 version",
+              // safari: "last 1 version",
+              // chrome: "last 1 version",
+              // edge: "last 1 version"
+              //   } */
             }
           ]
         ]

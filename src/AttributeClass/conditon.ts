@@ -146,7 +146,7 @@ export default function(
         //
       }
     }
-    async connectedCallback() {
+    connectedCallback() {
       connectedCallback(this);
       //   super.connectedCallback();
 
@@ -167,7 +167,7 @@ export default function(
       //   onmounted(this);
       //
     }
-    async disconnectedCallback() {
+    disconnectedCallback() {
       disconnectedCallback(this);
       //   onunmounted(this);
       //   super.connectedCallback();

@@ -1382,6 +1382,10 @@ function onunmounted(ele) {
     }
 }
 
+function setimmediate(fun) {
+    return Promise.resolve().then(() => fun());
+}
+
 var _a$1;
 
 const attributeChangedCallback = Symbol("attributeChanged");
@@ -1406,18 +1410,22 @@ class AttrChange extends HTMLElement {
             Object.assign(attrs, defaultProps);
         }
     }
-    async disconnectedCallback() {
-        onunmounted(this);
+    disconnectedCallback() {
+        setimmediate(() => {
+            onunmounted(this);
+        });
     }
-    async connectedCallback() {
-        if (!this[readysymbol]) {
-            this[readysymbol] = true;
-            const callback = get$1(this, firstinstalledcallback);
-            if (isfunction(callback)) {
-                callback.call(this);
+    connectedCallback() {
+        setimmediate(() => {
+            if (!this[readysymbol]) {
+                this[readysymbol] = true;
+                const callback = get$1(this, firstinstalledcallback);
+                if (isfunction(callback)) {
+                    callback.call(this);
+                }
             }
-        }
-        onmounted(this);
+            onmounted(this);
+        });
     }
     setAttribute(qualifiedName, value) {
         const callback = get$1(this, attributeChangedCallback);
@@ -1969,8 +1977,8 @@ function loadlinkstyle(stylelinkelement, container) {
     });
 }
 
-async function waitloadallstyle(prefix, containerthis) {
-    await Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), containerthis)));
+function waitloadallstyle(prefix, containerthis) {
+    return Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), containerthis)));
 }
 
 function readonlyproxy(target) {
@@ -1988,10 +1996,6 @@ function readonlyproxy(target) {
             return false;
         }
     });
-}
-
-function setimmediate(fun) {
-    return Promise.resolve().then(() => fun());
 }
 
 const innerwatchrecords = Symbol("innerwatchrecord");
@@ -2079,13 +2083,13 @@ function createComponent(custfun) {
                     mountrealelement(this[elementsymbol], this);
                 }
             }
-            async connectedCallback() {
+            connectedCallback() {
                 connectedCallback(this);
                 this[mountedsymbol].forEach(f => {
                     setimmediate(f);
                 });
             }
-            async disconnectedCallback() {
+            disconnectedCallback() {
                 disconnectedCallback(this);
                 this[unmountedsymbol].forEach(f => {
                     setimmediate(f);
@@ -2230,10 +2234,10 @@ function conditon(conditon, iftrue, iffalse) {
                 get$1(this, handlefalse).call(this);
             }
         }
-        async connectedCallback() {
+        connectedCallback() {
             connectedCallback(this);
         }
-        async disconnectedCallback() {
+        disconnectedCallback() {
             disconnectedCallback(this);
         }
         [attributeChangedCallback](name) {
@@ -2394,11 +2398,13 @@ function ListMap(list, mapfun) {
                 }
             }
         }
-        async disconnectedCallback() {
-            disconnectedCallback(this);
-            if (itemtagname) {
-                querySelectorAll(itemtagname).forEach(e => removeNode(e));
-            }
+        disconnectedCallback() {
+            setimmediate(() => {
+                disconnectedCallback(this);
+                if (itemtagname) {
+                    querySelectorAll(itemtagname).forEach(e => removeNode(e));
+                }
+            });
         }
         [firstinstalledcallback]() {
             const attrs = createeleattragentreadwrite(this);
@@ -2414,7 +2420,7 @@ function ListMap(list, mapfun) {
             Object.assign(this[cached_realele], this[listinnerelement]);
             mountrealelement(this[listinnerelement], this);
         }
-        async connectedCallback() {
+        connectedCallback() {
             connectedCallback(this);
         }
     }
@@ -2445,11 +2451,13 @@ function Switchable(funstate) {
             this[_a] = new WeakMap;
             this[_c] = false;
         }
-        async disconnectedCallback() {
-            disconnectedCallback(this);
-            if (isfunction(this[cancel_watch_symbol])) {
-                this[cancel_watch_symbol]();
-            }
+        disconnectedCallback() {
+            setimmediate(() => {
+                disconnectedCallback(this);
+                if (isfunction(this[cancel_watch_symbol])) {
+                    this[cancel_watch_symbol]();
+                }
+            });
         }
         [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
             eleclass = autocreateclass(eleclass);
@@ -2475,7 +2483,7 @@ function Switchable(funstate) {
                 callmountswitch();
             });
         }
-        async connectedCallback() {
+        connectedCallback() {
             connectedCallback(this);
         }
     }
@@ -2582,7 +2590,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.6";
+var version = "1.4.7";
 
 const version1 = version;
 

@@ -251,7 +251,7 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
           mount(this[elementsymbol], this);
         }
       }
-      async connectedCallback() {
+      connectedCallback() {
         connectedCallback(this);
         // if (!this[elementsymbol]) {
         //   this[elementsymbol] = render(this[vdomsymbol]).flat(Infinity);
@@ -268,7 +268,7 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         // onmounted(this);
         // super.connectedCallback();
       }
-      async disconnectedCallback() {
+      disconnectedCallback() {
         disconnectedCallback(this);
         this[unmountedsymbol].forEach(f => {
           setimmediate(f);

@@ -17,6 +17,7 @@ import render from "../RenderVirtual/render-vdom-to-real";
 import { isfunction } from "../UtilTools/util";
 import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
 import { Custom } from "../CustomClass/customclass";
+import { setimmediate } from "src/UtilTools/setimmediate";
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
@@ -32,13 +33,15 @@ function Switchable(
   class Switchable extends AttrChange {
     // [current_element_class]: Htmlelementconstructor;
     [cached_class_element] = new WeakMap<Htmlelementconstructor, Element>();
-    async disconnectedCallback() {
+    disconnectedCallback() {
       //   onunmounted(this);
       //   super.disconnectedCallback();
-      disconnectedCallback(this);
-      if (isfunction(this[cancel_watch_symbol])) {
-        this[cancel_watch_symbol]();
-      }
+      setimmediate(() => {
+        disconnectedCallback(this);
+        if (isfunction(this[cancel_watch_symbol])) {
+          this[cancel_watch_symbol]();
+        }
+      });
     }
     [cancel_watch_symbol]: CancelWatchfun;
     static [componentsymbol] = componentsymbol;
@@ -73,7 +76,7 @@ function Switchable(
         callmountswitch();
       });
     }
-    async connectedCallback() {
+    connectedCallback() {
       connectedCallback(this);
       /* if (!this[readysymbol]) {
         this[readysymbol] = true;
