@@ -996,6 +996,14 @@ function listMap(
 ): Virtualdom<Htmlelementconstructor>;
 ```
 
+## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
+
+```ts
+function Switchable(
+  funstate: ReactiveState<Htmlelementconstructor | Custom>
+): Virtualdom<Htmlelementconstructor>;
+```
+
 ## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
 
 ```ts
@@ -1021,7 +1029,7 @@ type VaildVDom =
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
-function createComponent(custfun: Custom): Htmlelementconstructor;
+function createComponent(custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
 interface Custom {
   (
     props?: Record<string, ReactiveState<any>>,
@@ -1038,6 +1046,18 @@ interface Custom {
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
+```ts
+type CancelWatchfun = () => void;
+type UnwrapedState = any;
+interface CallbackReactiveState {
+  (...args: UnwrapedState[]): void;
+}
+function watch<T extends UnwrapedState>(
+  state: ReactiveState<T> | Array<ReactiveState<T>>,
+  callback: CallbackReactiveState
+): CancelWatchfun;
+```
+
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
@@ -1047,23 +1067,28 @@ interface Custom {
 ### 如果初始值是对象类型则不能修改为原始类型，
 
 ```ts
-type UnwrapedState =
-  | string
-  | number
-  | boolean
-  | undefined
-  | object
-  | bigint
-  | Function;
+type UnwrapedState = any;
 class ReactiveState<T extends UnwrapedState> {
-  constructor(init?: T);
+  value: T extends Array<any>
+    ? Array<any>
+    : T extends Function
+    ? Function
+    : T extends Primitivetype
+    ? Primitivetype
+    : object;
   readonly [Symbol.toStringTag] = "ReactiveState";
-  value: T | undefined;
+  constructor(init?: T);
 
-  valueOf: () => T | undefined;
+  valueOf: () => T extends any[]
+    ? any[]
+    : T extends Function
+    ? Function
+    : T extends Primitivetype
+    ? Primitivetype
+    : object;
   toString(): string;
 
-  [Symbol.toPrimitive](): string | undefined;
+  [Symbol.toPrimitive](): string | undefined | Primitivetype;
 }
 ```
 
@@ -1077,7 +1102,7 @@ function computed<T extends UnwrapedState>(
   callback: CallbackReactiveState,
   setter?: SetterFun
 ): ReactiveState<any>;
-declare type SetterFun = (v: any) => void;
+type SetterFun = (v: any) => void;
 ```
 
 ## 使用`Directives`函数来扩展指令,返回已有的指令合集
@@ -1140,6 +1165,7 @@ interface Class {
   defaultProps?: Record<string, any>;
   css?: string;
 }
+declare const isvirtualelement: unique symbol;
 interface Virtualdom<T extends Class | string | Function> {
   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
@@ -1151,12 +1177,4 @@ interface Virtualdom<T extends Class | string | Function> {
   onevent: Record<string, Array<EventListener>>;
   bindattr: Record<string, ReactiveState<any>>;
 }
-```
-
-## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
-
-```ts
-function Switchable(
-  funstate: ReactiveState<Htmlelementconstructor | Custom>
-): Virtualdom<Htmlelementconstructor>;
 ```
