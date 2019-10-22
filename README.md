@@ -1052,7 +1052,7 @@ interface Custom {
 type CancelWatchfun = () => void;
 type UnwrapedState = any;
 interface CallbackReactiveState {
-  (...args: UnwrapedState[]): void;
+  (...args: UnwrapedState[]): any;
 }
 function watch<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
