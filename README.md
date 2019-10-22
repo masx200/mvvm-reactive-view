@@ -1102,7 +1102,12 @@ class ReactiveState<T extends UnwrapedState> {
 
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
-### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,第二个参数是回调函数,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
+### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,
+
+### 第二个参数是回调函数,充当`getter`,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
+
+
+### 第三个参数可选，是`setter`函数
 
 ```ts
 function computed<T extends UnwrapedState>(
