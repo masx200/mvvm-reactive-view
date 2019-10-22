@@ -1029,7 +1029,9 @@ type VaildVDom =
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
-function createComponent(custfun: Htmlelementconstructor | Custom) : Htmlelementconstructor;
+function createComponent(
+  custfun: Htmlelementconstructor | Custom
+): Htmlelementconstructor;
 interface Custom {
   (
     props?: Record<string, ReactiveState<any>>,
@@ -1059,6 +1061,12 @@ function watch<T extends UnwrapedState>(
 ```
 
 ## 使用`createState`来生成一个引用形式响应式的状态，
+
+```ts
+function createState<T extends UnwrapedState>(
+  init: ReactiveState<T>
+): ReactiveState<T>;
+```
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
 
