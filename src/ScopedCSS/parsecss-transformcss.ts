@@ -90,11 +90,11 @@ export function loadlinkstyle(
   });
 }
 
-export async function waitloadallstyle(
+export  function waitloadallstyle(
   prefix: string,
   containerthis: Element | HTMLElement | SVGSVGElement | SVGElement
 ) {
-  await Promise.all(
+  return Promise.all(
     [...componentsstylesheet[prefix]].map(styleurl =>
       loadlinkstyle(createlinkstylesheet(styleurl), containerthis)
     )
