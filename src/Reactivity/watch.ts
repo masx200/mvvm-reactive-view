@@ -21,7 +21,7 @@ export type UnwrapedState = any; //Primitivetype | Exclude<object, Function>;
 export interface CallbackReactiveState /* <
   
 > */ {
-  (...args: UnwrapedState[]): void;
+  (...args: UnwrapedState[]): any;
 }
 
 export function watch<T extends UnwrapedState>(
