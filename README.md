@@ -1029,7 +1029,7 @@ type VaildVDom =
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
-function createComponent(custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
+function createComponent(custfun: Htmlelementconstructor | Custom) : Htmlelementconstructor;
 interface Custom {
   (
     props?: Record<string, ReactiveState<any>>,
