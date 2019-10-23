@@ -3,11 +3,12 @@ import render from "../RenderVirtual/render-vdom-to-real";
 // import { RegExp } from "core-js";
 import {
   appendchild,
-  createanotherhtmldocument /* , insertfirst */
+  createanotherhtmldocument /* , insertfirst */,
+  querySelectorAll
 } from "../UtilTools/dom";
-import { get } from "../UtilTools/reflect";
+import { get, set } from "../UtilTools/reflect";
 import { createcssBlob } from "./create-cssurlblob";
-import { prefixcssrules } from "./transform-prefix-cssrules";
+import { transformcsstext } from "./transformcsstext";
 
 export function parsecsstext(text: string): Array<CSSRule> {
   const styleelement = render(
@@ -28,7 +29,7 @@ export function parsecsstext(text: string): Array<CSSRule> {
   );
 }
 
-const componentsstylesheet: Record<string, Set<string>> = {};
+const componentsstylesheet: Map<string, Set<string>> = new Map();
 // { [key: string]: Set<string> }
 
 export { componentsstylesheet };
@@ -38,34 +39,27 @@ export function savestyleblob(
   urltext?: string
 ) {
   tagname = tagname.toLowerCase();
-  if (!componentsstylesheet[tagname]) {
-    componentsstylesheet[tagname] = new Set();
+  const prefix = tagname;
+  if (
+    !get(componentsstylesheet, prefix)
+    // componentsstylesheet[tagname]
+  ) {
+    set(componentsstylesheet, tagname, new Set());
+    // componentsstylesheet[tagname] = ;
   }
   if (csstext) {
-    componentsstylesheet[tagname].add(createcssBlob(csstext));
+    get(componentsstylesheet, prefix).add(createcssBlob(csstext));
   } else if (urltext) {
-    componentsstylesheet[tagname].add(urltext);
+    get(componentsstylesheet, prefix).add(urltext);
   }
 }
-export function cssrulestocsstext(cssrules: Array<CSSRule>): string {
-  return cssrules.map(c => c.cssText).join("\n");
-  // .replace(/\n/g, "");
-}
+
 export function createlinkstylesheet(url: string): HTMLLinkElement {
   return render(
     createElement("link", { href: url, rel: "stylesheet" })
   ) as HTMLLinkElement;
 }
-export function transformcsstext(text: string, prefix: string): string {
-  const css = text;
-  const cssomold = parsecsstext(css);
-  const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
-  //   console.log(cssomnew);
-  //   console.log([css, prefix, cssomold, cssomnew]);
-  const cssnewtext = cssrulestocsstext(cssomnew);
-  //   console.log([text, cssomold, cssomnew, cssnewtext]);
-  return cssnewtext;
-}
+
 export function registercssprefix(text: string, prefix: string) {
   const css = text;
   const cssnewtext = transformcsstext(css, prefix);
@@ -95,8 +89,15 @@ export function waitloadallstyle(
   containerthis: Element | HTMLElement | SVGSVGElement | SVGElement
 ) {
   return Promise.all(
-    [...componentsstylesheet[prefix]].map(styleurl =>
-      loadlinkstyle(createlinkstylesheet(styleurl), containerthis)
-    )
+    [...get(componentsstylesheet, prefix)].map(styleurl => {
+      if (
+        querySelectorAll(`link[rel="stylesheet"][href="${styleurl}"]`).length
+      ) {
+        return Promise.resolve();
+      } else {
+        /* 如果已经有过相同的linkstylesheet挂载着的话,则不重复挂载 */
+        return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
+      }
+    })
   );
 }

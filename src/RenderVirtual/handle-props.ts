@@ -7,7 +7,7 @@ import { isfunction } from "src/UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
-import { bindstatesymbol, virtualdomsymbol } from "./render-vdom-to-real";
+import { bindstatesymbol /* virtualdomsymbol */ } from "./render-vdom-to-real";
 
 export default handleprops;
 function handleprops(
@@ -39,8 +39,9 @@ function handleprops(
       // Object.fromEntries(Object.entries(vdom.props).filter())
     );
     /* 添加常量的属性 */
-    set(element, virtualdomsymbol, vdom);
+    // set(element, virtualdomsymbol, vdom);
     // element[virtualdomsymbol] = vdom;
+    /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
     vdom.element = element;
     /* 添加绑定属性 */
 

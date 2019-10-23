@@ -1,7 +1,7 @@
 // import deepobserve from "deep-observe-agent-proxy";
-import { usestste } from "../mounted-unmounted/Component-context";
 import { set } from "../UtilTools/reflect";
 import { isfunction, isobject, isprimitive } from "../UtilTools/util";
+import { getproperyreadproxy } from "./getproperyread-proxy";
 // import { getproperyreadproxy } from "./computed";
 import handleobjectstate from "./handle-object-state";
 import ReactiveState, {
@@ -11,7 +11,6 @@ import ReactiveState, {
   isReactiveState
 } from "./ReactiveState";
 import { UnwrapedState } from "./watch";
-import { getproperyreadproxy } from "./getproperyread-proxy";
 export const set_prototype = Set.prototype;
 
 export default function<T extends UnwrapedState>(
@@ -25,7 +24,7 @@ export default function<T extends UnwrapedState>(
 ): ReactiveState<T> {
   /* 收集组件内部创建的 ReactiveState*/
   const state: ReactiveState<T> = createstate(init as any) as ReactiveState<T>;
-  usestste(state);
+  //   usestste(state);
   return state;
 }
 

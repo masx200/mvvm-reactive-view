@@ -28,7 +28,7 @@ let StateSet: Set<ReactiveState<any>> = new Set();
 export function getstates() {
   return [...StateSet];
 }
-export function usestste(state: ReactiveState<any>) {
+export function recordusestste(state: ReactiveState<any>) {
   if (ctxopen) {
     StateSet.add(state);
   }

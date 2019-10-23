@@ -2,7 +2,7 @@ import ReactiveState from "./ReactiveState";
 export declare type CancelWatchfun = () => void;
 export declare type UnwrapedState = any;
 export interface CallbackReactiveState {
-    (...args: UnwrapedState[]): void;
+    (...args: UnwrapedState[]): any;
 }
 export declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: CallbackReactiveState): CancelWatchfun;
 export declare function unwatch(state: ReactiveState<any>): void;

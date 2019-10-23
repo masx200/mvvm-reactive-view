@@ -45,13 +45,15 @@ const customElements = window.customElements as CustomElements;
 // export default customElements;
 
 if (!has(customElements, elementset)) {
-  set(customElements, elementset, new Set());
+  Reflect.set(customElements, elementset, new Set());
+  //   assert(elementset in customElements);
   //   customElements[elementset] = new Set();
 }
 if (!has(customElements, elementmap)) {
-  set(customElements, elementmap, {});
+  Reflect.set(customElements, elementmap, {});
   //   customElements[elementmap] = {};
 }
+// debugger;
 export default (initclass: Function, extendsname?: string) =>
   RandomDefineCustomElement(initclass, extendsname);
 
@@ -67,7 +69,8 @@ function RandomDefineCustomElement(
   }
 
   //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
-
+  //   console.log(get(customElements, elementset));
+  //   debugger;
   if (!get(customElements, elementset).has(initclass)) {
     const elementname = getrandomstringandnumber(length);
 

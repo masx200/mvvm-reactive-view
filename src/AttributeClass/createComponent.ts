@@ -2,14 +2,12 @@ const waittranformcsssymbol = Symbol("waittranformcss");
 export const innerwatchrecords = Symbol("innerwatchrecord");
 export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import {
-  AttrChange,
-  attributeChangedCallback,
-  firstinstalledcallback,
-  connectedCallback,
-  disconnectedCallback
-} from "./attr-change";
+import { isvalidvdom } from "src/CreateElement/isvalidvdom";
+import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
 import { cached_create_componet } from "../cached-map";
+// import { Class } from "./rendervdomtoreal";
+import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
+import { Custom } from "../CustomClass/customclass";
 import {
   closectx,
   getMounted,
@@ -19,9 +17,6 @@ import {
   invalid_Function,
   openctx
 } from "../mounted-unmounted/Component-context";
-import createstate from "../Reactivity/create-state";
-import { Custom } from "../CustomClass/customclass";
-import { seteletext } from "../UtilTools/dom";
 // import { isvalidvdom } from "../CreateElement/html";
 // import { Promise } from "q";
 // import { inflate } from "zlib";
@@ -31,33 +26,40 @@ import mount from "../MountElement/mount-real-element";
 import {
   /* createApp, */ invalid_Virtualdom
 } from "../MountElement/MountElement";
+import ReactiveState, {
+  dispatchsymbol /* , { dispatchsymbol } */
+} from "../Reactivity/ReactiveState";
+import readonlyproxy from "../Reactivity/readonly-proxy";
+import render from "../RenderVirtual/render-vdom-to-real";
 import {
   /* parsecsstext,
-                prefixcssrules,
-                cssrulestocsstext, */
+                    prefixcssrules,
+                    cssrulestocsstext, */
   //   savestyleblob,
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
   registercssprefix,
   /*  loadlinkstyle,
-                createlinkstylesheet */
+                    createlinkstylesheet */
   //   savestyleblob
   waitloadallstyle
 } from "../ScopedCSS/parsecss-transformcss";
-import ReactiveState /* , { dispatchsymbol } */ from "../Reactivity/ReactiveState";
-import readonlyproxy from "../Reactivity/readonly-proxy";
-import { readysymbol } from "./readysymbol";
-import { apply, get } from "../UtilTools/reflect";
-import render from "../RenderVirtual/render-vdom-to-real";
+import { seteletext } from "../UtilTools/dom";
+import { apply, defineProperty, get } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
 import { isArray, isfunction, isobject, isstring } from "../UtilTools/util";
-// import { Class } from "./rendervdomtoreal";
-import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
-import { isvalidvdom } from "src/CreateElement/isvalidvdom";
+import {
+  AttrChange,
+  attributeChangedCallback,
+  connectedCallback,
+  disconnectedCallback,
+  firstinstalledcallback
+} from "./attr-change";
+import createcomponent from "./createComponent";
 import { componentsymbol } from "./iscomponent";
-import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
+import { readysymbol } from "./readysymbol";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
@@ -96,7 +98,10 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
 
         if (css) {
           const prefix = this.tagName.toLowerCase();
-          if (!componentsstylesheet[prefix]) {
+          if (
+            !get(componentsstylesheet, prefix)
+            /*  componentsstylesheet[prefix] */
+          ) {
             /* 改成异步解析css转换 */
             this[waittranformcsssymbol] = () => {
               return setimmediate(() => {
@@ -133,7 +138,25 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         openctx();
 
         const thisattributess = Object.fromEntries(
-          Object.entries(props).map(([key, value]) => [key, createstate(value)])
+          Object.entries(props).map(([key]) => [
+            key,
+            (() => {
+              /* 使用getter来保证每次访问到最新的attribute */
+              const attributes = createeleattragentreadwrite(this) as Record<
+                string,
+                any
+              >;
+              const state = new ReactiveState();
+              defineProperty(state, "value", {
+                get() {
+                  return get(attributes, key);
+                },
+                configurable: true
+              });
+              //   usestste(state);
+              return state;
+            })()
+          ])
         );
         this[attributessymbol] = thisattributess;
         // console.log({ props, thisattributess });
@@ -218,6 +241,17 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
       [firstinstalledcallback]() {
+        const thencallbackfirst = () => {
+          /* 异步解析转换css */
+          seteletext(this, "");
+          return waitloadallstyle(prefix, this);
+        };
+        const thencallbacksecond = () => {
+          //   console.log("style load all");
+          //   console.log("mount1");
+          mount(this[elementsymbol], this, false);
+          this[waittranformcsssymbol] = undefined;
+        };
         if (!this[elementsymbol]) {
           this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
         }
@@ -227,15 +261,11 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         if (css /*  && componentsstylesheet[prefix] */) {
           const waitcallback = this[waittranformcsssymbol];
           if (waitcallback) {
-            waitcallback().then(() => {
-              /* 异步解析转换css */
-              seteletext(this, "");
-              waitloadallstyle(prefix, this).then(() => {
-                //   console.log("style load all");
-                //   console.log("mount1");
-                mount(this[elementsymbol], this, false);
-              });
-            });
+            waitcallback()
+              .then(thencallbackfirst)
+              .then(thencallbacksecond);
+          } else {
+            Promise.resolve(thencallbackfirst).then(thencallbacksecond);
           }
 
           /* 先清空当前组件 的children */
@@ -308,12 +338,15 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         if (this[readysymbol]) {
           {
             const propreactivestate = this[attributessymbol][name];
-            const attributes = createeleattragentreadwrite(this) as Record<
+            /*   const attributes = createeleattragentreadwrite(this) as Record<
               string,
               any
-            >;
+            >; */
             if (propreactivestate) {
-              propreactivestate["value"] = attributes[name];
+              /* 使用getter来保证每次访问到最新的attribute */
+              propreactivestate[dispatchsymbol]();
+              //   propreactivestate["value"] = attributes[name];
+
               /* 当属性改变时要跟ReactiveState同步状态 */
               /*   set(
             get(this, attributessymbol)[name],
@@ -339,7 +372,6 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
     throw TypeError();
   }
 }
-import createcomponent from "./createComponent";
 export { createcomponent as createComponent };
 export default (custfun: Custom | Htmlelementconstructor) =>
   autocreateclass(custfun);

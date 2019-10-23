@@ -45,7 +45,7 @@
     const self = globalThis;
     const window$1 = globalThis;
     const global = globalThis;
-    const {WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt, Number: Number} = globalThis;
+    const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt, Number: Number} = globalThis;
     function isprimitive(a) {
         return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
     }
@@ -81,7 +81,13 @@
         return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
     }
     function isSet(a) {
-        return gettagtype(a) === "Set" && a instanceof Set$1;
+        return a instanceof Set$1;
+    }
+    function isMap(a) {
+        return a instanceof Map;
+    }
+    function isWeakMap(a) {
+        return a instanceof WeakMap;
     }
     const {HTMLElement: HTMLElement$1, customElements: customElements$1, Proxy: Proxy$1} = window$1;
     if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElements$1)) {
@@ -236,18 +242,6 @@
     function isinputtextortextarea(ele) {
         const tagname = geteletagname(ele);
         return tagname === "textarea" || tagname === "select" || tagname === "input" && get(ele, "type") === "text";
-    }
-    function merge_entries(a) {
-        const m = {};
-        a.forEach(([key, value]) => {
-            if (!m[key]) {
-                m[key] = new Set$1;
-            }
-            value.forEach(v => {
-                m[key].add(v);
-            });
-        });
-        return Object$1.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
     }
     function isObject(value) {
         var type = typeof value;
@@ -423,8 +417,105 @@
     const cached_callback_eventlistner = new WeakMap;
     const cached_create_componet = new WeakMap;
     const cached_callback_debounced_watchs = new WeakMap;
-    const Reflect$2 = window$1.Reflect;
-    const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, get: get$1, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1$1, set: set$1} = Reflect$2;
+    const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1$1, preventExtensions: preventExtensions} = Reflect;
+    function get$1(target, propertyKey) {
+        if (isMap(target) || isWeakMap(target)) {
+            return target.get(propertyKey);
+        } else {
+            return Reflect.get(target, propertyKey);
+        }
+    }
+    function set$1(target, propertyKey, value) {
+        if (isMap(target) || isWeakMap(target)) {
+            target.set(propertyKey, value);
+            return true;
+        } else {
+            return Reflect.set(target, propertyKey, value);
+        }
+    }
+    let watchrecord = [];
+    function getwatchrecords() {
+        return [ ...watchrecord ];
+    }
+    function usewatch(state, callback) {
+        if (ctxopen) {
+            watchrecord.push([ state, callback ]);
+        }
+    }
+    function clearwatch() {
+        watchrecord = [];
+    }
+    const invalid_Function = "invalid Function";
+    const errormessage = "invalid useMounted or useUnMounted out of createComponent";
+    let ctxopen = false;
+    let MountedSet = new Set$1;
+    let UnMountedSet = new Set$1;
+    let StateSet = new Set$1;
+    function getstates() {
+        return [ ...StateSet ];
+    }
+    function recordusestste(state) {
+        if (ctxopen) {
+            StateSet.add(state);
+        }
+    }
+    function getMounted() {
+        return [ ...MountedSet ];
+    }
+    function getUnMounted() {
+        return [ ...UnMountedSet ];
+    }
+    function useMounted(fun) {
+        if (isfunction(fun)) {
+            if (ctxopen) {
+                MountedSet.add(fun);
+            } else {
+                console.error(errormessage);
+                throw Error();
+            }
+        } else {
+            console.error(fun);
+            console.error(invalid_Function);
+            throw TypeError();
+        }
+    }
+    function useUnMounted(fun) {
+        if (isfunction(fun)) {
+            if (ctxopen) {
+                UnMountedSet.add(fun);
+            } else {
+                console.error(errormessage);
+                throw Error();
+            }
+        } else {
+            console.error(fun);
+            console.error(invalid_Function);
+            throw TypeError();
+        }
+    }
+    function clearMounted() {
+        MountedSet = new Set$1;
+    }
+    function clearstate() {
+        StateSet = new Set$1;
+    }
+    function clearUnMounted() {
+        UnMountedSet = new Set$1;
+    }
+    function openctx() {
+        ctxopen = true;
+        clearall();
+    }
+    function closectx() {
+        ctxopen = false;
+        clearall();
+    }
+    function clearall() {
+        clearMounted();
+        clearUnMounted();
+        clearstate();
+        clearwatch();
+    }
     var _a, _b;
     const addonelistner = Symbol("addonelistner");
     const removeonelistner = Symbol("removeonelistner");
@@ -432,7 +523,7 @@
     const debouncedispatch = Symbol("debouncedispatch");
     const invalid_primitive_or_object_state = "invalid primitive or object state";
     function isReactiveState(a) {
-        return a instanceof ReactiveState && gettagtype(a) === "ReactiveState";
+        return a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState";
     }
     const eventtargetsymbol = Symbol("eventtatget");
     const memlisteners = Symbol("memlisteners");
@@ -454,6 +545,7 @@
                 configurable: true,
                 writable: true
             });
+            recordusestste(this);
             const debouncedfun = debounce_1(eventname => {
                 const name = eventname ? String$1(eventname) : "value";
                 this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
@@ -512,11 +604,23 @@
             return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
         }
     }
+    function merge_entries(a) {
+        const m = {};
+        a.forEach(([key, value]) => {
+            if (!m[key]) {
+                m[key] = new Set$1;
+            }
+            value.forEach(v => {
+                m[key].add(v);
+            });
+        });
+        return Object$1.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
+    }
+    const VirtualElementSet = new WeakSet;
     const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
     function isVirtualdom(a) {
-        return isobject(a) && get$1(a, isvirtualelement) === isvirtualelement;
+        return VirtualElementSet.has(a);
     }
-    const isvirtualelement = Symbol("isvirtualelement");
     function createVirtualElement(type, props = {}, children = []) {
         props = Object$1.assign({}, props);
         children = children.flat(1 / 0);
@@ -540,9 +644,8 @@
         defineProperty(thisarg, Symbol.toStringTag, {
             value: "VirtualElement"
         });
-        defineProperty(thisarg, isvirtualelement, {
-            value: isvirtualelement
-        });
+        preventExtensions(thisarg);
+        VirtualElementSet.add(thisarg);
         return thisarg;
     }
     function isvalidvdom(v) {
@@ -561,6 +664,9 @@
             return true;
         }
         return flag;
+    }
+    function isclassextendsHTMLElement(initclass) {
+        return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
     }
     function seteletext(e, v) {
         e.textContent = v;
@@ -625,187 +731,16 @@
     function querySelectorAll(selector) {
         return [ ...document$1.querySelectorAll(selector) ];
     }
-    const readysymbol = Symbol("readystate");
-    function isNodeArray(arr) {
-        return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
-    }
-    function isNode(a) {
-        return a instanceof Node;
-    }
-    let watchrecord = [];
-    function getwatchrecords() {
-        return [ ...watchrecord ];
-    }
-    function usewatch(state, callback) {
-        if (ctxopen) {
-            watchrecord.push([ state, callback ]);
-        }
-    }
-    function clearwatch() {
-        watchrecord = [];
-    }
-    const invalid_Function = "invalid Function";
-    const errormessage = "invalid useMounted or useUnMounted out of createComponent";
-    let ctxopen = false;
-    let MountedSet = new Set$1;
-    let UnMountedSet = new Set$1;
-    let StateSet = new Set$1;
-    function getstates() {
-        return [ ...StateSet ];
-    }
-    function usestste(state) {
-        if (ctxopen) {
-            StateSet.add(state);
-        }
-    }
-    function getMounted() {
-        return [ ...MountedSet ];
-    }
-    function getUnMounted() {
-        return [ ...UnMountedSet ];
-    }
-    function useMounted(fun) {
-        if (isfunction(fun)) {
-            if (ctxopen) {
-                MountedSet.add(fun);
-            } else {
-                console.error(errormessage);
-                throw Error();
-            }
-        } else {
-            console.error(fun);
-            console.error(invalid_Function);
-            throw TypeError();
-        }
-    }
-    function useUnMounted(fun) {
-        if (isfunction(fun)) {
-            if (ctxopen) {
-                UnMountedSet.add(fun);
-            } else {
-                console.error(errormessage);
-                throw Error();
-            }
-        } else {
-            console.error(fun);
-            console.error(invalid_Function);
-            throw TypeError();
-        }
-    }
-    function clearMounted() {
-        MountedSet = new Set$1;
-    }
-    function clearstate() {
-        StateSet = new Set$1;
-    }
-    function clearUnMounted() {
-        UnMountedSet = new Set$1;
-    }
-    function openctx() {
-        ctxopen = true;
-        clearall();
-    }
-    function closectx() {
-        ctxopen = false;
-        clearall();
-    }
-    function clearall() {
-        clearMounted();
-        clearUnMounted();
-        clearstate();
-        clearwatch();
-    }
     function toArray(a) {
         return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
     }
-    function watch(state, callback) {
-        if (isarray(state) || isReactiveState(state)) {
-            const statearray = toArray(state);
-            if (!statearray.length) {
-                console.error("Empty array not allowed");
-                throw new Error;
-            }
-            const debouncedcallback = debounce_1(callback);
-            const stateandlisteners = statearray.map(state1 => {
-                const listener = (() => {
-                    const cachedfun = cached_callback_debounced_watchs.get(callback);
-                    if (cachedfun) {
-                        return cachedfun;
-                    } else {
-                        const listenfun = () => {
-                            debouncedcallback(...statearray.map(r => r.valueOf()));
-                        };
-                        cached_callback_debounced_watchs.set(callback, listenfun);
-                        return listenfun;
-                    }
-                })();
-                watchsingle(state1, listener);
-                return [ state1, listener ];
-            });
-            const cancelWatch = () => {
-                stateandlisteners.forEach(([state, listener]) => {
-                    state[cancelsubscribe](listener);
-                });
-            };
-            return cancelWatch;
-        } else {
-            console.error(state);
-            console.error(callback);
-            console.error(invalid_ReactiveState + invalid_Function);
-            throw new TypeError;
+    function mountrealelement(ele, container, clear = true) {
+        if (clear) {
+            seteletext(container, "");
         }
-    }
-    function watchsingle(state, callback) {
-        if (!(isReactiveState(state) && isfunction(callback))) {
-            console.error(state);
-            console.error(callback);
-            console.error(invalid_ReactiveState + invalid_Function);
-            throw TypeError();
-        }
-        state[subscribesymbol](callback);
-        requestAnimationFrame$1(() => {
-            rewatch(state);
-        });
-        usewatch(state, callback);
-    }
-    function unwatch(state) {
-        state[removeallistenerssymbol]();
-    }
-    function rewatch(state) {
-        state[addallistenerssymbol]();
-    }
-    const eventlistenerssymbol = Symbol("eventlisteners");
-    function onevent(element, eventname, callback) {
-        firstaddlisteners(element, eventname, toArray(callback));
-    }
-    function firstaddlisteners(ele, event, callarray) {
-        const element = ele;
-        callarray.forEach(call => {
-            if (!isfunction(call)) {
-                console.error(call);
-                console.error(invalid_Function);
-                throw TypeError();
-            }
-            if (!has(element, eventlistenerssymbol)) {
-                set$1(element, eventlistenerssymbol, []);
-            }
-            get$1(ele, eventlistenerssymbol).push([ event, call ]);
-            domaddlisten(ele, event, call);
-        });
-    }
-    function removelisteners(ele) {
-        if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
-                domremovelisten(ele, event, call);
-            });
-        }
-    }
-    function readdlisteners(ele) {
-        if (has(ele, eventlistenerssymbol)) {
-            get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
-                domaddlisten(ele, event, call);
-            });
-        }
+        const eles = toArray(ele).flat(Infinity);
+        eles.forEach(e => appendchild(container, e));
+        return container;
     }
     const charactorlist = Array$1(26).fill(undefined).map((v, i) => 97 + i).map(n => String$1.fromCharCode(n));
     const hexnumberlist = Array$1(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
@@ -818,9 +753,6 @@
     }
     function getrandomstringandnumber(length = 1) {
         return Array$1(length).fill(undefined).map(() => getrandomcharactor()).join("") + "-" + Array$1(length).fill(undefined).map(() => getrandomhexnumberandcharactor()).join("");
-    }
-    function isclassextendsHTMLElement(initclass) {
-        return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
     }
     const invalid_custom_element_class = "invalid custom element class !";
     if (!isobject(window$1.customElements)) {
@@ -839,10 +771,10 @@
     const {CustomElementRegistry: CustomElementRegistry} = window$1;
     const customElements$1$1 = window$1.customElements;
     if (!has(customElements$1$1, elementset)) {
-        set$1(customElements$1$1, elementset, new Set$1);
+        Reflect.set(customElements$1$1, elementset, new Set$1);
     }
     if (!has(customElements$1$1, elementmap)) {
-        set$1(customElements$1$1, elementmap, {});
+        Reflect.set(customElements$1$1, elementmap, {});
     }
     var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
     function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
@@ -908,45 +840,61 @@
     function iscomponent(a) {
         return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
     }
-    function mountrealelement(ele, container, clear = true) {
-        if (clear) {
-            seteletext(container, "");
-        }
-        const eles = toArray(ele).flat(Infinity);
-        eles.forEach(e => appendchild(container, e));
-        return container;
-    }
-    const invalid_Virtualdom = "invalid Virtualdom ";
-    function MountElement(vdom, container) {
-        if (isarray(vdom)) {
-            vdom = vdom.flat(Infinity);
-            if (!vdom.length) {
+    function watch(state, callback) {
+        if (isarray(state) || isReactiveState(state)) {
+            const statearray = toArray(state);
+            if (!statearray.length) {
                 console.error("Empty array not allowed");
-                throw new TypeError;
+                throw new Error;
             }
-        }
-        const el = container;
-        if (!(el instanceof HTMLElement)) {
-            console.error(el);
-            console.error("invalid container HTMLElement!");
-            throw TypeError();
-        }
-        if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
-            console.error(el);
-            console.error("Do not mount  to <html> or <body> <head>.");
-            throw Error();
-        }
-        const elesarray = toArray(vdom);
-        if (isvalidvdom(vdom)) {
-            mountrealelement(render(elesarray), container);
-        } else if (isNode(vdom) || isNodeArray(vdom)) {
-            mountrealelement(elesarray, container);
+            const debouncedcallback = debounce_1(callback);
+            const stateandlisteners = statearray.map(state1 => {
+                const listener = (() => {
+                    const cachedfun = cached_callback_debounced_watchs.get(callback);
+                    if (cachedfun) {
+                        return cachedfun;
+                    } else {
+                        const listenfun = () => {
+                            debouncedcallback(...statearray.map(r => r.valueOf()));
+                        };
+                        cached_callback_debounced_watchs.set(callback, listenfun);
+                        return listenfun;
+                    }
+                })();
+                watchsingle(state1, listener);
+                return [ state1, listener ];
+            });
+            const cancelWatch = () => {
+                stateandlisteners.forEach(([state, listener]) => {
+                    state[cancelsubscribe](listener);
+                });
+            };
+            return cancelWatch;
         } else {
-            console.error(vdom);
-            console.error(invalid_Virtualdom);
+            console.error(state);
+            console.error(callback);
+            console.error(invalid_ReactiveState + invalid_Function);
+            throw new TypeError;
+        }
+    }
+    function watchsingle(state, callback) {
+        if (!(isReactiveState(state) && isfunction(callback))) {
+            console.error(state);
+            console.error(callback);
+            console.error(invalid_ReactiveState + invalid_Function);
             throw TypeError();
         }
-        return container;
+        state[subscribesymbol](callback);
+        requestAnimationFrame$1(() => {
+            rewatch(state);
+        });
+        usewatch(state, callback);
+    }
+    function unwatch(state) {
+        state[removeallistenerssymbol]();
+    }
+    function rewatch(state) {
+        state[addallistenerssymbol]();
     }
     function isconnected(element) {
         const isConnectedstate = element.isConnected;
@@ -1032,6 +980,39 @@
             createhtmlandtextdirective(seteletext, "text")(ele, text);
         }
     });
+    const eventlistenerssymbol = Symbol("eventlisteners");
+    function onevent(element, eventname, callback) {
+        firstaddlisteners(element, eventname, toArray(callback));
+    }
+    function firstaddlisteners(ele, event, callarray) {
+        const element = ele;
+        callarray.forEach(call => {
+            if (!isfunction(call)) {
+                console.error(call);
+                console.error(invalid_Function);
+                throw TypeError();
+            }
+            if (!has(element, eventlistenerssymbol)) {
+                set$1(element, eventlistenerssymbol, []);
+            }
+            get$1(ele, eventlistenerssymbol).push([ event, call ]);
+            domaddlisten(ele, event, call);
+        });
+    }
+    function removelisteners(ele) {
+        if (has(ele, eventlistenerssymbol)) {
+            get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
+                domremovelisten(ele, event, call);
+            });
+        }
+    }
+    function readdlisteners(ele) {
+        if (has(ele, eventlistenerssymbol)) {
+            get$1(ele, eventlistenerssymbol).forEach(([event, call]) => {
+                domaddlisten(ele, event, call);
+            });
+        }
+    }
     function handleprops(element, vdom) {
         ((element, vdom) => {
             Object$1.entries(vdom.directives).forEach(([name, value]) => {
@@ -1045,7 +1026,6 @@
             });
             const attribute1 = createeleattragentreadwrite(element);
             Object$1.assign(attribute1, vdom.props);
-            set$1(element, virtualdomsymbol, vdom);
             vdom.element = element;
             Object$1.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
                 attribute1[key] = primitivestate.valueOf();
@@ -1068,7 +1048,6 @@
         });
     }
     const bindstatesymbol = Symbol("bindstate");
-    const virtualdomsymbol = Symbol("virtualelement");
     function throwinvalideletype(type) {
         console.error(type);
         console.error("invalid element type!");
@@ -1081,12 +1060,10 @@
         }
         if (isnumber(vdom) || isstring(vdom)) {
             const textnode = createtextnode(vdom);
-            set$1(textnode, virtualdomsymbol, vdom);
             return textnode;
         } else if (isReactiveState(vdom)) {
             const reactive = vdom;
             const textnode = createtextnode(String$1(reactive));
-            set$1(textnode, virtualdomsymbol, vdom);
             watch(reactive, () => {
                 const state = reactive;
                 if (isconnected(element)) {
@@ -1154,6 +1131,194 @@
         }
         throw new Error;
     }
+    function isNodeArray(arr) {
+        return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
+    }
+    function isNode(a) {
+        return a instanceof Node;
+    }
+    const invalid_Virtualdom = "invalid Virtualdom ";
+    function MountElement(vdom, container) {
+        if (isarray(vdom)) {
+            vdom = vdom.flat(Infinity);
+            if (!vdom.length) {
+                console.error("Empty array not allowed");
+                throw new TypeError;
+            }
+        }
+        const el = container;
+        if (!(el instanceof HTMLElement)) {
+            console.error(el);
+            console.error("invalid container HTMLElement!");
+            throw TypeError();
+        }
+        if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
+            console.error(el);
+            console.error("Do not mount  to <html> or <body> <head>.");
+            throw Error();
+        }
+        const elesarray = toArray(vdom);
+        if (isvalidvdom(vdom)) {
+            mountrealelement(render(elesarray), container);
+        } else if (isNode(vdom) || isNodeArray(vdom)) {
+            mountrealelement(elesarray, container);
+        } else {
+            console.error(vdom);
+            console.error(invalid_Virtualdom);
+            throw TypeError();
+        }
+        return container;
+    }
+    function readonlyproxy(target) {
+        return new Proxy(target, {
+            set() {
+                return true;
+            },
+            defineProperty() {
+                return false;
+            },
+            deleteProperty() {
+                return false;
+            },
+            setPrototypeOf() {
+                return false;
+            }
+        });
+    }
+    function createcssBlob(source) {
+        const cachedBlob = sourcecssblobCache.get(source);
+        if (cachedBlob) {
+            return cachedBlob;
+        } else {
+            const bloburl = URL.createObjectURL(new Blob([ source ], {
+                type: "text/css"
+            }));
+            sourcecssblobCache.set(source, bloburl);
+            return bloburl;
+        }
+    }
+    const sourcecssblobCache = new Map;
+    function isCSSStyleRule(a) {
+        return gettagtype(a) === "CSSStyleRule";
+    }
+    function isCSSMediaRule(a) {
+        return gettagtype(a) === "CSSMediaRule";
+    }
+    function isCSSImportRule(a) {
+        return gettagtype(a) === "CSSImportRule";
+    }
+    function selectoraddprefix(cssstylerule, prefix) {
+        const selectorold = cssstylerule.selectorText;
+        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+        const selectorTextss = selectorold;
+        const selectorarray = selectorTextss.split(",");
+        const selectoraftertransform = selectorarray.map(selectorTextone => {
+            let prefixselector = prefix + " " + selectorTextone;
+            if (selectorTextone.startsWith("*")) {
+                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
+            }
+            return prefixselector;
+        }).join(",");
+        return {
+            selectorText: selectoraftertransform,
+            cssText: selectoraftertransform + stylebodyold,
+            [Symbol.toStringTag]: "CSSStyleRule"
+        };
+    }
+    function cssrulestocsstext(cssrules) {
+        return cssrules.map(c => c.cssText).join("\n");
+    }
+    function prefixcssrules(cssRulesarray, prefix) {
+        return cssRulesarray.map(cssrule => {
+            if (isCSSStyleRule(cssrule)) {
+                const resultoutput = selectoraddprefix(cssrule, prefix);
+                return resultoutput;
+            } else if (isCSSMediaRule(cssrule)) {
+                const rulesarr = prefixcssrules([ ...cssrule.cssRules ], prefix);
+                const conditionText = cssrule.conditionText;
+                const cssText = cssrule.cssText.slice(0, 7) + conditionText + "{" + cssrulestocsstext(rulesarr) + "}";
+                return {
+                    cssText: cssText,
+                    conditionText: conditionText,
+                    cssRules: rulesarr,
+                    [Symbol.toStringTag]: "CSSMediaRule"
+                };
+            } else if (isCSSImportRule(cssrule)) {
+                savestyleblob(prefix, undefined, cssrule.href);
+                return;
+            } else {
+                return cssrule;
+            }
+        }).filter(Boolean);
+    }
+    function transformcsstext(text, prefix) {
+        const cachedtext = oldcsstotransformedcss.get(text);
+        if (cachedtext) {
+            return cachedtext;
+        } else {
+            const css = text;
+            const cssomold = parsecsstext(css);
+            const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
+            const cssnewtext = cssrulestocsstext(cssomnew);
+            oldcsstotransformedcss.set(text, cssnewtext);
+            return cssnewtext;
+        }
+    }
+    const oldcsstotransformedcss = new Map;
+    function parsecsstext(text) {
+        const styleelement = render(h("style", [ text ]));
+        const otherdocument = createanotherhtmldocument();
+        appendchild(otherdocument.documentElement, styleelement);
+        return Array$1.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
+    }
+    const componentsstylesheet = new Map;
+    function savestyleblob(tagname, csstext, urltext) {
+        tagname = tagname.toLowerCase();
+        const prefix = tagname;
+        if (!get$1(componentsstylesheet, prefix)) {
+            set$1(componentsstylesheet, tagname, new Set$1);
+        }
+        if (csstext) {
+            get$1(componentsstylesheet, prefix).add(createcssBlob(csstext));
+        } else if (urltext) {
+            get$1(componentsstylesheet, prefix).add(urltext);
+        }
+    }
+    function createlinkstylesheet(url) {
+        return render(h("link", {
+            href: url,
+            rel: "stylesheet"
+        }));
+    }
+    function registercssprefix(text, prefix) {
+        const css = text;
+        const cssnewtext = transformcsstext(css, prefix);
+        savestyleblob(prefix, cssnewtext);
+    }
+    function loadlinkstyle(stylelinkelement, container) {
+        return new Promise(rs => {
+            const loaderrorfun = () => {
+                stylelinkelement.onload = stylelinkelement.onerror = null;
+                rs();
+            };
+            stylelinkelement.onload = loaderrorfun;
+            stylelinkelement.onerror = loaderrorfun;
+            appendchild(container, stylelinkelement);
+        });
+    }
+    function waitloadallstyle(prefix, containerthis) {
+        return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
+            if (querySelectorAll('link[rel="stylesheet"][href="'.concat(styleurl, '"]')).length) {
+                return Promise.resolve();
+            } else {
+                return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
+            }
+        }));
+    }
+    function setimmediate(fun) {
+        return Promise.resolve().then(() => fun());
+    }
+    const readysymbol = Symbol("readystate");
     function onmounted(ele) {
         if (isarray(ele)) {
             ele.forEach(e => {
@@ -1207,9 +1372,6 @@
             }
             onunmounted(getchildNodes(ele));
         }
-    }
-    function setimmediate(fun) {
-        return Promise.resolve().then(() => fun());
     }
     var _a$1;
     const attributeChangedCallback = Symbol("attributeChanged");
@@ -1271,6 +1433,355 @@
         }
     }
     _a$1 = readysymbol;
+    const waittranformcsssymbol = Symbol("waittranformcss");
+    const innerwatchrecords = Symbol("innerwatchrecord");
+    const innerstatesymbol = Symbol("innerstate");
+    const attributessymbol = Symbol("attributes");
+    const elementsymbol = Symbol("innerelement");
+    const inner_vdom_symbol = Symbol("innervdom");
+    const mountedsymbol = Symbol("mounted");
+    const unmountedsymbol = Symbol("unmounted");
+    function createComponent(custfun) {
+        var _a, _b, _c;
+        if (isfunction(custfun)) {
+            const cached_class = cached_create_componet.get(custfun);
+            if (cached_class) {
+                return cached_class;
+            }
+            const defaultProps = get$1(custfun, "defaultProps");
+            const css = get$1(custfun, "css");
+            class Component extends AttrChange {
+                constructor(propsjson = {}, children = []) {
+                    super();
+                    this[_a] = {};
+                    this[_c] = false;
+                    const css = get$1(this.constructor, "css");
+                    if (css) {
+                        const prefix = this.tagName.toLowerCase();
+                        if (!get$1(componentsstylesheet, prefix)) {
+                            this[waittranformcsssymbol] = () => {
+                                return setimmediate(() => {
+                                    registercssprefix(css, prefix);
+                                });
+                            };
+                        }
+                    }
+                    const attrs = createeleattragentreadwrite(this);
+                    if (isobject(propsjson)) {
+                        Object$1.assign(attrs, propsjson);
+                    }
+                    const props = attrs;
+                    openctx();
+                    const thisattributess = Object$1.fromEntries(Object$1.entries(props).map(([key]) => [ key, (() => {
+                        const attributes = createeleattragentreadwrite(this);
+                        const state = new ReactiveState;
+                        defineProperty(state, "value", {
+                            get() {
+                                return get$1(attributes, key);
+                            },
+                            configurable: true
+                        });
+                        return state;
+                    })() ]));
+                    this[attributessymbol] = thisattributess;
+                    const readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
+                    let possiblyvirtualdom;
+                    try {
+                        possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
+                    } catch (error) {
+                        closectx();
+                        console.error(error);
+                        throw error;
+                    }
+                    if (isarray(possiblyvirtualdom)) {
+                        possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
+                    }
+                    if (isvalidvdom(possiblyvirtualdom)) {
+                        const vdomarray = toArray(possiblyvirtualdom);
+                        this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
+                        this[mountedsymbol] = getMounted();
+                        this[unmountedsymbol] = getUnMounted();
+                        this[innerstatesymbol] = getstates();
+                        this[innerwatchrecords] = getwatchrecords();
+                        closectx();
+                    } else {
+                        closectx();
+                        console.error(possiblyvirtualdom);
+                        console.error(invalid_Virtualdom);
+                        throw TypeError();
+                    }
+                }
+                [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
+                    const thencallbackfirst = () => {
+                        seteletext(this, "");
+                        return waitloadallstyle(prefix, this);
+                    };
+                    const thencallbacksecond = () => {
+                        mountrealelement(this[elementsymbol], this, false);
+                        this[waittranformcsssymbol] = undefined;
+                    };
+                    if (!this[elementsymbol]) {
+                        this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
+                    }
+                    const css = get$1(this.constructor, "css");
+                    const prefix = this.tagName.toLowerCase();
+                    if (css) {
+                        const waitcallback = this[waittranformcsssymbol];
+                        if (waitcallback) {
+                            waitcallback().then(thencallbackfirst).then(thencallbacksecond);
+                        } else {
+                            Promise.resolve(thencallbackfirst).then(thencallbacksecond);
+                        }
+                    } else {
+                        mountrealelement(this[elementsymbol], this);
+                    }
+                }
+                connectedCallback() {
+                    setimmediate(() => {
+                        connectedCallback(this);
+                        this[mountedsymbol].forEach(f => {
+                            setimmediate(f);
+                        });
+                    });
+                }
+                disconnectedCallback() {
+                    setimmediate(() => {
+                        disconnectedCallback(this);
+                        this[unmountedsymbol].forEach(f => {
+                            setimmediate(f);
+                        });
+                    });
+                }
+                [attributeChangedCallback](name) {
+                    if (this[readysymbol]) {
+                        {
+                            const propreactivestate = this[attributessymbol][name];
+                            if (propreactivestate) {
+                                propreactivestate[dispatchsymbol]();
+                            }
+                        }
+                    }
+                }
+            }
+            Component[_b] = componentsymbol;
+            Component.css = isstring(css) && css ? css : undefined;
+            Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
+            cached_create_componet.set(custfun, Component);
+            return Component;
+        } else {
+            console.error(custfun);
+            console.error(invalid_Function);
+            throw TypeError();
+        }
+    }
+    var createComponent$1 = custfun => autocreateclass(custfun);
+    function autocreateclass(custfun) {
+        if (isclassextendsHTMLElement(custfun)) {
+            return custfun;
+        } else if (isfunction(custfun)) {
+            return createComponent(custfun);
+        } else {
+            throw TypeError();
+        }
+    }
+    function h(type, propsorchildren, ...children) {
+        if (isfunction(type)) {
+            type = autocreateclass(type);
+        }
+        if (isarray(propsorchildren)) {
+            return apply(createElement, undefined, [ type, undefined, [ ...propsorchildren, ...children ].flat(1 / 0) ]);
+        } else {
+            return apply(createElement, undefined, [ type, propsorchildren, ...children ]);
+        }
+    }
+    function createElement(type, props = {}, ...children) {
+        let typenormalized = isstring(type) || isfunction(type) ? type : "";
+        const propsnormalized = isplainobject(props) ? props : {};
+        const childrennormalized = children.flat(Infinity).map(a => a === 0 ? "0" : a).filter(a => !!a);
+        if (isstring(typenormalized)) {
+            typenormalized = typenormalized.trim().toLowerCase();
+        }
+        if ("" === typenormalized) {
+            return childrennormalized;
+        } else {
+            return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
+        }
+    }
+    const invalid_ReactiveState = "invalid ReactiveState";
+    const truevdomsymbol = Symbol("truevdom");
+    const falsevdomsymbol = Symbol("falsevdom");
+    const trueelesymbol = Symbol("trueele");
+    const falseelesymbol = Symbol("falseele");
+    const handletrue = Symbol("handletrue");
+    const handlefalse = Symbol("handlefalse");
+    function conditon(conditon, iftrue, iffalse) {
+        var _a, _b, _c, _d;
+        if (!(isReactiveState(conditon) || isboolean(conditon))) {
+            console.error(conditon);
+            console.error(invalid_ReactiveState);
+            throw TypeError();
+        }
+        [ iftrue, iffalse ].forEach(a => {
+            if (!(isundefined(a) || isvalidvdom(a))) {
+                console.error(a);
+                console.error(invalid_Virtualdom);
+                throw new TypeError;
+            }
+        });
+        const options = {
+            true: iftrue,
+            false: iffalse
+        };
+        const optionstrue = get$1(options, "true");
+        const optionsfalse = get$1(options, "false");
+        class Condition extends AttrChange {
+            constructor() {
+                super(...arguments);
+                this[_b] = false;
+                this[_c] = [ optionstrue ].flat(1 / 0).filter(Boolean);
+                this[_d] = [ optionsfalse ].flat(1 / 0).filter(Boolean);
+            }
+            [(_a = componentsymbol, _b = readysymbol, _c = truevdomsymbol, _d = falsevdomsymbol, 
+            handlefalse)]() {
+                setelehtml(this, "");
+                if (this[falsevdomsymbol]) {
+                    if (!this[falseelesymbol]) {
+                        this[falseelesymbol] = render(this[falsevdomsymbol]);
+                    }
+                    const elementtomount = this[falseelesymbol];
+                    mountrealelement(elementtomount, this);
+                    onmounted(elementtomount);
+                    if (this[trueelesymbol]) {
+                        onunmounted(this[trueelesymbol]);
+                    }
+                }
+            }
+            [handletrue]() {
+                setelehtml(this, "");
+                if (this[truevdomsymbol]) {
+                    if (!this[trueelesymbol]) {
+                        this[trueelesymbol] = render(this[truevdomsymbol]);
+                    }
+                    const elementtomount = this[trueelesymbol];
+                    mountrealelement(elementtomount, this);
+                    onmounted(elementtomount);
+                    if (this[falseelesymbol]) {
+                        onunmounted(this[falseelesymbol]);
+                    }
+                }
+            }
+            [firstinstalledcallback]() {
+                const attrs = createeleattragentreadwrite(this);
+                if (true === attrs["value"]) {
+                    get$1(this, handletrue).call(this);
+                } else if (!attrs["value"]) {
+                    get$1(this, handlefalse).call(this);
+                }
+            }
+            connectedCallback() {
+                connectedCallback(this);
+            }
+            disconnectedCallback() {
+                disconnectedCallback(this);
+            }
+            [attributeChangedCallback](name) {
+                if (this[readysymbol]) {
+                    if (name === "value") {
+                        const attrs = createeleattragentreadwrite(this);
+                        if (true === attrs["value"]) {
+                            this[handletrue]();
+                        } else if (!attrs["value"]) {
+                            this[handlefalse]();
+                        }
+                    }
+                }
+            }
+        }
+        Condition[_a] = componentsymbol;
+        const vdom = h(Condition, {
+            value: conditon
+        });
+        return vdom;
+    }
+    function getproperyreadproxy(a) {
+        const __proto__ = "__proto__";
+        const target = a;
+        return new Proxy(target, {
+            getOwnPropertyDescriptor(target, key) {
+                if (issymbol(key)) {
+                    return;
+                } else {
+                    return getOwnPropertyDescriptor(target, key);
+                }
+            },
+            ownKeys(target) {
+                let myvalue = get$1(target, "value");
+                const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+                return Array$1.from(new Set$1([ ...ownKeys$1$1(target), ...ownKeys$1$1(myvalueobj) ]));
+            },
+            has(target, key) {
+                const myvalue = get$1(target, "value");
+                const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
+                return has(target, key) || has(myvalueobj, key);
+            },
+            get(target, key) {
+                if (has(target, key)) {
+                    return get$1(target, key);
+                } else {
+                    const myvalue = get$1(target, "value");
+                    const myvalueobj = Object$1(myvalue);
+                    if (has(myvalueobj, key)) {
+                        const property = get$1(myvalueobj, key);
+                        return isfunction(property) ? property.bind(myvalueobj) : property;
+                    }
+                }
+            }
+        });
+    }
+    function computed(state, callback, setter) {
+        if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
+            console.error(state);
+            console.error(callback);
+            console.error(invalid_ReactiveState + invalid_Function);
+            throw TypeError();
+        }
+        const state1array = toArray(state);
+        if (!state1array.length) {
+            console.error("Empty array not allowed");
+            throw new Error;
+        }
+        const state1 = Arraycomputed(state1array, callback, setter);
+        return state1;
+    }
+    function Arraycomputed(state, callback, setter) {
+        const reactivestate = new ReactiveState;
+        const getter = () => {
+            const value = apply(callback, undefined, state.map(st => st.valueOf()));
+            const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
+            if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
+                return possiblevalue;
+            } else {
+                console.error(possiblevalue);
+                throw TypeError();
+            }
+        };
+        let memorized = getter();
+        defineProperty(reactivestate, "value", {
+            set: isfunction(setter) ? setter : undefined,
+            get: getter,
+            configurable: true
+        });
+        state.forEach(state => {
+            watch(state, () => {
+                let newvalue = getter();
+                if (newvalue !== memorized) {
+                    reactivestate[dispatchsymbol]();
+                    memorized = newvalue;
+                }
+            });
+        });
+        return getproperyreadproxy(reactivestate);
+    }
     const Setprototype = Set$1.prototype;
     const Mapprototype = Map.prototype;
     function ispromise(a) {
@@ -1282,7 +1793,7 @@
     function isregexp(a) {
         return a instanceof RegExp;
     }
-    function isMap(a) {
+    function isMap$1(a) {
         return a instanceof Map;
     }
     function isSet$2(a) {
@@ -1291,8 +1802,8 @@
     function isArray$1(a) {
         return Array$1.isArray(a);
     }
-    const Reflect$3 = window$1.Reflect;
-    const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$3;
+    const Reflect$2 = window$1.Reflect;
+    const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
     function isobject$2(a) {
         return typeof a === "object" && a !== null;
     }
@@ -1327,7 +1838,7 @@
                     callback(ancestor, patharray, undefined, undefined);
                     return Setprototype.clear.call(fakeobj);
                 });
-            } else if (isMap(target)) {
+            } else if (isMap$1(target)) {
                 fakeobj = new Map([ ...target ]);
                 set$2(fakeobj, "clear", () => {
                     Mapprototype.clear.call(target);
@@ -1351,7 +1862,7 @@
             } else {
                 fakeobj = {};
             }
-            if (!isSet$2(target) && !isMap(target)) {
+            if (!isSet$2(target) && !isMap$1(target)) {
                 setPrototypeOf(fakeobj, null);
             }
             return new Proxy(fakeobj, {
@@ -1406,7 +1917,7 @@
                 },
                 get(t, k) {
                     var value = get$2(target, k);
-                    if (isfunction$1(value) && (isSet$2(target) || isMap(target))) {
+                    if (isfunction$1(value) && (isSet$2(target) || isMap$1(target))) {
                         return get$2(fakeobj, k).bind(fakeobj);
                     }
                     if (isfunction$1(value) || isobject$2(value)) {
@@ -1590,45 +2101,9 @@
         };
         return new Proxy(reactive, objproxyhandler);
     }
-    function getproperyreadproxy(a) {
-        const __proto__ = "__proto__";
-        const target = a;
-        return new Proxy(target, {
-            getOwnPropertyDescriptor(target, key) {
-                if (issymbol(key)) {
-                    return;
-                } else {
-                    return getOwnPropertyDescriptor(target, key);
-                }
-            },
-            ownKeys(target) {
-                let myvalue = get$1(target, "value");
-                const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-                return Array$1.from(new Set$1([ ...ownKeys$1$1(target), ...ownKeys$1$1(myvalueobj) ]));
-            },
-            has(target, key) {
-                const myvalue = get$1(target, "value");
-                const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-                return has(target, key) || has(myvalueobj, key);
-            },
-            get(target, key) {
-                if (has(target, key)) {
-                    return get$1(target, key);
-                } else {
-                    const myvalue = get$1(target, "value");
-                    const myvalueobj = Object$1(myvalue);
-                    if (has(myvalueobj, key)) {
-                        const property = get$1(myvalueobj, key);
-                        return isfunction(property) ? property.bind(myvalueobj) : property;
-                    }
-                }
-            }
-        });
-    }
     const set_prototype = Set$1.prototype;
     function createstate(init) {
         const state = createstate$1(init);
-        usestste(state);
         return state;
     }
     function createstate$1(init) {
@@ -1666,424 +2141,6 @@
             throw Error();
         }
     }
-    function createcssBlob(source) {
-        return URL.createObjectURL(new Blob([ source ], {
-            type: "text/css"
-        }));
-    }
-    function isCSSStyleRule(a) {
-        return gettagtype(a) === "CSSStyleRule";
-    }
-    function isCSSMediaRule(a) {
-        return gettagtype(a) === "CSSMediaRule";
-    }
-    function isCSSImportRule(a) {
-        return gettagtype(a) === "CSSImportRule";
-    }
-    function selectoraddprefix(cssstylerule, prefix) {
-        const selectorold = cssstylerule.selectorText;
-        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
-        const selectorTextss = selectorold;
-        const selectorarray = selectorTextss.split(",");
-        const selectoraftertransform = selectorarray.map(selectorTextone => {
-            let prefixselector = prefix + " " + selectorTextone;
-            if (selectorTextone.startsWith("*")) {
-                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
-            }
-            return prefixselector;
-        }).join(",");
-        return {
-            selectorText: selectoraftertransform,
-            cssText: selectoraftertransform + stylebodyold,
-            [Symbol.toStringTag]: "CSSStyleRule"
-        };
-    }
-    function prefixcssrules(cssRulesarray, prefix) {
-        return cssRulesarray.map(cssrule => {
-            if (isCSSStyleRule(cssrule)) {
-                const resultoutput = selectoraddprefix(cssrule, prefix);
-                return resultoutput;
-            } else if (isCSSMediaRule(cssrule)) {
-                prefixcssrules([ ...cssrule.cssRules ], prefix);
-                return cssrule;
-            } else if (isCSSImportRule(cssrule)) {
-                savestyleblob(prefix, undefined, cssrule.href);
-                return;
-            } else {
-                return cssrule;
-            }
-        }).filter(Boolean);
-    }
-    function parsecsstext(text) {
-        const styleelement = render(h("style", [ text ]));
-        const otherdocument = createanotherhtmldocument();
-        appendchild(otherdocument.documentElement, styleelement);
-        return Array$1.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
-    }
-    const componentsstylesheet = {};
-    function savestyleblob(tagname, csstext, urltext) {
-        tagname = tagname.toLowerCase();
-        if (!componentsstylesheet[tagname]) {
-            componentsstylesheet[tagname] = new Set$1;
-        }
-        if (csstext) {
-            componentsstylesheet[tagname].add(createcssBlob(csstext));
-        } else if (urltext) {
-            componentsstylesheet[tagname].add(urltext);
-        }
-    }
-    function cssrulestocsstext(cssrules) {
-        return cssrules.map(c => c.cssText).join("\n");
-    }
-    function createlinkstylesheet(url) {
-        return render(h("link", {
-            href: url,
-            rel: "stylesheet"
-        }));
-    }
-    function transformcsstext(text, prefix) {
-        const css = text;
-        const cssomold = parsecsstext(css);
-        const cssomnew = prefixcssrules(cssomold, prefix).filter(Boolean);
-        const cssnewtext = cssrulestocsstext(cssomnew);
-        return cssnewtext;
-    }
-    function registercssprefix(text, prefix) {
-        const css = text;
-        const cssnewtext = transformcsstext(css, prefix);
-        savestyleblob(prefix, cssnewtext);
-    }
-    function loadlinkstyle(stylelinkelement, container) {
-        return new Promise(rs => {
-            const loaderrorfun = () => {
-                stylelinkelement.onload = stylelinkelement.onerror = null;
-                rs();
-            };
-            stylelinkelement.onload = loaderrorfun;
-            stylelinkelement.onerror = loaderrorfun;
-            appendchild(container, stylelinkelement);
-        });
-    }
-    function waitloadallstyle(prefix, containerthis) {
-        return Promise.all([ ...componentsstylesheet[prefix] ].map(styleurl => loadlinkstyle(createlinkstylesheet(styleurl), containerthis)));
-    }
-    function readonlyproxy(target) {
-        return new Proxy(target, {
-            set() {
-                return true;
-            },
-            defineProperty() {
-                return false;
-            },
-            deleteProperty() {
-                return false;
-            },
-            setPrototypeOf() {
-                return false;
-            }
-        });
-    }
-    const waittranformcsssymbol = Symbol("waittranformcss");
-    const innerwatchrecords = Symbol("innerwatchrecord");
-    const innerstatesymbol = Symbol("innerstate");
-    const attributessymbol = Symbol("attributes");
-    const elementsymbol = Symbol("innerelement");
-    const inner_vdom_symbol = Symbol("innervdom");
-    const mountedsymbol = Symbol("mounted");
-    const unmountedsymbol = Symbol("unmounted");
-    function createComponent(custfun) {
-        var _a, _b, _c;
-        if (isfunction(custfun)) {
-            const cached_class = cached_create_componet.get(custfun);
-            if (cached_class) {
-                return cached_class;
-            }
-            const defaultProps = get$1(custfun, "defaultProps");
-            const css = get$1(custfun, "css");
-            class Component extends AttrChange {
-                constructor(propsjson = {}, children = []) {
-                    super();
-                    this[_a] = {};
-                    this[_c] = false;
-                    const css = get$1(this.constructor, "css");
-                    if (css) {
-                        const prefix = this.tagName.toLowerCase();
-                        if (!componentsstylesheet[prefix]) {
-                            this[waittranformcsssymbol] = () => {
-                                return setimmediate(() => {
-                                    registercssprefix(css, prefix);
-                                });
-                            };
-                        }
-                    }
-                    const attrs = createeleattragentreadwrite(this);
-                    if (isobject(propsjson)) {
-                        Object$1.assign(attrs, propsjson);
-                    }
-                    const props = attrs;
-                    openctx();
-                    const thisattributess = Object$1.fromEntries(Object$1.entries(props).map(([key, value]) => [ key, createstate(value) ]));
-                    this[attributessymbol] = thisattributess;
-                    const readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
-                    let possiblyvirtualdom;
-                    try {
-                        possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
-                    } catch (error) {
-                        closectx();
-                        console.error(error);
-                        throw error;
-                    }
-                    if (isarray(possiblyvirtualdom)) {
-                        possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
-                    }
-                    if (isvalidvdom(possiblyvirtualdom)) {
-                        const vdomarray = toArray(possiblyvirtualdom);
-                        this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
-                        this[mountedsymbol] = getMounted();
-                        this[unmountedsymbol] = getUnMounted();
-                        this[innerstatesymbol] = getstates();
-                        this[innerwatchrecords] = getwatchrecords();
-                        closectx();
-                    } else {
-                        closectx();
-                        console.error(possiblyvirtualdom);
-                        console.error(invalid_Virtualdom);
-                        throw TypeError();
-                    }
-                }
-                [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
-                    if (!this[elementsymbol]) {
-                        this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
-                    }
-                    const css = get$1(this.constructor, "css");
-                    const prefix = this.tagName.toLowerCase();
-                    if (css) {
-                        const waitcallback = this[waittranformcsssymbol];
-                        if (waitcallback) {
-                            waitcallback().then(() => {
-                                seteletext(this, "");
-                                waitloadallstyle(prefix, this).then(() => {
-                                    mountrealelement(this[elementsymbol], this, false);
-                                });
-                            });
-                        }
-                    } else {
-                        mountrealelement(this[elementsymbol], this);
-                    }
-                }
-                connectedCallback() {
-                    setimmediate(() => {
-                        connectedCallback(this);
-                        this[mountedsymbol].forEach(f => {
-                            setimmediate(f);
-                        });
-                    });
-                }
-                disconnectedCallback() {
-                    setimmediate(() => {
-                        disconnectedCallback(this);
-                        this[unmountedsymbol].forEach(f => {
-                            setimmediate(f);
-                        });
-                    });
-                }
-                [attributeChangedCallback](name) {
-                    if (this[readysymbol]) {
-                        {
-                            const propreactivestate = this[attributessymbol][name];
-                            const attributes = createeleattragentreadwrite(this);
-                            if (propreactivestate) {
-                                propreactivestate["value"] = attributes[name];
-                            }
-                        }
-                    }
-                }
-            }
-            Component[_b] = componentsymbol;
-            Component.css = isstring(css) && css ? css : undefined;
-            Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
-            cached_create_componet.set(custfun, Component);
-            return Component;
-        } else {
-            console.error(custfun);
-            console.error(invalid_Function);
-            throw TypeError();
-        }
-    }
-    var createComponent$1 = custfun => autocreateclass(custfun);
-    function autocreateclass(custfun) {
-        if (isclassextendsHTMLElement(custfun)) {
-            return custfun;
-        } else if (isfunction(custfun)) {
-            return createComponent(custfun);
-        } else {
-            throw TypeError();
-        }
-    }
-    function h(type, propsorchildren, ...children) {
-        if (isfunction(type)) {
-            type = autocreateclass(type);
-        }
-        if (isarray(propsorchildren)) {
-            return apply(createElement, undefined, [ type, undefined, [ ...propsorchildren, ...children ].flat(1 / 0) ]);
-        } else {
-            return apply(createElement, undefined, [ type, propsorchildren, ...children ]);
-        }
-    }
-    function createElement(type, props = {}, ...children) {
-        let typenormalized = isstring(type) || isfunction(type) ? type : "";
-        const propsnormalized = isplainobject(props) ? props : {};
-        const childrennormalized = children.flat(Infinity).map(a => a === 0 ? "0" : a).filter(a => !!a);
-        if (isstring(typenormalized)) {
-            typenormalized = typenormalized.trim().toLowerCase();
-        }
-        if ("" === typenormalized) {
-            return childrennormalized;
-        } else {
-            return apply(createVirtualElement, undefined, [ typenormalized, propsnormalized, childrennormalized ]);
-        }
-    }
-    const invalid_ReactiveState = "invalid ReactiveState";
-    const truevdomsymbol = Symbol("truevdom");
-    const falsevdomsymbol = Symbol("falsevdom");
-    const trueelesymbol = Symbol("trueele");
-    const falseelesymbol = Symbol("falseele");
-    const handletrue = Symbol("handletrue");
-    const handlefalse = Symbol("handlefalse");
-    function conditon(conditon, iftrue, iffalse) {
-        var _a, _b, _c, _d;
-        if (!(isReactiveState(conditon) || isboolean(conditon))) {
-            console.error(conditon);
-            console.error(invalid_ReactiveState);
-            throw TypeError();
-        }
-        [ iftrue, iffalse ].forEach(a => {
-            if (!(isundefined(a) || isvalidvdom(a))) {
-                console.error(a);
-                console.error(invalid_Virtualdom);
-                throw new TypeError;
-            }
-        });
-        const options = {
-            true: iftrue,
-            false: iffalse
-        };
-        const optionstrue = get$1(options, "true");
-        const optionsfalse = get$1(options, "false");
-        class Condition extends AttrChange {
-            constructor() {
-                super(...arguments);
-                this[_b] = false;
-                this[_c] = [ optionstrue ].flat(1 / 0).filter(Boolean);
-                this[_d] = [ optionsfalse ].flat(1 / 0).filter(Boolean);
-            }
-            [(_a = componentsymbol, _b = readysymbol, _c = truevdomsymbol, _d = falsevdomsymbol, 
-            handlefalse)]() {
-                setelehtml(this, "");
-                if (this[falsevdomsymbol]) {
-                    if (!this[falseelesymbol]) {
-                        this[falseelesymbol] = render(this[falsevdomsymbol]);
-                    }
-                    const elementtomount = this[falseelesymbol];
-                    mountrealelement(elementtomount, this);
-                    onmounted(elementtomount);
-                    if (this[trueelesymbol]) {
-                        onunmounted(this[trueelesymbol]);
-                    }
-                }
-            }
-            [handletrue]() {
-                setelehtml(this, "");
-                if (this[truevdomsymbol]) {
-                    if (!this[trueelesymbol]) {
-                        this[trueelesymbol] = render(this[truevdomsymbol]);
-                    }
-                    const elementtomount = this[trueelesymbol];
-                    mountrealelement(elementtomount, this);
-                    onmounted(elementtomount);
-                    if (this[falseelesymbol]) {
-                        onunmounted(this[falseelesymbol]);
-                    }
-                }
-            }
-            [firstinstalledcallback]() {
-                const attrs = createeleattragentreadwrite(this);
-                if (true === attrs["value"]) {
-                    get$1(this, handletrue).call(this);
-                } else if (!attrs["value"]) {
-                    get$1(this, handlefalse).call(this);
-                }
-            }
-            connectedCallback() {
-                connectedCallback(this);
-            }
-            disconnectedCallback() {
-                disconnectedCallback(this);
-            }
-            [attributeChangedCallback](name) {
-                if (this[readysymbol]) {
-                    if (name === "value") {
-                        const attrs = createeleattragentreadwrite(this);
-                        if (true === attrs["value"]) {
-                            this[handletrue]();
-                        } else if (!attrs["value"]) {
-                            this[handlefalse]();
-                        }
-                    }
-                }
-            }
-        }
-        Condition[_a] = componentsymbol;
-        const vdom = h(Condition, {
-            value: conditon
-        });
-        return vdom;
-    }
-    function computed(state, callback, setter) {
-        if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
-            console.error(state);
-            console.error(callback);
-            console.error(invalid_ReactiveState + invalid_Function);
-            throw TypeError();
-        }
-        const state1array = toArray(state);
-        if (!state1array.length) {
-            console.error("Empty array not allowed");
-            throw new Error;
-        }
-        const state1 = Arraycomputed(state1array, callback, setter);
-        usestste(state1);
-        return state1;
-    }
-    function Arraycomputed(state, callback, setter) {
-        const reactivestate = new ReactiveState;
-        const getter = () => {
-            const value = apply(callback, undefined, state.map(st => st.valueOf()));
-            const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
-            if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
-                return possiblevalue;
-            } else {
-                console.error(possiblevalue);
-                throw TypeError();
-            }
-        };
-        let memorized = getter();
-        defineProperty(reactivestate, "value", {
-            set: isfunction(setter) ? setter : undefined,
-            get: getter,
-            configurable: true
-        });
-        state.forEach(state => {
-            watch(state, () => {
-                let newvalue = getter();
-                if (newvalue !== memorized) {
-                    reactivestate[dispatchsymbol]();
-                    memorized = newvalue;
-                }
-            });
-        });
-        return getproperyreadproxy(reactivestate);
-    }
     const listvalueattr = Symbol("listvalueattr");
     const listinnervdom = Symbol("listinnervdom");
     const listinnerelement = Symbol("listinnerelement");
@@ -2103,8 +2160,8 @@
         class ListMap extends AttrChange {
             constructor() {
                 super(...arguments);
-                this[_a] = {};
-                this[_b] = {};
+                this[_a] = new Map;
+                this[_b] = new Map;
                 this[_c] = createstate([]);
                 this[_e] = false;
             }
@@ -2171,8 +2228,12 @@
                 set$1(this[listvalueattr], "value", value);
                 this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
                 this[listinnerelement] = render(this[listinnervdom]);
-                Object$1.assign(this[cached_vdom_symbol], this[listinnervdom]);
-                Object$1.assign(this[cached_realele], this[listinnerelement]);
+                Object$1.entries(this[listinnervdom]).forEach(([key, value]) => {
+                    set$1(this[cached_vdom_symbol], key, value);
+                });
+                Object$1.entries(this[listinnerelement]).forEach(([key, value]) => {
+                    set$1(this[cached_realele], key, value);
+                });
                 mountrealelement(this[listinnerelement], this);
             }
             connectedCallback() {

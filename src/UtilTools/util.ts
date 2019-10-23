@@ -54,9 +54,11 @@ export function gettagtype(a: any): string {
 //  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
 //}
 export function isSet(a: any): a is Set<any> {
-  return gettagtype(a) === "Set" && a instanceof Set;
+  return a instanceof Set;
 }
-
+export function isMap(a: any): a is Map<any, any> {
+  return a instanceof Map;
+}
 const camelizeRE = /-(\w)/g;
 export const camelize = (str: string): string => {
   return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ""));
@@ -66,3 +68,7 @@ const hyphenateRE = /\B([A-Z])/g;
 export const hyphenate = (str: string): string => {
   return str.replace(hyphenateRE, "-$1").toLowerCase();
 };
+
+export function isWeakMap(a: any): a is WeakMap<any, any> {
+  return a instanceof WeakMap;
+}

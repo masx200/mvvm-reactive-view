@@ -4,10 +4,7 @@
   (...args: T[]): any;
 } */
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
-import {
-  invalid_Function,
-  usestste
-} from "../mounted-unmounted/Component-context";
+import { invalid_Function } from "../mounted-unmounted/Component-context";
 import {
   apply,
   //   getPrototypeOf
@@ -18,9 +15,9 @@ import { toArray } from "../UtilTools/toArray";
 import {
   isArray,
   isFunction,
+  isfunction,
   isobject,
-  isprimitive,
-  isfunction
+  isprimitive
 } from "../UtilTools/util";
 import computed from "./computed";
 import { getproperyreadproxy } from "./getproperyread-proxy";
@@ -68,7 +65,7 @@ export default function<T extends UnwrapedState>(
   //     state1array = Array.from(state);
   //   }
   const state1 = Arraycomputed(state1array, callback, setter);
-  usestste(state1);
+  //   usestste(state1);
   return state1;
 }
 type SetterFun = (v: any) => void;

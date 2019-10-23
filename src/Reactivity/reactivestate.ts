@@ -3,8 +3,9 @@ import { cached_callback_eventlistner } from "../cached-map";
 // import Reflect from "./reflect";
 import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 import { defineProperty } from "../UtilTools/reflect";
-import { gettagtype, isobject, isSet } from "../UtilTools/util";
+import { isobject, isSet } from "../UtilTools/util";
 import { UnwrapedState } from "./watch";
+import { recordusestste } from "src/mounted-unmounted/Component-context";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 // import { Primitive } from 'lodash';
@@ -14,7 +15,9 @@ const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
   "invalid primitive or object state";
 export function isReactiveState(a: any): a is ReactiveState<any> {
-  return a instanceof ReactiveState && gettagtype(a) === "ReactiveState";
+  return (
+    a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState"
+  );
 }
 // export const textnodesymbol = Symbol("textnode");
 export const changetextnodesymbol = Symbol("changetextnode");
@@ -76,7 +79,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     //});
 
 */
-
+    recordusestste(this);
     const debouncedfun = debounce((eventname?: string) => {
       const name = eventname ? String(eventname) : "value";
 

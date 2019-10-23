@@ -86,8 +86,8 @@ function ListMap(
     //   } */
     // } */
     static defaultProps = { value: [] };
-    [cached_vdom_symbol]: Record<number, Virtualdom<any>> = {};
-    [cached_realele]: Record<number, Element> = {};
+    [cached_vdom_symbol]: Map<number, Virtualdom<any>> = new Map();
+    [cached_realele]: Map<number, Element> = new Map();
     [listvalueattr] = createstate([]);
     // [listlengthsymbol]: number;
     [listinnerelement]: Array<Element | Node>;
@@ -193,9 +193,17 @@ function ListMap(
         )
       );
       this[listinnerelement] = render(this[listinnervdom]);
-
-      Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
-      Object.assign(this[cached_realele], this[listinnerelement]);
+      Object.entries(this[listinnervdom]).forEach(([key, value]) => {
+        /*  this[cached_vdom_symbol]已经改成Map类型了*/
+        set(this[cached_vdom_symbol], key, value);
+      });
+      Object.entries(this[listinnerelement]).forEach(([key, value]) => {
+        /* this[cached_realele] 已经改成Map类型了
+         */
+        set(this[cached_realele], key, value);
+      });
+      //   Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
+      //   Object.assign(this[cached_realele], this[listinnerelement]);
       mount(this[listinnerelement], this);
     }
     connectedCallback() {

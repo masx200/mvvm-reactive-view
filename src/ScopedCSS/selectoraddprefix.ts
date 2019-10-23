@@ -1,5 +1,5 @@
 // import { get } from "src/UtilTools/reflect";
-
+/*  selectoraddprefix函数返回新对象,不是修改原来的对象*/
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
   //css 选择器可能有多个

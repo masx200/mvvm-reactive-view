@@ -36,7 +36,8 @@ import { autocreateclass } from "src/AttributeClass/createComponent";
 export const bindstatesymbol = Symbol("bindstate");
 
 // export const reactivestatesymbol = Symbol("reactive");
-export const virtualdomsymbol = Symbol("virtualelement");
+// export const virtualdomsymbol = Symbol("virtualelement");
+/* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
 function throwinvalideletype(type?: any) {
   console.error(type);
   console.error("invalid element type!");
@@ -78,7 +79,7 @@ export default function render(
   }
   if (isnumber(vdom) || isstring(vdom)) {
     const textnode = createtextnode(vdom);
-    set(textnode, virtualdomsymbol, vdom);
+    // set(textnode, virtualdomsymbol, vdom);
     // textnode[virtualdomsymbol] = vdom;
     return textnode;
 
@@ -87,7 +88,7 @@ export default function render(
   } else if (isReactiveState(vdom) /*instanceof ReactiveState*/) {
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
-    set(textnode, virtualdomsymbol, vdom);
+    // set(textnode, virtualdomsymbol, vdom);
     // textnode[virtualdomsymbol] = reactive;
 
     //textnode[reactivestatesymbol] = reactive;

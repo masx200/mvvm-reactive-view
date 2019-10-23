@@ -1,23 +1,23 @@
+const VirtualElementSet = new WeakSet<Virtualdom<any>>();
 const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
-import { ElementAttrs } from "./create-element";
 import { Class } from "../CustomClass/customclass";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 //// import { Class } from "./rendervdomtoreal";
 import { merge_entries } from "../UtilTools/merge-entries";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
-import { defineProperty, get } from "../UtilTools/reflect";
-import { isobject, isstring } from "../UtilTools/util";
+import { defineProperty, preventExtensions } from "../UtilTools/reflect";
+import { isstring } from "../UtilTools/util";
+import { ElementAttrs } from "./create-element";
 import { VaildVDom } from "./isvalidvdom";
 // //export function isVirtualdom(a: any): a is Virtualdom<any> {
 //   return a instanceof Virtualdom;
 // }//
 export function isVirtualdom(a: any): a is Virtualdom<any> {
-  return (
-    isobject(a) &&
+  return VirtualElementSet.has(a);
+  /*   isobject(a) &&
     // has(a, isvirtualelement) &&
-    get(a, isvirtualelement) === isvirtualelement
-  );
+    get(a, isvirtualelement) === isvirtualelement */
 }
-export const isvirtualelement = Symbol("isvirtualelement");
+// export const isvirtualelement = Symbol("isvirtualelement");
 export type Vdomchildren = Array<VaildVDom>;
 export { createVirtualElement };
 function createVirtualElement<T extends Class | string | Function>(
@@ -104,12 +104,14 @@ function createVirtualElement<T extends Class | string | Function>(
   defineProperty(thisarg, Symbol.toStringTag, { value: "VirtualElement" });
   //   thisarg[Symbol.toStringTag] = "VirtualElement";
   //   thisarg[isvirtualelement] = isvirtualelement;
-  defineProperty(thisarg, isvirtualelement, { value: isvirtualelement });
+  //   defineProperty(thisarg, isvirtualelement, { value: isvirtualelement });
+  preventExtensions(thisarg);
+  VirtualElementSet.add(thisarg);
   return thisarg;
 }
 // JSON.stringify
 interface Virtualdom<T extends Class | string | Function> {
-  readonly [isvirtualelement]: unique symbol;
+  //   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
   element: Element | undefined;
   type: T;

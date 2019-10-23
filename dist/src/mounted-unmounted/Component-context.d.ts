@@ -3,7 +3,7 @@ export declare function getwatchrecords(): [ReactiveState<any>, Function][];
 export declare function usewatch(state: ReactiveState<any>, callback: Function): void;
 export declare const invalid_Function = "invalid Function";
 export declare function getstates(): ReactiveState<any>[];
-export declare function usestste(state: ReactiveState<any>): void;
+export declare function recordusestste(state: ReactiveState<any>): void;
 export declare function getMounted(): Function[];
 export declare function getUnMounted(): Function[];
 export declare function useMounted(fun: Function): void;

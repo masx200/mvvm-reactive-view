@@ -13,5 +13,7 @@ export declare function isfunction(a: any): a is Function;
 export declare function isarray(a: any): a is Array<any>;
 export declare function gettagtype(a: any): string;
 export declare function isSet(a: any): a is Set<any>;
+export declare function isMap(a: any): a is Map<any, any>;
 export declare const camelize: (str: string) => string;
 export declare const hyphenate: (str: string) => string;
+export declare function isWeakMap(a: any): a is WeakMap<any, any>;

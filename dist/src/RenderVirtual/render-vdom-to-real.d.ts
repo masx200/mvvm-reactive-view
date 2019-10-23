@@ -2,7 +2,6 @@ export { render };
 import ReactiveState from "../Reactivity/ReactiveState";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 export declare const bindstatesymbol: unique symbol;
-export declare const virtualdomsymbol: unique symbol;
 export default function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
 export default function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
 export default function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;

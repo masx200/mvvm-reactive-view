@@ -1,22 +1,73 @@
-const Reflect = window.Reflect;
-// export default Reflect;
+import { isMap, isWeakMap } from "./util";
 
+// const { Reflect } = window;
+// export default Reflect;
 export const {
   apply,
   construct,
   defineProperty,
   deleteProperty,
-  get,
+  //   get,
   getOwnPropertyDescriptor,
   getPrototypeOf,
   has,
 
   //   isExtensible,
   ownKeys,
-  //   preventExtensions,
-  set
+  preventExtensions
+  //   set
   //   setPrototypeOf
 } = Reflect;
+/* get和set函数同时实现reflect.get和reflect.set和map.set和map.get */
+export function get(
+  target: Map<any, any> | WeakMap<any, any>,
+  propertyKey: PropertyKey
+): any;
+export function get(
+  target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
+  propertyKey: PropertyKey
+): //   receiver?: any
+any;
+export function get(
+  target: object,
+  propertyKey: PropertyKey
+  //   receiver?: any
+): any {
+  if (isMap(target) || isWeakMap(target)) {
+    // debugger;
+    return target.get(propertyKey);
+  } else {
+    // debugger;
+    return Reflect.get(target, propertyKey /* , receiver */);
+  }
+}
+export function set(
+  target: Map<any, any> | WeakMap<any, any>,
+  propertyKey: PropertyKey,
+  value: any
+): boolean;
+export function set(
+  target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
+  propertyKey: PropertyKey,
+  value: any
+): //   receiver?: any
+boolean;
+export function set(
+  target: object,
+  propertyKey: PropertyKey,
+  value: any
+  //   receiver?: any
+): boolean {
+  if (isMap(target) || isWeakMap(target)) {
+    target.set(propertyKey, value);
+    // debugger;
+    return true;
+  } else {
+    // debugger;
+    return Reflect.set(target, propertyKey, value /* , receiver */);
+  }
+}
+
 // export {};
 /*
 apply()
