@@ -1923,6 +1923,12 @@ function conditon(conditon, iftrue, iffalse) {
     return vdom;
 }
 
+function asserttype(con) {
+    if (!con) {
+        throw new TypeError;
+    }
+}
+
 function getproperyreadproxy(a) {
     const __proto__ = "__proto__";
     const target = a;
@@ -2382,12 +2388,6 @@ function createstate$1(init) {
     }
 }
 
-function asserttype(con) {
-    if (!con) {
-        throw new TypeError;
-    }
-}
-
 const listvalueattr = Symbol("listvalueattr");
 
 const listinnervdom = Symbol("listinnervdom");
@@ -2410,7 +2410,7 @@ function ListMap(list, mapfun) {
     }
     const ITEMfactory = (value, index) => {
         const possiblevdom = mapfun(value, index);
-        asserttype(isvalidvdom(possiblevdom));
+        asserttype(isVirtualdom(possiblevdom));
         return possiblevdom;
     };
     class ListMap extends AttrChange {
@@ -2658,7 +2658,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.10";
+var version = "1.4.11";
 
 const version1 = version;
 

@@ -1,7 +1,8 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
+import { asserttype } from "src/asserttype";
 import { setimmediate } from "src/UtilTools/setimmediate";
 import createElement from "../CreateElement/create-element";
-import Virtualdom from "../CreateElement/VirtualElement";
+import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import mount from "../MountElement/mount-real-element";
 import computed from "../Reactivity/computed";
 import createstate from "../Reactivity/create-state";
@@ -21,8 +22,6 @@ import {
 import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
-import { asserttype } from "src/asserttype";
-import { isvalidvdom } from "src/CreateElement/isvalidvdom";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
@@ -46,7 +45,7 @@ function ListMap(
 
   const ITEMfactory = (value: ReactiveState<any>, index: number) => {
     const possiblevdom = mapfun(value, index);
-    asserttype(isvalidvdom(possiblevdom));
+    asserttype(isVirtualdom(possiblevdom));
     return possiblevdom;
   };
 

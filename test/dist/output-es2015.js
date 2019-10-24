@@ -1702,6 +1702,11 @@
         });
         return vdom;
     }
+    function asserttype(con) {
+        if (!con) {
+            throw new TypeError;
+        }
+    }
     function getproperyreadproxy(a) {
         const __proto__ = "__proto__";
         const target = a;
@@ -2140,11 +2145,6 @@
             throw Error();
         }
     }
-    function asserttype(con) {
-        if (!con) {
-            throw new TypeError;
-        }
-    }
     const listvalueattr = Symbol("listvalueattr");
     const listinnervdom = Symbol("listinnervdom");
     const listinnerelement = Symbol("listinnerelement");
@@ -2162,7 +2162,7 @@
         }
         const ITEMfactory = (value, index) => {
             const possiblevdom = mapfun(value, index);
-            asserttype(isvalidvdom(possiblevdom));
+            asserttype(isVirtualdom(possiblevdom));
             return possiblevdom;
         };
         class ListMap extends AttrChange {
