@@ -21,6 +21,8 @@ import {
 import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+import { asserttype } from "src/asserttype";
+import { isvalidvdom } from "src/CreateElement/isvalidvdom";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
@@ -42,8 +44,11 @@ function ListMap(
     throw new TypeError();
   }
 
-  const ITEMfactory = (value: ReactiveState<any>, index: number) =>
-    mapfun(value, index);
+  const ITEMfactory = (value: ReactiveState<any>, index: number) => {
+    const possiblevdom = mapfun(value, index);
+    asserttype(isvalidvdom(possiblevdom));
+    return possiblevdom;
+  };
 
   //   const itemclass = createComponent(
   //     Object.assign(

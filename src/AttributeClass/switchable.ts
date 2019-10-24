@@ -1,23 +1,22 @@
-import {
-  AttrChange,
-  firstinstalledcallback,
-  connectedCallback,
-  disconnectedCallback
-} from "./attr-change";
-import { Htmlelementconstructor, autocreateclass } from "./createComponent";
+import { setimmediate } from "src/UtilTools/setimmediate";
 import { h } from "../CreateElement/create-element";
-import { componentsymbol } from "./iscomponent";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
-import { readysymbol } from "./readysymbol";
 import Virtualdom from "../CreateElement/VirtualElement";
-import { watch, CancelWatchfun } from "../Reactivity/watch";
+import { Custom } from "../CustomClass/customclass";
 // import { isclassextendsHTMLElement } from "../CustomElement/create-costum-elemet";
 import { mountrealelement } from "../MountElement/mount-real-element";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import { CancelWatchfun, watch } from "../Reactivity/watch";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { isfunction } from "../UtilTools/util";
-import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
-import { Custom } from "../CustomClass/customclass";
-import { setimmediate } from "src/UtilTools/setimmediate";
+import {
+  AttrChange,
+  connectedCallback,
+  disconnectedCallback,
+  firstinstalledcallback
+} from "./attr-change";
+import { autocreateclass, Htmlelementconstructor } from "./createComponent";
+import { componentsymbol } from "./iscomponent";
+import { readysymbol } from "./readysymbol";
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
 const switch_mount_symbol = Symbol("switch_mount");
@@ -48,10 +47,10 @@ function Switchable(
     [readysymbol] = false;
     [switch_mount_symbol](eleclass: Custom | Htmlelementconstructor) {
       eleclass = autocreateclass(eleclass);
-      if (!isclassextendsHTMLElement(eleclass)) {
+      /*  if (!isclassextendsHTMLElement(eleclass)) {
         console.error(eleclass);
         throw new TypeError();
-      }
+      } */
       //   this[current_element_class] = eleclass;
       const eleme = this[cached_class_element].get(eleclass);
       if (eleme) {

@@ -668,79 +668,35 @@
     function isclassextendsHTMLElement(initclass) {
         return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
     }
-    function seteletext(e, v) {
-        e.textContent = v;
+    function isCSSStyleRule(a) {
+        return gettagtype(a) === "CSSStyleRule";
     }
-    function setelehtml(e, v) {
-        e.innerHTML = v;
+    function isCSSMediaRule(a) {
+        return gettagtype(a) === "CSSMediaRule";
     }
-    function appendchild(container, ele) {
-        container.appendChild(ele);
+    function isCSSImportRule(a) {
+        return gettagtype(a) === "CSSImportRule";
     }
-    function createsvgelement() {
-        return createElementNS(svgnamespace, "svg");
+    function selectoraddprefix(cssstylerule, prefix) {
+        const selectorold = cssstylerule.selectorText;
+        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+        const selectorTextss = selectorold;
+        const selectorarray = selectorTextss.split(",");
+        const selectoraftertransform = selectorarray.map(selectorTextone => {
+            let prefixselector = prefix + " " + selectorTextone;
+            if (selectorTextone.startsWith("*")) {
+                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
+            }
+            return prefixselector;
+        }).join(",");
+        return {
+            selectorText: selectoraftertransform,
+            cssText: selectoraftertransform + stylebodyold,
+            [Symbol.toStringTag]: "CSSStyleRule"
+        };
     }
-    function createDocumentFragment() {
-        return document$1.createDocumentFragment();
-    }
-    function createnativeelement(type) {
-        return document$1.createElement(type);
-    }
-    function createElementNS(namespace, name) {
-        return document$1.createElementNS(namespace, name);
-    }
-    function createtextnode(data) {
-        return document$1.createTextNode(String$1(data));
-    }
-    const svgnamespace = "http://www.w3.org/2000/svg";
-    function changetext(textnode, value) {
-        textnode.nodeValue = String$1(value);
-    }
-    const mathnamespace = "http://www.w3.org/1998/Math/MathML";
-    function createmathelement() {
-        return createElementNS(mathnamespace, "math");
-    }
-    function removeElement(element) {
-        element.remove();
-    }
-    function domaddlisten(ele, event, call) {
-        ele.addEventListener(event, call);
-    }
-    function domremovelisten(ele, event, call) {
-        ele.removeEventListener(event, call);
-    }
-    function getchildren(ele) {
-        return [ ...ele.children ];
-    }
-    function getchildNodes(ele) {
-        return [ ...ele.childNodes ];
-    }
-    function getAttribute(ele, name) {
-        return HTMLElementprototype.getAttribute.call(ele, name);
-    }
-    function setAttribute(ele, name, value) {
-        HTMLElementprototype.setAttribute.call(ele, name, value);
-    }
-    function removeAttribute$1(ele, name) {
-        HTMLElementprototype.removeAttribute.call(ele, name);
-    }
-    const HTMLElementprototype = HTMLElement.prototype;
-    function createanotherhtmldocument() {
-        return document$1.implementation.createHTMLDocument("");
-    }
-    function querySelectorAll(selector) {
-        return [ ...document$1.querySelectorAll(selector) ];
-    }
-    function toArray(a) {
-        return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
-    }
-    function mountrealelement(ele, container, clear = true) {
-        if (clear) {
-            seteletext(container, "");
-        }
-        const eles = toArray(ele).flat(Infinity);
-        eles.forEach(e => appendchild(container, e));
-        return container;
+    function cssrulestocsstext(cssrules) {
+        return cssrules.map(c => c.cssText).join("\n");
     }
     const charactorlist = Array$1(26).fill(undefined).map((v, i) => 97 + i).map(n => String$1.fromCharCode(n));
     const hexnumberlist = Array$1(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
@@ -839,6 +795,118 @@
     const componentsymbol = Symbol("component");
     function iscomponent(a) {
         return isfunction(a) && get$1(a, componentsymbol) === componentsymbol;
+    }
+    function seteletext(e, v) {
+        e.textContent = v;
+    }
+    function setelehtml(e, v) {
+        e.innerHTML = v;
+    }
+    function appendchild(container, ele) {
+        container.appendChild(ele);
+    }
+    function createsvgelement() {
+        return createElementNS(svgnamespace, "svg");
+    }
+    function createDocumentFragment() {
+        return document$1.createDocumentFragment();
+    }
+    function createnativeelement(type) {
+        return document$1.createElement(type);
+    }
+    function createElementNS(namespace, name) {
+        return document$1.createElementNS(namespace, name);
+    }
+    function createtextnode(data) {
+        return document$1.createTextNode(String$1(data));
+    }
+    const svgnamespace = "http://www.w3.org/2000/svg";
+    function changetext(textnode, value) {
+        textnode.nodeValue = String$1(value);
+    }
+    const mathnamespace = "http://www.w3.org/1998/Math/MathML";
+    function createmathelement() {
+        return createElementNS(mathnamespace, "math");
+    }
+    function removeElement(element) {
+        element.remove();
+    }
+    function domaddlisten(ele, event, call) {
+        ele.addEventListener(event, call);
+    }
+    function domremovelisten(ele, event, call) {
+        ele.removeEventListener(event, call);
+    }
+    function getchildren(ele) {
+        return [ ...ele.children ];
+    }
+    function getchildNodes(ele) {
+        return [ ...ele.childNodes ];
+    }
+    function getAttribute(ele, name) {
+        return HTMLElementprototype.getAttribute.call(ele, name);
+    }
+    function setAttribute(ele, name, value) {
+        HTMLElementprototype.setAttribute.call(ele, name, value);
+    }
+    function removeAttribute$1(ele, name) {
+        HTMLElementprototype.removeAttribute.call(ele, name);
+    }
+    const HTMLElementprototype = HTMLElement.prototype;
+    function createanotherhtmldocument() {
+        return document$1.implementation.createHTMLDocument("");
+    }
+    function querySelectorAll(selector) {
+        return [ ...document$1.querySelectorAll(selector) ];
+    }
+    function toArray(a) {
+        return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
+    }
+    function mountrealelement(ele, container, clear = true) {
+        if (clear) {
+            seteletext(container, "");
+        }
+        const eles = toArray(ele).flat(Infinity);
+        eles.forEach(e => appendchild(container, e));
+        return container;
+    }
+    function isNodeArray(arr) {
+        return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
+    }
+    function isNode(a) {
+        return a instanceof Node;
+    }
+    const invalid_Virtualdom = "invalid Virtualdom ";
+    function MountElement(vdom, container) {
+        if (isarray(vdom)) {
+            vdom = vdom.flat(Infinity);
+            if (!vdom.length) {
+                console.error("Empty array not allowed");
+                throw new TypeError;
+            }
+        }
+        const el = container;
+        if (!(el instanceof HTMLElement)) {
+            console.error(el);
+            console.error("invalid container HTMLElement!");
+            throw TypeError();
+        }
+        if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
+            console.error(el);
+            console.error("Do not mount  to <html> or <body> <head>.");
+            throw Error();
+        }
+        const elesarray = toArray(vdom);
+        if (isvalidvdom(vdom)) {
+            mountrealelement(render(elesarray), container);
+        } else if (isNode(vdom) || isNodeArray(vdom)) {
+            mountrealelement(elesarray, container);
+        } else {
+            console.error(vdom);
+            console.error(invalid_Virtualdom);
+            throw TypeError();
+        }
+        return container;
     }
     function watch(state, callback) {
         if (isarray(state) || isReactiveState(state)) {
@@ -1131,59 +1199,12 @@
         }
         throw new Error;
     }
-    function isNodeArray(arr) {
-        return !!(isarray(arr) && arr.length && arr.every(a => isNode(a)));
-    }
-    function isNode(a) {
-        return a instanceof Node;
-    }
-    const invalid_Virtualdom = "invalid Virtualdom ";
-    function MountElement(vdom, container) {
-        if (isarray(vdom)) {
-            vdom = vdom.flat(Infinity);
-            if (!vdom.length) {
-                console.error("Empty array not allowed");
-                throw new TypeError;
-            }
-        }
-        const el = container;
-        if (!(el instanceof HTMLElement)) {
-            console.error(el);
-            console.error("invalid container HTMLElement!");
-            throw TypeError();
-        }
-        if (el === document$1.body || el === document$1.documentElement || el === document$1.head) {
-            console.error(el);
-            console.error("Do not mount  to <html> or <body> <head>.");
-            throw Error();
-        }
-        const elesarray = toArray(vdom);
-        if (isvalidvdom(vdom)) {
-            mountrealelement(render(elesarray), container);
-        } else if (isNode(vdom) || isNodeArray(vdom)) {
-            mountrealelement(elesarray, container);
-        } else {
-            console.error(vdom);
-            console.error(invalid_Virtualdom);
-            throw TypeError();
-        }
-        return container;
-    }
-    function readonlyproxy(target) {
-        return new Proxy(target, {
-            set() {
-                return true;
-            },
-            defineProperty() {
-                return false;
-            },
-            deleteProperty() {
-                return false;
-            },
-            setPrototypeOf() {
-                return false;
-            }
-        });
+    const componentsstylesheet = new Map;
+    function createlinkstylesheet(url) {
+        return render(h("link", {
+            href: url,
+            rel: "stylesheet"
+        }));
     }
     function createcssBlob(source) {
         const cachedBlob = sourcecssblobCache.get(source);
@@ -1198,35 +1219,17 @@
         }
     }
     const sourcecssblobCache = new Map;
-    function isCSSStyleRule(a) {
-        return gettagtype(a) === "CSSStyleRule";
-    }
-    function isCSSMediaRule(a) {
-        return gettagtype(a) === "CSSMediaRule";
-    }
-    function isCSSImportRule(a) {
-        return gettagtype(a) === "CSSImportRule";
-    }
-    function selectoraddprefix(cssstylerule, prefix) {
-        const selectorold = cssstylerule.selectorText;
-        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
-        const selectorTextss = selectorold;
-        const selectorarray = selectorTextss.split(",");
-        const selectoraftertransform = selectorarray.map(selectorTextone => {
-            let prefixselector = prefix + " " + selectorTextone;
-            if (selectorTextone.startsWith("*")) {
-                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
-            }
-            return prefixselector;
-        }).join(",");
-        return {
-            selectorText: selectoraftertransform,
-            cssText: selectoraftertransform + stylebodyold,
-            [Symbol.toStringTag]: "CSSStyleRule"
-        };
-    }
-    function cssrulestocsstext(cssrules) {
-        return cssrules.map(c => c.cssText).join("\n");
+    function savestyleblob(tagname, csstext, urltext) {
+        tagname = tagname.toLowerCase();
+        const prefix = tagname;
+        if (!get$1(componentsstylesheet, prefix)) {
+            set$1(componentsstylesheet, tagname, new Set$1);
+        }
+        if (csstext) {
+            get$1(componentsstylesheet, prefix).add(createcssBlob(csstext));
+        } else if (urltext) {
+            get$1(componentsstylesheet, prefix).add(urltext);
+        }
     }
     function prefixcssrules(cssRulesarray, prefix) {
         return cssRulesarray.map(cssrule => {
@@ -1251,6 +1254,12 @@
             }
         }).filter(Boolean);
     }
+    function parsecsstext(text) {
+        const styleelement = render(h("style", [ text ]));
+        const otherdocument = createanotherhtmldocument();
+        appendchild(otherdocument.documentElement, styleelement);
+        return Array$1.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
+    }
     function transformcsstext(text, prefix) {
         const cachedtext = oldcsstotransformedcss.get(text);
         if (cachedtext) {
@@ -1265,31 +1274,6 @@
         }
     }
     const oldcsstotransformedcss = new Map;
-    function parsecsstext(text) {
-        const styleelement = render(h("style", [ text ]));
-        const otherdocument = createanotherhtmldocument();
-        appendchild(otherdocument.documentElement, styleelement);
-        return Array$1.from(get$1(get$1(styleelement, "sheet"), "cssRules"));
-    }
-    const componentsstylesheet = new Map;
-    function savestyleblob(tagname, csstext, urltext) {
-        tagname = tagname.toLowerCase();
-        const prefix = tagname;
-        if (!get$1(componentsstylesheet, prefix)) {
-            set$1(componentsstylesheet, tagname, new Set$1);
-        }
-        if (csstext) {
-            get$1(componentsstylesheet, prefix).add(createcssBlob(csstext));
-        } else if (urltext) {
-            get$1(componentsstylesheet, prefix).add(urltext);
-        }
-    }
-    function createlinkstylesheet(url) {
-        return render(h("link", {
-            href: url,
-            rel: "stylesheet"
-        }));
-    }
     function registercssprefix(text, prefix) {
         const css = text;
         const cssnewtext = transformcsstext(css, prefix);
@@ -1304,6 +1288,31 @@
             stylelinkelement.onload = loaderrorfun;
             stylelinkelement.onerror = loaderrorfun;
             appendchild(container, stylelinkelement);
+        });
+    }
+    function waitloadallstyle(prefix, containerthis) {
+        return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
+            if (querySelectorAll('link[rel="stylesheet"][href="'.concat(styleurl, '"]')).length) {
+                return Promise.resolve();
+            } else {
+                return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
+            }
+        }));
+    }
+    function readonlyproxy(target) {
+        return new Proxy(target, {
+            set() {
+                return true;
+            },
+            defineProperty() {
+                return false;
+            },
+            deleteProperty() {
+                return false;
+            },
+            setPrototypeOf() {
+                return false;
+            }
         });
     }
     function setimmediate(fun) {
@@ -1424,15 +1433,6 @@
         }
     }
     _a$1 = readysymbol;
-    function waitloadallstyle(prefix, containerthis) {
-        return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
-            if (querySelectorAll('link[rel="stylesheet"][href="'.concat(styleurl, '"]')).length) {
-                return Promise.resolve();
-            } else {
-                return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
-            }
-        }));
-    }
     const waittranformcsssymbol = Symbol("waittranformcss");
     const innerwatchrecords = Symbol("innerwatchrecord");
     const innerstatesymbol = Symbol("innerstate");
@@ -1459,6 +1459,7 @@
                     if (css) {
                         const prefix = this.tagName.toLowerCase();
                         if (!get$1(componentsstylesheet, prefix)) {
+                            set$1(componentsstylesheet, prefix, new Set$1);
                             this[waittranformcsssymbol] = () => {
                                 return setimmediate(() => {
                                     registercssprefix(css, prefix);
@@ -1490,12 +1491,10 @@
                         possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
                     } catch (error) {
                         closectx();
-                        console.error(error);
+                        console.error("error in component");
                         throw error;
                     }
-                    if (isarray(possiblyvirtualdom)) {
-                        possiblyvirtualdom = possiblyvirtualdom.flat(Infinity).filter(Boolean);
-                    }
+                    possiblyvirtualdom = toArray(possiblyvirtualdom);
                     if (isvalidvdom(possiblyvirtualdom)) {
                         const vdomarray = toArray(possiblyvirtualdom);
                         this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
@@ -2141,6 +2140,11 @@
             throw Error();
         }
     }
+    function asserttype(con) {
+        if (!con) {
+            throw new TypeError;
+        }
+    }
     const listvalueattr = Symbol("listvalueattr");
     const listinnervdom = Symbol("listinnervdom");
     const listinnerelement = Symbol("listinnerelement");
@@ -2156,7 +2160,11 @@
             console.error(mapfun);
             throw new TypeError;
         }
-        const ITEMfactory = (value, index) => mapfun(value, index);
+        const ITEMfactory = (value, index) => {
+            const possiblevdom = mapfun(value, index);
+            asserttype(isvalidvdom(possiblevdom));
+            return possiblevdom;
+        };
         class ListMap extends AttrChange {
             constructor() {
                 super(...arguments);
@@ -2273,10 +2281,6 @@
             }
             [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
                 eleclass = autocreateclass(eleclass);
-                if (!isclassextendsHTMLElement(eleclass)) {
-                    console.error(eleclass);
-                    throw new TypeError;
-                }
                 const eleme = this[cached_class_element].get(eleclass);
                 if (eleme) {
                     mountrealelement(eleme, this);

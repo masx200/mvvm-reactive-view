@@ -1,10 +1,11 @@
 import {
   componentsstylesheet,
-  createlinkstylesheet,
-  loadlinkstyle
+  createlinkstylesheet
+  //   loadlinkstyle
 } from "./parsecss-transformcss";
 import { querySelectorAll } from "src/UtilTools/dom";
 import { get } from "src/UtilTools/reflect";
+import { loadlinkstyle } from "./loadlinkstyle";
 
 export function waitloadallstyle(
   prefix: string,

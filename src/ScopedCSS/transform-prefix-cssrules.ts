@@ -1,7 +1,8 @@
 import { isCSSStyleRule, isCSSMediaRule, isCSSImportRule } from "./isCSSRule";
 import { selectoraddprefix } from "./selectoraddprefix";
-import { savestyleblob } from "./parsecss-transformcss";
+// import { savestyleblob } from "./parsecss-transformcss";
 import { cssrulestocsstext } from "./cssrulestocsstext";
+import { savestyleblob } from "./savestyleblob";
 
 export function prefixcssrules(
   cssRulesarray: Array<CSSRule>,

@@ -4,6 +4,8 @@ export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
 import { isvalidvdom } from "src/CreateElement/isvalidvdom";
 import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
+import { registercssprefix } from "src/ScopedCSS/registercssprefix";
+import { waitloadallstyle } from "src/ScopedCSS/waitloadallstyle";
 import { cached_create_componet } from "../cached-map";
 // import { Class } from "./rendervdomtoreal";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
@@ -33,23 +35,23 @@ import readonlyproxy from "../Reactivity/readonly-proxy";
 import render from "../RenderVirtual/render-vdom-to-real";
 import {
   /* parsecsstext,
-                    prefixcssrules,
-                    cssrulestocsstext, */
+                        prefixcssrules,
+                        cssrulestocsstext, */
   //   savestyleblob,
-  componentsstylesheet,
+  componentsstylesheet
   //   createlinkstylesheet,
   //   transformcsstext,
-  registercssprefix
+  //   registercssprefix
   /*  loadlinkstyle,
-                    createlinkstylesheet */
+                        createlinkstylesheet */
   //   savestyleblob
   //   waitloadallstyle
 } from "../ScopedCSS/parsecss-transformcss";
 import { seteletext } from "../UtilTools/dom";
-import { apply, defineProperty, get } from "../UtilTools/reflect";
+import { apply, defineProperty, get, set } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
-import { isArray, isfunction, isobject, isstring } from "../UtilTools/util";
+import { isfunction, isobject, isstring } from "../UtilTools/util";
 import {
   AttrChange,
   attributeChangedCallback,
@@ -60,7 +62,6 @@ import {
 import createcomponent from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
-import { waitloadallstyle } from "src/ScopedCSS/waitloadallstyle";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
@@ -103,7 +104,9 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
             !get(componentsstylesheet, prefix)
             /*  componentsstylesheet[prefix] */
           ) {
+            set(componentsstylesheet, prefix, new Set());
             /* 改成异步解析css转换 */
+            // console.trace();
             this[waittranformcsssymbol] = () => {
               return setimmediate(() => {
                 registercssprefix(css, prefix);
@@ -192,15 +195,16 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
           // );
         } catch (error) {
           closectx();
-          console.error(error);
+          console.error("error in component");
           throw error;
         }
-
+        /* 
         if (isArray(possiblyvirtualdom)) {
           possiblyvirtualdom = possiblyvirtualdom
             .flat(Infinity)
             .filter(Boolean);
-        }
+        } */
+        possiblyvirtualdom = toArray(possiblyvirtualdom);
         if (isvalidvdom(possiblyvirtualdom)) {
           const vdomarray /* isArray(possiblyvirtualdom)
                 ? possiblyvirtualdom

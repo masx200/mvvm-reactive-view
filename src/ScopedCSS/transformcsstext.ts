@@ -1,6 +1,7 @@
-import { parsecsstext } from "./parsecss-transformcss";
+// import { parsecsstext } from "./parsecss-transformcss";
 import { prefixcssrules } from "./transform-prefix-cssrules";
 import { cssrulestocsstext } from "./cssrulestocsstext";
+import { parsecsstext } from "./parsecsstext";
 
 export function transformcsstext(text: string, prefix: string): string {
   const cachedtext = oldcsstotransformedcss.get(text);
