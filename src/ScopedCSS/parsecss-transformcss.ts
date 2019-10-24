@@ -3,8 +3,7 @@ import render from "../RenderVirtual/render-vdom-to-real";
 // import { RegExp } from "core-js";
 import {
   appendchild,
-  createanotherhtmldocument /* , insertfirst */,
-  querySelectorAll
+  createanotherhtmldocument /* , insertfirst */
 } from "../UtilTools/dom";
 import { get, set } from "../UtilTools/reflect";
 import { createcssBlob } from "./create-cssurlblob";
@@ -82,22 +81,4 @@ export function loadlinkstyle(
     stylelinkelement.onerror = loaderrorfun;
     appendchild(container, stylelinkelement);
   });
-}
-
-export function waitloadallstyle(
-  prefix: string,
-  containerthis: Element | HTMLElement | SVGSVGElement | SVGElement
-) {
-  return Promise.all(
-    [...get(componentsstylesheet, prefix)].map(styleurl => {
-      if (
-        querySelectorAll(`link[rel="stylesheet"][href="${styleurl}"]`).length
-      ) {
-        return Promise.resolve();
-      } else {
-        /* 如果已经有过相同的linkstylesheet挂载着的话,则不重复挂载 */
-        return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
-      }
-    })
-  );
 }

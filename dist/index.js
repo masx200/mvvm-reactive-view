@@ -6,7 +6,7 @@ const window = globalThis;
 
 const global = globalThis;
 
-const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
+const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt} = globalThis;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -1494,16 +1494,6 @@ function loadlinkstyle(stylelinkelement, container) {
     });
 }
 
-function waitloadallstyle(prefix, containerthis) {
-    return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
-        if (querySelectorAll(`link[rel="stylesheet"][href="${styleurl}"]`).length) {
-            return Promise.resolve();
-        } else {
-            return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
-        }
-    }));
-}
-
 function setimmediate(fun) {
     return Promise.resolve().then(() => fun());
 }
@@ -1633,6 +1623,16 @@ class AttrChange extends HTMLElement {
 
 _a$1 = readysymbol;
 
+function waitloadallstyle(prefix, containerthis) {
+    return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
+        if (querySelectorAll(`link[rel="stylesheet"][href="${styleurl}"]`).length) {
+            return Promise.resolve();
+        } else {
+            return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
+        }
+    }));
+}
+
 const waittranformcsssymbol = Symbol("waittranformcss");
 
 const innerwatchrecords = Symbol("innerwatchrecord");
@@ -1722,7 +1722,7 @@ function createComponent(custfun) {
             [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
                 const thencallbackfirst = () => {
                     seteletext(this, "");
-                    return waitloadallstyle(prefix, this);
+                    return waitloadallstyle(prefix, document.head);
                 };
                 const thencallbacksecond = () => {
                     mountrealelement(this[elementsymbol], this, false);

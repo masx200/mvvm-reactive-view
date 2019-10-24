@@ -39,11 +39,11 @@ import {
   componentsstylesheet,
   //   createlinkstylesheet,
   //   transformcsstext,
-  registercssprefix,
+  registercssprefix
   /*  loadlinkstyle,
                     createlinkstylesheet */
   //   savestyleblob
-  waitloadallstyle
+  //   waitloadallstyle
 } from "../ScopedCSS/parsecss-transformcss";
 import { seteletext } from "../UtilTools/dom";
 import { apply, defineProperty, get } from "../UtilTools/reflect";
@@ -60,6 +60,7 @@ import {
 import createcomponent from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+import { waitloadallstyle } from "src/ScopedCSS/waitloadallstyle";
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
@@ -244,7 +245,8 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
         const thencallbackfirst = () => {
           /* 异步解析转换css */
           seteletext(this, "");
-          return waitloadallstyle(prefix, this);
+          /* 挂载link style sheet到head上 */
+          return waitloadallstyle(prefix, document.head);
         };
         const thencallbacksecond = () => {
           //   console.log("style load all");

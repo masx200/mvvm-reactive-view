@@ -45,7 +45,7 @@
     const self = globalThis;
     const window$1 = globalThis;
     const global = globalThis;
-    const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt, Number: Number} = globalThis;
+    const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame$1, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String$1, Array: Array$1, document: document$1, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set$1, Math: Math$1, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout$1, parseInt: parseInt} = globalThis;
     function isprimitive(a) {
         return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
     }
@@ -1306,15 +1306,6 @@
             appendchild(container, stylelinkelement);
         });
     }
-    function waitloadallstyle(prefix, containerthis) {
-        return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
-            if (querySelectorAll('link[rel="stylesheet"][href="'.concat(styleurl, '"]')).length) {
-                return Promise.resolve();
-            } else {
-                return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
-            }
-        }));
-    }
     function setimmediate(fun) {
         return Promise.resolve().then(() => fun());
     }
@@ -1433,6 +1424,15 @@
         }
     }
     _a$1 = readysymbol;
+    function waitloadallstyle(prefix, containerthis) {
+        return Promise.all([ ...get$1(componentsstylesheet, prefix) ].map(styleurl => {
+            if (querySelectorAll('link[rel="stylesheet"][href="'.concat(styleurl, '"]')).length) {
+                return Promise.resolve();
+            } else {
+                return loadlinkstyle(createlinkstylesheet(styleurl), containerthis);
+            }
+        }));
+    }
     const waittranformcsssymbol = Symbol("waittranformcss");
     const innerwatchrecords = Symbol("innerwatchrecord");
     const innerstatesymbol = Symbol("innerstate");
@@ -1514,7 +1514,7 @@
                 [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
                     const thencallbackfirst = () => {
                         seteletext(this, "");
-                        return waitloadallstyle(prefix, this);
+                        return waitloadallstyle(prefix, document$1.head);
                     };
                     const thencallbacksecond = () => {
                         mountrealelement(this[elementsymbol], this, false);
