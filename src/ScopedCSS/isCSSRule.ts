@@ -9,3 +9,6 @@ export function isCSSMediaRule(a: any): a is CSSMediaRule {
 export function isCSSImportRule(a: any): a is CSSImportRule {
   return gettagtype(a) === "CSSImportRule";
 }
+export function isCSSRule(a: any): a is CSSRule {
+  return a instanceof CSSRule;
+}

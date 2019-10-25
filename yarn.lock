@@ -4639,10 +4639,10 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@^3.7.0-dev.20191017:
-  version "3.7.0-dev.20191017"
-  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.0-dev.20191017.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.7.0-dev.20191017.tgz#e61440dd445edea6d7b9a699e7c5d5fbcd1906f2"
-  integrity sha1-5hRA3URe3qbXuaaZ58XV+80ZBvI=
+typescript@^3.7.1-rc:
+  version "3.7.1-rc"
+  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.1-rc.tgz?cache=0&sync_timestamp=1571984274475&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.7.1-rc.tgz#2054b872d67f8dc732e36c1df397f9327f37ada0"
+  integrity sha1-IFS4ctZ/jccy42wd85f5Mn83raA=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

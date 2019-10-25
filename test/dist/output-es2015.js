@@ -677,26 +677,19 @@
     function isCSSImportRule(a) {
         return gettagtype(a) === "CSSImportRule";
     }
-    function selectoraddprefix(cssstylerule, prefix) {
-        const selectorold = cssstylerule.selectorText;
-        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
-        const selectorTextss = selectorold;
-        const selectorarray = selectorTextss.split(",");
-        const selectoraftertransform = selectorarray.map(selectorTextone => {
-            let prefixselector = prefix + " " + selectorTextone;
-            if (selectorTextone.startsWith("*")) {
-                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
-            }
-            return prefixselector;
-        }).join(",");
-        return {
-            selectorText: selectoraftertransform,
-            cssText: selectoraftertransform + stylebodyold,
-            [Symbol.toStringTag]: "CSSStyleRule"
-        };
-    }
     function cssrulestocsstext(cssrules) {
         return cssrules.map(c => c.cssText).join("\n");
+    }
+    function prefixcssmediarule(cssrule, prefix) {
+        const rulesarr = prefixcssrules([ ...cssrule.cssRules ], prefix);
+        const conditionText = cssrule.conditionText;
+        const cssText = cssrule.cssText.slice(0, 7) + conditionText + "{" + cssrulestocsstext(rulesarr) + "}";
+        return {
+            cssText: cssText,
+            conditionText: conditionText,
+            cssRules: rulesarr,
+            [Symbol.toStringTag]: "CSSMediaRule"
+        };
     }
     const charactorlist = Array$1(26).fill(undefined).map((v, i) => 97 + i).map(n => String$1.fromCharCode(n));
     const hexnumberlist = Array$1(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
@@ -1231,21 +1224,31 @@
             get$1(componentsstylesheet, prefix).add(urltext);
         }
     }
+    function selectoraddprefix(cssstylerule, prefix) {
+        const selectorold = cssstylerule.selectorText;
+        const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
+        const selectorTextss = selectorold;
+        const selectorarray = selectorTextss.split(",");
+        const selectoraftertransform = selectorarray.map(selectorTextone => {
+            let prefixselector = prefix + " " + selectorTextone;
+            if (selectorTextone.startsWith("*")) {
+                prefixselector = prefixselector + "," + selectorTextone.replace("*", prefix);
+            }
+            return prefixselector;
+        }).join(",");
+        return {
+            selectorText: selectoraftertransform,
+            cssText: selectoraftertransform + stylebodyold,
+            [Symbol.toStringTag]: "CSSStyleRule"
+        };
+    }
     function prefixcssrules(cssRulesarray, prefix) {
         return cssRulesarray.map(cssrule => {
             if (isCSSStyleRule(cssrule)) {
                 const resultoutput = selectoraddprefix(cssrule, prefix);
                 return resultoutput;
             } else if (isCSSMediaRule(cssrule)) {
-                const rulesarr = prefixcssrules([ ...cssrule.cssRules ], prefix);
-                const conditionText = cssrule.conditionText;
-                const cssText = cssrule.cssText.slice(0, 7) + conditionText + "{" + cssrulestocsstext(rulesarr) + "}";
-                return {
-                    cssText: cssText,
-                    conditionText: conditionText,
-                    cssRules: rulesarr,
-                    [Symbol.toStringTag]: "CSSMediaRule"
-                };
+                return prefixcssmediarule(cssrule, prefix);
             } else if (isCSSImportRule(cssrule)) {
                 savestyleblob(prefix, undefined, cssrule.href);
                 return;

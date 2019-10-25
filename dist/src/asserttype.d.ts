@@ -1,1 +1,1 @@
-export declare function asserttype(con: boolean): void;
+export declare function asserttype(con: boolean): asserts con;
