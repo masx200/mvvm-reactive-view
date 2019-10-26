@@ -5,6 +5,8 @@ import resolve from "rollup-plugin-node-resolve";
 import postcss from "rollup-plugin-postcss";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import { terser } from "rollup-plugin-terser";
+
+const shouldcompress = process.env.NODE_ENV === "production";
 export default [
   {
     input: "./test/src/index.js",
@@ -62,7 +64,15 @@ export default [
       commonjs(),
       terser({
         sourcemap: true,
-        compress: false,
+        compress: shouldcompress
+          ? {
+              toplevel: true,
+              unused: true,
+              drop_console: true,
+              drop_debugger: true,
+              pure_funcs: ["console.log"]
+            }
+          : false,
         mangle: false,
         output: {
           ascii_only: !0,

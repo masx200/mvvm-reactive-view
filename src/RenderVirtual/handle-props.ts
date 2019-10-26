@@ -14,6 +14,14 @@ function handleprops(
   element: HTMLElement | Element | SVGSVGElement | SVGElement,
   vdom: Virtualdom<any>
 ) {
+  /* if (!vdom.element) {
+    vdom.element = element;
+  }
+ */
+  vdom.element.push(element);
+  /*  if (vdom.element.length > 1) {
+    console.log(vdom);
+  } */
   ((element, vdom) => {
     Object.entries(vdom.directives).forEach(([name, value]) => {
       if (
@@ -30,7 +38,7 @@ function handleprops(
       }
     });
 
-    const attribute1: { [key: string]: any } = createeleattr(element);
+    const attribute1: Record<string, any> = createeleattr(element);
     Object.assign(
       attribute1,
 
@@ -42,7 +50,7 @@ function handleprops(
     // set(element, virtualdomsymbol, vdom);
     // element[virtualdomsymbol] = vdom;
     /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
-    vdom.element = element;
+
     /* 添加绑定属性 */
 
     Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {

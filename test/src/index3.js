@@ -11,7 +11,7 @@ import {
   useMounted,
   useUnMounted,
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import mycss from "./test.css";
@@ -57,7 +57,7 @@ console.log([h, createElement]);
   //   /* mycom.defaultProps = { cccccc: "bbbbbbb" };
   //   mycom.css = mycss; /* css``; */ */
   const myclasscomponent = mycom;
-  const vdom = createElement(
+  let vdom = createElement(
     myclasscomponent,
     {
       aaaaaa: 222222222,
@@ -68,10 +68,10 @@ console.log([h, createElement]);
   console.log([vdom, myclasscomponent, mycom]);
   document.body.appendChild(MountElement(vdom, document.createElement("div")));
   setTimeout(() => {
-    vdom.element.setAttribute(
-      "cccccc",
-      "aaaaaaaaaaaaaaaaaabbbbbbbbbbnnnnnnnnnnnnn"
-    );
+    vdom.element.forEach(e => {
+      e.setAttribute("cccccc", "aaaaaaaaaaaaaaaaaabbbbbbbbbbnnnnnnnnnnnnn");
+    });
+    vdom = undefined;
   }, 5000);
   document.body.appendChild(
     MountElement(

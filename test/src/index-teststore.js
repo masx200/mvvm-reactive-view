@@ -8,7 +8,7 @@ import {
   h,
   MountElement,
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 console.log([h, createElement]);
 const number = createState(10);
 function increment() {
@@ -42,7 +42,7 @@ const mycomappclass = createComponent(() => {
   );
   return vdom;
 });
-const vdom = [
+let vdom = [
   createElement(mycomappclass),
   createElement(mycomappclass),
   createElement(mycomappclass)
@@ -53,13 +53,16 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
   vdom.forEach(vdom => {
     const element = vdom.element;
-    element.parentNode.removeChild(element);
+    // element.parentNode.removeChild(element);
+    element.forEach(e => e.remove());
   });
   // @ts-ignore
   number.value = -50;
 
   vdom.forEach(vdom => {
     const element = vdom.element;
-    document.body.appendChild(element);
+    // document.body.appendChild(element);
+    element.forEach(e => document.body.appendChild(e));
   });
+  vdom = undefined;
 }, 5000);

@@ -2,7 +2,7 @@ import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import createElement from "../CreateElement/create-element";
 // import createElement from "./createelement";
-import Virtualdom from "../CreateElement/VirtualElement";
+import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 // const readysymbol = Symbol("ready");
 import {
   onmounted,
@@ -63,12 +63,14 @@ export default function(
     // css?: string | undefined;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
-    [truevdomsymbol]: any[] = [optionstrue].flat(1 / 0).filter(Boolean);
+    [truevdomsymbol]: Vdomchildren = [optionstrue].flat(1 / 0).filter(Boolean);
     /*isarray(optionstrue)
     ? optionstrue.filter(Boolean)
     : */
 
-    [falsevdomsymbol]: any[] = [optionsfalse].flat(1 / 0).filter(Boolean);
+    [falsevdomsymbol]: Vdomchildren = [optionsfalse]
+      .flat(1 / 0)
+      .filter(Boolean);
     /* isarray(optionsfalse)
     ? optionsfalse.filter(Boolean)
     : */
@@ -90,8 +92,8 @@ export default function(
     //         [optionsfalse].flat(1 / 0).filter(Boolean);
     //       // optionsfalse;
     //     } */
-    [falseelesymbol]: any[];
-    [trueelesymbol]: any[];
+    [falseelesymbol]: Node[];
+    [trueelesymbol]: Node[];
     // [truevdomsymbol]: any[];
     // [falsevdomsymbol]: any[];
     //   [readysymbol] = false;
@@ -102,36 +104,42 @@ export default function(
           // } else {
           this[falseelesymbol] = render(this[falsevdomsymbol]);
           // this[falsevdomsymbol].map(e => render(e));
-        }
-        //   mount(this[falseelesymbol], this);
-        const elementtomount = this[falseelesymbol];
-        mount(elementtomount, this);
-        // elementtomount.forEach(e => onmounted(e));
-        onmounted(elementtomount);
-        if (this[trueelesymbol]) {
-          onunmounted(this[trueelesymbol]);
-          //   this[trueelesymbol].forEach(e => onunmounted(e));
+          this[falsevdomsymbol] = [];
         }
       }
+      //   mount(this[falseelesymbol], this);
+      const elementtomount = this[falseelesymbol];
+      mount(elementtomount, this);
+      // elementtomount.forEach(e => onmounted(e));
+      onmounted(elementtomount);
+      if (this[trueelesymbol]) {
+        onunmounted(this[trueelesymbol]);
+        //   this[trueelesymbol].forEach(e => onunmounted(e));
+      }
+      //   }
     }
     [handletrue]() {
       setelehtml(this, "");
       if (this[truevdomsymbol]) {
         if (!this[trueelesymbol]) {
           this[trueelesymbol] = render(this[truevdomsymbol]);
+
           // this[truevdomsymbol].map(e => render(e));
-        }
-        //
-        //   mount(this[trueelesymbol], this);
-        const elementtomount = this[trueelesymbol];
-        mount(elementtomount, this);
-        onmounted(elementtomount);
-        // elementtomount.forEach(e => onmounted(e));
-        if (this[falseelesymbol]) {
-          onunmounted(this[falseelesymbol]);
-          //   this[falseelesymbol].forEach(e => onunmounted(e));
+          /* 垃圾回收 */
+          this[truevdomsymbol] = [];
         }
       }
+      //
+      //   mount(this[trueelesymbol], this);
+      const elementtomount = this[trueelesymbol];
+      mount(elementtomount, this);
+      onmounted(elementtomount);
+      // elementtomount.forEach(e => onmounted(e));
+      if (this[falseelesymbol]) {
+        onunmounted(this[falseelesymbol]);
+        //   this[falseelesymbol].forEach(e => onunmounted(e));
+      }
+      //   }
     }
     [firstinstalledcallback]() {
       const attrs: { [key: string]: any } = createeleattr(this);
@@ -179,7 +187,7 @@ export default function(
       if (this[readysymbol]) {
         // console.log(name, oldValue, newValue);
         if (name === "value") {
-          const attrs: { [key: string]: any } = createeleattr(this);
+          const attrs: Record<string, any> = createeleattr(this);
           //   console.log(attrs);
           if (true === attrs["value"]) {
             this[handletrue]();

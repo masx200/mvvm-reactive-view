@@ -114,16 +114,16 @@ export class AttrChange extends HTMLElement {
 
   //禁止设置innerhtml，innertext，textcontent
   /* disconnectedCallback() {
-  console.log('Custom square element removed from page.');
+  //console.log('Custom square element removed from page.');
 } */
   /* connectedCallback() {
-  console.log('Custom square element added to page.');
+  //console.log('Custom square element added to page.');
   updateStyle(this);
 } */
   //
   //   connectedCallback(){}
   /* attributeChangedCallback(name, oldValue, newValue) {
-  console.log('Custom square element attributes changed.');
+  //console.log('Custom square element attributes changed.');
   updateStyle(this);
 } */
   setAttribute(qualifiedName: string, value: string) {

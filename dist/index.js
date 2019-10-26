@@ -6,7 +6,7 @@ const window = globalThis;
 
 const global = globalThis;
 
-const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt} = globalThis;
+const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, EventTarget: EventTarget, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -718,13 +718,15 @@ function createVirtualElement(type, props = {}, children = []) {
     const propsentries = Object.entries(props);
     const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
-    const thisarg = Object.create(null);
+    const virtual = Object.create(null);
+    const vdom = virtual;
     [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
-        defineProperty(thisarg, key, {
+        defineProperty(virtual, key, {
             writable: true
         });
     });
-    Object.assign(thisarg, {
+    vdom.element = [];
+    Object.assign(virtual, {
         type: type,
         bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
         props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
@@ -732,12 +734,13 @@ function createVirtualElement(type, props = {}, children = []) {
         onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
         directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
     });
-    defineProperty(thisarg, Symbol.toStringTag, {
+    defineProperty(virtual, Symbol.toStringTag, {
         value: "VirtualElement"
     });
-    preventExtensions(thisarg);
-    VirtualElementSet.add(thisarg);
-    return thisarg;
+    preventExtensions(virtual);
+    VirtualElementSet.add(virtual);
+    Object.freeze(vdom);
+    return virtual;
 }
 
 function isvalidvdom(v) {
@@ -1241,6 +1244,7 @@ function readdlisteners(ele) {
 }
 
 function handleprops(element, vdom) {
+    vdom.element.push(element);
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
             if (isfunction(directive[name])) {
@@ -1253,7 +1257,6 @@ function handleprops(element, vdom) {
         });
         const attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
-        vdom.element = element;
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
             watch(primitivestate, () => {
@@ -1326,10 +1329,10 @@ function render(vdom, namespace) {
             }
         } else if (typeof type == "function") {
             if (isobject(type["defaultProps"])) {
-                vdom.props = JSON.parse(JSON.stringify({
+                Object.assign(vdom.props, JSON.parse(JSON.stringify({
                     ...type["defaultProps"],
                     ...vdom.props
-                }));
+                })));
             }
             const propsjson = JSON.parse(JSON.stringify({
                 ...vdom.props,
@@ -1365,7 +1368,6 @@ function render(vdom, namespace) {
     } else {
         throwinvalideletype(vdom);
     }
-    throw new Error;
 }
 
 const componentsstylesheet = new Map;
@@ -1732,7 +1734,11 @@ function createComponent(custfun) {
                     this[waittranformcsssymbol] = undefined;
                 };
                 if (!this[elementsymbol]) {
-                    this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
+                    const innervdom = this[inner_vdom_symbol];
+                    if (innervdom) {
+                        this[elementsymbol] = render(innervdom).flat(Infinity);
+                        this[inner_vdom_symbol] = [];
+                    }
                 }
                 const css = get$1(this.constructor, "css");
                 const prefix = this.tagName.toLowerCase();
@@ -1870,13 +1876,14 @@ function conditon(conditon, iftrue, iffalse) {
             if (this[falsevdomsymbol]) {
                 if (!this[falseelesymbol]) {
                     this[falseelesymbol] = render(this[falsevdomsymbol]);
+                    this[falsevdomsymbol] = [];
                 }
-                const elementtomount = this[falseelesymbol];
-                mountrealelement(elementtomount, this);
-                onmounted(elementtomount);
-                if (this[trueelesymbol]) {
-                    onunmounted(this[trueelesymbol]);
-                }
+            }
+            const elementtomount = this[falseelesymbol];
+            mountrealelement(elementtomount, this);
+            onmounted(elementtomount);
+            if (this[trueelesymbol]) {
+                onunmounted(this[trueelesymbol]);
             }
         }
         [handletrue]() {
@@ -1884,13 +1891,14 @@ function conditon(conditon, iftrue, iffalse) {
             if (this[truevdomsymbol]) {
                 if (!this[trueelesymbol]) {
                     this[trueelesymbol] = render(this[truevdomsymbol]);
+                    this[truevdomsymbol] = [];
                 }
-                const elementtomount = this[trueelesymbol];
-                mountrealelement(elementtomount, this);
-                onmounted(elementtomount);
-                if (this[falseelesymbol]) {
-                    onunmounted(this[falseelesymbol]);
-                }
+            }
+            const elementtomount = this[trueelesymbol];
+            mountrealelement(elementtomount, this);
+            onmounted(elementtomount);
+            if (this[falseelesymbol]) {
+                onunmounted(this[falseelesymbol]);
             }
         }
         [firstinstalledcallback]() {
@@ -2398,12 +2406,10 @@ const listinnervdom = Symbol("listinnervdom");
 
 const listinnerelement = Symbol("listinnerelement");
 
-const cached_vdom_symbol = Symbol("cached_vdom");
-
 const cached_realele = Symbol("cached_realele");
 
 function ListMap(list, mapfun) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     if (!isarray(list) && !isSet(list) && !isReactiveState(list)) {
         console.error(list);
         throw new TypeError;
@@ -2417,16 +2423,19 @@ function ListMap(list, mapfun) {
         asserttype(isVirtualdom(possiblevdom));
         return possiblevdom;
     };
+    function indextovdom(index, thiscom) {
+        const vdom = ITEMfactory(computed(thiscom[listvalueattr], v => v[index]), index);
+        return vdom;
+    }
     class ListMap extends AttrChange {
         constructor() {
             super(...arguments);
             this[_a] = new Map;
-            this[_b] = new Map;
-            this[_c] = createstate([]);
-            this[_e] = false;
+            this[_b] = createstate([]);
+            this[_d] = false;
         }
-        [(_a = cached_vdom_symbol, _b = cached_realele, _c = listvalueattr, _d = componentsymbol, 
-        _e = readysymbol, attributeChangedCallback)](name) {
+        [(_a = cached_realele, _b = listvalueattr, _c = componentsymbol, _d = readysymbol, 
+        attributeChangedCallback)](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
                     const attrs = createeleattragentreadwrite(this);
@@ -2441,33 +2450,19 @@ function ListMap(list, mapfun) {
                     const oldlength = domchildren.length;
                     if (newlength > oldlength) {
                         const numindexs = Array(newlength).fill(undefined).map((v, i) => i).slice(oldlength);
-                        const vdomstoadd = numindexs.map(index => {
-                            const cached_vdom1 = get$1(this[cached_vdom_symbol], index);
-                            if (cached_vdom1) {
-                                return cached_vdom1;
-                            } else {
-                                const vdom = ITEMfactory(computed(this[listvalueattr], v => v[index]), index);
-                                set$1(this[cached_vdom_symbol], index, vdom);
-                                return vdom;
-                            }
-                        });
-                        const realelementstoadd = vdomstoadd.map((vdom, i) => {
-                            const index = i + oldlength;
+                        const realelementstoadd = numindexs.map(index => {
                             const cached_element = get$1(this[cached_realele], index);
                             if (cached_element) {
                                 return cached_element;
                             } else {
+                                const vdom = indextovdom(index, this);
                                 const element = render(vdom);
                                 set$1(this[cached_realele], index, element);
                                 return element;
                             }
                         });
-                        this[listinnervdom].push(...vdomstoadd);
-                        this[listinnerelement].push(...realelementstoadd);
                         realelementstoadd.forEach(element => appendchild(this, element));
                     } else if (newlength < oldlength) {
-                        this[listinnervdom] = this[listinnervdom].slice(0, newlength);
-                        this[listinnerelement] = this[listinnerelement].slice(0, newlength);
                         getchildren(this).slice(newlength).forEach(element => removeElement(element));
                     }
                 }
@@ -2488,13 +2483,12 @@ function ListMap(list, mapfun) {
             set$1(this[listvalueattr], "value", value);
             this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
             this[listinnerelement] = render(this[listinnervdom]);
-            Object.entries(this[listinnervdom]).forEach(([key, value]) => {
-                set$1(this[cached_vdom_symbol], key, value);
-            });
             Object.entries(this[listinnerelement]).forEach(([key, value]) => {
-                set$1(this[cached_realele], key, value);
+                set$1(this[cached_realele], Number(key), value);
             });
             mountrealelement(this[listinnerelement], this);
+            this[listinnerelement] = [];
+            this[listinnervdom] = [];
         }
         connectedCallback() {
             connectedCallback(this);
@@ -2503,7 +2497,7 @@ function ListMap(list, mapfun) {
     ListMap.defaultProps = {
         value: []
     };
-    ListMap[_d] = componentsymbol;
+    ListMap[_c] = componentsymbol;
     return h(ListMap, {
         value: list
     });
@@ -2662,7 +2656,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-var version = "1.4.12";
+var version = "1.4.13";
 
 const version1 = version;
 

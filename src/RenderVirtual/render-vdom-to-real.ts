@@ -38,7 +38,7 @@ export const bindstatesymbol = Symbol("bindstate");
 // export const reactivestatesymbol = Symbol("reactive");
 // export const virtualdomsymbol = Symbol("virtualelement");
 /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
-function throwinvalideletype(type?: any) {
+function throwinvalideletype(type?: any): never {
   console.error(type);
   console.error("invalid element type!");
   console.error(invalid_Virtualdom);
@@ -158,9 +158,14 @@ export default function render(
         myAge: 18
   }*/
       if (isobject(type["defaultProps"])) {
-        vdom.props = JSON.parse(
-          JSON.stringify({ ...type["defaultProps"], ...vdom.props })
+        /*  改成了readonly属性 props*/
+        Object.assign(
+          vdom.props,
+          JSON.parse(JSON.stringify({ ...type["defaultProps"], ...vdom.props }))
         );
+        /* vdom.props = JSON.parse(
+          JSON.stringify({ ...type["defaultProps"], ...vdom.props })
+        ); */
       }
 
       const propsjson = JSON.parse(
@@ -254,5 +259,5 @@ export default function render(
   /* console.error(vdom);
   throw new Error(); */
   //   return;
-  throw new Error();
+  //   throw new Error();
 }

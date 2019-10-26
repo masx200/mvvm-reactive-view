@@ -35,7 +35,8 @@ function createVirtualElement<T extends Class | string | Function>(
   const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(
     ([key]) => Letter_case_and_Chinese.test(key[0])
   );
-  const thisarg: Virtualdom<T> = Object.create(null);
+  const virtual = Object.create(null);
+  const vdom = virtual;
   [
     "onevent",
     "element",
@@ -45,18 +46,19 @@ function createVirtualElement<T extends Class | string | Function>(
     "directives",
     "bindattr"
   ].forEach(key => {
-    defineProperty(thisarg, key, {
+    defineProperty(virtual, key, {
       //   enumerable: false,
       writable: true
     });
   });
   //   ["type", "props", "children", "directives", "bindattr"].forEach(key => {
-  //     defineProperty(thisarg, key, {
+  //     defineProperty(virtual, key, {
   //       enumerable: true,
   //       writable: true
   //     });
   //   });
-  Object.assign(thisarg, {
+  vdom.element = [];
+  Object.assign(virtual, {
     type,
     bindattr: Object.fromEntries(
       Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))
@@ -101,29 +103,31 @@ function createVirtualElement<T extends Class | string | Function>(
         ])
     )
   });
-  defineProperty(thisarg, Symbol.toStringTag, { value: "VirtualElement" });
-  //   thisarg[Symbol.toStringTag] = "VirtualElement";
-  //   thisarg[isvirtualelement] = isvirtualelement;
-  //   defineProperty(thisarg, isvirtualelement, { value: isvirtualelement });
-  preventExtensions(thisarg);
-  VirtualElementSet.add(thisarg);
-  return thisarg;
+  defineProperty(virtual, Symbol.toStringTag, { value: "VirtualElement" });
+  //   virtual[Symbol.toStringTag] = "VirtualElement";
+  //   virtual[isvirtualelement] = isvirtualelement;
+  //   defineProperty(virtual, isvirtualelement, { value: isvirtualelement });
+  preventExtensions(virtual);
+  VirtualElementSet.add(virtual);
+
+  Object.freeze(vdom);
+  return virtual;
 }
 // JSON.stringify
 interface Virtualdom<T extends Class | string | Function> {
   //   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
-  element: Element | undefined;
-  type: T;
-  props: ElementAttrs;
-  children: Vdomchildren;
-  directives: Record<string, any>;
+  readonly element: Element[];
+  readonly type: T;
+  readonly props: ElementAttrs;
+  readonly children: Vdomchildren;
+  readonly directives: Record<string, any>;
   //   { [key: string]: any };
-  onevent: Record<string, Array<EventListener>>;
+  readonly onevent: Record<string, Array<EventListener>>;
   //   {
   //     [key: string]: Array<EventListener>;
   //   };
-  bindattr: Record<string, ReactiveState<any>>;
+  readonly bindattr: Record<string, ReactiveState<any>>;
   /* {
     [key: string]: ReactiveState<any>;
   }; */

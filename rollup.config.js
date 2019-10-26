@@ -9,7 +9,7 @@ const banner = `const globalThis = Function('return this')();
 const self = globalThis;
 const window = globalThis;
 const global = globalThis;
-const {WeakSet,WeakMap,Date, RegExp, Event, CustomEvent, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, EventTarget, JSON, Map, clearTimeout, setTimeout, parseInt} = globalThis;`;
+const {WeakSet,WeakMap,Date, RegExp, Event, CustomEvent, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, EventTarget, JSON, Map, clearTimeout, setTimeout, parseInt,Number} = globalThis;`;
 const myterserplugin = terser({
   sourcemap: true,
   toplevel: true,

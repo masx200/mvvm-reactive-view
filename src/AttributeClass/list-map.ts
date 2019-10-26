@@ -28,7 +28,8 @@ const listvalueattr = Symbol("listvalueattr");
 // const listlengthsymbol = Symbol("listlength");
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
-const cached_vdom_symbol = Symbol("cached_vdom");
+/* 不需要中间缓存了 */
+// const cached_vdom_symbol = Symbol("cached_vdom");
 const cached_realele = Symbol("cached_realele");
 function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
@@ -48,7 +49,23 @@ function ListMap(
     asserttype(isVirtualdom(possiblevdom));
     return possiblevdom;
   };
+  function indextovdom(index: number, thiscom: ListMap) {
+    /* 只要缓存从index到element就够了,不需要中间缓存了 */
+    // index => {
+    /* const cached_vdom1 = get(thiscom[cached_vdom_symbol], index);
+    if (cached_vdom1) {
+      return cached_vdom1;
+    } else { */
+    const vdom = ITEMfactory(
+      computed(thiscom[listvalueattr], v => (v as any[])[index] as any),
 
+      index
+    );
+    //   set(thiscom[cached_vdom_symbol], index, vdom);
+    return vdom;
+    // }
+    //   }
+  }
   //   const itemclass = createComponent(
   //     Object.assign(
   //       (
@@ -90,7 +107,7 @@ function ListMap(
     //   } */
     // } */
     static defaultProps = { value: [] };
-    [cached_vdom_symbol]: Map<number, Virtualdom<any>> = new Map();
+    // [cached_vdom_symbol]: Map<number, Virtualdom<any>> = new Map();
     [cached_realele]: Map<number, Element> = new Map();
     [listvalueattr] = createstate([]);
     // [listlengthsymbol]: number;
@@ -121,45 +138,31 @@ function ListMap(
               .map((v, i) => i)
               .slice(oldlength);
 
-            const vdomstoadd: Array<Virtualdom<any>> = numindexs.map(index => {
-              const cached_vdom1 = get(this[cached_vdom_symbol], index);
-              if (cached_vdom1) {
-                return cached_vdom1;
-              } else {
-                const vdom = ITEMfactory(
-                  computed(
-                    this[listvalueattr],
-                    v => (v as any[])[index] as any
-                  ),
-
-                  index
-                );
-                set(this[cached_vdom_symbol], index, vdom);
-                return vdom;
-              }
-            });
-            const realelementstoadd: Element[] = vdomstoadd.map((vdom, i) => {
-              const index = i + oldlength;
+            // const vdomstoadd: Array<Virtualdom<any>> = numindexs.map();
+            const realelementstoadd: Element[] = numindexs.map(index => {
+              //   const index = i + oldlength;
               //   const index = Number(vdom.children[0]);
 
               //   const index = vdom.props.index;
 
               const cached_element = get(this[cached_realele], index);
+              /* 直接从缓存中获取element */
               if (cached_element) {
                 return cached_element;
               } else {
+                const vdom = indextovdom(index, this);
                 const element = render(vdom);
                 set(this[cached_realele], index, element);
                 return element;
               }
             });
-            this[listinnervdom].push(...vdomstoadd);
-            this[listinnerelement].push(...realelementstoadd);
+            /* this[listinnervdom].push(...vdomstoadd);
+            this[listinnerelement].push(...realelementstoadd); */
             realelementstoadd.forEach(element => appendchild(this, element));
           } else if (newlength < oldlength) {
             /* 把旧的清除掉 */
-            this[listinnervdom] = this[listinnervdom].slice(0, newlength);
-            this[listinnerelement] = this[listinnerelement].slice(0, newlength);
+            /*  this[listinnervdom] = this[listinnervdom].slice(0, newlength);
+            this[listinnerelement] = this[listinnerelement].slice(0, newlength); */
             getchildren(this)
               .slice(newlength)
               .forEach(element => removeElement(element));
@@ -197,18 +200,22 @@ function ListMap(
         )
       );
       this[listinnerelement] = render(this[listinnervdom]);
-      Object.entries(this[listinnervdom]).forEach(([key, value]) => {
-        /*  this[cached_vdom_symbol]已经改成Map类型了*/
-        set(this[cached_vdom_symbol], key, value);
-      });
+      // /*   Object.entries(this[listinnervdom]).forEach(([key, value]) => {
+      //     /*  this[cached_vdom_symbol]已经改成Map类型了*/
+      //     set(this[cached_vdom_symbol], key, value);
+      //   }); */
       Object.entries(this[listinnerelement]).forEach(([key, value]) => {
         /* this[cached_realele] 已经改成Map类型了
          */
-        set(this[cached_realele], key, value);
+        set(this[cached_realele], Number(key), value);
       });
       //   Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
       //   Object.assign(this[cached_realele], this[listinnerelement]);
       mount(this[listinnerelement], this);
+
+      /* 清除不使用的变量引用,垃圾回收 */
+      this[listinnerelement] = [];
+      this[listinnervdom] = [];
     }
     connectedCallback() {
       /*   if (!this[readysymbol]) {

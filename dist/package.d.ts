@@ -14,6 +14,7 @@ declare const _exports: {
         "test": string;
         "serve": string;
         "prettier": string;
+        "test-prod": string;
     };
     "repository": string;
     "keywords": never[];
@@ -25,6 +26,7 @@ declare const _exports: {
     "homepage": string;
     "dependencies": {};
     "devDependencies": {
+        "cross-env": string;
         "@babel/core": string;
         "@babel/plugin-proposal-class-properties": string;
         "@babel/plugin-transform-react-jsx": string;

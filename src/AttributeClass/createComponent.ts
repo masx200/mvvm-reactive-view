@@ -245,6 +245,7 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
       [inner_vdom_symbol]: Array<
         Virtualdom<any> | ReactiveState<any> | string | number
       >;
+      // | undefined;
       [firstinstalledcallback]() {
         const thencallbackfirst = () => {
           /* 异步解析转换css */
@@ -259,7 +260,12 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
           this[waittranformcsssymbol] = undefined;
         };
         if (!this[elementsymbol]) {
-          this[elementsymbol] = render(this[inner_vdom_symbol]).flat(Infinity);
+          const innervdom = this[inner_vdom_symbol];
+          if (innervdom) {
+            this[elementsymbol] = render(innervdom).flat(Infinity);
+            this[inner_vdom_symbol] = [];
+            /*清除不再使用的引用, 垃圾回收 */
+          }
         }
 
         const css = get(this.constructor, "css");
