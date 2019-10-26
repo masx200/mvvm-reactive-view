@@ -1180,12 +1180,12 @@ interface Class {
 
 interface Virtualdom<T extends Class | string | Function> {
   readonly [Symbol.toStringTag]: "VirtualElement";
-  element: Element | undefined;
-  type: T;
-  props: ElementAttrs;
-  children: Vdomchildren;
-  directives: Record<string, any>;
-  onevent: Record<string, Array<EventListener>>;
-  bindattr: Record<string, ReactiveState<any>>;
+  readonly element: Element[];
+  readonly type: T;
+  readonly props: ElementAttrs;
+  readonly children: Vdomchildren;
+  readonly directives: Record<string, any>;
+  readonly onevent: Record<string, Array<EventListener>>;
+  readonly bindattr: Record<string, ReactiveState<any>>;
 }
 ```
