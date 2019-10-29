@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "paths": {
       "htm": ["./@types/htm"]
       // "packagejson": ["./package.json"]
