@@ -47,7 +47,7 @@ function isfunction(a) {
 }
 
 function isarray(a) {
-    return a instanceof Array && Array.isArray(a) && gettagtype(a) === "Array";
+    return Array.isArray(a) && a instanceof Array;
 }
 
 function gettagtype(a) {
