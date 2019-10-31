@@ -18,7 +18,7 @@
 
 ## 兼容的浏览器
 
-浏览器要求原生支持`Proxy`和`ECMASCRIPT2015`以上
+浏览器要求原生支持`Proxy`和`ECMASCRIPT2017`以上
 
 EDGE,CHROME,FIREFOX,SAFARI
 
