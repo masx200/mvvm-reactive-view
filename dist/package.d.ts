@@ -26,7 +26,6 @@ declare const _exports: {
     "homepage": string;
     "dependencies": {};
     "devDependencies": {
-        "cross-env": string;
         "@babel/core": string;
         "@babel/plugin-proposal-class-properties": string;
         "@babel/plugin-transform-react-jsx": string;
@@ -40,6 +39,7 @@ declare const _exports: {
         "babel-preset-env": string;
         "core-js": string;
         "core-js-pure": string;
+        "cross-env": string;
         "eslint": string;
         "eslint-config-prettier": string;
         "htm": string;

@@ -1,3 +1,6 @@
+// declare interface Array<T> {
+//   flat(arg0: number): any[];
+// }
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import createElement from "../CreateElement/create-element";

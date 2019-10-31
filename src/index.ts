@@ -1,3 +1,5 @@
+import "../polyfill/Array-prototype-flat";
+import "../polyfill/Object-fromEntries";
 import "./assetbrowser";
 import Condition from "./AttributeClass/conditon";
 import createComponent from "./AttributeClass/createComponent";
@@ -24,7 +26,7 @@ import "./Directives/model-input-textarea-value-directive-binding";
 import MountElement from "./MountElement/MountElement";
 import render from "./RenderVirtual/render-vdom-to-real";
 import watch from "./Reactivity/watch";
-import version from "./version";
+// import version from "./version";
 
 export { render };
 export { computed };
@@ -39,5 +41,5 @@ export { watch };
 export { Directives };
 export { Condition };
 export { ListMap };
-export { version };
+// export { version };
 export { Switchable };
