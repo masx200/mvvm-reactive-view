@@ -16,7 +16,11 @@
 
 ## 由于使用了 `Proxy`，所以不支持 `IE` 浏览器，而且 `Proxy` 不可 `polyfill`
 
-### 浏览器要求原生支持`Proxy`和`ECMASCRIPT2015+`
+## 兼容的浏览器
+
+浏览器要求原生支持`Proxy`和`ECMASCRIPT2015`以上
+
+EDGE,CHROME,FIREFOX,SAFARI
 
 # 安装 `npm` 模块
 
