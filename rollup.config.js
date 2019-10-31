@@ -11,6 +11,31 @@ const self = globalThis;
 const window = globalThis;
 const global = globalThis;
 const {WeakSet,WeakMap,Date, RegExp, Event, CustomEvent, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, EventTarget, JSON, Map, clearTimeout, setTimeout, parseInt,Number} = globalThis;`;
+const beautifyterserplugin = terser({
+  sourcemap: true,
+  compress: false,
+  mangle: false,
+  output: {
+    ascii_only: !0,
+    comments: !1,
+    beautify: true
+  }
+});
+const mybabelplugin = babel({
+  presets: [
+    [
+      "@babel/preset-env",
+      {
+        targets: [
+          "last 1 edge version",
+          "last 1 safari version",
+          "last 1 chrome version",
+          "last 1 firefox version"
+        ]
+      }
+    ]
+  ]
+});
 const myterserplugin = terser({
   sourcemap: true,
   toplevel: true,
@@ -39,47 +64,6 @@ export default [
       }
     ],
     plugins: [
-      babel({
-        // plugins: [
-        //   [
-        //     "@babel/plugin-transform-react-jsx",
-        //     {
-        //       pragma: "h",
-        //       pragmaFrag: "''"
-        //     }
-        //   ],
-        //   [
-        //     "babel-plugin-htm",
-        //     {
-        //       tag: "html",
-        //       pragma: "h"
-        //     }
-        //   ],
-        //   "@babel/plugin-proposal-class-properties"
-        // ],
-        presets: [
-          [
-            "@babel/preset-env",
-            {
-              //   corejs: 3,
-              // useBuiltIns: 'usage',
-              targets: [
-                "last 1 edge version",
-                "last 1 safari version",
-                "last 1 chrome version",
-                "last 1 firefox version"
-              ]
-              /*  {
-                    /* esmodules: true */
-              // firefox: "last 1 version",
-              // safari: "last 1 version",
-              // chrome: "last 1 version",
-              // edge: "last 1 version"
-              //   } */
-            }
-          ]
-        ]
-      }),
       json(),
       resolve(),
       commonjs(),
@@ -87,17 +71,8 @@ export default [
         tsconfig: "./tsconfig.json",
         typescript: typescriptlib
       }),
-      terser({
-        sourcemap: true,
-        compress: false,
-        mangle: false,
-        output: {
-          ascii_only: !0,
-          comments: !1,
-          beautify: true
-        }
-      }),
-      sourcemaps()
+      sourcemaps(),
+      beautifyterserplugin
     ]
   },
   {
@@ -109,6 +84,12 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [resolve(), commonjs(), myterserplugin, sourcemaps()]
+    plugins: [
+      mybabelplugin,
+      resolve(),
+      commonjs(),
+      myterserplugin,
+      sourcemaps()
+    ]
   }
 ];

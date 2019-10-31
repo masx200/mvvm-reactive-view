@@ -111,50 +111,6 @@ if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElemen
     throw new TypeError;
 }
 
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) symbols = symbols.filter((function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        }));
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-
-function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-            ownKeys(source, true).forEach((function(key) {
-                _defineProperty(target, key, source[key]);
-            }));
-        } else if (Object.getOwnPropertyDescriptors) {
-            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-            ownKeys(source).forEach((function(key) {
-                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-            }));
-        }
-    }
-    return target;
-}
-
 const acceptValue = [ "input", "textarea", "option", "select" ];
 
 var mustUseDomProp = (tag, attr, attrtype) => {
@@ -171,7 +127,7 @@ const String$1 = window.String;
 
 const Reflect$1 = window.Reflect;
 
-const {get: get, set: set, ownKeys: ownKeys$1} = Reflect$1;
+const {get: get, set: set, ownKeys: ownKeys} = Reflect$1;
 
 const valuestring = "value";
 
@@ -274,7 +230,7 @@ function createeleattragentreadwrite(ele) {
             return true;
         },
         has(target, key) {
-            return ownKeys$1(outputattrs).includes(key);
+            return ownKeys(outputattrs).includes(key);
         },
         defineProperty() {
             return false;
@@ -287,9 +243,10 @@ function createeleattragentreadwrite(ele) {
             };
             const myvalue = get(outputattrs, key);
             if (typeof myvalue !== "undefined") {
-                return _objectSpread2({
-                    value: myvalue
-                }, otherdescipter);
+                return {
+                    value: myvalue,
+                    ...otherdescipter
+                };
             } else {
                 return;
             }
@@ -345,7 +302,7 @@ var root = _freeGlobal || freeSelf || Function("return this")();
 
 var _root = root;
 
-var now = function now() {
+var now = function() {
     return _root.Date.now();
 };
 
@@ -546,7 +503,7 @@ const cached_create_componet = new WeakMap;
 
 const cached_callback_debounced_watchs = new WeakMap;
 
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$2, preventExtensions: preventExtensions} = Reflect;
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, preventExtensions: preventExtensions} = Reflect;
 
 function get$1(target, propertyKey) {
     if (isMap(target) || isWeakMap(target)) {
@@ -2036,7 +1993,7 @@ function getproperyreadproxy(a) {
         ownKeys(target) {
             let myvalue = get$1(target, "value");
             const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys$2(target), ...ownKeys$2(myvalueobj) ]));
+            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
         },
         has(target, key) {
             const myvalue = get$1(target, "value");
@@ -2134,7 +2091,7 @@ function isArray$1(a) {
 
 const Reflect$2 = window.Reflect;
 
-const {ownKeys: ownKeys$3, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
+const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
 
 function isobject$2(a) {
     return typeof a === "object" && a !== null;
@@ -2209,7 +2166,7 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
                 return deleteProperty$1(target, p);
             },
             ownKeys() {
-                return ownKeys$3(target);
+                return ownKeys$2(target);
             },
             has(t, p) {
                 return has$1(target, p);
@@ -2316,7 +2273,7 @@ function handleobjectstate(init) {
     reactive.value = initobj;
     const objproxyhandler = {};
     objproxyhandler.ownKeys = target => {
-        return Array.from(new Set([ ...ownKeys$2(target), ...ownKeys$2(get$1(target, "value")) ]));
+        return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(get$1(target, "value")) ]));
     };
     objproxyhandler.setPrototypeOf = () => {
         return false;
@@ -2644,14 +2601,14 @@ function createRef(value) {
     };
 }
 
-var n = function n(t, r, u, e) {
+var n = function(t, r, u, e) {
     for (var p = 1; p < r.length; p++) {
         var s = r[p], h = "number" == typeof s ? u[s] : s, a = r[++p];
         1 === a ? e[0] = h : 3 === a ? e[1] = Object.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
     }
     return e;
-}, t = function t(n) {
-    for (var t, r, u = 1, e = "", p = "", s = [ 0 ], h = function h(n) {
+}, t = function(n) {
+    for (var t, r, u = 1, e = "", p = "", s = [ 0 ], h = function(n) {
         1 === u && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? s.push(n || e, 0) : 3 === u && (n || e) ? (s.push(n || e, 1), 
         u = 2) : 2 === u && "..." === e && n ? s.push(n, 3) : 2 === u && e && !n ? s.push(!0, 5, e) : u >= 5 && ((e || !n && 5 === u) && (s.push(e, u, r), 
         u = 6), n && (s.push(n, u, r), u = 6)), e = "";

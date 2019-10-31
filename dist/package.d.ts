@@ -1,12 +1,12 @@
 declare const _exports: {
     "version": string;
+    "main": string;
+    "types": string;
+    "module": string;
     "files": string[];
     "publishConfig": {
         "registry": string;
     };
-    "main": string;
-    "types": string;
-    "module": string;
     "name": string;
     "description": string;
     "scripts": {
