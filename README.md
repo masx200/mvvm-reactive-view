@@ -724,6 +724,8 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 # 可自由切换的组件,可配合前端路由使用
 
+例如 page.js https://github.com/visionmedia/page.js
+
 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`
 
 ```jsx
