@@ -8,6 +8,4 @@ export declare class AttrChange extends HTMLElement {
     connectedCallback(): void;
     [readysymbol]: boolean;
     constructor();
-    setAttribute(qualifiedName: string, value: string): void;
-    removeAttribute(qualifiedName: string): void;
 }

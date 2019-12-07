@@ -1,3 +1,4 @@
+const EventTarget = window.EventTarget;
 import debounce from "lodash/debounce";
 import { cached_callback_eventlistner } from "../cached-map";
 // import Reflect from "./reflect";

@@ -14,7 +14,6 @@ declare const _exports: {
         "test": string;
         "serve": string;
         "prettier": string;
-        "test-prod": string;
     };
     "repository": string;
     "keywords": never[];
@@ -24,7 +23,9 @@ declare const _exports: {
         "url": string;
     };
     "homepage": string;
-    "dependencies": {};
+    "dependencies": {
+        "event-target-shim": string;
+    };
     "devDependencies": {
         "@babel/core": string;
         "@babel/plugin-proposal-class-properties": string;

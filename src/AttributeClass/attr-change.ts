@@ -1,13 +1,12 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { getAttribute, removeAttribute, setAttribute } from "../UtilTools/dom";
-import { get } from "../UtilTools/reflect";
-import { isFunction, isobject, isfunction } from "../UtilTools/util";
-import { readysymbol } from "./readysymbol";
-import {
-  onunmounted,
-  onmounted
-} from "../mounted-unmounted/element-onmount-unmount";
 import { setimmediate } from "src/UtilTools/setimmediate";
+import {
+  onmounted,
+  onunmounted
+} from "../mounted-unmounted/element-onmount-unmount";
+import { get } from "../UtilTools/reflect";
+import { isFunction, isfunction, isobject } from "../UtilTools/util";
+import { readysymbol } from "./readysymbol";
 export const attributeChangedCallback = Symbol("attributeChanged");
 export const firstinstalledcallback = Symbol("firstinstalled");
 /* 
@@ -71,6 +70,31 @@ export class AttrChange extends HTMLElement {
       Object.assign(attrs, defaultProps);
       // Object.assign(props, this.constructor["defaultProps"]);
     }
+
+    // 使用mutation observer代替 setattribute劫持
+    new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type == "attributes") {
+          console.log(
+            "The " + mutation.attributeName + " attribute was modified."
+          );
+          const callback = get(this, attributeChangedCallback);
+
+          let qualifiedName = mutation.attributeName;
+          if (
+            qualifiedName &&
+            isFunction(
+              callback
+              // this[attributeChangedCallback]
+            )
+          ) {
+            // setimmediate(() => {
+            callback.call(this, qualifiedName);
+            // });
+          }
+        }
+      });
+    }).observe(this, { attributes: true });
   }
   //   [attributeChangedCallback](name?: string): void;
   // prototype!: HTMLElement;
@@ -126,38 +150,38 @@ export class AttrChange extends HTMLElement {
   //console.log('Custom square element attributes changed.');
   updateStyle(this);
 } */
-  setAttribute(qualifiedName: string, value: string) {
-    const callback = get(this, attributeChangedCallback);
-    const oldValue = getAttribute(this, qualifiedName);
-    // super.getAttribute(qualifiedName);
+  //   setAttribute(qualifiedName: string, value: string) {
+  //     const callback = get(this, attributeChangedCallback);
+  //     const oldValue = getAttribute(this, qualifiedName);
+  //     // super.getAttribute(qualifiedName);
 
-    if (oldValue !== value) {
-      setAttribute(this, qualifiedName, value);
-      //   super.setAttribute(qualifiedName, value);
-      if (
-        isFunction(
-          callback
-          // this[attributeChangedCallback]
-        )
-      ) {
-        // setimmediate(() => {
-        callback.call(this, qualifiedName, oldValue, value);
-        // });
-      }
-    }
-  }
-  removeAttribute(qualifiedName: string) {
-    const callback = get(this, attributeChangedCallback);
-    const oldValue = getAttribute(this, qualifiedName);
+  //     if (oldValue !== value) {
+  //       setAttribute(this, qualifiedName, value);
+  //       //   super.setAttribute(qualifiedName, value);
+  //       if (
+  //         isFunction(
+  //           callback
+  //           // this[attributeChangedCallback]
+  //         )
+  //       ) {
+  //         // setimmediate(() => {
+  //         callback.call(this, qualifiedName, oldValue, value);
+  //         // });
+  //       }
+  //     }
+  //   }
+  //   removeAttribute(qualifiedName: string) {
+  //     const callback = get(this, attributeChangedCallback);
+  //     const oldValue = getAttribute(this, qualifiedName);
 
-    if (null !== oldValue) {
-      //   super.removeAttribute(qualifiedName);
-      removeAttribute(this, qualifiedName);
-      if (isFunction(callback)) {
-        // setimmediate(() => {
-        callback.call(this, qualifiedName, oldValue, undefined);
-        // });
-      }
-    }
-  }
+  //     if (null !== oldValue) {
+  //       //   super.removeAttribute(qualifiedName);
+  //       removeAttribute(this, qualifiedName);
+  //       if (isFunction(callback)) {
+  //         // setimmediate(() => {
+  //         callback.call(this, qualifiedName, oldValue, undefined);
+  //         // });
+  //       }
+  //     }
+  //   }
 }
