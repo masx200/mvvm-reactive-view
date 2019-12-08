@@ -54,7 +54,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
 
 
-# `webcomponent` `custom-elements` `polyfill`
+# 需要`webcomponent` `custom-elements` `polyfill`
 
 
 
@@ -180,6 +180,7 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
 
+需要 `Object.fromEntries`和`Array.prototype.flat`的polyfill
 
 https://github.com/zloirock/core-js
 
