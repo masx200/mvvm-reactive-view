@@ -52,29 +52,11 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
-https://github.com/masx200/webpack-react-vue-spa-awesome-config/blob/master/lib/polyfill.min.js
 
-```html
-<script
-  type="module"
-  src="https://cdn.jsdelivr.net/gh/masx200/webpack-react-vue-spa-awesome-config@2.4.5/polyfill/dist/polyfill.min.js"
-></script>
-```
 
 # `webcomponent` `custom-elements` `polyfill`
 
-```html
-<script
-  src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"
-  type="module"
-></script>
-```
 
-或者
-
-```js
-import "@masx200/mvvm-reactive-view/polyfill/custom-elements.min.js";
-```
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 
@@ -198,10 +180,6 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
 
-```js
-import "core-js/features/array/flat";
-import "core-js/modules/es.object.from-entries";
-```
 
 https://github.com/zloirock/core-js
 
