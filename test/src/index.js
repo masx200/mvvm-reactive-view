@@ -1,3 +1,4 @@
+import "../../dist/polyfill";
 /* const timelabel = "第一次加载完成";
 // console.time(timelabel);
 requestAnimationFrame(() => {

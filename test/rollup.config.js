@@ -12,12 +12,14 @@ export default [
     input: "./test/src/index.js",
     output: [
       {
+        sourceMap: true,
         file: "./test/dist/output-es2015.js",
         format: "iife",
         sourcemap: true
       }
     ],
     plugins: [
+      sourcemaps(),
       babel({
         plugins: [
           [

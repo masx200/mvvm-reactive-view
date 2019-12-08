@@ -23,9 +23,7 @@ declare const _exports: {
         "url": string;
     };
     "homepage": string;
-    "dependencies": {
-        "event-target-shim": string;
-    };
+    "dependencies": {};
     "devDependencies": {
         "@babel/core": string;
         "@babel/plugin-proposal-class-properties": string;
@@ -43,6 +41,7 @@ declare const _exports: {
         "cross-env": string;
         "eslint": string;
         "eslint-config-prettier": string;
+        "event-target-shim": string;
         "htm": string;
         "lodash": string;
         "node-sass": string;
@@ -56,6 +55,7 @@ declare const _exports: {
         "rollup-plugin-sourcemaps": string;
         "rollup-plugin-terser": string;
         "rollup-plugin-typescript2": string;
+        "serialize-javascript": string;
         "terser": string;
         "tslib": string;
         "typescript": string;

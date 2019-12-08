@@ -48,17 +48,31 @@ https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js
 
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
 
+# polyfill
+
+```js
+import "@masx200/mvvm-reactive-view/dist/polyfill.js";
+```
+
 ## 基于 `EventTarget`,`Microsoft Edge` 浏览器不支持`new EventTarget`,需要自行添加`polyfill`
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
 
-
-
-# 需要`webcomponent` `custom-elements` `polyfill`
-
-
+## 需要`webcomponent` `custom-elements` `polyfill`
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
+
+## ECMAScript2019 polyfill
+
+由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
+
+需要 `Object.fromEntries`和`Array.prototype.flat`的 polyfill
+
+https://github.com/zloirock/core-js
+
+https://github.com/tc39/proposal-object-from-entries
+
+https://tc39.es/proposal-flatMap/
 
 # 使用 `npm` 模块
 
@@ -177,16 +191,6 @@ https://github.com/developit/htm/tree/master/packages/babel-plugin-htm
 https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx
 
 https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
-
-由于使用了 `ECMAScript2019` 的 `api`，所以需要自行添加 `polyfill`
-
-需要 `Object.fromEntries`和`Array.prototype.flat`的polyfill
-
-https://github.com/zloirock/core-js
-
-https://github.com/tc39/proposal-object-from-entries
-
-https://tc39.es/proposal-flatMap/
 
 还需要使用`babel-preset-env`包含`core-js@3` 和 `"@babel/plugin-proposal-class-properties"`
 

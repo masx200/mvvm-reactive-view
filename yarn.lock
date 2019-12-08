@@ -605,9 +605,9 @@
     "@babel/helper-plugin-utils" "^7.0.0"
 
 "@babel/preset-env@^7.6.0":
-  version "7.7.5"
-  resolved "https://registry.npm.taobao.org/@babel/preset-env/download/@babel/preset-env-7.7.5.tgz?cache=0&sync_timestamp=1575638299465&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fpreset-env%2Fdownload%2F%40babel%2Fpreset-env-7.7.5.tgz#f28573ed493edb4ba763b37fb4fbb85601469370"
-  integrity sha1-8oVz7Uk+20unY7N/tPu4VgFGk3A=
+  version "7.7.6"
+  resolved "https://registry.npm.taobao.org/@babel/preset-env/download/@babel/preset-env-7.7.6.tgz#39ac600427bbb94eec6b27953f1dfa1d64d457b2"
+  integrity sha1-OaxgBCe7uU7sayeVPx36HWTUV7I=
   dependencies:
     "@babel/helper-module-imports" "^7.7.4"
     "@babel/helper-plugin-utils" "^7.0.0"
@@ -4138,10 +4138,10 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.8.1:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^1.23.1:
-  version "1.27.8"
-  resolved "https://registry.npm.taobao.org/rollup/download/rollup-1.27.8.tgz?cache=0&sync_timestamp=1575267933750&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frollup%2Fdownload%2Frollup-1.27.8.tgz#94288a957af9f4c2380b73a17494d87705997d0f"
-  integrity sha1-lCiKlXr59MI4C3OhdJTYdwWZfQ8=
+rollup@^1.27.9:
+  version "1.27.9"
+  resolved "https://registry.npm.taobao.org/rollup/download/rollup-1.27.9.tgz#742f1234c1fa935f35149a433807da675b10f9a6"
+  integrity sha1-dC8SNMH6k181FJpDOAfaZ1sQ+aY=
   dependencies:
     "@types/estree" "*"
     "@types/node" "*"

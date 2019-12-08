@@ -57,6 +57,7 @@ export default [
     input: "./index.ts",
     output: [
       {
+        sourceMap: true,
         banner,
         file: "./dist/index.js",
         format: "esm",
@@ -64,6 +65,7 @@ export default [
       }
     ],
     plugins: [
+      sourcemaps(),
       json(),
       resolve(),
       commonjs(),
@@ -85,6 +87,25 @@ export default [
       }
     ],
     plugins: [
+      sourcemaps(),
+      mybabelplugin,
+      resolve(),
+      commonjs(),
+      myterserplugin,
+      sourcemaps()
+    ]
+  },
+  {
+    input: "./polyfill/index.js",
+    output: [
+      {
+        file: "./dist/polyfill.js",
+        format: "iife",
+        sourcemap: true
+      }
+    ],
+    plugins: [
+      sourcemaps(),
       mybabelplugin,
       resolve(),
       commonjs(),
