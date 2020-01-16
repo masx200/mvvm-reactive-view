@@ -583,9 +583,11 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```js
 (async () => {
   const defaultProps = { cccccc: "bbbbbbb" };
-  const css = await (await fetch(
-    "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
-  )).text();
+  const css = await (
+    await fetch(
+      "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
+    )
+  ).text();
   const Hellowordclass = createComponent(
     Object.assign(
       () => {
@@ -996,14 +998,17 @@ function Switchable(
 ## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
 
 ```ts
- function Condition(conditon: ReactiveState<boolean> | boolean, iftrue?: Virtualdom<any> | string, iffalse?: Virtualdom<any> | string): Virtualdom<Htmlelementconstructor>;
+function Condition(
+  conditon: ReactiveState<boolean> | boolean,
+  iftrue?: Virtualdom<any> | string,
+  iffalse?: Virtualdom<any> | string
+): Virtualdom<Htmlelementconstructor>;
 interface Htmlelementconstructor {
   new (): HTMLElement;
   prototype: HTMLElement;
   defaultProps?: Record<string, any>;
   css?: string;
 }
-
 ```
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
