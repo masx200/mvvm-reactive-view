@@ -18,18 +18,18 @@ import {
   disconnectedCallback,
   firstinstalledcallback
 } from "./attr-change";
-// import { VaildVDom } from "./conditon";
+
 import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
-// const listlengthsymbol = Symbol("listlength");
+
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
 /* 不需要中间缓存了 */
-// const cached_vdom_symbol = Symbol("cached_vdom");
+
 const cached_realele = Symbol("cached_realele");
 function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
@@ -51,7 +51,7 @@ function ListMap(
   };
   function indextovdom(index: number, thiscom: ListMap) {
     /* 只要缓存从index到element就够了,不需要中间缓存了 */
-    // index => {
+
     /* const cached_vdom1 = get(thiscom[cached_vdom_symbol], index);
     if (cached_vdom1) {
       return cached_vdom1;
@@ -61,58 +61,20 @@ function ListMap(
 
       index
     );
-    //   set(thiscom[cached_vdom_symbol], index, vdom);
-    return vdom;
-    // }
-    //   }
-  }
-  //   const itemclass = createComponent(
-  //     Object.assign(
-  //       (
-  //         props: Record<string, ReactiveState<any>>,
-  //         children: [(0 | undefined)?]
-  //       ) => {
-  //         const { value: propvalue /* , index: propindex */ } = props as {
-  //           value: ReactiveState<any>;
-  //           //   index: ReactiveState<any>;
-  //         };
-  //         // const myprops = {propvalue,}
-  //         const value = propvalue; //myprops.value;
-  //         const [propindex = 0] = children;
-  //         const index = Number(propindex); //myprops.index.valueOf() as number;
-  //         return mapfun(value, index);
-  //       },
-  //       { defaultProps: { /*  index: 0, */ value: undefined } }
-  //     ) as Custom
-  //     //,/* {defaultProps:{
 
-  //     //  value
-  //     // }} */
-  //   );
+    return vdom;
+  }
+
   /* 没有必要创建一个class */
-  //   const itemtagname = RandomDefineCustomElement(itemclass);
-  //   const ITEMfactory = (value: ReactiveState<any>, index: number) =>
-  //     createElement(itemclass, { value }, index);
-  //   console.log(ITEMfactory);
+
   class ListMap extends AttrChange {
-    // /* constructor() {
-    //   super();
-    //   /*    const defaultProps = get(this.constructor, "defaultProps");
-    //   // this.constructor["defaultProps"];
-    //   const attrs: Record<string, any> = createeleattragentreadwrite(this);
-    //   //   const props = {};
-    //   if (isobject(defaultProps)) {
-    //     Object.assign(attrs, defaultProps);
-    //     // Object.assign(props, this.constructor["defaultProps"]);
-    //   } */
-    // } */
     static defaultProps = { value: [] };
-    // [cached_vdom_symbol]: Map<number, Virtualdom<any>> = new Map();
+
     [cached_realele]: Map<number, Element> = new Map();
     [listvalueattr] = createstate([]);
-    // [listlengthsymbol]: number;
+
     [listinnerelement]: Array<Element | Node>;
-    [listinnervdom]: Array<Virtualdom<any>>; //Virtualdom<Htmlelementconstructor>[];
+    [listinnervdom]: Array<Virtualdom<any>>;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     [attributeChangedCallback](name: string) {
@@ -125,10 +87,10 @@ function ListMap(
             console.log(value);
             throw new TypeError();
           }
-          // this[listlengthsymbol] = value.length;
+
           /* 状态变化时同步一次 */
           set(this[listvalueattr], "value", value);
-          //  [] = ;
+
           const domchildren = getchildren(this);
           const newlength = value.length;
           const oldlength = domchildren.length;
@@ -138,13 +100,7 @@ function ListMap(
               .map((v, i) => i)
               .slice(oldlength);
 
-            // const vdomstoadd: Array<Virtualdom<any>> = numindexs.map();
             const realelementstoadd: Element[] = numindexs.map(index => {
-              //   const index = i + oldlength;
-              //   const index = Number(vdom.children[0]);
-
-              //   const index = vdom.props.index;
-
               const cached_element = get(this[cached_realele], index);
               /* 直接从缓存中获取element */
               if (cached_element) {
@@ -171,9 +127,6 @@ function ListMap(
       }
     }
     disconnectedCallback() {
-      //   onunmounted(this);
-      //   super.disconnectedCallback();
-
       setimmediate(() => {
         disconnectedCallback(this);
         /* if (itemtagname) {
@@ -190,7 +143,7 @@ function ListMap(
         throw new TypeError();
       }
       /* 挂载时同步一次 */
-      // this[listvalueattr]["value"] = value;
+
       set(this[listvalueattr], "value", value);
       this[listinnervdom] = value.map((v, index) =>
         ITEMfactory(
@@ -200,17 +153,13 @@ function ListMap(
         )
       );
       this[listinnerelement] = render(this[listinnervdom]);
-      // /*   Object.entries(this[listinnervdom]).forEach(([key, value]) => {
-      //     /*  this[cached_vdom_symbol]已经改成Map类型了*/
-      //     set(this[cached_vdom_symbol], key, value);
-      //   }); */
+
       Object.entries(this[listinnerelement]).forEach(([key, value]) => {
         /* this[cached_realele] 已经改成Map类型了
          */
         set(this[cached_realele], Number(key), value);
       });
-      //   Object.assign(this[cached_vdom_symbol], this[listinnervdom]);
-      //   Object.assign(this[cached_realele], this[listinnerelement]);
+
       mount(this[listinnerelement], this);
 
       /* 清除不使用的变量引用,垃圾回收 */
@@ -222,9 +171,9 @@ function ListMap(
         this[readysymbol] = true;
 
        
-        // this[listlengthsymbol] = value.length;
+        
       } */
-      //   onmounted(this);
+
       connectedCallback(this);
     }
   }

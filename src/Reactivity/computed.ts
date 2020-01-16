@@ -77,7 +77,11 @@ function Arraycomputed<T extends UnwrapedState>(
   const reactivestate = new ReactiveState();
   const getter = () => {
     //自动解包
-    const value = apply(callback, undefined, state.map(st => st.valueOf()));
+    const value = apply(
+      callback,
+      undefined,
+      state.map(st => st.valueOf())
+    );
     // callback(...state.map(st => st.valueOf()));
     const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
 

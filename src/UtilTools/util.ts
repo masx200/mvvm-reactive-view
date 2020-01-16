@@ -35,9 +35,9 @@ export function isfunction(a: any): a is Function {
 }
 
 export function isarray(a: any): a is Array<any> {
-  return Array.isArray(a)&&a instanceof Array 
-//&&  
-//&& gettagtype(a) === "Array";
+  return Array.isArray(a) && a instanceof Array;
+  //&&
+  //&& gettagtype(a) === "Array";
 }
 /* export function getsymbol(a: string) {
   return Symbol(a);

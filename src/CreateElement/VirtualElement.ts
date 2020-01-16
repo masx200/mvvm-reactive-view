@@ -2,22 +2,20 @@ const VirtualElementSet = new WeakSet<Virtualdom<any>>();
 const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
 import { Class } from "../CustomClass/customclass";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
-//// import { Class } from "./rendervdomtoreal";
+
 import { merge_entries } from "../UtilTools/merge-entries";
 import { defineProperty, preventExtensions } from "../UtilTools/reflect";
 import { isstring } from "../UtilTools/util";
 import { ElementAttrs } from "./create-element";
 import { VaildVDom } from "./isvalidvdom";
-// //export function isVirtualdom(a: any): a is Virtualdom<any> {
-//   return a instanceof Virtualdom;
-// }//
+
 export function isVirtualdom(a: any): a is Virtualdom<any> {
   return VirtualElementSet.has(a);
   /*   isobject(a) &&
-    // has(a, isvirtualelement) &&
+    
     get(a, isvirtualelement) === isvirtualelement */
 }
-// export const isvirtualelement = Symbol("isvirtualelement");
+
 export type Vdomchildren = Array<VaildVDom>;
 export { createVirtualElement };
 function createVirtualElement<T extends Class | string | Function>(
@@ -47,16 +45,10 @@ function createVirtualElement<T extends Class | string | Function>(
     "bindattr"
   ].forEach(key => {
     defineProperty(virtual, key, {
-      //   enumerable: false,
       writable: true
     });
   });
-  //   ["type", "props", "children", "directives", "bindattr"].forEach(key => {
-  //     defineProperty(virtual, key, {
-  //       enumerable: true,
-  //       writable: true
-  //     });
-  //   });
+
   vdom.element = [];
   Object.assign(virtual, {
     type,
@@ -64,9 +56,9 @@ function createVirtualElement<T extends Class | string | Function>(
       Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))
     ),
     props: Object.fromEntries(
-      Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(
-        ([key, value]) => [key, isstring(value) ? value.trim() : value]
-      )
+      Entries_beginning_with_a_letter.filter(
+        e => !isReactiveState(e[1])
+      ).map(([key, value]) => [key, isstring(value) ? value.trim() : value])
     ),
     children,
     onevent: Object.fromEntries(
@@ -104,161 +96,27 @@ function createVirtualElement<T extends Class | string | Function>(
     )
   });
   defineProperty(virtual, Symbol.toStringTag, { value: "VirtualElement" });
-  //   virtual[Symbol.toStringTag] = "VirtualElement";
-  //   virtual[isvirtualelement] = isvirtualelement;
-  //   defineProperty(virtual, isvirtualelement, { value: isvirtualelement });
+
   preventExtensions(virtual);
   VirtualElementSet.add(virtual);
 
   Object.freeze(vdom);
   return virtual;
 }
-// JSON.stringify
+
 interface Virtualdom<T extends Class | string | Function> {
-  //   readonly [isvirtualelement]: unique symbol;
   readonly [Symbol.toStringTag]: "VirtualElement";
   readonly element: Element[];
   readonly type: T;
   readonly props: ElementAttrs;
   readonly children: Vdomchildren;
   readonly directives: Record<string, any>;
-  //   { [key: string]: any };
+
   readonly onevent: Record<string, Array<EventListener>>;
-  //   {
-  //     [key: string]: Array<EventListener>;
-  //   };
+
   readonly bindattr: Record<string, ReactiveState<any>>;
   /* {
     [key: string]: ReactiveState<any>;
   }; */
 }
 export default Virtualdom;
-// //export default class Virtualdom<T extends Class | string | Function> {
-//   [Symbol.toStringTag] = "VirtualElement";
-//   // get [Symbol.toStringTag]() {
-//     return "VirtualElement";
-//   // } //
-// //   options: any |undefined
-// //  element: undefined | Element | Node;
-//   type: T | undefined;
-//   props: ElementAttrs = {};
-//   children: Vdomchildren = [];
-//   directives: object = {};
-//   onevent: { [key: string]: Array<EventListener> } = {};
-//   bindattr: { [key: string]: ReactiveState<any> } = {};
-//   constructor(type: T, props: ElementAttrs = {}, children: Vdomchildren = []) {
-//     //对象浅拷贝
-//     props = { ...props };
-//     const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
-//     // console.log(type, props, children);
-//     //添加支持on开头事件绑定写法
-//     const propsentries = Object.entries(props);
-//     //
-// .map(([key, value]) => [
-// key.startsWith("on")?key.replace("on","@")：key
-// ,
-// value
-
-// ]);
-// //
-// //   const propsentriesNOTevents = propsentries.filter(
-//       ([key]) => !(key.startsWith("@") || key.startsWith("on"))
-//     );
-//     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) =>
-//       Letter_case_and_Chinese.test(key[0])
-//     );
-
-//     Object.assign(this, {
-//       type,
-//       bindattr: Object.fromEntries(
-//         //   propsentriesNOTevents
-//           .filter(([key]) => Letter_case_and_Chinese.test(key[0])) //
-// //    Entries_beginning_with_a_letter.filter(
-//           e => isReactiveState(e[1])
-//           // e[1] instanceof ReactiveState
-//         )
-//       ),
-//       props: Object.fromEntries(
-//         //   propsentriesNOTevents
-//           .filter(([key]) => Letter_case_and_Chinese.test(key[0])) //
-// //  Entries_beginning_with_a_letter.filter(
-//           e => !isReactiveState(e[1])
-//           //    e[1] instanceof ReactiveState
-//         )
-//       ),
-//       children: children.flat(1 / 0),
-//       onevent: Object.fromEntries(
-//         // 需要合并entries
-//         [
-//         ['value',[f,f]]
-//         ,
-//         ['value',[f,f]]
-//       ]
-//         合并成
-
-//          [
-//         ['value',[f,f,f,f]]
-//          ]
-//         //
-
-// //
-
-//         [["value",["f","f"]],["value",["f","f"]]]
-
-//         [["value",["f","f","f","f"]]]
-
-//         //
-// //     merge_entries([
-//           ...propsentries
-//             .filter(([key]) => /\@/.test(key[0]))
-//             .map(([key, value]) => [
-//               //事件名称变成小写
-//               key
-//                 .slice(1)
-//                 .toLowerCase()
-//                 .trim(),
-//               //把事件绑定变成事件数组
-//               [value].flat(1 / 0)
-//             ]),
-//           ...propsentries
-//             .filter(([key]) => key.startsWith("on"))
-//             .map(([key, value]) => [
-//               //事件名称变成小写
-//               key
-//                 .slice(2)
-//                 .toLowerCase()
-//                 .trim(),
-//               //把事件绑定变成事件数组
-//               [value].flat(1 / 0)
-//             ])
-//         ])
-//       ),
-
-//       //指令支持以"*"开头和"_"开头
-//       directives: Object.fromEntries(
-//         propsentriesNOTevents
-//         //  .filter(([key]) => /\//
-// //.test(key[0]) || key[0].startsWith("_"))
-//         //  .map(([key, value]) => [
-//             //指令也变成小写
-//             key
-//               .slice(1)
-//               .toLowerCase()
-//               .trim(),
-
-//             value
-//           ])
-//       )
-//     });
-//     //
-//  Object.defineProperty(this, Symbol.toStringTag, {
-//       value: "virtualdom",
-//       configurable: true
-//     });
-// //
-// //  }
-// }//
-// // defineProperty(Virtualdom.prototype, Symbol.toStringTag, {
-//   value: "VirtualElement"
-// });
-//  //

@@ -54,7 +54,7 @@ export default function<T extends Htmlelementconstructor | string | Custom>(
   props?: ElementAttrs,
   ...children: Vdomchildren
 ): Virtualdom<T>;
-//如果第二个参数是数组，则 变成
+
 /* 
 h(type,...children)
 h(type,children)
@@ -67,7 +67,6 @@ export default function(
 ) {
   if (isfunction(type)) {
     type = autocreateclass(type);
-    // debugger;
   }
 
   if (isarray(propsorchildren)) {
@@ -86,7 +85,7 @@ export default function(
       type,
       propsorchildren,
       ...children
-    ]); // createElement(...arguments);
+    ]);
   }
 }
 function createElement<T extends Vdomchildren>(
@@ -111,10 +110,8 @@ function createElement<T extends Function | string | Class>(
   props: ElementAttrs = {},
   ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
-  // | Array<Virtualdom | string>
-  // if(isarray()){}
   /* add fragment element */
-  //   console.log(type, props, children);
+
   let typenormalized: "" | Function | string =
     isstring(type) || isfunction(type) ? type : "";
   const propsnormalized = isplainobject(props) ? props : {};
@@ -122,18 +119,11 @@ function createElement<T extends Function | string | Class>(
     .flat(Infinity)
     .map(a => (a === 0 ? "0" : a))
     .filter(a => !!a);
-  if (
-    isstring(typenormalized)
-    //   typeof typenormalized === "string"
-  ) {
+  if (isstring(typenormalized)) {
     typenormalized = typenormalized.trim().toLowerCase();
   }
 
-  if (
-    //typeof typenormalized === "string" &&
-
-    "" === typenormalized
-  ) {
+  if ("" === typenormalized) {
     return childrennormalized;
   } else {
     /* propsnormalized = Object.fromEntries(

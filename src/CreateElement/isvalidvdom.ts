@@ -4,7 +4,7 @@ export type VaildVDom =
   | number
   | Vdomchildren
   | ReactiveState<any>;
-// import { VaildVDom } from "./isvalidvdom";
+
 import Virtualdom, {
   isVirtualdom,
   Vdomchildren
@@ -24,28 +24,21 @@ export function isvalidvdom(v: any): v is VaildVDom {
     /*flag = v
         .map((ele: any) => {
           return isvalidvdom(ele);
-          //isstring(ele) || ele instanceof Virtualdom;
+          
         })
         .includes(false)
         ? false
         : true;
       return flag;*/
-    //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-    //不允许空数组
+
     /* children可能为空数组 */
     return /* !! */ /* v.length */ /* && */ v.every(e => isvalidvdom(e));
-  } else if (
-    isVirtualdom(v)
-    // v instanceof Virtualdom
-  ) {
+  } else if (isVirtualdom(v)) {
     return isvalidvdom(v.children);
     /*  if (isvalidvdom(v.children)) {
         return true;
       } */
-  } else if (
-    isReactiveState(v)
-    //  v instanceof ReactiveState
-  ) {
+  } else if (isReactiveState(v)) {
     return true;
   }
   /*  else {

@@ -1,5 +1,5 @@
 import htm from "htm";
-// import htm from "../types/htm";
+
 import { invalid_Virtualdom } from "../MountElement/MountElement";
 import { apply } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
@@ -7,14 +7,7 @@ import Virtualdom, { Vdomchildren } from "./VirtualElement";
 import h from "./create-element";
 import { isvalidvdom } from "./isvalidvdom";
 
-// const html = htm.bind(h);
-// function html(
-//   strings?: TemplateStringsArray,
-//   ...values: any[]
-// ): Virtualdom<any>;
 function html(...inargs: any[]): Virtualdom<any> | Vdomchildren {
-  // return (htm as HTM).call(h, ...inargs);
-
   return apply(htm /* as HTM */, h, inargs);
 }
 
@@ -37,10 +30,6 @@ export default function(...args: any[]) {
   }
 }
 
-// declare const htm: (
-//   strings?: TemplateStringsArray,
-//   ...values: any[]
-// ) => Virtualdom<any>;
 /* declare module "htm/dist/htm.module" {
   const htm: (
     strings?: TemplateStringsArray,

@@ -1,11 +1,12 @@
-import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
-import json from "rollup-plugin-json";
-import resolve from "rollup-plugin-node-resolve";
-import sourcemaps from "rollup-plugin-sourcemaps";
-import { terser } from "rollup-plugin-terser";
-import typescriptplugin from "rollup-plugin-typescript2";
-import typescriptlib from "typescript";
+import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
+import resolve from 'rollup-plugin-node-resolve';
+import sourcemaps from 'rollup-plugin-sourcemaps';
+import { terser } from 'rollup-plugin-terser';
+import typescriptplugin from 'rollup-plugin-typescript2';
+import typescriptlib from 'typescript';
+
 const banner = `const globalThis = Function('return this')();
 const self = globalThis;
 const window = globalThis;
@@ -23,6 +24,7 @@ const beautifyterserplugin = terser({
 });
 const mybabelplugin = babel({
   presets: [
+    "@babel/preset-typescript",
     [
       "@babel/preset-env",
       {
@@ -34,7 +36,15 @@ const mybabelplugin = babel({
         ]
       }
     ]
+  ],
+  plugins: [
+    "@babel/plugin-syntax-nullish-coalescing-operator",
+    "@babel/plugin-transform-typescript",
+    "@babel/plugin-proposal-nullish-coalescing-operator"
   ]
+  //   presets: [
+
+  //   ]
 });
 const myterserplugin = terser({
   sourcemap: true,
@@ -65,14 +75,26 @@ export default [
       }
     ],
     plugins: [
-      sourcemaps(),
-      json(),
-      resolve(),
-      commonjs(),
+      mybabelplugin,
+      //   babel({
+      //     presets: ["@babel/preset-typescript"],
+      //     plugins: [
+      //       "@babel/plugin-syntax-nullish-coalescing-operator",
+      //       "@babel/plugin-transform-typescript",
+      //       "@babel/plugin-proposal-nullish-coalescing-operator"
+      //     ]
+      //   }),
       typescriptplugin({
+        clean: true,
+        objectHashIgnoreUnknownHack: true,
         tsconfig: "./tsconfig.json",
         typescript: typescriptlib
       }),
+      //   sourcemaps(),
+      json(),
+      resolve(),
+      commonjs(),
+
       sourcemaps(),
       beautifyterserplugin
     ]
@@ -87,7 +109,7 @@ export default [
       }
     ],
     plugins: [
-      sourcemaps(),
+      //   sourcemaps(),
       mybabelplugin,
       resolve(),
       commonjs(),

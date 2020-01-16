@@ -996,23 +996,14 @@ function Switchable(
 ## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
 
 ```ts
-function Condition(
-  conditon: ReactiveState<any> | boolean,
-  iftrue?: VaildVDom,
-  iffalse?: VaildVDom
-): Virtualdom<Htmlelementconstructor>;
+ function Condition(conditon: ReactiveState<boolean> | boolean, iftrue?: Virtualdom<any> | string, iffalse?: Virtualdom<any> | string): Virtualdom<Htmlelementconstructor>;
 interface Htmlelementconstructor {
   new (): HTMLElement;
   prototype: HTMLElement;
   defaultProps?: Record<string, any>;
   css?: string;
 }
-type VaildVDom =
-  | Virtualdom<any>
-  | string
-  | number
-  | Vdomchildren
-  | ReactiveState<any>;
+
 ```
 
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
