@@ -127,7 +127,7 @@ export default [
       }
     ],
     plugins: [
-      sourcemaps(),
+      //sourcemaps(),
       mybabelplugin,
       resolve(),
       commonjs(),
