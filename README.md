@@ -981,27 +981,9 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 ## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
 ```ts
-function listMap(
+declare function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any>
-): Virtualdom<Htmlelementconstructor>;
-```
-
-## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
-
-```ts
-function Switchable(
-  funstate: ReactiveState<Htmlelementconstructor | Custom>
-): Virtualdom<Htmlelementconstructor>;
-```
-
-## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
-
-```ts
-function Condition(
-  conditon: ReactiveState<boolean> | boolean,
-  iftrue?: Virtualdom<any> | string,
-  iffalse?: Virtualdom<any> | string
+  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any> | string
 ): Virtualdom<Htmlelementconstructor>;
 interface Htmlelementconstructor {
   new (): HTMLElement;
@@ -1011,12 +993,30 @@ interface Htmlelementconstructor {
 }
 ```
 
+## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
+
+```ts
+declare function Switchable(
+  funstate: ReactiveState<Htmlelementconstructor | Custom>
+): Virtualdom<Htmlelementconstructor>;
+```
+
+## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
+
+```ts
+declare const Condition: (
+  conditon: boolean | ReactiveState<boolean>,
+  iftrue?: string | Virtualdom<any> | undefined,
+  iffalse?: string | Virtualdom<any> | undefined
+) => Virtualdom<Htmlelementconstructor>;
+```
+
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
 
 ```ts
-function createComponent(
-  custfun: Htmlelementconstructor | Custom
-): Htmlelementconstructor;
+declare const createComponent: (
+  custfun: Custom | Htmlelementconstructor
+) => Htmlelementconstructor;
 interface Custom {
   (
     props?: Record<string, ReactiveState<any>>,
@@ -1039,7 +1039,7 @@ type UnwrapedState = any;
 interface CallbackReactiveState {
   (...args: UnwrapedState[]): any;
 }
-function watch<T extends UnwrapedState>(
+declare function watch<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
   callback: CallbackReactiveState
 ): CancelWatchfun;
@@ -1048,8 +1048,11 @@ function watch<T extends UnwrapedState>(
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
 ```ts
-function createState<T extends UnwrapedState>(
+declare function createState<T extends UnwrapedState>(
   init: ReactiveState<T>
+): ReactiveState<T>;
+declare function createState<T extends UnwrapedState>(
+  init: Exclude<T, ReactiveState<any>> | undefined
 ): ReactiveState<T>;
 ```
 
@@ -1061,7 +1064,7 @@ function createState<T extends UnwrapedState>(
 
 ```ts
 type UnwrapedState = any;
-class ReactiveState<T extends UnwrapedState> {
+declare class ReactiveState<T extends UnwrapedState> {
   value: T extends Array<any>
     ? Array<any>
     : T extends Function
@@ -1071,7 +1074,13 @@ class ReactiveState<T extends UnwrapedState> {
     : object;
   readonly [Symbol.toStringTag] = "ReactiveState";
   constructor(init?: T);
-
+  [debouncedispatch]: (eventname?: string | undefined) => void;
+  [removeallistenerssymbol](): void;
+  [removeonelistner](callback: EventListener): void;
+  [addonelistner](callback: EventListener): void;
+  [addallistenerssymbol](): void;
+  [eventtargetsymbol]: EventTarget;
+  [memlisteners]: Set<EventListener>;
   valueOf: () => T extends any[]
     ? any[]
     : T extends Function
@@ -1080,7 +1089,9 @@ class ReactiveState<T extends UnwrapedState> {
     ? Primitivetype
     : object;
   toString(): string;
-
+  [dispatchsymbol](eventname?: string): void;
+  [subscribesymbol](callback: Function): void;
+  [cancelsubscribe](callback: Function): void;
   [Symbol.toPrimitive](): string | undefined | Primitivetype;
 }
 ```
@@ -1094,11 +1105,11 @@ class ReactiveState<T extends UnwrapedState> {
 ### 第三个参数可选，是`setter`函数
 
 ```ts
-function computed<T extends UnwrapedState>(
-  state: ReactiveState<T> | Array<ReactiveState<T>>,
+declare const computed: <T extends any>(
+  state: ReactiveState<T> | ReactiveState<T>[],
   callback: CallbackReactiveState,
-  setter?: SetterFun
-): ReactiveState<any>;
+  setter?: SetterFun | undefined
+) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
 ```
 
@@ -1156,14 +1167,14 @@ function createElement<T extends Htmlelementconstructor | string | Custom>(
 type Vdomchildren = Array<
   Virtualdom<any> | string | ReactiveState<any> | number
 >;
-interface Class {
+interface Htmlelementconstructor {
   new (): HTMLElement;
   prototype: HTMLElement;
   defaultProps?: Record<string, any>;
   css?: string;
 }
 
-interface Virtualdom<T extends Class | string | Function> {
+interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
   readonly [Symbol.toStringTag]: "VirtualElement";
   readonly element: Element[];
   readonly type: T;

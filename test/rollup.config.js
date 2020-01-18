@@ -1,10 +1,10 @@
-import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
-import json from "rollup-plugin-json";
-import resolve from "rollup-plugin-node-resolve";
-import postcss from "rollup-plugin-postcss";
-import sourcemaps from "rollup-plugin-sourcemaps";
-import { terser } from "rollup-plugin-terser";
+import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
+import resolve from 'rollup-plugin-node-resolve';
+import postcss from 'rollup-plugin-postcss';
+import sourcemaps from 'rollup-plugin-sourcemaps';
+import { terser } from 'rollup-plugin-terser';
 
 const shouldcompress = process.env.NODE_ENV === "production";
 export default [
@@ -36,7 +36,9 @@ export default [
               pragma: "h"
             }
           ],
-          "@babel/plugin-proposal-class-properties"
+          "@babel/plugin-proposal-class-properties",
+
+          "@babel/plugin-proposal-nullish-coalescing-operator"
         ],
         presets: [
           [

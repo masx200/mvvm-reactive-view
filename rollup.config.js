@@ -4,8 +4,7 @@ import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
-import typescriptplugin from 'rollup-plugin-typescript2';
-import typescriptlib from 'typescript';
+import typescript from 'rollup-plugin-ts';
 
 const banner = `const globalThis = Function('return this')();
 const self = globalThis;
@@ -38,6 +37,7 @@ const mybabelplugin = babel({
     ]
   ],
   plugins: [
+    "@babel/plugin-proposal-class-properties",
     "@babel/plugin-syntax-nullish-coalescing-operator",
     "@babel/plugin-transform-typescript",
     "@babel/plugin-proposal-nullish-coalescing-operator"
@@ -75,6 +75,7 @@ export default [
       }
     ],
     plugins: [
+      typescript(),
       mybabelplugin,
       //   babel({
       //     presets: ["@babel/preset-typescript"],
@@ -84,12 +85,12 @@ export default [
       //       "@babel/plugin-proposal-nullish-coalescing-operator"
       //     ]
       //   }),
-      typescriptplugin({
-        clean: true,
-        objectHashIgnoreUnknownHack: true,
-        tsconfig: "./tsconfig.json",
-        typescript: typescriptlib
-      }),
+      //   typescriptplugin({
+      //     clean: true,
+      //     objectHashIgnoreUnknownHack: true,
+      //     tsconfig: "./tsconfig.json",
+      //     typescript: typescriptlib
+      //   }),
       //   sourcemaps(),
       json(),
       resolve(),

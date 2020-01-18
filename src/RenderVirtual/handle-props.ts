@@ -1,9 +1,9 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
-import watch from "src/Reactivity/watch";
-import { isconnected } from "src/UtilTools/isconnected";
-import { get, has, set } from "src/UtilTools/reflect";
-import { isfunction } from "src/UtilTools/util";
+import watch from "../Reactivity/watch";
+import { isconnected } from "../UtilTools/isconnected";
+import { get, has, set } from "../UtilTools/reflect";
+import { isfunction } from "../UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
@@ -44,11 +44,9 @@ function handleprops(
 
       /* 把属性为false的先不设置 */
       vdom.props
-      // Object.fromEntries(Object.entries(vdom.props).filter())
     );
     /* 添加常量的属性 */
-    // set(element, virtualdomsymbol, vdom);
-    // element[virtualdomsymbol] = vdom;
+
     /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
 
     /* 添加绑定属性 */
@@ -83,17 +81,12 @@ function handleprops(
   */
   [...Object.values(vdom.bindattr), ...Object.values(vdom.directives)]
     .flat(1 / 0)
-    .filter(
-      e => isReactiveState(e)
-      // e instanceof ReactiveState
-    )
+    .filter(e => isReactiveState(e))
 
     .forEach((e: ReactiveState<any>) => {
       if (!has(element, bindstatesymbol)) {
         set(element, bindstatesymbol, new Set());
-        // element[bindstatesymbol] = new Set();
       }
       (get(element, bindstatesymbol) as Set<ReactiveState<any>>).add(e);
-      //   element[bindstatesymbol].add(e);
     });
 }

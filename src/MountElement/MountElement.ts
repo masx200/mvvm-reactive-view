@@ -1,7 +1,5 @@
 export const invalid_Virtualdom = "invalid Virtualdom ";
-// import { VaildVDom } from "../AttributeClass/conditon";
-// import document from "./UtilTools/dom";
-// import { isvalidvdom } from "./CreateElement/html";
+
 import mount from "./mount-real-element";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { toArray } from "../UtilTools/toArray";
@@ -15,7 +13,6 @@ export default function MountElement<T extends Element>(
   if (isArray(vdom)) {
     vdom = vdom.flat(Infinity);
     if (!vdom.length) {
-      //不允许空数组
       console.error("Empty array not allowed");
       throw new TypeError();
     }
@@ -55,7 +52,6 @@ export default function MountElement<T extends Element>(
   } */
   const elesarray = toArray(vdom);
   if (isvalidvdom(vdom)) {
-    // mount(elesarray.map(e => render(e)), container);
     mount(render(elesarray), container);
   } else if (isNode(vdom) /*  instanceof Node */ || isNodeArray(vdom)) {
     mount(elesarray, container);

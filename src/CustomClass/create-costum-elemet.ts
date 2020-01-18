@@ -1,32 +1,24 @@
-import { Class, Custom } from "./customclass";
-//import setlikearray from "./setlikearay";
-// const customElementsarray = new Set;
+import { Htmlelementconstructor, Custom } from "./customclass";
+
 import RandomDefineCustomElement, {
   invalid_custom_element_class
 } from "./CustomElementRegistry";
 import { construct } from "../UtilTools/reflect";
 import { isclassextendsHTMLElement } from "./isclassextendsHTMLElement";
-import { autocreateclass } from "src/AttributeClass/createComponent";
-import { isfunction } from "src/UtilTools/util";
-
-// import Reflect from "./reflect";
-
-// import { Class } from "./rendervdomtoreal";
+import { autocreateclass } from "../AttributeClass/createComponent";
+import { isfunction } from "../UtilTools/util";
 
 export function createcostumelemet(
-  initclass: Class | Custom,
+  initclass: Htmlelementconstructor | Custom,
   propsjson?: object,
   children?: any[]
-  //   options?: any
 ): HTMLElement {
   let type = initclass;
   if (isfunction(type)) {
     type = autocreateclass(type);
-    // debugger;
   }
   initclass = type;
   if (isclassextendsHTMLElement(initclass)) {
-    // customElementsarray.push(initclass);
     /*   const elementname =
      getcustomelementname(initclass); */
     /* if (customElements.get(elementname) === initclass) {
@@ -34,7 +26,7 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     } */
     RandomDefineCustomElement(initclass);
-    return construct(initclass, [propsjson, children /* , options */]); // (children);
+    return construct(initclass, [propsjson, children /* , options */]);
   } else {
     console.error(initclass);
     console.error(invalid_custom_element_class);

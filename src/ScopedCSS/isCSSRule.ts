@@ -1,4 +1,4 @@
-import { gettagtype } from "src/UtilTools/util";
+import { gettagtype } from "../UtilTools/util";
 
 export function isCSSStyleRule(a: any): a is CSSStyleRule {
   return gettagtype(a) === "CSSStyleRule";

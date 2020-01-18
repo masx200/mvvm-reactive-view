@@ -13,10 +13,10 @@ import ReactiveState, {
   subscribesymbol
 } from "./ReactiveState";
 import { toArray } from "../UtilTools/toArray";
-//import { requestAnimationFrame } from "./directives";
+
 import { isarray, isFunction } from "../UtilTools/util";
 export type CancelWatchfun = () => void;
-export type UnwrapedState = any; //Primitivetype | Exclude<object, Function>;
+export type UnwrapedState = any;
 
 export interface CallbackReactiveState /* <
   
@@ -46,7 +46,6 @@ export function watch<T extends UnwrapedState>(
             return cachedfun;
           } else {
             const listenfun = () => {
-              //watch的回调函数自动解包
               debouncedcallback(...statearray.map(r => r.valueOf()));
             };
             cached_callback_debounced_watchs.set(callback, listenfun);
@@ -69,12 +68,7 @@ export function watch<T extends UnwrapedState>(
       });
     };
     return cancelWatch;
-  }
-  //  else if (isReactiveState(state)) {
-  //  watchsingle(state, callback);
-  ////return watch(toArray(state),callback)
-  // }
-  else {
+  } else {
     console.error(state);
     console.error(callback);
     console.error(invalid_ReactiveState + invalid_Function);
@@ -82,18 +76,8 @@ export function watch<T extends UnwrapedState>(
   }
 }
 
-function watchsingle(
-  state: ReactiveState<any>,
-  callback: Function
-  //  statekey?: string
-) {
-  if (
-    !(
-      isReactiveState(state) &&
-      // state instanceof ReactiveState
-      isFunction(callback)
-    )
-  ) {
+function watchsingle(state: ReactiveState<any>, callback: Function) {
+  if (!(isReactiveState(state) && isFunction(callback))) {
     console.error(state);
     console.error(callback);
     console.error(invalid_ReactiveState + invalid_Function);
@@ -103,16 +87,8 @@ function watchsingle(
 
   state[subscribesymbol](callback);
 
-  //  if (statekey) {
-
-  //   state[subscribesymbol](callback, statekey);
-  // } else {
-
-  //  }
-
   requestAnimationFrame(() => {
     rewatch(state);
-    // state[addallistenerssymbol]();
   });
 
   usewatch(state, callback);

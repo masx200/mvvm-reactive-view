@@ -37,7 +37,7 @@ export default function(init: object): ReactiveState<object> {
   });
   if (containReactiveState) {
     initobj = Object.assign({}, init);
-    // initobj = { ...init };
+
     state_entries.forEach(([key, state]) => {
       defineProperty(initobj, key, {
         enumerable: true,
@@ -51,20 +51,13 @@ export default function(init: object): ReactiveState<object> {
       });
     });
   }
-  //   const inittype = isfunction(init)
-  //   ? "function"
-  //   : isprimitive(init)
-  //   ? "primitive"
-  //   : /* isobject(init)
-  //   ? "object" */
-  //     /* : */ void 0;
+
   if (containReactiveState) {
     state_entries.forEach(([key, state]) => {
       watch(state, () => {
         reactive[dispatchsymbol](String(key));
       });
     });
-    // console.log(reactive);
   }
   reactive.value = initobj;
 
@@ -84,7 +77,6 @@ export default function(init: object): ReactiveState<object> {
     target: ReactiveState<object>,
     key
   ) => {
-    //如果是symbol属性返回undefined
     if (issymbol(key)) {
       return;
     }
@@ -137,7 +129,7 @@ export default function(init: object): ReactiveState<object> {
                 return;
               }).bind(value);
             }
-            // break;
+
             case "delete": {
               return ((dele: any) => {
                 if (set_prototype.has.call(value, dele)) {
@@ -148,7 +140,7 @@ export default function(init: object): ReactiveState<object> {
                 return;
               }).bind(value);
             }
-            // break;
+
             case "clear": {
               return (() => {
                 if (value.size) {
@@ -159,7 +151,6 @@ export default function(init: object): ReactiveState<object> {
                 return;
               }).bind(value);
             }
-            // break;
           }
         } else {
           /* VM1933:1 Uncaught TypeError: Method Set.prototype.values called on incompatible receiver [object Object] */
@@ -181,7 +172,6 @@ export default function(init: object): ReactiveState<object> {
   };
   objproxyhandler.set = (target: ReactiveState<object>, key, value) => {
     if (isReactiveState(value)) {
-      //如果遇到 isReactiveState则自动解包
       value = value.valueOf();
     }
     const myvalue = get(target, "value");
@@ -208,9 +198,7 @@ export default function(init: object): ReactiveState<object> {
       console.error(init);
       console.error(invalid_primitive_or_object_state);
       throw TypeError();
-      //   return false;
     }
-    // return true;
   };
   return new Proxy(
     reactive,

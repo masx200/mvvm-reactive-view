@@ -1,6 +1,5 @@
 export function issymbol(a: any): a is symbol {
   return typeof a === "symbol";
-  //||gettagtype(a) === "symbol";
 }
 
 export { isplainobject };
@@ -25,8 +24,7 @@ export function isboolean(a: any): a is boolean {
 export function isobject(a: any): a is Exclude<object, Function> {
   return typeof a === "object" && a !== null;
 }
-// export function isstring(a: string): true;
-// export function isstring(a): boolean;
+
 export function isstring(a: any): a is string {
   return typeof a === "string";
 }
@@ -36,25 +34,19 @@ export function isfunction(a: any): a is Function {
 
 export function isarray(a: any): a is Array<any> {
   return Array.isArray(a) && a instanceof Array;
-  //&&
-  //&& gettagtype(a) === "Array";
 }
 /* export function getsymbol(a: string) {
   return Symbol(a);
 } */
 export function gettagtype(a: any): string {
-  return (
-    {}.toString
-      .call(a)
-      .replace("[object ", "")
-      .replace("]", "")
-      //.toLowerCase()
-      .trim()
-  );
+  return {}.toString
+    .call(a)
+    .replace("[object ", "")
+    .replace("]", "")
+
+    .trim();
 }
-//export function ispromise(a: any): a is Promise<any> {
-//  return gettagtype(a) === "promise" && isFunction(get(a, "then"));
-//}
+
 export function isSet(a: any): a is Set<any> {
   return a instanceof Set;
 }

@@ -1,6 +1,11 @@
-import h from "./create-element";
+export default h;
+
 export { h };
-import { Class, Custom } from "../CustomClass/customclass";
+import {
+  autocreateclass,
+  Htmlelementconstructor
+} from "../AttributeClass/createComponent";
+import { /* Class, */ Custom } from "../CustomClass/customclass";
 import ReactiveState from "../Reactivity/ReactiveState";
 import { apply } from "../UtilTools/reflect";
 import {
@@ -13,10 +18,6 @@ import Virtualdom, {
   createVirtualElement,
   Vdomchildren
 } from "./VirtualElement";
-import {
-  autocreateclass,
-  Htmlelementconstructor
-} from "../AttributeClass/createComponent";
 type styleprop =
   | string
   | object
@@ -34,22 +35,22 @@ export interface ElementAttrs {
   [key: string]: any;
 }
 
-export default function<T extends Htmlelementconstructor | string | Custom>(
+function h<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   propsorchildren?: Vdomchildren,
   ...children: Vdomchildren
 ): Virtualdom<T>;
-export default function<T extends Vdomchildren>(
+function h<T extends Vdomchildren>(
   type: "",
   propsorchildren?: T,
   ...children: T
 ): T;
-export default function<T extends Vdomchildren>(
+function h<T extends Vdomchildren>(
   type: "",
   props?: ElementAttrs,
   ...children: T
 ): T;
-export default function<T extends Htmlelementconstructor | string | Custom>(
+function h<T extends Htmlelementconstructor | string | Custom>(
   type: T,
   props?: ElementAttrs,
   ...children: Vdomchildren
@@ -60,7 +61,7 @@ h(type,...children)
 h(type,children)
 */
 
-export default function(
+function h(
   type?: Htmlelementconstructor | string | Custom,
   propsorchildren?: Vdomchildren | ElementAttrs,
   ...children: Vdomchildren
@@ -105,7 +106,7 @@ function createElement<T extends Function | string>(
   ...children: T
 ): T; */
 
-function createElement<T extends Function | string | Class>(
+function createElement<T extends Function | string | Htmlelementconstructor>(
   type?: T,
   props: ElementAttrs = {},
   ...children: Vdomchildren

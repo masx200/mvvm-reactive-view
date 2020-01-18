@@ -1,13 +1,5 @@
-import Virtualdom, { Vdomchildren } from "../../src/CreateElement/VirtualElement";
+import Virtualdom, { Vdomchildren } from '../../src/CreateElement/VirtualElement';
 
-/* declare module "htm" {
-  const htm: (
-    strings?: TemplateStringsArray,
-    ...values: any[]
-  ) => Virtualdom<any>;
-  export default htm;
-}
- */
 declare interface Htm {
   (strings?: TemplateStringsArray, ...values: any[]):
     | Virtualdom<any>

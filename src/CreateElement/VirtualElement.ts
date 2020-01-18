@@ -1,6 +1,6 @@
 const VirtualElementSet = new WeakSet<Virtualdom<any>>();
 const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
-import { Class } from "../CustomClass/customclass";
+import { Htmlelementconstructor } from "../CustomClass/customclass";
 import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 
 import { merge_entries } from "../UtilTools/merge-entries";
@@ -18,7 +18,9 @@ export function isVirtualdom(a: any): a is Virtualdom<any> {
 
 export type Vdomchildren = Array<VaildVDom>;
 export { createVirtualElement };
-function createVirtualElement<T extends Class | string | Function>(
+function createVirtualElement<
+  T extends Htmlelementconstructor | string | Function
+>(
   type: T,
   props: ElementAttrs = {},
   children: Vdomchildren = []
@@ -104,7 +106,7 @@ function createVirtualElement<T extends Class | string | Function>(
   return virtual;
 }
 
-interface Virtualdom<T extends Class | string | Function> {
+interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
   readonly [Symbol.toStringTag]: "VirtualElement";
   readonly element: Element[];
   readonly type: T;

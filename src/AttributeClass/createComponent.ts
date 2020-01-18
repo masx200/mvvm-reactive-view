@@ -1,15 +1,10 @@
-const waittranformcsssymbol = Symbol("waittranformcss");
-export const innerwatchrecords = Symbol("innerwatchrecord");
-export const innerstatesymbol = Symbol("innerstate");
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { isvalidvdom } from "src/CreateElement/isvalidvdom";
-import { isclassextendsHTMLElement } from "src/CustomClass/isclassextendsHTMLElement";
-import { registercssprefix } from "src/ScopedCSS/registercssprefix";
-import { waitloadallstyle } from "src/ScopedCSS/waitloadallstyle";
-import { cached_create_componet } from "../cached-map";
 
+import { cached_create_componet } from "../cached-map";
+import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
+import { isclassextendsHTMLElement } from "../CustomClass/isclassextendsHTMLElement";
 import {
   closectx,
   getMounted,
@@ -19,26 +14,14 @@ import {
   invalid_Function,
   openctx
 } from "../mounted-unmounted/Component-context";
-
 import mount from "../MountElement/mount-real-element";
-import {
-  /* createApp, */ invalid_Virtualdom
-} from "../MountElement/MountElement";
-import ReactiveState, {
-  dispatchsymbol /* , { dispatchsymbol } */
-} from "../Reactivity/ReactiveState";
+import { invalid_Virtualdom } from "../MountElement/MountElement";
+import ReactiveState, { dispatchsymbol } from "../Reactivity/ReactiveState";
 import readonlyproxy from "../Reactivity/readonly-proxy";
 import render from "../RenderVirtual/render-vdom-to-real";
-import {
-  /* parsecsstext,
-                        prefixcssrules,
-                        cssrulestocsstext, */
-
-  componentsstylesheet
-
-  /*  loadlinkstyle,
-                        createlinkstylesheet */
-} from "../ScopedCSS/parsecss-transformcss";
+import { componentsstylesheet } from "../ScopedCSS/parsecss-transformcss";
+import { registercssprefix } from "../ScopedCSS/registercssprefix";
+import { waitloadallstyle } from "../ScopedCSS/waitloadallstyle";
 import { seteletext } from "../UtilTools/dom";
 import { apply, defineProperty, get, set } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
@@ -51,9 +34,12 @@ import {
   disconnectedCallback,
   firstinstalledcallback
 } from "./attr-change";
-import createcomponent from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+
+const waittranformcsssymbol = Symbol("waittranformcss");
+export const innerwatchrecords = Symbol("innerwatchrecord");
+export const innerstatesymbol = Symbol("innerstate");
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
@@ -65,7 +51,7 @@ export interface Htmlelementconstructor {
   defaultProps?: Record<string, any>;
   css?: string;
 }
-function createComponent(custfun: Custom): Htmlelementconstructor {
+function createComponentold(custfun: Custom): Htmlelementconstructor {
   if (isfunction(custfun)) {
     const cached_class = cached_create_componet.get(custfun);
     if (cached_class) {
@@ -334,17 +320,19 @@ function createComponent(custfun: Custom): Htmlelementconstructor {
     throw TypeError();
   }
 }
-export { createcomponent as createComponent };
-export default (custfun: Custom | Htmlelementconstructor) =>
+
+const createComponent = (custfun: Custom | Htmlelementconstructor) =>
   autocreateclass(custfun);
+export default createComponent;
 export function autocreateclass(
   custfun: Custom | Htmlelementconstructor
 ): Htmlelementconstructor {
   if (isclassextendsHTMLElement(custfun)) {
     return custfun;
   } else if (isfunction(custfun)) {
-    return createComponent(custfun);
+    return createComponentold(custfun);
   } else {
     throw TypeError();
   }
 }
+export { createComponent };

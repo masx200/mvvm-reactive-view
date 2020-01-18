@@ -26,12 +26,12 @@ export default function<
   if (clear) {
     seteletext(container, "");
   }
-  //   container.innerHTML = "";
+
   /*  let eles: Array<any>;
   if (Array.isArray(ele)) {
     eles = ele;
   } else {
-    // appendchild(container, ele);
+    
     eles = [ele];
   } */
   const eles = toArray(ele).flat(Infinity);

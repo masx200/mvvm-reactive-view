@@ -1,4 +1,4 @@
-import { appendchild } from "src/UtilTools/dom";
+import { appendchild } from "../UtilTools/dom";
 
 export function loadlinkstyle(
   stylelinkelement: HTMLElement,
@@ -8,7 +8,6 @@ export function loadlinkstyle(
     const loaderrorfun = () => {
       stylelinkelement.onload = stylelinkelement.onerror = null;
       rs();
-      //   console.log(stylelinkelement.href);
     };
     stylelinkelement.onload = loaderrorfun;
     stylelinkelement.onerror = loaderrorfun;

@@ -1,5 +1,5 @@
 export { getrandomstringandnumber };
-import { get } from "src/UtilTools/reflect";
+import { get } from "../UtilTools/reflect";
 
 const charactorlist = Array(26)
   .fill(undefined)
@@ -16,25 +16,13 @@ const charactorandnumberlist = [
 ];
 
 function getrandomcharactor() {
-  return get(
-    //  Array(26)
-    //  .fill(undefined)
-    //  .map((v, i) => 97 + i)
-    // .map(n => String.fromCharCode(n))
-    charactorlist,
-    Math.floor(Math.random() * charactorlist.length)
-  );
+  return get(charactorlist, Math.floor(Math.random() * charactorlist.length));
 }
 function getrandomhexnumberandcharactor() {
   return get(
-    // Array(16)
-    //  .fill(undefined)
-    // .map((v, i) => i)
     charactorandnumberlist,
     Math.floor(Math.random() * charactorandnumberlist.length)
   );
-
-  //.toString(16);
 }
 function getrandomstringandnumber(length = 1) {
   return (

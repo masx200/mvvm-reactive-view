@@ -1,17 +1,10 @@
 export const invalid_custom_element_class = "invalid custom element class !";
-// import { isclassextendsHTMLElement } from "./CustomElement/create-costum-elemet";
+
 import { get, getPrototypeOf, has, set } from "../UtilTools/reflect";
 import { isobject } from "../UtilTools/util";
 import { getrandomstringandnumber } from "./getrandomstringandnumber";
 import { isclassextendsHTMLElement } from "./isclassextendsHTMLElement";
-if (
-  //   typeof Proxy !== "function" ||
-  !isobject(window.customElements) //||
-  //   typeof customElements !== "object" ||
-
-  //||
-  //   typeof CustomElementRegistry !== "function"
-) {
+if (!isobject(window.customElements)) {
   console.error(" customElements  not supported !");
   throw new TypeError();
 }
@@ -42,18 +35,14 @@ interface CustomElements extends CustomElementRegistry {
 }
 const { CustomElementRegistry } = window;
 const customElements = window.customElements as CustomElements;
-// export default customElements;
 
 if (!has(customElements, elementset)) {
   Reflect.set(customElements, elementset, new Set());
-  //   assert(elementset in customElements);
-  //   customElements[elementset] = new Set();
 }
 if (!has(customElements, elementmap)) {
   Reflect.set(customElements, elementmap, {});
-  //   customElements[elementmap] = {};
 }
-// debugger;
+
 export default (initclass: Function, extendsname?: string) =>
   RandomDefineCustomElement(initclass, extendsname);
 
@@ -68,9 +57,6 @@ function RandomDefineCustomElement(
     throw TypeError();
   }
 
-  //如果未注册自定义组件，则用随机名称注册，如果名称重复则重新生成新的随机名
-  //   console.log(get(customElements, elementset));
-  //   debugger;
   if (!get(customElements, elementset).has(initclass)) {
     const elementname = getrandomstringandnumber(length);
 
@@ -91,8 +77,6 @@ function RandomDefineCustomElement(
       initclass
     );
   }
-
-  //如果已经注册自定义组件，则返回注册的名称
 }
 
 /* customElements.get = function name(name) {

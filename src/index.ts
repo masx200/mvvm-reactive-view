@@ -1,4 +1,3 @@
-//  import '../polyfill/index';
 import "./assetbrowser";
 import Condition from "./AttributeClass/conditon";
 import createComponent from "./AttributeClass/createComponent";

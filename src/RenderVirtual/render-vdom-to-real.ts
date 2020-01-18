@@ -10,7 +10,6 @@ import {
   createDocumentFragment,
   createElementNS,
   createmathelement,
-  //   createnonescript,
   createnativeelement,
   createsvgelement,
   createtextnode,
@@ -31,12 +30,10 @@ import Virtualdom, {
   Vdomchildren
 } from "../CreateElement/VirtualElement";
 import handleprops from "./handle-props";
-import { autocreateclass } from "src/AttributeClass/createComponent";
+import { autocreateclass } from "../AttributeClass/createComponent";
 
 export const bindstatesymbol = Symbol("bindstate");
 
-// export const reactivestatesymbol = Symbol("reactive");
-// export const virtualdomsymbol = Symbol("virtualelement");
 /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
 function throwinvalideletype(type?: any): never {
   console.error(type);
@@ -44,6 +41,10 @@ function throwinvalideletype(type?: any): never {
   console.error(invalid_Virtualdom);
   throw TypeError(/*"invalid element type!"*/);
 }
+export default function render(
+  vdom: Virtualdom<any> | string,
+  namespace?: string
+): Node;
 export default function render(
   vdom: Virtualdom<string | Function>,
   namespace?: string
@@ -79,19 +80,12 @@ export default function render(
   }
   if (isnumber(vdom) || isstring(vdom)) {
     const textnode = createtextnode(vdom);
-    // set(textnode, virtualdomsymbol, vdom);
-    // textnode[virtualdomsymbol] = vdom;
-    return textnode;
 
-    // } else if (typeof vdom === "string") {
-    // return createtextnode(vdom);
+    return textnode;
   } else if (isReactiveState(vdom) /*instanceof ReactiveState*/) {
     const reactive = vdom;
     const textnode = createtextnode(String(reactive));
-    // set(textnode, virtualdomsymbol, vdom);
-    // textnode[virtualdomsymbol] = reactive;
 
-    //textnode[reactivestatesymbol] = reactive;
     /*  try {
       reactive[textnodesymbol] = textnode;
     } catch (error) {
@@ -106,18 +100,14 @@ export default function render(
     });
     const element = textnode;
     set(element, bindstatesymbol, new Set());
-    // element[bindstatesymbol] = new Set();
+
     (get(element, bindstatesymbol) as Set<ReactiveState<any>>).add(reactive);
-    // element[bindstatesymbol].add(reactive);
+
     return textnode;
-  } else if (
-    isVirtualdom(vdom)
-    //vdom instanceof Virtualdom && "type" in vdom
-  ) {
+  } else if (isVirtualdom(vdom)) {
     let { type } = vdom;
     if (isfunction(type)) {
       type = autocreateclass(type);
-      // debugger;
     }
     let element:
       | Element
@@ -142,17 +132,12 @@ export default function render(
         mount(render(vdom.children), fragmentnode);
 
         return fragmentnode;
-        //不要创建html元素
-        // return render(vdom.children);
-        // element = createDocumentFragment();
       } else {
         element = namespace
           ? createElementNS(namespace, type)
           : createnativeelement(type);
       }
     } else if (typeof type == "function") {
-      //添加默认props
-
       /*static defaultProps = {
         name: 'Omi',
         myAge: 18
@@ -178,15 +163,9 @@ export default function render(
           )
         })
       );
-      element = createcostumelemet(
-        type,
-        propsjson,
-        vdom.children
-        // vdom.options
-      );
+      element = createcostumelemet(type, propsjson, vdom.children);
     } else {
       throwinvalideletype(vdom);
-      // throw TypeError("invalid element type!");
     }
     /*  if (element) {
       const attribute1: { [key: string]: any } = createeleattr(element);
@@ -194,36 +173,26 @@ export default function render(
         attribute1,
 
         /* 把属性为false的先不设置 */
-    //     vdom.props
-    //     // Object.fromEntries(Object.entries(vdom.props).filter())
-    //   );
-    // } */
-    // apply(handleprops)
 
     /* 自定义组件不添加children,而是从构造函数传入 */
     /* web components也可以设置 childnodes,比如说slot */
-    /* https://webkit.org/blog/4096/introducing-shadow-dom-api/ */
+    /* https:
     /*  */
-    /* https://developer.mozilla.org/zh-CN/docs/Web/API/Element/slot */
+
     if (
       type &&
       (isfunction(type) || isstring(type))
-      // /
-      //   /
 
       /* typeof type !== "function" */
     ) {
       /* 如果自己创造的组件就不加children, */
-      if (
-        !iscomponent(type)
-        // componentsymbol !== type[componentsymbol]
-      ) {
+      if (!iscomponent(type)) {
         if (element) {
           mount(
             vdom.children.map(e => {
               if (type === "svg" && isVirtualdom(e)) {
                 /* 没想到svg的创建方式这么特别?否则显示不出svg */
-                //   element.innerHTML = element.innerHTML;
+
                 return render(e, svgnamespace);
               } else if (type === "math" && isVirtualdom(e)) {
                 return render(e, mathnamespace);
@@ -236,7 +205,6 @@ export default function render(
 
             element
           );
-          //   return element;
         }
       }
     }
@@ -251,13 +219,8 @@ export default function render(
     return element as Node | Element;
   } else {
     throwinvalideletype(vdom);
-    // throw TypeError("invalid element type!");
   }
-  //   throw Error();
-  //   throwinvalideletype();
 
   /* console.error(vdom);
   throw new Error(); */
-  //   return;
-  //   throw new Error();
 }

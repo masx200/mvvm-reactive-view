@@ -1,5 +1,5 @@
 import { componentsstylesheet } from "./parsecss-transformcss";
-import { get, set } from "src/UtilTools/reflect";
+import { get, set } from "../UtilTools/reflect";
 import { createcssBlob } from "./create-cssurlblob";
 
 export function savestyleblob(
@@ -9,12 +9,8 @@ export function savestyleblob(
 ) {
   tagname = tagname.toLowerCase();
   const prefix = tagname;
-  if (
-    !get(componentsstylesheet, prefix)
-    // componentsstylesheet[tagname]
-  ) {
+  if (!get(componentsstylesheet, prefix)) {
     set(componentsstylesheet, tagname, new Set());
-    // componentsstylesheet[tagname] = ;
   }
   if (csstext) {
     get(componentsstylesheet, prefix).add(createcssBlob(csstext));

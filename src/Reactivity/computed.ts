@@ -1,54 +1,49 @@
-/* interface CallbackReactiveState<
- 
-> {
-  (...args: T[]): any;
-} */
-import { invalid_ReactiveState } from "../AttributeClass/conditon";
-import { invalid_Function } from "../mounted-unmounted/Component-context";
-import {
-  apply,
-  //   getPrototypeOf
-  //   set
-  defineProperty
-} from "../UtilTools/reflect";
-import { toArray } from "../UtilTools/toArray";
+import { invalid_Function } from "src/mounted-unmounted/Component-context";
+import { apply, defineProperty } from "src/UtilTools/reflect";
+import { toArray } from "src/UtilTools/toArray";
 import {
   isArray,
   isFunction,
   isfunction,
   isobject,
   isprimitive
-} from "../UtilTools/util";
-import computed from "./computed";
+} from "src/UtilTools/util";
+
 import { getproperyreadproxy } from "./getproperyread-proxy";
 import ReactiveState, {
   dispatchsymbol,
   isReactiveState
 } from "./ReactiveState";
-import { CallbackReactiveState, UnwrapedState, watch } from "./watch";
+import watch, { CallbackReactiveState, UnwrapedState } from "./watch";
+import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 
-//const { defineProperty } = Object;
-export default function<T extends UnwrapedState>(
+/* interface CallbackReactiveState<
+import { invalid_Function } from '../mounted-unmounted/Component-context';
+import { apply, defineProperty } from '../UtilTools/reflect';
+import { toArray } from '../UtilTools/toArray';
+import { isArray, isFunction, isfunction, isobject, isprimitive } from '../UtilTools/util';
+import { getproperyreadproxy } from './getproperyread-proxy';
+import ReactiveState, { dispatchsymbol, isReactiveState } from './ReactiveState';
+import { CallbackReactiveState, UnwrapedState, watch } from './watch';
+
+ 
+> {
+  (...args: T[]): any;
+} */
+
+const computed = function<T extends UnwrapedState>(
   state: ReactiveState<T> | Array<ReactiveState<T>>,
   callback: CallbackReactiveState,
   setter?: SetterFun
 ): ReactiveState<any> {
-  if (
-    !(
-      (isArray(state) || isReactiveState(state)) &&
-      // state instanceof ReactiveState
-      isFunction(callback)
-    )
-  ) {
+  if (!((isArray(state) || isReactiveState(state)) && isFunction(callback))) {
     console.error(state);
     console.error(callback);
     console.error(invalid_ReactiveState + invalid_Function);
 
     throw TypeError();
   }
-  const state1array: ReactiveState<T>[] =
-    //   if (isReactiveState(state)) {
-    toArray(state);
+  const state1array: ReactiveState<T>[] = toArray(state);
   if (!state1array.length) {
     console.error("Empty array not allowed");
     throw new Error();
@@ -58,16 +53,12 @@ export default function<T extends UnwrapedState>(
 
       callback
     ); */
-  //   } else if (isArray(state)) {
-  //     state1array = state;
-  //     // state1 = Arraycomputed(state, callback);
-  //   } else {
-  //     state1array = Array.from(state);
-  //   }
+
   const state1 = Arraycomputed(state1array, callback, setter);
-  //   usestste(state1);
+
   return state1;
-}
+};
+export default computed;
 type SetterFun = (v: any) => void;
 function Arraycomputed<T extends UnwrapedState>(
   state: ReactiveState<T>[],
@@ -76,13 +67,12 @@ function Arraycomputed<T extends UnwrapedState>(
 ): ReactiveState<any> {
   const reactivestate = new ReactiveState();
   const getter = () => {
-    //自动解包
     const value = apply(
       callback,
       undefined,
       state.map(st => st.valueOf())
     );
-    // callback(...state.map(st => st.valueOf()));
+
     const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
 
     if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
@@ -95,10 +85,6 @@ function Arraycomputed<T extends UnwrapedState>(
 
   let memorized = getter();
 
-  // if (isFunction(memorized)) {
-  //   console.error(memorized);
-  //   throw new TypeError();
-  // }
   defineProperty(reactivestate, "value", {
     set: isfunction(setter) ? setter : undefined,
     get: getter,
@@ -119,7 +105,5 @@ function Arraycomputed<T extends UnwrapedState>(
 
   return getproperyreadproxy(reactivestate);
 }
-
-// export function getproperyreadproxy<T extends object>(a: T): T;
 
 export { computed };

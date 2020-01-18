@@ -1,6 +1,6 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import { asserttype } from "src/asserttype";
-import { setimmediate } from "src/UtilTools/setimmediate";
+
+import { asserttype } from "../asserttype";
 import createElement from "../CreateElement/create-element";
 import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import mount from "../MountElement/mount-real-element";
@@ -10,7 +10,8 @@ import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { appendchild, getchildren, removeElement } from "../UtilTools/dom";
 import { get, set } from "../UtilTools/reflect";
-import { isArray, isfunction, isSet } from "../UtilTools/util";
+import { setimmediate } from "../UtilTools/setimmediate";
+import { isArray, isfunction, isSet, isstring } from "../UtilTools/util";
 import {
   AttrChange,
   attributeChangedCallback,
@@ -18,10 +19,10 @@ import {
   disconnectedCallback,
   firstinstalledcallback
 } from "./attr-change";
-
 import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+
 export { ListMap };
 export default ListMap;
 const listvalueattr = Symbol("listvalueattr");
@@ -33,7 +34,7 @@ const listinnerelement = Symbol("listinnerelement");
 const cached_realele = Symbol("cached_realele");
 function ListMap(
   list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any>
+  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any> | string
 ): Virtualdom<Htmlelementconstructor> {
   if (!isArray(list) && !isSet(list) && !isReactiveState(list)) {
     console.error(list);
@@ -46,10 +47,13 @@ function ListMap(
 
   const ITEMfactory = (value: ReactiveState<any>, index: number) => {
     const possiblevdom = mapfun(value, index);
-    asserttype(isVirtualdom(possiblevdom));
+    asserttype(isVirtualdom(possiblevdom) || isstring(possiblevdom));
     return possiblevdom;
   };
-  function indextovdom(index: number, thiscom: ListMap) {
+  function indextovdom(
+    index: number,
+    thiscom: ListMap
+  ): string | Virtualdom<any> {
     /* 只要缓存从index到element就够了,不需要中间缓存了 */
 
     /* const cached_vdom1 = get(thiscom[cached_vdom_symbol], index);
@@ -70,11 +74,11 @@ function ListMap(
   class ListMap extends AttrChange {
     static defaultProps = { value: [] };
 
-    [cached_realele]: Map<number, Element> = new Map();
+    [cached_realele]: Map<number, Element | Node> = new Map();
     [listvalueattr] = createstate([]);
 
     [listinnerelement]: Array<Element | Node>;
-    [listinnervdom]: Array<Virtualdom<any>>;
+    [listinnervdom]: Array<Virtualdom<any> | string>;
     static [componentsymbol] = componentsymbol;
     [readysymbol] = false;
     [attributeChangedCallback](name: string) {
@@ -100,18 +104,20 @@ function ListMap(
               .map((v, i) => i)
               .slice(oldlength);
 
-            const realelementstoadd: Element[] = numindexs.map(index => {
-              const cached_element = get(this[cached_realele], index);
-              /* 直接从缓存中获取element */
-              if (cached_element) {
-                return cached_element;
-              } else {
-                const vdom = indextovdom(index, this);
-                const element = render(vdom);
-                set(this[cached_realele], index, element);
-                return element;
+            const realelementstoadd: Element[] | Node[] = numindexs.map(
+              index => {
+                const cached_element = get(this[cached_realele], index);
+                /* 直接从缓存中获取element */
+                if (cached_element) {
+                  return cached_element;
+                } else {
+                  const vdom = indextovdom(index, this);
+                  const element: Node | Element = render(vdom);
+                  set(this[cached_realele], index, element);
+                  return element;
+                }
               }
-            });
+            );
             /* this[listinnervdom].push(...vdomstoadd);
             this[listinnerelement].push(...realelementstoadd); */
             realelementstoadd.forEach(element => appendchild(this, element));

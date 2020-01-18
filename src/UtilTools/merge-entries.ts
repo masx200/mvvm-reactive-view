@@ -15,7 +15,6 @@ export function merge_entries(
     if (!m[key]) {
       m[key] = new Set();
     }
-    // m[key] && (m[key] = new Set());
 
     value.forEach((v: any) => {
       m[key].add(v);

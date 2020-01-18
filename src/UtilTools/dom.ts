@@ -105,9 +105,9 @@ export function createanotherhtmldocument() {
   return document.implementation.createHTMLDocument("");
 }
 /* export function getparentNode(ele: Node): Node {
-  return ele.parentNode ? ele.parentNode : ele;
-}
- */
+    return ele.parentNode ? ele.parentNode : ele;
+  }
+   */
 export function querySelectorAll(selector: string) {
   return [...document.querySelectorAll(selector)];
 }

@@ -1,16 +1,15 @@
 const EventTarget = window.EventTarget;
 import debounce from "lodash/debounce";
 import { cached_callback_eventlistner } from "../cached-map";
-// import Reflect from "./reflect";
+
 import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 import { defineProperty } from "../UtilTools/reflect";
 import { isobject, isSet } from "../UtilTools/util";
 import { UnwrapedState } from "./watch";
-import { recordusestste } from "src/mounted-unmounted/Component-context";
+import { recordusestste } from "../mounted-unmounted/Component-context";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
-// import { Primitive } from 'lodash';
-// export const callbackmap = Symbol("callbackmap");
+
 export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
@@ -20,7 +19,7 @@ export function isReactiveState(a: any): a is ReactiveState<any> {
     a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState"
   );
 }
-// export const textnodesymbol = Symbol("textnode");
+
 export const changetextnodesymbol = Symbol("changetextnode");
 export const eventtargetsymbol = Symbol("eventtatget");
 export const memlisteners = Symbol("memlisteners");
@@ -46,38 +45,23 @@ export default class ReactiveState<T extends UnwrapedState> {
     : T extends Primitivetype
     ? Primitivetype
     : object;
-  //extends Primitivetype ? Primitivetype : Exclude<object, Function>;
-  //   [callbackmap] = new Map<Function, EventListener>();
 
   readonly [Symbol.toStringTag] = "ReactiveState";
 
   constructor(init?: T) {
-    //super();
-    // this.value = undefined;
+    this.value = init as any;
 
-    // if (isprimitive(init) || isobject(init)) {
-    this.value = init as any; //as T; /* extends Primitivetype
-    //  ? Primitivetype
-    //  : Exclude<object, Function>; */
     defineProperty(this, "value", {
       value: init,
       configurable: true,
       writable: true
     });
 
-    // this.value = init;
-    // } else {
-    //   console.error(init);
-    //   console.error(invalid_primitive_or_object_state);
-    //   throw TypeError();
-    // }
-    // this[eventtargetsymbol] = new EventTarget();
-
     /*
-  //  Object.defineProperty(this, Symbol.toStringTag, {
- //     value: "ReactiveState",
-   //   configurable: true
-    //});
+  
+ 
+   
+    
 
 */
     recordusestste(this);
@@ -94,7 +78,7 @@ export default class ReactiveState<T extends UnwrapedState> {
   }
   [debouncedispatch]: (eventname?: string | undefined) => void;
   /* get [Symbol.toStringTag]() {
-  //  return "ReativeState";
+  
 
 } */
   [removeallistenerssymbol]() {
@@ -111,25 +95,21 @@ export default class ReactiveState<T extends UnwrapedState> {
     this[eventtargetsymbol].addEventListener(name, callback);
   }
   [addallistenerssymbol]() {
-    // const name = "value";
     this[memlisteners].forEach(callback => {
       this[addonelistner](callback);
-      //   this[eventtargetsymbol].addEventListener(name, callback);
     });
   }
   /*  [changetextnodesymbol](textnode: Text) {
     this[textnodesymbol] = textnode;
   } */
-  // [textnodesymbol]: Text | undefined;
+
   /*  [changetextnodesymbol](textnode: Text) {
       this[textnodesymbol] = textnode;
     } */
-  // [textnodesymbol]: Text | undefined;
 
   [eventtargetsymbol] = new EventTarget();
   [memlisteners] = new Set<EventListener>();
 
-  //剑头函数绑定this
   valueOf = () => {
     return this.value;
   };
@@ -145,8 +125,6 @@ export default class ReactiveState<T extends UnwrapedState> {
   }
 
   [dispatchsymbol](eventname?: string) {
-    //添加防抖函数
-
     this[debouncedispatch](eventname);
   }
   [subscribesymbol](
@@ -158,14 +136,11 @@ export default class ReactiveState<T extends UnwrapedState> {
     if (possiblecallback) {
       eventlistener = possiblecallback;
     } else {
-      //自动解包
       eventlistener = () => callback(/* this.valueOf() */);
 
       cached_callback_eventlistner.set(callback, eventlistener);
     }
-    // this[eventtargetsymbol].addEventListener("value", callback);
-    // const name = eventname ? String(eventname) : "value";
-    //  const name = "value";
+
     this[memlisteners].add(eventlistener);
   }
   [cancelsubscribe](callback: Function) {
@@ -180,7 +155,6 @@ export default class ReactiveState<T extends UnwrapedState> {
   }
 
   [Symbol.toPrimitive](): string | undefined | Primitivetype {
-    //return this.value;
     const value = this.valueOf();
     return isprimitive(value)
       ? value

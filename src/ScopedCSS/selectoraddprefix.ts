@@ -1,9 +1,7 @@
-// import { get } from "src/UtilTools/reflect";
 /*  selectoraddprefix函数返回新对象,不是修改原来的对象*/
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
   /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
-  //css 选择器可能有多个
-  //h1,p,h3,div
+
   const selectorold = cssstylerule.selectorText;
   const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
   const selectorTextss = selectorold;
@@ -25,21 +23,15 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
     if (cssstylerule.selectorText.startsWith(prefix)) {
       return cssstylerule;
     } else { */
-  // console.trace();
+
   return {
     /* 没有用到的变量,消耗性能 */
-    // type: cssstylerule.type,
-    // parentRule: cssstylerule.parentRule,
-    // parentStyleSheet: cssstylerule.parentStyleSheet,
-    // style: cssstylerule.style,
-    // styleMap: get(cssstylerule, "styleMap"),
+
     selectorText: selectoraftertransform,
     cssText: selectoraftertransform + stylebodyold,
-    // cssText: selectoraftertransform + stylebodyold,
-    // selectorText: selectoraftertransform,
+
     [Symbol.toStringTag]: "CSSStyleRule"
   };
-  // }
 
   /*
     const prefixselector = prefix + " " + selectorText;

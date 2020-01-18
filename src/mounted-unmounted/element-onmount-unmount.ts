@@ -4,11 +4,10 @@ import {
 } from "../AttributeClass/createComponent";
 import { cached_callback_eventlistner } from "../cached-map";
 import { isNode } from "../MountElement/isNodeArray";
-// import { isNode } from "./MountElement/MountElement";
+
 import ReactiveState, {
   addonelistner,
   dispatchsymbol,
-  //   callbackmap,
   removeonelistner
 } from "../Reactivity/ReactiveState";
 import { rewatch /* , unwatch */, unwatch } from "../Reactivity/watch";
@@ -26,18 +25,10 @@ export function onmounted(ele: Element | Node | Array<Node>) {
     ele.forEach(e => {
       onmounted(e);
     });
-  } else if (
-    isNode(ele)
-    //   ele instanceof Node
-  ) {
-    // if (has(ele, eventlistenerssymbol)) {
+  } else if (isNode(ele)) {
     readdlisteners(ele);
-    // }
-    //全局共享状态
-    if (
-      has(ele, bindstatesymbol)
-      // ele[bindstatesymbol]
-    ) {
+
+    if (has(ele, bindstatesymbol)) {
       (get(ele, bindstatesymbol) as ReactiveState<any>[])
 
         /*  ele[bindstatesymbol] */
@@ -48,17 +39,14 @@ export function onmounted(ele: Element | Node | Array<Node>) {
           state[dispatchsymbol]();
         });
     }
-    if (
-      has(ele, innerstatesymbol)
-      //   ele[innerstatesymbol]
-    ) {
+    if (has(ele, innerstatesymbol)) {
       (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
         (state: ReactiveState<any>) => {
           rewatch(state);
         }
       );
     }
-    // readdlisteners(ele);
+
     /* 记录组件中使用的watch的state和callback,
 组件卸载时removeeventlistener,
 组件挂载时addeventlistener
@@ -88,29 +76,18 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
     ele.forEach(e => {
       onunmounted(e);
     });
-  } else if (
-    isNode(ele)
-    //   ele instanceof Node
-  ) {
-    // if (
-    //   has(ele, eventlistenerssymbol)
-    //   // ele[eventlistenerssymbol]
-    // ) {
+  } else if (isNode(ele)) {
     removelisteners(ele);
-    // }
+
     /*   if (ele[bindstatesymbol]) {
       ele[bindstatesymbol].forEach((state: ReactiveState) => {
         unwatch(state);
       });
  */
-    // readdlisteners(ele);
-    // }
+
     //
     /* 组件卸载时unwatch组件内部的 ReactiveState*/
-    if (
-      has(ele, innerstatesymbol)
-      // ele[innerstatesymbol]
-    ) {
+    if (has(ele, innerstatesymbol)) {
       (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
         (state: ReactiveState<any>) => {
           unwatch(state);

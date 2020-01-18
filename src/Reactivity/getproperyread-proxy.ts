@@ -1,19 +1,18 @@
-import { isFunction, isobject, issymbol } from "src/UtilTools/util";
+import { isFunction, isobject, issymbol } from "../UtilTools/util";
 import {
   get,
   has,
   ownKeys,
   getOwnPropertyDescriptor
-} from "src/UtilTools/reflect";
+} from "../UtilTools/reflect";
 
 export function getproperyreadproxy<T extends object>(a: T): T {
   const __proto__ = "__proto__";
   /* 把基本类型原型的属性 也加上*/
-  //   const target = isobject(a) ? a : getPrototypeOf(a);
+
   const target = a;
   return new Proxy(target, {
     getOwnPropertyDescriptor(target, key) {
-      //对于symbol属性，返回undefined
       if (issymbol(key)) {
         return;
       } else {
@@ -23,7 +22,7 @@ export function getproperyreadproxy<T extends object>(a: T): T {
     ownKeys(target) {
       let myvalue = get(target, "value");
       const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-      //   return ownKeys(target);
+
       return Array.from(new Set([...ownKeys(target), ...ownKeys(myvalueobj)]));
 
       /* Array.from(
@@ -50,7 +49,7 @@ export function getproperyreadproxy<T extends object>(a: T): T {
           return isFunction(property) ? property.bind(myvalueobj) : property;
         }
       }
-      //   return get(target, key);
+
       /*  const myvalue = get(target, "value");
   
         if (has(target, key)) {

@@ -13,7 +13,7 @@
     "declaration": true,
     "noUnusedLocals": true,
     "module": "esnext",
-    "target": "esnext",
+    "target": "es2019",
     "jsx": "preserve",
     "removeComments": true,
     "pretty": true,

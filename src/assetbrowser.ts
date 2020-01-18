@@ -2,15 +2,13 @@ import { isfunction, isobject } from "./UtilTools/util";
 const { HTMLElement, customElements, Proxy } = window;
 if (
   !isfunction(HTMLElement) ||
-  //   typeof HTMLElement !== "function" ||
   !isfunction(Proxy) ||
-  //   typeof Proxy !== "function" ||
   !isobject(customElements)
   /*||
-  //   typeof customElements !== "object" ||
+  
   !isfunction(window.CustomElementRegistry)
-  //||
-  //   typeof CustomElementRegistry !== "function"
+  
+  
 
 */
 ) {

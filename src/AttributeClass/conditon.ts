@@ -1,18 +1,23 @@
-import { watch } from 'src/Reactivity/watch';
-import { get } from 'src/UtilTools/reflect';
-import { toArray } from 'src/UtilTools/toArray';
+import { watch } from "src/Reactivity/watch";
+import { get } from "src/UtilTools/reflect";
+import { toArray } from "src/UtilTools/toArray";
 
-import createElement from '../CreateElement/create-element';
-import Virtualdom, { isVirtualdom } from '../CreateElement/VirtualElement';
-import { invalid_Virtualdom } from '../MountElement/MountElement';
-import ReactiveState, { isReactiveState } from '../Reactivity/ReactiveState';
-import render from '../RenderVirtual/render-vdom-to-real';
-import { replaceChild } from '../UtilTools/dom';
-import { isboolean, isstring, isundefined } from '../UtilTools/util';
-import { AttrChange, connectedCallback, disconnectedCallback, firstinstalledcallback } from './attr-change';
-import { Htmlelementconstructor } from './createComponent';
-import { componentsymbol } from './iscomponent';
-import { readysymbol } from './readysymbol';
+import createElement from "../CreateElement/create-element";
+import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
+import { invalid_Virtualdom } from "../MountElement/MountElement";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import render from "../RenderVirtual/render-vdom-to-real";
+import { replaceChild } from "../UtilTools/dom";
+import { isboolean, isstring, isundefined } from "../UtilTools/util";
+import {
+  AttrChange,
+  connectedCallback,
+  disconnectedCallback,
+  firstinstalledcallback
+} from "./attr-change";
+import { Htmlelementconstructor } from "./createComponent";
+import { componentsymbol } from "./iscomponent";
+import { readysymbol } from "./readysymbol";
 
 export const invalid_ReactiveState = "invalid ReactiveState";
 const truevdomsymbol = Symbol("truevdom");
@@ -22,7 +27,8 @@ const falseelesymbol = Symbol("falseele");
 const handletrue = Symbol("handletrue");
 const handlefalse = Symbol("handlefalse");
 const currentelementsymbol = Symbol("currentelement");
-export default function(
+
+const Condition = function(
   conditon: ReactiveState<boolean> | boolean,
   iftrue?: Virtualdom<any> | string,
   iffalse?: Virtualdom<any> | string
@@ -64,12 +70,10 @@ export default function(
     [trueelesymbol]: Node[];
 
     [handlefalse]() {
-      //   if (this[falsevdomsymbol].length) {
       if (!this[falseelesymbol]) {
         this[falseelesymbol] = render(this[falsevdomsymbol]);
 
         this[falsevdomsymbol] = [];
-        // }
       }
 
       const elementtomount = this[falseelesymbol][0] || this;
@@ -77,13 +81,11 @@ export default function(
       this[currentelementsymbol] = elementtomount;
     }
     [handletrue]() {
-      //   if (this[truevdomsymbol].length) {
       if (!this[trueelesymbol]) {
         this[trueelesymbol] = render(this[truevdomsymbol]);
 
         /* 垃圾回收 */
         this[truevdomsymbol] = [];
-        // }
       }
       //
       const elementtomount = this[trueelesymbol][0] || this;
@@ -109,17 +111,6 @@ export default function(
       } else {
         handleconditionchange(conditon);
       }
-
-      // /*   const attrs: { [key: string]: any } = createeleattr(this);
-      //   if (true === attrs["value"]) {
-      //     get(this, handletrue).call(this);
-      //   } else if (!attrs["value"]) {
-      //     /* "@masx200/dom-element-attribute-agent-proxy"
-      //   如果属性设置为false,则获取到的是undefined
-      //   */
-      //     get(this, handlefalse).call(this);
-      //     //
-      //   } */
     }
     connectedCallback() {
       connectedCallback(this);
@@ -144,30 +135,12 @@ export default function(
     disconnectedCallback() {
       disconnectedCallback(this);
     }
-
-    /*     // [attributeChangedCallback](
-    //   name: string /* , oldValue: any, newValue: any */
-    // ) {
-    //   if (this[readysymbol]) {
-    //     if (name === "value") {
-    //       const attrs: Record<string, any> = createeleattr(this);
-
-    //       if (true === attrs["value"]) {
-    //         this[handletrue]();
-    //         //
-    //       } else if (!attrs["value"]) {
-    //         this[handlefalse]();
-    //         //
-    //       }
-    //     }
-
-    //     //
-    //   }
-    // } */
   }
   /* vdom.options = { true: iftrue, false: iffalse }; */
   const vdom = createElement(Condition);
   /*  const vdom = createElement(Condition, { value: conditon }); */
   return vdom;
   /*  */
-}
+};
+export default Condition;
+export { Condition };

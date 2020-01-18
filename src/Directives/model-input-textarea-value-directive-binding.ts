@@ -2,10 +2,7 @@ import { invalid_ReactiveState } from "../AttributeClass/conditon";
 import { querySelectorAll } from "../UtilTools/dom";
 import directives from "./extend-directive";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, {
-  // ReactiveState,
-  isReactiveState
-} from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import { get, set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
 import Virtualdom from "../CreateElement/VirtualElement";
@@ -62,10 +59,9 @@ function model(
     throw TypeError();
   }
   if (types.includes(vdom.type)) {
-    // const vdom = virtualdom;
     set(vdom.bindattr, bindattribute, value);
     /*  [
-      // vdom.bindattr["checked"] = value;
+      
       "change",
       "input"
     ]. */
@@ -96,10 +92,10 @@ function model(
 
 /* directives({
   value(_element: Element, value: ReactiveState<any>, vdom: Virtualdom<any>) {
-    // console.log(vdom);
+    
     if (
       isReactiveState(value) &&
-      //   value instanceof ReactiveState
+      
 
       (vdom.type === "input" ||
         vdom.type === "textarea" ||
@@ -134,10 +130,10 @@ function model(
 });
 directives({
   checked(_element: Element, value: ReactiveState<any>, vdom: Virtualdom<any>) {
-    // console.log(vdom);
+    
     if (
       isReactiveState(value) &&
-      //   value instanceof ReactiveState
+      
 
       vdom.type === "input"
     ) {
@@ -165,7 +161,7 @@ directives({
       console.error(vdom);
       console.error(invalid_ReactiveState + invalid_Virtualdom);
       throw TypeError();
-      //throw TypeError(invalid_ReactiveState + invalid_Virtualdom);
+      
     }
   }
 }); */

@@ -17,14 +17,14 @@ export default function(
 */
   firstaddlisteners(element, eventname, toArray(callback));
   /*
-//  if (isfunction(callback)) {
-//    firstaddlisteners(element, eventname, [callback]);
-//  } else if (isArray(callback)) {
-//    firstaddlisteners(element, eventname, callback);
- // } else {
- //   console.error(callback);
- //   throw TypeError(invalid_Function);
- // }
+
+
+
+
+ 
+ 
+ 
+ 
 */
 }
 export function firstaddlisteners(
@@ -42,7 +42,6 @@ export function firstaddlisteners(
 
     if (!has(element, eventlistenerssymbol)) {
       set(element, eventlistenerssymbol, []);
-      //   element[eventlistenerssymbol] = [];
     }
     (get(ele, eventlistenerssymbol) as [string, EventListener][])
       /* ele[eventlistenerssymbol] */
@@ -50,31 +49,20 @@ export function firstaddlisteners(
     domaddlisten(ele, event, call);
   });
 }
-export function removelisteners(
-  ele: Element | Node
-  //   event: string,
-  //   callarray: Array<EventListener>
-) {
-  // const element = ele;
+export function removelisteners(ele: Element | Node) {
   if (has(ele, eventlistenerssymbol)) {
     (get(ele, eventlistenerssymbol) as [string, EventListener][])
       /*   ele[eventlistenerssymbol] */
 
       .forEach(([event, call]) => {
-        //   ele[eventlistenerssymbol].push([event, call]);
         domremovelisten(ele, event, call);
       });
   }
 }
-export function readdlisteners(
-  ele: Element | Node
-  //   event: string,
-  //   callarray: Array<EventListener>
-) {
+export function readdlisteners(ele: Element | Node) {
   if (has(ele, eventlistenerssymbol)) {
     (get(ele, eventlistenerssymbol) as [string, EventListener][]).forEach(
       ([event, call]) => {
-        //   ele[eventlistenerssymbol].push([event, call]);
         domaddlisten(ele, event, call);
       }
     );

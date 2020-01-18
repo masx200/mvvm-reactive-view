@@ -44,7 +44,6 @@ export function useMounted(fun: Function) {
     if (ctxopen) {
       MountedSet.add(fun);
     } else {
-      //console.error()
       console.error(errormessage);
       throw Error();
     }
@@ -62,13 +61,11 @@ export function useUnMounted(fun: Function) {
     } else {
       console.error(errormessage);
       throw Error();
-      //throw Error(errormessage);
     }
   } else {
     console.error(fun);
     console.error(invalid_Function);
     throw TypeError();
-    //throw TypeError(invalid_Function);
   }
 }
 export function clearMounted() {

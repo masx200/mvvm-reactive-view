@@ -1,5 +1,5 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { setimmediate } from "src/UtilTools/setimmediate";
+
 import {
   onmounted,
   onunmounted
@@ -7,6 +7,8 @@ import {
 import { get } from "../UtilTools/reflect";
 import { isFunction, isfunction, isobject } from "../UtilTools/util";
 import { readysymbol } from "./readysymbol";
+import { setimmediate } from "src/UtilTools/setimmediate";
+
 export const attributeChangedCallback = Symbol("attributeChanged");
 export const firstinstalledcallback = Symbol("firstinstalled");
 /* 

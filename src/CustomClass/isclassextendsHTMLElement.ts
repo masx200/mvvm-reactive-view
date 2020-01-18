@@ -1,9 +1,9 @@
-import { Class } from "../CustomClass/customclass";
+import { Htmlelementconstructor } from "../CustomClass/customclass";
 import { isfunction } from "../UtilTools/util";
 
 export function isclassextendsHTMLElement(initclass: {
   prototype: any;
-}): initclass is Class {
+}): initclass is Htmlelementconstructor {
   return !!(
     isfunction(initclass) &&
     initclass.prototype &&
