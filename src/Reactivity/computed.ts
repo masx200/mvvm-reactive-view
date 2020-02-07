@@ -13,7 +13,7 @@ import { getproperyreadproxy } from "./getproperyread-proxy";
 import ReactiveState, {
   dispatchsymbol,
   isReactiveState
-} from "./ReactiveState";
+} from "./reactivestate.ts";
 import watch, { CallbackReactiveState, UnwrapedState } from "./watch";
 import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 
