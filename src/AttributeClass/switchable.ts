@@ -2,7 +2,7 @@ import { h } from "../CreateElement/create-element";
 import Virtualdom from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
 import { mountrealelement } from "../MountElement/mount-real-element";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 import { CancelWatchfun, watch } from "../Reactivity/watch";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { setimmediate } from "../UtilTools/setimmediate";
