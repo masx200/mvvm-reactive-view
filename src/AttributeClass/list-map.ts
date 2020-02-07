@@ -6,7 +6,7 @@ import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import mount from "../MountElement/mount-real-element";
 import computed from "../Reactivity/computed";
 import createstate from "../Reactivity/create-state";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { appendchild, getchildren, removeElement } from "../UtilTools/dom";
 import { get, set } from "../UtilTools/reflect";
