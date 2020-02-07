@@ -37,6 +37,7 @@ const mybabelplugin = babel({
     ]
   ],
   plugins: [
+"@babel/plugin-proposal-optional-catch-binding",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-syntax-nullish-coalescing-operator",
     "@babel/plugin-transform-typescript",
