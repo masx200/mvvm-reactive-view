@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-ts';
+import postcss from 'rollup-plugin-postcss';
 const banner = `const globalThis = Function('return this')();
 const self = globalThis;
 const window = globalThis;
@@ -36,7 +37,6 @@ const mybabelplugin = babel({
         '@babel/plugin-proposal-optional-catch-binding',
         '@babel/plugin-proposal-class-properties',
         '@babel/plugin-syntax-nullish-coalescing-operator',
-        '@babel/plugin-transform-typescript',
         '@babel/plugin-proposal-nullish-coalescing-operator'
     ]
 });
@@ -119,6 +119,70 @@ export default [
             resolve(),
             commonjs(),
             myterserplugin,
+            sourcemaps()
+        ]
+    },
+    {
+        input: './test/src/index.js',
+        output: [{
+                sourceMap: true,
+                file: './test/dist/output-es2015.js',
+                format: 'iife',
+                sourcemap: true
+            }],
+        plugins: [
+            sourcemaps(),
+            babel({
+                plugins: [
+                    [
+                        '@babel/plugin-transform-react-jsx',
+                        {
+                            pragma: 'h',
+                            pragmaFrag: '\'\''
+                        }
+                    ],
+                    [
+                        'babel-plugin-htm',
+                        {
+                            tag: 'html',
+                            pragma: 'h'
+                        }
+                    ],
+                    '@babel/plugin-proposal-class-properties',
+                    '@babel/plugin-proposal-optional-catch-binding',
+                    '@babel/plugin-proposal-nullish-coalescing-operator'
+                ],
+                presets: [[
+                        '@babel/preset-env',
+                        {
+                            targets: [
+                                'last 1 edge version',
+                                'last 1 safari version',
+                                'last 1 chrome version',
+                                'last 1 firefox version'
+                            ]
+                        }
+                    ]]
+            }),
+            json(),
+            resolve(),
+            commonjs(),
+            terser({
+                sourcemap: true,
+                compress: false,
+                mangle: false,
+                output: {
+                    ascii_only: !0,
+                    ecma: 5,
+                    comments: !1,
+                    beautify: true
+                }
+            }),
+            postcss({
+                minimize: true,
+                extract: false,
+                inject: false
+            }),
             sourcemaps()
         ]
     }
