@@ -7,7 +7,7 @@ import ReactiveState, {
   dispatchsymbol,
   invalid_primitive_or_object_state,
   isReactiveState
-} from "./ReactiveState";
+} from "./reactivestate.ts";
 import { UnwrapedState } from "./watch";
 export const set_prototype = Set.prototype;
 
