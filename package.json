@@ -15,7 +15,7 @@
         "build": "rollup -c rollup.config.js",
         "watch": "rollup -c ./rollup.config.js --watch",
         "serve": "live-server test",
-      "prettier": "prettier *.js --write&&prettier *.json --write && prettier *.md --write &&prettier --parser=typescript --write ./src/**/*.ts&&prettier --parser=babel --write ./test/**/*.js",
+      "prettier": "prettier *.js --write&&prettier *.json --write && prettier *.md --write &&prettier --parser=typescript --write ./src/**/*.ts&&prettier --parser=babel --write ./test/**/*.js"
      },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
