@@ -5,7 +5,7 @@ import { toArray } from "src/UtilTools/toArray";
 import createElement from "../CreateElement/create-element";
 import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { replaceChild } from "../UtilTools/dom";
 import { isboolean, isstring, isundefined } from "../UtilTools/util";
