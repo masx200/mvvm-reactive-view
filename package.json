@@ -1,5 +1,5 @@
 {
-  "version": "1.5.5",
+  "version": "1.5.6",
   "main": "./dist/index.min.js",
   "types": "dist/index.d.ts",
   "module": "./dist/index.min.js",
@@ -26,11 +26,12 @@
   },
   "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
   "dependencies": {
-    "@rollup/plugin-commonjs": "^11.0.2",
+      },
+  "devDependencies": {
+"@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-json": "^4.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1"
-  },
-  "devDependencies": {
+,
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
