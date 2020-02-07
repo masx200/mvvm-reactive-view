@@ -77,6 +77,43 @@ export default [
     ],
     plugins: [
       typescript(),
+ //     mybabelplugin,
+      //   babel({
+      //     presets: ["@babel/preset-typescript"],
+      //     plugins: [
+      //       "@babel/plugin-syntax-nullish-coalescing-operator",
+      //       "@babel/plugin-transform-typescript",
+      //       "@babel/plugin-proposal-nullish-coalescing-operator"
+      //     ]
+      //   }),
+      //   typescriptplugin({
+      //     clean: true,
+      //     objectHashIgnoreUnknownHack: true,
+      //     tsconfig: "./tsconfig.json",
+      //     typescript: typescriptlib
+      //   }),
+      //   sourcemaps(),
+      json(),
+      resolve(),
+      commonjs(),
+
+      sourcemaps(),
+      beautifyterserplugin
+    ]
+  },
+{
+    input: "./dist/index.js",
+    output: [
+      {
+        sourceMap: true,
+//        banner,
+        file: "./dist/index.js",
+        format: "esm",
+        sourcemap: true
+      }
+    ],
+    plugins: [
+//      typescript(),
       mybabelplugin,
       //   babel({
       //     presets: ["@babel/preset-typescript"],
