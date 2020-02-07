@@ -71,11 +71,12 @@ export default [
       }
     ],
     plugins: [
-      typescript(),
       json(),
       resolve(),
       commonjs(),
+
       sourcemaps(),
+      typescript(),
       beautifyterserplugin
     ]
   },
