@@ -13,10 +13,10 @@
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "scripts": {
         "build": "rollup -c rollup.config.js",
-        "test": "rollup -c ./test/rollup.config.js",
+        "watch": "rollup -c ./rollup.config.js --watch",
         "serve": "live-server test",
-        "prettier": "prettier --parser=typescript --write ./src/**/*.ts"
-    },
+      "prettier": "prettier *.js --write&&prettier *.json --write && prettier *.md --write &&prettier --parser=typescript --write ./src/**/*.ts&&prettier --parser=babel --write ./test/**/*.js",
+     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
     "author": "masx200 <34191203+masx200@users.noreply.github.com>",
