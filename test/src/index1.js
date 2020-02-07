@@ -10,7 +10,7 @@ import {
   html,
   MountElement,
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 console.log([h, createElement]);
 /* console.log([
   Fragment,

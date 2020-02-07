@@ -9,7 +9,7 @@ import {
   html,
   MountElement,
   watch
-} from './mvvm-view';
+} from "./mvvm-view";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
@@ -298,12 +298,12 @@ const mycomapp = createComponent(() => {
         <script
           type="text/javascript"
           src="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/bundle.runtime~main.3a15bebb435b0d3fead6.js"
-        ></script
-        ><script
+        ></script>
+        <script
           type="text/javascript"
           src="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/chunk.vendors~main.f7c5ea92c1b78a8ff211.js"
-        ></script
-        ><script
+        ></script>
+        <script
           type="text/javascript"
           src="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.3.3/chunk.main.b9c7ffd191cff11a9b96.js"
         ></script>

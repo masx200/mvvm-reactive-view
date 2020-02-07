@@ -1,4 +1,4 @@
-import { render, h } from './mvvm-view';
+import { render, h } from "./mvvm-view";
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 setTimeout(() => {
   // @ts-ignore
