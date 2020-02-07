@@ -3,7 +3,7 @@ import { createcostumelemet } from "../CustomClass/create-costum-elemet";
 import { iscomponent } from "../AttributeClass/iscomponent";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import { watch } from "../Reactivity/watch";
 import {
   changetext,

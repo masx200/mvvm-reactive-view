@@ -2,7 +2,7 @@ import { invalid_ReactiveState } from "../AttributeClass/conditon";
 import { querySelectorAll } from "../UtilTools/dom";
 import directives from "./extend-directive";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
+import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
 import { get, set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
 import Virtualdom from "../CreateElement/VirtualElement";
