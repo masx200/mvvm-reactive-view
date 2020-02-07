@@ -16,7 +16,7 @@ import {
 } from "../mounted-unmounted/Component-context";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { dispatchsymbol } from "../Reactivity/ReactiveState";
+import ReactiveState, { dispatchsymbol } from "../Reactivity/reactivestate.ts";
 import readonlyproxy from "../Reactivity/readonly-proxy";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { componentsstylesheet } from "../ScopedCSS/parsecss-transformcss";
