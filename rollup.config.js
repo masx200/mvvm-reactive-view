@@ -1,7 +1,7 @@
 import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import json from 'rollup-plugin-json';
-import resolve from 'rollup-plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-ts';
@@ -23,7 +23,7 @@ const beautifyterserplugin = terser({
 });
 const mybabelplugin = babel({
   presets: [
-    "@babel/preset-typescript",
+    //"@babel/preset-typescript",
     [
       "@babel/preset-env",
       {
