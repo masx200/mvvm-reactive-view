@@ -1,4 +1,4 @@
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 import { watch } from "../Reactivity/watch";
 import { isconnected } from "../UtilTools/isconnected";
 import { isstring } from "../UtilTools/util";
