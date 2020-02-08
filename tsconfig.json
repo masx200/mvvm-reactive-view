@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-"plugins": [{ "name": "deno_ls_plugin" }]
-  ,
-  "allowJs": true,
+    "plugins": [],
+    "allowJs": true,
     "paths": {
       "htm": ["./@types/htm"]
     },
