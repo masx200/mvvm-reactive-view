@@ -9,7 +9,7 @@ import ReactiveState, {
   addonelistner,
   dispatchsymbol,
   removeonelistner
-} from "../Reactivity/ReactiveState";
+} from "../Reactivity/reactivestate.ts";
 import { rewatch /* , unwatch */, unwatch } from "../Reactivity/watch";
 import {
   readdlisteners,
