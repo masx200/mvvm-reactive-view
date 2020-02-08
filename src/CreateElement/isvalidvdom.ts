@@ -9,7 +9,7 @@ import Virtualdom, {
   isVirtualdom,
   Vdomchildren
 } from "../CreateElement/VirtualElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 import { isArray, isnumber, isstring } from "../UtilTools/util";
 
 export function isvalidvdom(v: any): v is VaildVDom {
