@@ -1,7 +1,7 @@
 const VirtualElementSet = new WeakSet<Virtualdom<any>>();
 const Letter_case_and_Chinese = /[A-Za-z\u4e00-\u9fa5]/;
 import { Htmlelementconstructor } from "../CustomClass/customclass";
-import ReactiveState, { isReactiveState } from "../Reactivity/ReactiveState";
+import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.ts";
 
 import { merge_entries } from "../UtilTools/merge-entries";
 import { defineProperty, preventExtensions } from "../UtilTools/reflect";
