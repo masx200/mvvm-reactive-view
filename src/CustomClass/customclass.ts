@@ -1,5 +1,5 @@
 import { Htmlelementconstructor } from "../AttributeClass/createComponent";
-import ReactiveState from "../Reactivity/ReactiveState";
+import ReactiveState from "../Reactivity/reactivestate.ts";
 import { Vdomchildren } from "../CreateElement/VirtualElement";
 import { VaildVDom } from "../CreateElement/isvalidvdom";
 export { Htmlelementconstructor };
