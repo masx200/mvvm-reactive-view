@@ -6,7 +6,7 @@ const componentsstylesheet: Map<string, Set<string>> = new Map();
 export { componentsstylesheet };
 
 export function createlinkstylesheet(url: string): HTMLLinkElement {
-  return render(
-    createElement("link", { href: url, rel: "stylesheet" })
-  ) as HTMLLinkElement;
+    return render(
+        createElement("link", { href: url, rel: "stylesheet" })
+    ) as HTMLLinkElement;
 }

@@ -4,20 +4,20 @@ import { createanotherhtmldocument, appendchild } from "../UtilTools/dom";
 import { get } from "../UtilTools/reflect";
 
 export function parsecsstext(text: string): Array<CSSRule> {
-  const styleelement = render(
-    createElement("style", [text])
-  ) as HTMLStyleElement;
+    const styleelement = render(
+        createElement("style", [text])
+    ) as HTMLStyleElement;
 
-  /* 只有添加到document之后才会有sheet */
+    /* 只有添加到document之后才会有sheet */
 
-  const otherdocument = createanotherhtmldocument();
-  appendchild(otherdocument.documentElement, styleelement);
+    const otherdocument = createanotherhtmldocument();
+    appendchild(otherdocument.documentElement, styleelement);
 
-  return Array.from(
-    get(
-      get(styleelement, "sheet"),
+    return Array.from(
+        get(
+            get(styleelement, "sheet"),
 
-      "cssRules"
-    )
-  );
+            "cssRules"
+        )
+    );
 }

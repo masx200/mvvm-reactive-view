@@ -5,6 +5,15 @@ interface Htmlelementconstructor {
     css?: string;
 }
 declare const createComponent: (custfun: Custom | Htmlelementconstructor) => Htmlelementconstructor;
+declare class ObserverTarget {
+    Listeners: Set<Listener>;
+    addListener(listener: Listener): void;
+    dispatch(): void;
+    removeListener(listener: Listener): void;
+}
+interface Listener {
+    (): any;
+}
 type Primitivetype = string | number | boolean | undefined | bigint;
 type CancelWatchfun = () => void;
 type UnwrapedState = any;
@@ -16,7 +25,7 @@ declare const addonelistner: unique symbol;
 declare const removeonelistner: unique symbol;
 declare const cancelsubscribe: unique symbol;
 declare const debouncedispatch: unique symbol;
-declare const eventtargetsymbol: unique symbol;
+declare const Targetsymbol: unique symbol;
 declare const memlisteners: unique symbol;
 declare const dispatchsymbol: unique symbol;
 declare const subscribesymbol: unique symbol;
@@ -26,18 +35,18 @@ declare class ReactiveState<T extends UnwrapedState> {
     value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
     readonly [Symbol.toStringTag] = "ReactiveState";
     constructor(init?: T);
-    [debouncedispatch]: (eventname?: string | undefined) => void;
+    [debouncedispatch]: () => void;
     [removeallistenerssymbol](): void;
-    [removeonelistner](callback: EventListener): void;
-    [addonelistner](callback: EventListener): void;
+    [removeonelistner](callback: Listener): void;
+    [addonelistner](callback: Listener): void;
     [addallistenerssymbol](): void;
-    [eventtargetsymbol]: EventTarget;
-    [memlisteners]: Set<EventListener>;
+    [Targetsymbol]: ObserverTarget;
+    [memlisteners]: Set<Listener>;
     valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
     toString(): string;
-    [dispatchsymbol](eventname?: string): void;
-    [subscribesymbol](callback: Function): void;
-    [cancelsubscribe](callback: Function): void;
+    [dispatchsymbol](): void;
+    [subscribesymbol](eventlistener: Listener): void;
+    [cancelsubscribe](eventlistener: Listener): void;
     [Symbol.toPrimitive](): string | undefined | Primitivetype;
 }
 type VaildVDom = Virtualdom<any> | string | number | Vdomchildren | ReactiveState<any>;

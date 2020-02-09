@@ -1,3 +1,3 @@
 export function setimmediate(fun: Function) {
-  return Promise.resolve().then(() => fun());
+    return Promise.resolve().then(() => fun());
 }

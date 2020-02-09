@@ -1,3 +1,47 @@
+function _defineProperty(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly) symbols = symbols.filter((function(sym) {
+            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        }));
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+
+function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i] != null ? arguments[i] : {};
+        if (i % 2) {
+            ownKeys(Object(source), true).forEach((function(key) {
+                _defineProperty(target, key, source[key]);
+            }));
+        } else if (Object.getOwnPropertyDescriptors) {
+            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+            ownKeys(Object(source)).forEach((function(key) {
+                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+            }));
+        }
+    }
+    return target;
+}
+
 const globalThis = Function("return this")();
 
 const self = globalThis;
@@ -6,7 +50,7 @@ const window = globalThis;
 
 const global = globalThis;
 
-const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
+const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -82,11 +126,11 @@ var isObject_1 = isObject;
 
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 
-var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object$1 && commonjsGlobal;
 
 var _freeGlobal = freeGlobal;
 
-var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+var freeSelf = typeof self == "object" && self && self.Object === Object$1 && self;
 
 var root = _freeGlobal || freeSelf || Function("return this")();
 
@@ -102,7 +146,7 @@ var Symbol$1 = _root.Symbol;
 
 var _Symbol = Symbol$1;
 
-var objectProto = Object.prototype;
+var objectProto = Object$1.prototype;
 
 var hasOwnProperty = objectProto.hasOwnProperty;
 
@@ -129,7 +173,7 @@ function getRawTag(value) {
 
 var _getRawTag = getRawTag;
 
-var objectProto$1 = Object.prototype;
+var objectProto$1 = Object$1.prototype;
 
 var nativeObjectToString$1 = objectProto$1.toString;
 
@@ -147,7 +191,7 @@ function baseGetTag(value) {
     if (value == null) {
         return value === undefined ? undefinedTag : nullTag;
     }
-    return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
+    return symToStringTag$1 && symToStringTag$1 in Object$1(value) ? _getRawTag(value) : _objectToString(value);
 }
 
 var _baseGetTag = baseGetTag;
@@ -287,8 +331,6 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-const cached_callback_eventlistner = new WeakMap;
-
 const cached_create_componet = new WeakMap;
 
 const cached_callback_debounced_watchs = new WeakMap;
@@ -398,7 +440,29 @@ function clearall() {
     clearwatch();
 }
 
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
+class ObserverTarget {
+    constructor() {
+        this.Listeners = new Set;
+    }
+    addListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.add(listener);
+    }
+    dispatch() {
+        const listenerset = this.Listeners;
+        listenerset.forEach(listener => {
+            Promise.resolve().then(() => {
+                listener();
+            });
+        });
+    }
+    removeListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.delete(listener);
+    }
+}
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, preventExtensions: preventExtensions} = Reflect;
 
 function get(target, propertyKey) {
     if (isMap(target) || isWeakMap(target)) {
@@ -419,8 +483,6 @@ function set(target, propertyKey, value) {
 
 var _a, _b;
 
-const EventTarget = window.EventTarget;
-
 const addonelistner = Symbol("addonelistner");
 
 const removeonelistner = Symbol("removeonelistner");
@@ -435,7 +497,7 @@ function isReactiveState(a) {
     return a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState";
 }
 
-const eventtargetsymbol = Symbol("eventtatget");
+const Targetsymbol = Symbol("eventtatget");
 
 const memlisteners = Symbol("memlisteners");
 
@@ -450,7 +512,7 @@ const addallistenerssymbol = Symbol("addallisteners");
 class ReactiveState {
     constructor(init) {
         this[Symbol.toStringTag] = "ReactiveState";
-        this[_a] = new EventTarget;
+        this[_a] = new ObserverTarget;
         this[_b] = new Set;
         this.valueOf = () => this.value;
         this.value = init;
@@ -460,14 +522,11 @@ class ReactiveState {
             writable: true
         });
         recordusestste(this);
-        const debouncedfun = debounce_1(eventname => {
-            const name = eventname ? String(eventname) : "value";
-            this[eventtargetsymbol].dispatchEvent(new CustomEvent("value", {
-                detail: name
-            }));
+        const debouncedfun = debounce_1(() => {
+            this[Targetsymbol].dispatch();
         });
-        this[debouncedispatch] = eventname => {
-            debouncedfun(eventname);
+        this[debouncedispatch] = () => {
+            debouncedfun();
         };
     }
     [removeallistenerssymbol]() {
@@ -476,12 +535,10 @@ class ReactiveState {
         });
     }
     [removeonelistner](callback) {
-        const name = "value";
-        this[eventtargetsymbol].removeEventListener(name, callback);
+        this[Targetsymbol].removeListener(callback);
     }
     [addonelistner](callback) {
-        const name = "value";
-        this[eventtargetsymbol].addEventListener(name, callback);
+        this[Targetsymbol].addListener(callback);
     }
     [addallistenerssymbol]() {
         this[memlisteners].forEach(callback => {
@@ -492,22 +549,13 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_a = eventtargetsymbol, _b = memlisteners, dispatchsymbol)](eventname) {
-        this[debouncedispatch](eventname);
+    [(_a = Targetsymbol, _b = memlisteners, dispatchsymbol)]() {
+        this[debouncedispatch]();
     }
-    [subscribesymbol](callback) {
-        let eventlistener;
-        const possiblecallback = cached_callback_eventlistner.get(callback);
-        if (possiblecallback) {
-            eventlistener = possiblecallback;
-        } else {
-            eventlistener = () => callback();
-            cached_callback_eventlistner.set(callback, eventlistener);
-        }
+    [subscribesymbol](eventlistener) {
         this[memlisteners].add(eventlistener);
     }
-    [cancelsubscribe](callback) {
-        const eventlistener = cached_callback_eventlistner.get(callback);
+    [cancelsubscribe](eventlistener) {
         if (eventlistener) {
             this[memlisteners].delete(eventlistener);
             this[removeonelistner](eventlistener);
@@ -583,50 +631,6 @@ function rewatch(state) {
     state[addallistenerssymbol]();
 }
 
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
-function ownKeys$1(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) symbols = symbols.filter((function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        }));
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-
-function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-            ownKeys$1(Object(source), true).forEach((function(key) {
-                _defineProperty(target, key, source[key]);
-            }));
-        } else if (Object.getOwnPropertyDescriptors) {
-            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-            ownKeys$1(Object(source)).forEach((function(key) {
-                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-            }));
-        }
-    }
-    return target;
-}
-
 const acceptValue = [ "input", "textarea", "option", "select" ];
 
 var mustUseDomProp = (tag, attr, attrtype) => attr === "value" && acceptValue.includes(tag) && attrtype !== "button" || attr === "selected" && tag === "option" || attr === "checked" && tag === "input" || attr === "muted" && tag === "video";
@@ -639,7 +643,7 @@ const String$1 = window.String;
 
 const Reflect$1 = window.Reflect;
 
-const {get: get$1, set: set$1, ownKeys: ownKeys$2} = Reflect$1;
+const {get: get$1, set: set$1, ownKeys: ownKeys$1$1} = Reflect$1;
 
 const valuestring = "value";
 
@@ -663,7 +667,7 @@ const isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "ty
 
 function objtostylestring(obj) {
     obj = JSON.parse(JSON.stringify(obj));
-    const objentries = Object.entries(obj).map(([key, value]) => [ hyphenate(key).trim(), value ]);
+    const objentries = Object$1.entries(obj).map(([key, value]) => [ hyphenate(key).trim(), value ]);
     return objentries.map(([key, value]) => key + ":" + value).join(";");
 }
 
@@ -677,7 +681,7 @@ function asserthtmlelement(ele) {
 
 function createeleattragentreadwrite(ele) {
     asserthtmlelement(ele);
-    var temp = Object.create(null);
+    var temp = Object$1.create(null);
     const outputattrs = new Proxy(temp, {
         ownKeys() {
             const isinputtextortextareaflag = isinputtextortextarea(ele);
@@ -742,7 +746,7 @@ function createeleattragentreadwrite(ele) {
             return true;
         },
         has(target, key) {
-            return ownKeys$2(outputattrs).includes(key);
+            return ownKeys$1$1(outputattrs).includes(key);
         },
         defineProperty() {
             return false;
@@ -804,7 +808,7 @@ function merge_entries(a) {
             m[key].add(v);
         });
     });
-    return Object.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
+    return Object$1.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
 }
 
 const VirtualElementSet = new WeakSet;
@@ -816,12 +820,12 @@ function isVirtualdom(a) {
 }
 
 function createVirtualElement(type, props = {}, children = []) {
-    props = Object.assign({}, props);
+    props = Object$1.assign({}, props);
     children = children.flat(1 / 0);
-    const propsentries = Object.entries(props);
+    const propsentries = Object$1.entries(props);
     const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
-    const virtual = Object.create(null);
+    const virtual = Object$1.create(null);
     const vdom = virtual;
     [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
         defineProperty(virtual, key, {
@@ -829,20 +833,20 @@ function createVirtualElement(type, props = {}, children = []) {
         });
     });
     vdom.element = [];
-    Object.assign(virtual, {
+    Object$1.assign(virtual, {
         type: type,
-        bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
-        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
+        bindattr: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
+        props: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
         children: children,
-        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+        onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
+        directives: Object$1.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
     });
     defineProperty(virtual, Symbol.toStringTag, {
         value: "VirtualElement"
     });
     preventExtensions(virtual);
     VirtualElementSet.add(virtual);
-    Object.freeze(vdom);
+    Object$1.freeze(vdom);
     return virtual;
 }
 
@@ -982,7 +986,7 @@ if (!isobject(window.customElements)) {
 }
 
 function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
-    const outputentrie = Object.entries(table).find(v => v[1] === Componentstatusname);
+    const outputentrie = Object$1.entries(table).find(v => v[1] === Componentstatusname);
     return outputentrie ? outputentrie[0] : undefined;
 }
 
@@ -1049,7 +1053,7 @@ customElements$1.define = function(name, constructor, options) {
 };
 
 set(customElements$1, Symbol.iterator, () => {
-    const entries = Object.entries(customElements$1[elementmap]);
+    const entries = Object$1.entries(customElements$1[elementmap]);
     return entries[Symbol.iterator].call(entries);
 });
 
@@ -1121,7 +1125,7 @@ function extenddirectives(options = {}) {
         console.error(options);
         throw new TypeError;
     }
-    Object.entries(options).forEach(([key, value]) => {
+    Object$1.entries(options).forEach(([key, value]) => {
         if (typeof value !== "function") {
             console.error(value);
             console.error(invalid_Function);
@@ -1206,7 +1210,7 @@ function readdlisteners(ele) {
 function handleprops(element, vdom) {
     vdom.element.push(element);
     ((element, vdom) => {
-        Object.entries(vdom.directives).forEach(([name, value]) => {
+        Object$1.entries(vdom.directives).forEach(([name, value]) => {
             if (isfunction(directive[name])) {
                 directive[name](value, element, vdom);
             } else {
@@ -1216,8 +1220,8 @@ function handleprops(element, vdom) {
             }
         });
         const attribute1 = createeleattragentreadwrite(element);
-        Object.assign(attribute1, vdom.props);
-        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+        Object$1.assign(attribute1, vdom.props);
+        Object$1.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
             watch(primitivestate, () => {
                 const state = primitivestate;
@@ -1226,11 +1230,11 @@ function handleprops(element, vdom) {
                 }
             });
         });
-        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
+        Object$1.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
     })(element, vdom);
-    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
+    [ ...Object$1.values(vdom.bindattr), ...Object$1.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
         if (!has(element, bindstatesymbol)) {
             set(element, bindstatesymbol, new Set);
         }
@@ -1289,15 +1293,9 @@ function render(vdom, namespace) {
             }
         } else if (typeof type == "function") {
             if (isobject(type["defaultProps"])) {
-                Object.assign(vdom.props, JSON.parse(JSON.stringify({
-                    ...type["defaultProps"],
-                    ...vdom.props
-                })));
+                Object$1.assign(vdom.props, JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props))));
             }
-            const propsjson = JSON.parse(JSON.stringify({
-                ...vdom.props,
-                ...Object.fromEntries(Object.entries(vdom.bindattr).map(([key, value]) => [ key, value.value ]))
-            }));
+            const propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(([key, value]) => [ key, value.value ])))));
             element = createcostumelemet(type, propsjson, vdom.children);
         } else {
             throwinvalideletype(vdom);
@@ -1562,8 +1560,7 @@ function onmounted(ele) {
         }
         if (has(ele, innerwatchrecords)) {
             const watchrecords = get(ele, innerwatchrecords);
-            watchrecords.forEach(([state, callback]) => {
-                const eventlistener = cached_callback_eventlistner.get(callback);
+            watchrecords.forEach(([state, eventlistener]) => {
                 if (eventlistener) {
                     state[addonelistner](eventlistener);
                 }
@@ -1587,8 +1584,7 @@ function onunmounted(ele) {
         }
         if (has(ele, innerwatchrecords)) {
             const watchrecords = get(ele, innerwatchrecords);
-            watchrecords.forEach(([state, callback]) => {
-                const eventlistener = cached_callback_eventlistner.get(callback);
+            watchrecords.forEach(([state, eventlistener]) => {
                 if (eventlistener) {
                     state[removeonelistner](eventlistener);
                 }
@@ -1621,7 +1617,7 @@ class AttrChange extends HTMLElement {
         const defaultProps = get(this.constructor, "defaultProps");
         const attrs = createeleattragentreadwrite(this);
         if (isobject(defaultProps)) {
-            Object.assign(attrs, defaultProps);
+            Object$1.assign(attrs, defaultProps);
         }
         new MutationObserver(mutations => {
             mutations.forEach(mutation => {
@@ -1703,11 +1699,11 @@ function createComponentold(custfun) {
                 }
                 const attrs = createeleattragentreadwrite(this);
                 if (isobject(propsjson)) {
-                    Object.assign(attrs, propsjson);
+                    Object$1.assign(attrs, propsjson);
                 }
                 const props = attrs;
                 openctx();
-                const thisattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
+                const thisattributess = Object$1.fromEntries(Object$1.entries(props).map(([key]) => [ key, (() => {
                     const attributes = createeleattragentreadwrite(this);
                     const state = new ReactiveState;
                     defineProperty(state, "value", {
@@ -1719,7 +1715,7 @@ function createComponentold(custfun) {
                     return state;
                 })() ]));
                 this[attributessymbol] = thisattributess;
-                const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
+                const readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 let possiblyvirtualdom;
                 try {
                     possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
@@ -1865,7 +1861,7 @@ const handlefalse = Symbol("handlefalse");
 
 const currentelementsymbol = Symbol("currentelement");
 
-const Condition = function(conditon, iftrue, iffalse) {
+const Condition = function Condition(conditon, iftrue, iffalse) {
     var _a, _b, _c, _d, _e;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
         console.error(conditon);
@@ -1957,7 +1953,7 @@ function getproperyreadproxy(a) {
         ownKeys(target) {
             let myvalue = get(target, "value");
             const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
+            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
         },
         has(target, key) {
             const myvalue = get(target, "value");
@@ -1969,7 +1965,7 @@ function getproperyreadproxy(a) {
                 return get(target, key);
             } else {
                 const myvalue = get(target, "value");
-                const myvalueobj = Object(myvalue);
+                const myvalueobj = Object$1(myvalue);
                 if (has(myvalueobj, key)) {
                     const property = get(myvalueobj, key);
                     return isfunction(property) ? property.bind(myvalueobj) : property;
@@ -1979,7 +1975,7 @@ function getproperyreadproxy(a) {
     });
 }
 
-const computed = function(state, callback, setter) {
+const computed = function computed(state, callback, setter) {
     if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
@@ -2055,7 +2051,7 @@ function isArray$1(a) {
 
 const Reflect$2 = window.Reflect;
 
-const {ownKeys: ownKeys$3, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
+const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
 
 function isobject$2(a) {
     return typeof a === "object" && a !== null;
@@ -2130,7 +2126,7 @@ function deepobserveaddpath(target, callback, patharray = [], ancestor = target)
                 return deleteProperty$1(target, p);
             },
             ownKeys() {
-                return ownKeys$3(target);
+                return ownKeys$2(target);
             },
             has(t, p) {
                 return has$1(target, p);
@@ -2207,13 +2203,13 @@ function observedeepagent(target, callback) {
 function handleobjectstate(init) {
     const reactive = new ReactiveState(init);
     let initobj = init;
-    const containReactiveState = isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
-    const state_entries = Object.entries(init).filter(e => {
+    const containReactiveState = isplainobject(init) && Object$1.values(init).some(a => isReactiveState(a));
+    const state_entries = Object$1.entries(init).filter(e => {
         const a = e[1];
         return isReactiveState(a);
     });
     if (containReactiveState) {
-        initobj = Object.assign({}, init);
+        initobj = Object$1.assign({}, init);
         state_entries.forEach(([key, state]) => {
             defineProperty(initobj, key, {
                 enumerable: true,
@@ -2230,13 +2226,13 @@ function handleobjectstate(init) {
     if (containReactiveState) {
         state_entries.forEach(([key, state]) => {
             watch(state, () => {
-                reactive[dispatchsymbol](String(key));
+                reactive[dispatchsymbol]();
             });
         });
     }
     reactive.value = initobj;
     const objproxyhandler = {};
-    objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
+    objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(get(target, "value")) ]));
     objproxyhandler.setPrototypeOf = () => false;
     objproxyhandler.defineProperty = () => false;
     objproxyhandler.getOwnPropertyDescriptor = (target, key) => {
@@ -2254,7 +2250,7 @@ function handleobjectstate(init) {
         const myvalue = get(target, "value");
         if (has(myvalue, key)) {
             deleteProperty(myvalue, key);
-            target[dispatchsymbol](String(key));
+            target[dispatchsymbol]();
             return true;
         } else {
             return true;
@@ -2269,7 +2265,7 @@ function handleobjectstate(init) {
         const deepflage = isarray(value) || isplainobject(value);
         if (key === "value" && deepflage) {
             return observedeepagent(get(target, key), (_target_, patharray) => {
-                target[dispatchsymbol](patharray[0]);
+                target[dispatchsymbol]();
             });
         } else if (has(target, key)) {
             return get(target, key);
@@ -2319,7 +2315,7 @@ function handleobjectstate(init) {
                 }
             } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
                 return observedeepagent(resultvalue, () => {
-                    target[dispatchsymbol](String(key));
+                    target[dispatchsymbol]();
                 });
             } else {
                 return resultvalue;
@@ -2340,7 +2336,7 @@ function handleobjectstate(init) {
         } else if (!has(target, key)) {
             if (myvalue[key] !== value) {
                 set(myvalue, key, value);
-                target[dispatchsymbol](String(key));
+                target[dispatchsymbol]();
             }
             return true;
         } else {
@@ -2474,7 +2470,7 @@ function ListMap(list, mapfun) {
             set(this[listvalueattr], "value", value);
             this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
             this[listinnerelement] = render(this[listinnervdom]);
-            Object.entries(this[listinnerelement]).forEach(([key, value]) => {
+            Object$1.entries(this[listinnerelement]).forEach(([key, value]) => {
                 set(this[cached_realele], Number(key), value);
             });
             mountrealelement(this[listinnerelement], this);
@@ -2557,7 +2553,7 @@ function createRef(value) {
 var n = function n(t, r, u, e) {
     for (var p = 1; p < r.length; p++) {
         var s = r[p], h = "number" == typeof s ? u[s] : s, a = r[++p];
-        1 === a ? e[0] = h : 3 === a ? e[1] = Object.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
+        1 === a ? e[0] = h : 3 === a ? e[1] = Object$1.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
     }
     return e;
 }, t = function t(n) {

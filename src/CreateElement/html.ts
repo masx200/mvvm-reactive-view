@@ -6,26 +6,26 @@ import { toArray } from "../UtilTools/toArray";
 import Virtualdom, { Vdomchildren } from "./VirtualElement";
 import h from "./create-element";
 import { isvalidvdom } from "./isvalidvdom";
-import ReactiveState from "src/Reactivity/ReactiveState";
+import ReactiveState from "src/Reactivity/reactivestate.js";
 
 function htmlold(...inargs: any[]): Virtualdom<any> | Vdomchildren {
-  return apply(htm /* as HTM */, h, inargs);
+    return apply(htm /* as HTM */, h, inargs);
 }
 
 /* 如果出现未闭合标签会产生错误的vdom */
 
 export { html };
 export default function html(
-  ...args: any[]
+    ...args: any[]
 ): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any> {
-  const prevdom = toArray(htmlold(...args));
+    const prevdom = toArray(htmlold(...args));
 
-  const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
-  if (isvalidvdom(vdom)) {
-    return vdom;
-  } else {
-    console.error(vdom);
-    console.error(invalid_Virtualdom);
-    throw new TypeError();
-  }
+    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
+    if (isvalidvdom(vdom)) {
+        return vdom;
+    } else {
+        console.error(vdom);
+        console.error(invalid_Virtualdom);
+        throw new TypeError();
+    }
 }

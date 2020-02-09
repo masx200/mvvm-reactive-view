@@ -3,22 +3,22 @@ let watchrecord: [ReactiveState<any>, Function][] = [];
 组件卸载时removeeventlistener,
 组件挂载时addeventlistener
 */
-import ReactiveState from "../Reactivity/ReactiveState";
+import ReactiveState from "../Reactivity/reactivestate.js";
 import { isFunction } from "../UtilTools/util";
 export function getwatchrecords() {
-  return [...watchrecord];
+    return [...watchrecord];
 }
 export function usewatch(state: ReactiveState<any>, callback: Function) {
-  if (ctxopen) {
-    watchrecord.push([state, callback]);
-  }
+    if (ctxopen) {
+        watchrecord.push([state, callback]);
+    }
 }
 function clearwatch() {
-  watchrecord = [];
+    watchrecord = [];
 }
 export const invalid_Function = "invalid Function";
 const errormessage =
-  "invalid useMounted or useUnMounted out of createComponent";
+    "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
 let MountedSet: Set<Function> = new Set();
 let UnMountedSet: Set<Function> = new Set();
@@ -26,69 +26,69 @@ let StateSet: Set<ReactiveState<any>> = new Set();
 /* 收集组件内部创建的 ReactiveState*/
 
 export function getstates() {
-  return [...StateSet];
+    return [...StateSet];
 }
 export function recordusestste(state: ReactiveState<any>) {
-  if (ctxopen) {
-    StateSet.add(state);
-  }
+    if (ctxopen) {
+        StateSet.add(state);
+    }
 }
 export function getMounted() {
-  return [...MountedSet];
+    return [...MountedSet];
 }
 export function getUnMounted() {
-  return [...UnMountedSet];
+    return [...UnMountedSet];
 }
 export function useMounted(fun: Function) {
-  if (isFunction(fun)) {
-    if (ctxopen) {
-      MountedSet.add(fun);
+    if (isFunction(fun)) {
+        if (ctxopen) {
+            MountedSet.add(fun);
+        } else {
+            console.error(errormessage);
+            throw Error();
+        }
     } else {
-      console.error(errormessage);
-      throw Error();
+        console.error(fun);
+        console.error(invalid_Function);
+        throw TypeError();
     }
-  } else {
-    console.error(fun);
-    console.error(invalid_Function);
-    throw TypeError();
-  }
 }
 
 export function useUnMounted(fun: Function) {
-  if (isFunction(fun)) {
-    if (ctxopen) {
-      UnMountedSet.add(fun);
+    if (isFunction(fun)) {
+        if (ctxopen) {
+            UnMountedSet.add(fun);
+        } else {
+            console.error(errormessage);
+            throw Error();
+        }
     } else {
-      console.error(errormessage);
-      throw Error();
+        console.error(fun);
+        console.error(invalid_Function);
+        throw TypeError();
     }
-  } else {
-    console.error(fun);
-    console.error(invalid_Function);
-    throw TypeError();
-  }
 }
 export function clearMounted() {
-  MountedSet = new Set();
+    MountedSet = new Set();
 }
 
 function clearstate() {
-  StateSet = new Set();
+    StateSet = new Set();
 }
 export function clearUnMounted() {
-  UnMountedSet = new Set();
+    UnMountedSet = new Set();
 }
 export function openctx() {
-  ctxopen = true;
-  clearall();
+    ctxopen = true;
+    clearall();
 }
 export function closectx() {
-  ctxopen = false;
-  clearall();
+    ctxopen = false;
+    clearall();
 }
 function clearall() {
-  clearMounted();
-  clearUnMounted();
-  clearstate();
-  clearwatch();
+    clearMounted();
+    clearUnMounted();
+    clearstate();
+    clearwatch();
 }

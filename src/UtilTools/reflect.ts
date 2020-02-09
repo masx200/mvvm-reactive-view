@@ -1,56 +1,56 @@
 import { isMap, isWeakMap } from "./util";
 
 export const {
-  apply,
-  construct,
-  defineProperty,
-  deleteProperty,
+    apply,
+    construct,
+    defineProperty,
+    deleteProperty,
 
-  getOwnPropertyDescriptor,
-  getPrototypeOf,
-  has,
+    getOwnPropertyDescriptor,
+    getPrototypeOf,
+    has,
 
-  ownKeys,
-  preventExtensions
+    ownKeys,
+    preventExtensions
 } = Reflect;
 /* get和set函数同时实现reflect.get和reflect.set和map.set和map.get */
 export function get(
-  target: Map<any, any> | WeakMap<any, any>,
-  propertyKey: PropertyKey
+    target: Map<any, any> | WeakMap<any, any>,
+    propertyKey: PropertyKey
 ): any;
 export function get(
-  target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
-  propertyKey: PropertyKey
+    target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
+    propertyKey: PropertyKey
 ): any;
 export function get(target: object, propertyKey: PropertyKey): any {
-  if (isMap(target) || isWeakMap(target)) {
-    return target.get(propertyKey);
-  } else {
-    return Reflect.get(target, propertyKey /* , receiver */);
-  }
+    if (isMap(target) || isWeakMap(target)) {
+        return target.get(propertyKey);
+    } else {
+        return Reflect.get(target, propertyKey /* , receiver */);
+    }
 }
 export function set(
-  target: Map<any, any> | WeakMap<any, any>,
-  propertyKey: PropertyKey,
-  value: any
+    target: Map<any, any> | WeakMap<any, any>,
+    propertyKey: PropertyKey,
+    value: any
 ): boolean;
 export function set(
-  target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
-  propertyKey: PropertyKey,
-  value: any
+    target: Exclude<object, Map<any, any> | WeakMap<any, any>>,
+    propertyKey: PropertyKey,
+    value: any
 ): boolean;
 export function set(
-  target: object,
-  propertyKey: PropertyKey,
-  value: any
+    target: object,
+    propertyKey: PropertyKey,
+    value: any
 ): boolean {
-  if (isMap(target) || isWeakMap(target)) {
-    target.set(propertyKey, value);
+    if (isMap(target) || isWeakMap(target)) {
+        target.set(propertyKey, value);
 
-    return true;
-  } else {
-    return Reflect.set(target, propertyKey, value /* , receiver */);
-  }
+        return true;
+    } else {
+        return Reflect.set(target, propertyKey, value /* , receiver */);
+    }
 }
 
 /*

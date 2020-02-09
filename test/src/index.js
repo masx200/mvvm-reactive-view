@@ -22,6 +22,6 @@ import "./index1.js";
 import "./index2.js";
 import "./index3.js";
 
-import "./index-test-all-component.js";
+// import "./index-test-all-component.js";
 import "./index-fun-state";
 import "./index-switchable";

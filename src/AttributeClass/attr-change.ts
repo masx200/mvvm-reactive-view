@@ -1,8 +1,8 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
 
 import {
-  onmounted,
-  onunmounted
+    onmounted,
+    onunmounted
 } from "../mounted-unmounted/element-onmount-unmount";
 import { get } from "../UtilTools/reflect";
 import { isFunction, isfunction, isobject } from "../UtilTools/util";
@@ -27,90 +27,92 @@ export const firstinstalledcallback = Symbol("firstinstalled");
             }
 */
 export function connectedCallback(componentelement: HTMLElement) {
-  AttrChange.prototype.connectedCallback.call(componentelement);
+    AttrChange.prototype.connectedCallback.call(componentelement);
 }
 
 export function disconnectedCallback(componentelement: HTMLElement) {
-  AttrChange.prototype.disconnectedCallback.call(componentelement);
+    AttrChange.prototype.disconnectedCallback.call(componentelement);
 }
 export class AttrChange extends HTMLElement {
-  disconnectedCallback() {
-    setimmediate(() => {
-      onunmounted(this);
-    });
-  }
-  connectedCallback() {
-    setimmediate(() => {
-      if (!this[readysymbol]) {
-        this[readysymbol] = true;
-        const callback = get(this, firstinstalledcallback);
-        if (isfunction(callback)) {
-          setimmediate(() => {
-            callback.call(this);
-          });
-        }
-      }
-      onmounted(this);
-    });
-  }
-  [readysymbol] = false;
+    disconnectedCallback() {
+        setimmediate(() => {
+            onunmounted(this);
+        });
+    }
+    connectedCallback() {
+        setimmediate(() => {
+            if (!this[readysymbol]) {
+                this[readysymbol] = true;
+                const callback = get(this, firstinstalledcallback);
+                if (isfunction(callback)) {
+                    setimmediate(() => {
+                        callback.call(this);
+                    });
+                }
+            }
+            onmounted(this);
+        });
+    }
+    [readysymbol] = false;
 
-  constructor() {
-    super();
-    const defaultProps = get(this.constructor, "defaultProps");
+    constructor() {
+        super();
+        const defaultProps = get(this.constructor, "defaultProps");
 
-    const attrs: Record<string, any> = createeleattragentreadwrite(this);
+        const attrs: Record<string, any> = createeleattragentreadwrite(this);
 
-    if (isobject(defaultProps)) {
-      /*     if (!this[attributessymbol]) {
+        if (isobject(defaultProps)) {
+            /*     if (!this[attributessymbol]) {
         this[attributessymbol] = {};
       } */
-      Object.assign(attrs, defaultProps);
+            Object.assign(attrs, defaultProps);
+        }
+
+        new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.type == "attributes") {
+                    console.log(
+                        "The " +
+                            mutation.attributeName +
+                            " attribute was modified."
+                    );
+                    const callback = get(this, attributeChangedCallback);
+
+                    let qualifiedName = mutation.attributeName;
+                    if (qualifiedName && isFunction(callback)) {
+                        callback.call(this, qualifiedName);
+                    }
+                }
+            });
+        }).observe(this, { attributes: true });
     }
 
-    new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (mutation.type == "attributes") {
-          console.log(
-            "The " + mutation.attributeName + " attribute was modified."
-          );
-          const callback = get(this, attributeChangedCallback);
-
-          let qualifiedName = mutation.attributeName;
-          if (qualifiedName && isFunction(callback)) {
-            callback.call(this, qualifiedName);
-          }
-        }
-      });
-    }).observe(this, { attributes: true });
-  }
-
-  /*  defaultProps?: { [key: string]: any } | undefined;
+    /*  defaultProps?: { [key: string]: any } | undefined;
   css?: string | undefined; */
-  /* constructor() {
+    /* constructor() {
     super();
   } */
 
-  /* 跟seteletext发生冲突,清空children */
+    /* 跟seteletext发生冲突,清空children */
 
-  /* _name?: any, _oldValue?: any, _newValue?: any */
+    /* _name?: any, _oldValue?: any, _newValue?: any */
 
-  //
+    //
 
-  /* constructor() {
+    /* constructor() {
     super();
   } */
 
-  /* disconnectedCallback() {
+    /* disconnectedCallback() {
   
 } */
-  /* connectedCallback() {
+    /* connectedCallback() {
   
   updateStyle(this);
 } */
-  //
+    //
 
-  /* attributeChangedCallback(name, oldValue, newValue) {
+    /* attributeChangedCallback(name, oldValue, newValue) {
   
   updateStyle(this);
 } */

@@ -56,10 +56,6 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 import "@masx200/mvvm-reactive-view/dist/polyfill.js";
 ```
 
-## 基于 `EventTarget`,`Microsoft Edge` 浏览器不支持`new EventTarget`,需要自行添加`polyfill`
-
-https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/EventTarget
-
 ## 需要`webcomponent` `custom-elements` `polyfill`
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
@@ -80,22 +76,22 @@ https://tc39.es/proposal-flatMap/
 
 ```js
 import {
-  Switchable,
-  ListMap,
-  computed,
-  createComponent,
-  useMounted,
-  useUnMounted,
-  Condition,
-  Directives,
-  watch,
-  html,
-  h,
-  MountElement,
-  createRef,
-  createElement,
-  createState,
-  render
+    Switchable,
+    ListMap,
+    computed,
+    createComponent,
+    useMounted,
+    useUnMounted,
+    Condition,
+    Directives,
+    watch,
+    html,
+    h,
+    MountElement,
+    createRef,
+    createElement,
+    createState,
+    render
 } from "@masx200/mvvm-reactive-view";
 ```
 
@@ -105,52 +101,52 @@ import {
 
 ```js
 import {
-  Switchable,
-  ListMap,
-  computed,
-  createComponent,
-  useMounted,
-  useUnMounted,
-  Condition,
-  Directives,
-  watch,
-  html,
-  h,
-  MountElement,
-  createRef,
-  createElement,
-  createState
+    Switchable,
+    ListMap,
+    computed,
+    createComponent,
+    useMounted,
+    useUnMounted,
+    Condition,
+    Directives,
+    watch,
+    html,
+    h,
+    MountElement,
+    createRef,
+    createElement,
+    createState
 } from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
 const inputref = createRef();
 const state1 = createState("hello");
 const stylestate = createState({ display: "block", width: "700px" });
 const vdom = html`
-  <div style=${{ display: "block", width: "500px" }}>hello world!</div>
-  <input
-    style="width:800px"
-    @input=${e => (state1.value = e.target.value)}
-    *ref=${inputref}
-    @change=${e => (state1.value = e.target.value)}
-    id="code16"
-    class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
-    value=${state1}
-  />
-  <h1 style=${stylestate}>mvvm-reactive-view</h1>
-  <button
-    @click=${() => {
-      stylestate.color = "red";
-    }}
-  >
-    red
-  </button>
+    <div style=${{ display: "block", width: "500px" }}>hello world!</div>
+    <input
+        style="width:800px"
+        @input=${e => (state1.value = e.target.value)}
+        *ref=${inputref}
+        @change=${e => (state1.value = e.target.value)}
+        id="code16"
+        class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
+        value=${state1}
+    />
+    <h1 style=${stylestate}>mvvm-reactive-view</h1>
+    <button
+        @click=${() => {
+            stylestate.color = "red";
+        }}
+    >
+        red
+    </button>
 
-  <button
-    @click=${() => {
-      stylestate.color = "green";
-    }}
-  >
-    green
-  </button>
+    <button
+        @click=${() => {
+            stylestate.color = "green";
+        }}
+    >
+        green
+    </button>
 `;
 watch(state1, console.log);
 watch(stylestate, console.log);
@@ -198,33 +194,33 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 ```json
 {
-  "plugins": [
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "h",
-        "pragmaFrag": "\"\""
-      }
+    "plugins": [
+        [
+            "@babel/plugin-transform-react-jsx",
+            {
+                "pragma": "h",
+                "pragmaFrag": "\"\""
+            }
+        ],
+        [
+            "babel-plugin-htm",
+            {
+                "tag": "html",
+                "pragma": "h"
+            }
+        ],
+        "@babel/plugin-proposal-class-properties"
     ],
-    [
-      "babel-plugin-htm",
-      {
-        "tag": "html",
-        "pragma": "h"
-      }
-    ],
-    "@babel/plugin-proposal-class-properties"
-  ],
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "corejs": 3,
-        "useBuiltIns": "usage",
-        "targets": { "esmodules": true }
-      }
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "corejs": 3,
+                "useBuiltIns": "usage",
+                "targets": { "esmodules": true }
+            }
+        ]
     ]
-  ]
 }
 ```
 
@@ -232,7 +228,7 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 ### `ReactiveState`状态改变触发`Event`,触发函数也已经用 `lodash`的`debounce`函数包装成防抖函数，保证了短时间内只能触发一次事件
 
-## `ReactiveState`,基于 `EventTarget` 和 `Proxy`,
+## `ReactiveState`,基于 `Proxy`,
 
 ## 基于`Proxy`的深层数据劫持监听，对于数组`Array`和普通对象`Plain Object`理论上无限层次的数据观察代理
 
@@ -249,29 +245,29 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 ```jsx
 const number = createState(10);
 function increment() {
-  number.value++;
+    number.value++;
 }
 function decrement() {
-  number.value--;
+    number.value--;
 }
 const store = { number, increment, decrement };
 
 const mycomappclass = createComponent(() => {
-  const vdom = (
-    <div>
-      <h3> 点击数字</h3>
-      <h2>number:{store.number}</h2>
+    const vdom = (
+        <div>
+            <h3> 点击数字</h3>
+            <h2>number:{store.number}</h2>
 
-      <button onclick={store.increment}>increment</button>
-      <button onclick={store.decrement}>decrement</button>
-    </div>
-  );
-  return vdom;
+            <button onclick={store.increment}>increment</button>
+            <button onclick={store.decrement}>decrement</button>
+        </div>
+    );
+    return vdom;
 });
 const vdom = [
-  createElement(mycomappclass),
-  createElement(mycomappclass),
-  createElement(mycomappclass)
+    createElement(mycomappclass),
+    createElement(mycomappclass),
+    createElement(mycomappclass)
 ];
 
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
@@ -284,13 +280,13 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```jsx
 var mystate = createState(true);
 var vdom = Condition(
-  mystate,
-  createElement("p", null, ["testtrue"]),
-  createElement("div", undefined, "testfalese")
+    mystate,
+    createElement("p", null, ["testtrue"]),
+    createElement("div", undefined, "testfalese")
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
-  mystate.value = false;
+    mystate.value = false;
 }, 3000);
 ```
 
@@ -313,19 +309,19 @@ const css = `
   font-size: 50px;
 }`;
 const Hellowordclass = createComponent(
-  Object.assign(
-    () => {
-      return <div> hello world</div>;
-    },
-    { css, defaultProps }
-  )
+    Object.assign(
+        () => {
+            return <div> hello world</div>;
+        },
+        { css, defaultProps }
+    )
 );
 document.body.appendChild(
-  MountElement(
-    <Hellowordclass />,
+    MountElement(
+        <Hellowordclass />,
 
-    document.createElement("div")
-  )
+        document.createElement("div")
+    )
 );
 ```
 
@@ -410,30 +406,30 @@ HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
 ```js
 var mystate = createState("aaeeqtt");
 const mycom = createComponent(
-  Object.assign(
-    (props, children) => {
-      useMounted(() => {
-        console.log("mounted1");
-      });
-      useMounted(() => {
-        console.log("mounted2", props);
-      });
-      useUnMounted(() => {
-        console.log("unmounted");
-      });
-      watch(props.cccccc, console.log);
-      return createElement("div", null, [
-        "wwwwwwwwwwww",
-        createElement("div", null, ["createComponent"]),
-        children,
-        createElement("div", null, [props.cccccc])
-      ]);
-    },
-    {
-      defaultProps: {
-        cccccc: "bbbbbbb"
-      },
-      css: `* {
+    Object.assign(
+        (props, children) => {
+            useMounted(() => {
+                console.log("mounted1");
+            });
+            useMounted(() => {
+                console.log("mounted2", props);
+            });
+            useUnMounted(() => {
+                console.log("unmounted");
+            });
+            watch(props.cccccc, console.log);
+            return createElement("div", null, [
+                "wwwwwwwwwwww",
+                createElement("div", null, ["createComponent"]),
+                children,
+                createElement("div", null, [props.cccccc])
+            ]);
+        },
+        {
+            defaultProps: {
+                cccccc: "bbbbbbb"
+            },
+            css: `* {
   color: purple !important;
 
   font-size: 50px;
@@ -441,20 +437,20 @@ const mycom = createComponent(
   .article-content h3 {
     font-size: 18px;
   }`
-    }
-  )
+        }
+    )
 );
 
 const myclasscomponent = mycom;
 const vdom = createElement(
-  myclasscomponent,
-  { cccccc: mystate, aaaaaa: 222222222, tttttt: "dddddddddd" },
-  ["children"]
+    myclasscomponent,
+    { cccccc: mystate, aaaaaa: 222222222, tttttt: "dddddddddd" },
+    ["children"]
 );
 console.log(vdom);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 setTimeout(() => {
-  mystate.value = "bbbbbbbbbbnnnnnnnnnnnnn";
+    mystate.value = "bbbbbbbbbbnnnnnnnnnnnnn";
 }, 5000);
 ```
 
@@ -470,51 +466,51 @@ setTimeout(() => {
 
 ```jsx
 function useMousePosition() {
-  const x = createState(0);
-  const y = createState(0);
+    const x = createState(0);
+    const y = createState(0);
 
-  function update(e) {
-    x.value = e.pageX;
-    y.value = e.pageY;
-  }
+    function update(e) {
+        x.value = e.pageX;
+        y.value = e.pageY;
+    }
 
-  useMounted(() => {
-    window.addEventListener("mousemove", update);
-  });
+    useMounted(() => {
+        window.addEventListener("mousemove", update);
+    });
 
-  useUnMounted(() => {
-    window.removeEventListener("mousemove", update);
-  });
+    useUnMounted(() => {
+        window.removeEventListener("mousemove", update);
+    });
 
-  return { x, y };
+    return { x, y };
 }
 
 const mycomapp = createComponent(() => {
-  const { x, y } = useMousePosition();
-  const plus = computed(x, x => {
-    return x + 100;
-  });
-  const multi = computed([x, y], (x, y) => {
-    return x * y;
-  });
-  let count = 0;
-  const cancelwatch = watch([x, y, multi, plus], (...args) => {
-    console.log(count, args);
-    count++;
-    if (count > 50) {
-      cancelwatch();
-    }
-  });
-  return (
-    <div>
-      <h3> 鼠标位置</h3>
-      <h2>x:{x}</h2>
+    const { x, y } = useMousePosition();
+    const plus = computed(x, x => {
+        return x + 100;
+    });
+    const multi = computed([x, y], (x, y) => {
+        return x * y;
+    });
+    let count = 0;
+    const cancelwatch = watch([x, y, multi, plus], (...args) => {
+        console.log(count, args);
+        count++;
+        if (count > 50) {
+            cancelwatch();
+        }
+    });
+    return (
+        <div>
+            <h3> 鼠标位置</h3>
+            <h2>x:{x}</h2>
 
-      <h1>y:{y}</h1>
-      <p>x+100 是{plus}</p>
-      <p>x*y 是{multi}</p>
-    </div>
-  );
+            <h1>y:{y}</h1>
+            <p>x+100 是{plus}</p>
+            <p>x*y 是{multi}</p>
+        </div>
+    );
 });
 var vdom = createElement(mycomapp);
 
@@ -527,16 +523,16 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 /* 第一种用法 */
 const colortext = createState("red");
 const stylestate = createState({
-  display: "block",
-  width: "100%",
-  color: colortext
+    display: "block",
+    width: "100%",
+    color: colortext
 });
 
 const vdom = html`
-  <hr />
-  <h1 style=${stylestate}>input color ${colortext}</h1>
-  <input _value=${colortext} />
-  <hr />
+    <hr />
+    <h1 style=${stylestate}>input color ${colortext}</h1>
+    <input _value=${colortext} />
+    <hr />
 `;
 
 console.log([vdom, colortext, stylestate]);
@@ -555,7 +551,7 @@ watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
 
 ```jsx
 function App1() {
-  return <div>helloworld</div>;
+    return <div>helloworld</div>;
 }
 
 var vdom = <div>{App1()}</div>;
@@ -575,8 +571,8 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 ```html
 <link
-  href="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
-  rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
+    rel="stylesheet"
 />
 ```
 
@@ -584,27 +580,27 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 ```js
 (async () => {
-  const defaultProps = { cccccc: "bbbbbbb" };
-  const css = await (
-    await fetch(
-      "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
-    )
-  ).text();
-  const Hellowordclass = createComponent(
-    Object.assign(
-      () => {
-        return createElement("div", undefined, "hello world");
-      },
-      { css, defaultProps }
-    )
-  );
-  document.body.appendChild(
-    MountElement(
-      createElement(Hellowordclass),
+    const defaultProps = { cccccc: "bbbbbbb" };
+    const css = await (
+        await fetch(
+            "https://cdn.jsdelivr.net/gh/masx200/masx200.github.io@4.2.2/src/assetscss/github-6556dfa9be535e551ffffaadfecdad99.min.css"
+        )
+    ).text();
+    const Hellowordclass = createComponent(
+        Object.assign(
+            () => {
+                return createElement("div", undefined, "hello world");
+            },
+            { css, defaultProps }
+        )
+    );
+    document.body.appendChild(
+        MountElement(
+            createElement(Hellowordclass),
 
-      document.createElement("div")
-    )
-  );
+            document.createElement("div")
+        )
+    );
 })();
 ```
 
@@ -620,7 +616,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 var mycom = class extends HTMLElement {};
 
 var vdom = html`
-  <${mycom} />
+    <${mycom} />
 `;
 
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
@@ -628,17 +624,17 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 ```ts
 document.body.appendChild(
-  MountElement(
-    createElement(
-      class extends HTMLElement {
-        static defaultProps = {
-          name: "HelloKitty",
-          myAge: 18
-        };
-      }
-    ),
-    document.createElement("div")
-  )
+    MountElement(
+        createElement(
+            class extends HTMLElement {
+                static defaultProps = {
+                    name: "HelloKitty",
+                    myAge: 18
+                };
+            }
+        ),
+        document.createElement("div")
+    )
 );
 ```
 
@@ -649,7 +645,7 @@ document.body.appendChild(
 ```tsx
 const numbers = [1, 2, 3, 4, 5];
 const listItems = numbers.map(number => {
-  return <li>{number}</li>;
+    return <li>{number}</li>;
 });
 
 MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
@@ -662,49 +658,49 @@ MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 ```jsx
 const refarray = [];
 const liststate = createState(
-  Array(10)
-    .fill(undefined)
-    .map((v, i) => i)
+    Array(10)
+        .fill(undefined)
+        .map((v, i) => i)
 );
 const vdom = (
-  <>
-    {ListMap(liststate, (value, index) => (
-      <div
-        _ref={ele => {
-          refarray.length = liststate.length;
-          refarray[index] = ele;
-        }}
-      >
-        {["item:", "value:", value, "index:", index]}
-      </div>
-    ))}
+    <>
+        {ListMap(liststate, (value, index) => (
+            <div
+                _ref={ele => {
+                    refarray.length = liststate.length;
+                    refarray[index] = ele;
+                }}
+            >
+                {["item:", "value:", value, "index:", index]}
+            </div>
+        ))}
 
-    <button
-      _text="push"
-      onclick={() => {
-        liststate.push(Math.random());
-      }}
-    />
-    <button
-      _text="pop"
-      onclick={() => {
-        liststate.pop();
-      }}
-    />
+        <button
+            _text="push"
+            onclick={() => {
+                liststate.push(Math.random());
+            }}
+        />
+        <button
+            _text="pop"
+            onclick={() => {
+                liststate.pop();
+            }}
+        />
 
-    <button
-      _text="shift"
-      onclick={() => {
-        liststate.shift();
-      }}
-    />
-    <button
-      _text="unshift"
-      onclick={() => {
-        liststate.unshift(Math.random());
-      }}
-    />
-  </>
+        <button
+            _text="shift"
+            onclick={() => {
+                liststate.shift();
+            }}
+        />
+        <button
+            _text="unshift"
+            onclick={() => {
+                liststate.unshift(Math.random());
+            }}
+        />
+    </>
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 ```
@@ -717,52 +713,52 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 ```jsx
 const com1 = createComponent(() => {
-  return <h1>component 1</h1>;
+    return <h1>component 1</h1>;
 });
 const com2 = createComponent(() => {
-  return <h1>component 2</h1>;
+    return <h1>component 2</h1>;
 });
 const com3 = createComponent(() => {
-  return <h1>component 3</h1>;
+    return <h1>component 3</h1>;
 });
 const com4 = () => {
-  return <h1>component 4</h1>;
+    return <h1>component 4</h1>;
 };
 const mystate = createState(com1);
 const vdom = Switchable(mystate);
 const element = render(vdom);
 document.body.appendChild(element);
 document.body.appendChild(
-  render(
-    h(() => (
-      <div>
-        <button
-          $text="component 1"
-          onclick={() => {
-            mystate.value = com1;
-          }}
-        />
-        <button
-          $text="component 2"
-          onclick={() => {
-            mystate.value = com2;
-          }}
-        />
-        <button
-          $text="component 3"
-          onclick={() => {
-            mystate.value = com3;
-          }}
-        />
-        <button
-          $text="component 4"
-          onclick={() => {
-            mystate.value = com4;
-          }}
-        />
-      </div>
-    ))
-  )
+    render(
+        h(() => (
+            <div>
+                <button
+                    $text="component 1"
+                    onclick={() => {
+                        mystate.value = com1;
+                    }}
+                />
+                <button
+                    $text="component 2"
+                    onclick={() => {
+                        mystate.value = com2;
+                    }}
+                />
+                <button
+                    $text="component 3"
+                    onclick={() => {
+                        mystate.value = com3;
+                    }}
+                />
+                <button
+                    $text="component 4"
+                    onclick={() => {
+                        mystate.value = com4;
+                    }}
+                />
+            </div>
+        ))
+    )
 );
 ```
 
@@ -772,22 +768,22 @@ document.body.appendChild(
 
 ```ts
 type classprop =
-  | string
-  | Set<string>
-  | Array<string>
-  | ReactiveState<string | Set<string> | Array<string>>;
+    | string
+    | Set<string>
+    | Array<string>
+    | ReactiveState<string | Set<string> | Array<string>>;
 ```
 
 ```js
 const classsetstate = createState(new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"]));
 html`
-  <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}></div>
+    <div style=${stylestate} class=${new Set(["wwwwwww", "eeeeeeee"])}></div>
 
-  <div style=${stylestate} class=${classsetstate} />
+    <div style=${stylestate} class=${classsetstate} />
 `;
 
 setTimeout(() => {
-  classsetstate.add("vvvvvvvvvvv");
+    classsetstate.add("vvvvvvvvvvv");
 }, 5000);
 ```
 
@@ -799,10 +795,10 @@ setTimeout(() => {
 
 ```ts
 type styleprop =
-  | string
-  | object
-  | ReactiveState<string>
-  | ReactiveState<object>;
+    | string
+    | object
+    | ReactiveState<string>
+    | ReactiveState<object>;
 ```
 
 `style="width:800px"`
@@ -813,9 +809,9 @@ type styleprop =
 const stylestate = createState({ display: "block", width: "700px" });
 
 html`
-  <div style=${stylestate} class=${classsetstate} />
+    <div style=${stylestate} class=${classsetstate} />
 
-  <div style=${{ display: "block", width: "100%" }}></div>
+    <div style=${{ display: "block", width: "100%" }}></div>
 `;
 ```
 
@@ -861,7 +857,7 @@ html`
 const ref = createRef();
 
 var vdom = html`
-  <div *ref=${ref} />
+    <div *ref=${ref} />
 `;
 
 console.log(ref.value);
@@ -882,21 +878,21 @@ console.log(ref.value);
 ```jsx
 const lirefs = [];
 var list = Array(10)
-  .fill(undefined)
-  .map((v, i) => i);
+    .fill(undefined)
+    .map((v, i) => i);
 const vdom = (
-  <ul>
-    {list.map((a, index) => (
-      <li
-        $ref={ele => {
-          lirefs[index] = ele;
-          lirefs.length = list.length;
-        }}
-      >
-        item{a}
-      </li>
-    ))}
-  </ul>
+    <ul>
+        {list.map((a, index) => (
+            <li
+                $ref={ele => {
+                    lirefs[index] = ele;
+                    lirefs.length = list.length;
+                }}
+            >
+                item{a}
+            </li>
+        ))}
+    </ul>
 );
 console.log(lirefs);
 ```
@@ -941,13 +937,13 @@ console.log(lirefs);
 
 ```js
 Directives({
-  myfocus(value, element, vdom) {
-    console.log(value, element, vdom);
-  }
+    myfocus(value, element, vdom) {
+        console.log(value, element, vdom);
+    }
 });
 const myvalue = "your directive value";
 html`
-  <input *myfocus=${myvalue} />
+    <input *myfocus=${myvalue} />
 `;
 ```
 
@@ -957,11 +953,11 @@ html`
 
 ```js
 html`
-  <textarea
-    value=${state1}
-    @input=${e => (state1.value = e.target.value)}
-    @change=${e => (state1.value = e.target.value)}
-  />
+    <textarea
+        value=${state1}
+        @input=${e => (state1.value = e.target.value)}
+        @change=${e => (state1.value = e.target.value)}
+    />
 `;
 ```
 
@@ -970,9 +966,9 @@ html`
 ```js
 const objstate2 = createState(`ssssssssssss`);
 const vdomobj = html`
-  <div>${objstate2}</div>
-  <div>${objstate2}</div>
-  ${objstate2}
+    <div>${objstate2}</div>
+    <div>${objstate2}</div>
+    ${objstate2}
 `;
 ```
 
@@ -984,14 +980,17 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
 ```ts
 declare function ListMap(
-  list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-  mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any> | string
+    list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
+    mapfun: (
+        value: ReactiveState<any>,
+        index: number
+    ) => Virtualdom<any> | string
 ): Virtualdom<Htmlelementconstructor>;
 interface Htmlelementconstructor {
-  new (): HTMLElement;
-  prototype: HTMLElement;
-  defaultProps?: Record<string, any>;
-  css?: string;
+    new (): HTMLElement;
+    prototype: HTMLElement;
+    defaultProps?: Record<string, any>;
+    css?: string;
 }
 ```
 
@@ -999,7 +998,7 @@ interface Htmlelementconstructor {
 
 ```ts
 declare function Switchable(
-  funstate: ReactiveState<Htmlelementconstructor | Custom>
+    funstate: ReactiveState<Htmlelementconstructor | Custom>
 ): Virtualdom<Htmlelementconstructor>;
 ```
 
@@ -1007,9 +1006,9 @@ declare function Switchable(
 
 ```ts
 declare const Condition: (
-  conditon: boolean | ReactiveState<boolean>,
-  iftrue?: string | Virtualdom<any> | undefined,
-  iffalse?: string | Virtualdom<any> | undefined
+    conditon: boolean | ReactiveState<boolean>,
+    iftrue?: string | Virtualdom<any> | undefined,
+    iffalse?: string | Virtualdom<any> | undefined
 ) => Virtualdom<Htmlelementconstructor>;
 ```
 
@@ -1017,15 +1016,15 @@ declare const Condition: (
 
 ```ts
 declare const createComponent: (
-  custfun: Custom | Htmlelementconstructor
+    custfun: Custom | Htmlelementconstructor
 ) => Htmlelementconstructor;
 interface Custom {
-  (
-    props?: Record<string, ReactiveState<any>>,
-    children?: Vdomchildren
-  ): VaildVDom;
-  defaultProps?: Record<string, any>;
-  css?: string;
+    (
+        props?: Record<string, ReactiveState<any>>,
+        children?: Vdomchildren
+    ): VaildVDom;
+    defaultProps?: Record<string, any>;
+    css?: string;
 }
 ```
 
@@ -1039,11 +1038,11 @@ interface Custom {
 type CancelWatchfun = () => void;
 type UnwrapedState = any;
 interface CallbackReactiveState {
-  (...args: UnwrapedState[]): any;
+    (...args: UnwrapedState[]): any;
 }
 declare function watch<T extends UnwrapedState>(
-  state: ReactiveState<T> | Array<ReactiveState<T>>,
-  callback: CallbackReactiveState
+    state: ReactiveState<T> | Array<ReactiveState<T>>,
+    callback: CallbackReactiveState
 ): CancelWatchfun;
 ```
 
@@ -1051,10 +1050,10 @@ declare function watch<T extends UnwrapedState>(
 
 ```ts
 declare function createState<T extends UnwrapedState>(
-  init: ReactiveState<T>
+    init: ReactiveState<T>
 ): ReactiveState<T>;
 declare function createState<T extends UnwrapedState>(
-  init: Exclude<T, ReactiveState<any>> | undefined
+    init: Exclude<T, ReactiveState<any>> | undefined
 ): ReactiveState<T>;
 ```
 
@@ -1066,35 +1065,44 @@ declare function createState<T extends UnwrapedState>(
 
 ```ts
 type UnwrapedState = any;
+declare class ObserverTarget {
+    Listeners: Set<Listener>;
+    addListener(listener: Listener): void;
+    dispatch(): void;
+    removeListener(listener: Listener): void;
+}
+interface Listener {
+    (): any;
+}
 declare class ReactiveState<T extends UnwrapedState> {
-  value: T extends Array<any>
-    ? Array<any>
-    : T extends Function
-    ? Function
-    : T extends Primitivetype
-    ? Primitivetype
-    : object;
-  readonly [Symbol.toStringTag] = "ReactiveState";
-  constructor(init?: T);
-  [debouncedispatch]: (eventname?: string | undefined) => void;
-  [removeallistenerssymbol](): void;
-  [removeonelistner](callback: EventListener): void;
-  [addonelistner](callback: EventListener): void;
-  [addallistenerssymbol](): void;
-  [eventtargetsymbol]: EventTarget;
-  [memlisteners]: Set<EventListener>;
-  valueOf: () => T extends any[]
-    ? any[]
-    : T extends Function
-    ? Function
-    : T extends Primitivetype
-    ? Primitivetype
-    : object;
-  toString(): string;
-  [dispatchsymbol](eventname?: string): void;
-  [subscribesymbol](callback: Function): void;
-  [cancelsubscribe](callback: Function): void;
-  [Symbol.toPrimitive](): string | undefined | Primitivetype;
+    value: T extends Array<any>
+        ? Array<any>
+        : T extends Function
+        ? Function
+        : T extends Primitivetype
+        ? Primitivetype
+        : object;
+    readonly [Symbol.toStringTag] = "ReactiveState";
+    constructor(init?: T);
+    [debouncedispatch]: () => void;
+    [removeallistenerssymbol](): void;
+    [removeonelistner](callback: Listener): void;
+    [addonelistner](callback: Listener): void;
+    [addallistenerssymbol](): void;
+    [Targetsymbol]: ObserverTarget;
+    [memlisteners]: Set<Listener>;
+    valueOf: () => T extends any[]
+        ? any[]
+        : T extends Function
+        ? Function
+        : T extends Primitivetype
+        ? Primitivetype
+        : object;
+    toString(): string;
+    [dispatchsymbol](): void;
+    [subscribesymbol](eventlistener: Listener): void;
+    [cancelsubscribe](eventlistener: Listener): void;
+    [Symbol.toPrimitive](): string | undefined | Primitivetype;
 }
 ```
 
@@ -1108,9 +1116,9 @@ declare class ReactiveState<T extends UnwrapedState> {
 
 ```ts
 declare const computed: <T extends any>(
-  state: ReactiveState<T> | ReactiveState<T>[],
-  callback: CallbackReactiveState,
-  setter?: SetterFun | undefined
+    state: ReactiveState<T> | ReactiveState<T>[],
+    callback: CallbackReactiveState,
+    setter?: SetterFun | undefined
 ) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
 ```
@@ -1123,39 +1131,39 @@ type SetterFun = (v: any) => void;
 
 ```typescript
 type styleprop =
-  | string
-  | object
-  | ReactiveState<string>
-  | ReactiveState<object>;
+    | string
+    | object
+    | ReactiveState<string>
+    | ReactiveState<object>;
 type classprop =
-  | string
-  | Set<string>
-  | Array<string>
-  | ReactiveState<string | Set<string> | Array<string>>;
+    | string
+    | Set<string>
+    | Array<string>
+    | ReactiveState<string | Set<string> | Array<string>>;
 interface ElementAttrs {
-  style?: styleprop;
-  class?: classprop;
-  [key: string]: any;
+    style?: styleprop;
+    class?: classprop;
+    [key: string]: any;
 }
 function createElement<T extends Htmlelementconstructor | string | Custom>(
-  type: T,
-  propsorchildren?: Vdomchildren,
-  ...children: Vdomchildren
+    type: T,
+    propsorchildren?: Vdomchildren,
+    ...children: Vdomchildren
 ): Virtualdom<T>;
 function createElement<T extends Vdomchildren>(
-  type: "",
-  propsorchildren?: T,
-  ...children: T
+    type: "",
+    propsorchildren?: T,
+    ...children: T
 ): T;
 function createElement<T extends Vdomchildren>(
-  type: "",
-  props?: ElementAttrs,
-  ...children: T
+    type: "",
+    props?: ElementAttrs,
+    ...children: T
 ): T;
 function createElement<T extends Htmlelementconstructor | string | Custom>(
-  type: T,
-  props?: ElementAttrs,
-  ...children: Vdomchildren
+    type: T,
+    props?: ElementAttrs,
+    ...children: Vdomchildren
 ): Virtualdom<T>;
 ```
 
@@ -1167,23 +1175,23 @@ function createElement<T extends Htmlelementconstructor | string | Custom>(
 
 ```ts
 type Vdomchildren = Array<
-  Virtualdom<any> | string | ReactiveState<any> | number
+    Virtualdom<any> | string | ReactiveState<any> | number
 >;
 interface Htmlelementconstructor {
-  new (): HTMLElement;
-  prototype: HTMLElement;
-  defaultProps?: Record<string, any>;
-  css?: string;
+    new (): HTMLElement;
+    prototype: HTMLElement;
+    defaultProps?: Record<string, any>;
+    css?: string;
 }
 
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
-  readonly [Symbol.toStringTag]: "VirtualElement";
-  readonly element: Element[];
-  readonly type: T;
-  readonly props: ElementAttrs;
-  readonly children: Vdomchildren;
-  readonly directives: Record<string, any>;
-  readonly onevent: Record<string, Array<EventListener>>;
-  readonly bindattr: Record<string, ReactiveState<any>>;
+    readonly [Symbol.toStringTag]: "VirtualElement";
+    readonly element: Element[];
+    readonly type: T;
+    readonly props: ElementAttrs;
+    readonly children: Vdomchildren;
+    readonly directives: Record<string, any>;
+    readonly onevent: Record<string, Array<EventListener>>;
+    readonly bindattr: Record<string, ReactiveState<any>>;
 }
 ```
