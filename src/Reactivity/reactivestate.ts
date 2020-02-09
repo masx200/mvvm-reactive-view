@@ -48,14 +48,15 @@ export default class ReactiveState<T extends UnwrapedState> {
         });
 
         recordusestste(this);
+    }
+    [debouncedispatch]: () => void = (() => {
         const debouncedfun = debounce(() => {
             this[Targetsymbol].dispatch();
         });
-        this[debouncedispatch] = () => {
+        return () => {
             debouncedfun();
         };
-    }
-    [debouncedispatch]: () => void;
+    })();
 
     [removeallistenerssymbol]() {
         this[memlisteners].forEach(callback => {
@@ -96,6 +97,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     }
     [subscribesymbol](eventlistener: Listener) {
         this[memlisteners].add(eventlistener);
+        this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener: Listener) {
         if (eventlistener) {

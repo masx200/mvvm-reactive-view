@@ -481,7 +481,7 @@ function set(target, propertyKey, value) {
     }
 }
 
-var _a, _b;
+var _a, _b, _c;
 
 const addonelistner = Symbol("addonelistner");
 
@@ -512,8 +512,16 @@ const addallistenerssymbol = Symbol("addallisteners");
 class ReactiveState {
     constructor(init) {
         this[Symbol.toStringTag] = "ReactiveState";
-        this[_a] = new ObserverTarget;
-        this[_b] = new Set;
+        this[_a] = (() => {
+            const debouncedfun = debounce_1(() => {
+                this[Targetsymbol].dispatch();
+            });
+            return () => {
+                debouncedfun();
+            };
+        })();
+        this[_b] = new ObserverTarget;
+        this[_c] = new Set;
         this.valueOf = () => this.value;
         this.value = init;
         defineProperty(this, "value", {
@@ -522,14 +530,8 @@ class ReactiveState {
             writable: true
         });
         recordusestste(this);
-        const debouncedfun = debounce_1(() => {
-            this[Targetsymbol].dispatch();
-        });
-        this[debouncedispatch] = () => {
-            debouncedfun();
-        };
     }
-    [removeallistenerssymbol]() {
+    [(_a = debouncedispatch, removeallistenerssymbol)]() {
         this[memlisteners].forEach(callback => {
             this[removeonelistner](callback);
         });
@@ -549,11 +551,12 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_a = Targetsymbol, _b = memlisteners, dispatchsymbol)]() {
+    [(_b = Targetsymbol, _c = memlisteners, dispatchsymbol)]() {
         this[debouncedispatch]();
     }
     [subscribesymbol](eventlistener) {
         this[memlisteners].add(eventlistener);
+        this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener) {
         if (eventlistener) {
