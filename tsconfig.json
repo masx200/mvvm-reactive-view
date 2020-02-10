@@ -30,7 +30,8 @@
         "importHelpers": true,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "alwaysStrict": true
+        "alwaysStrict": true,
+        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "./src/*/*.ts",
