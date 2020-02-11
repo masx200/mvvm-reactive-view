@@ -1,13 +1,11 @@
 {
-    "version": "1.5.7",
+    "type": "module",
+    "version": "1.5.8",
     "main": "./dist/index.min.js",
     "types": "dist/index.d.ts",
     "module": "./dist/index.min.js",
-    "files": [
-        "dist"
-    ],
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com/@masx200"
+        "registry": "https://registry.npmjs.org/"
     },
     "name": "@masx200/mvvm-reactive-view",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
