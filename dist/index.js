@@ -1,47 +1,3 @@
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) symbols = symbols.filter((function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        }));
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-
-function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-            ownKeys(Object(source), true).forEach((function(key) {
-                _defineProperty(target, key, source[key]);
-            }));
-        } else if (Object.getOwnPropertyDescriptors) {
-            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-            ownKeys(Object(source)).forEach((function(key) {
-                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-            }));
-        }
-    }
-    return target;
-}
-
 const globalThis = Function("return this")();
 
 const self = globalThis;
@@ -50,7 +6,7 @@ const window = globalThis;
 
 const global = globalThis;
 
-const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object$1, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
+const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
 
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
@@ -126,17 +82,17 @@ var isObject_1 = isObject;
 
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 
-var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object$1 && commonjsGlobal;
+var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
 
 var _freeGlobal = freeGlobal;
 
-var freeSelf = typeof self == "object" && self && self.Object === Object$1 && self;
+var freeSelf = typeof self == "object" && self && self.Object === Object && self;
 
 var root = _freeGlobal || freeSelf || Function("return this")();
 
 var _root = root;
 
-var now = function now() {
+var now = function() {
     return _root.Date.now();
 };
 
@@ -146,7 +102,7 @@ var Symbol$1 = _root.Symbol;
 
 var _Symbol = Symbol$1;
 
-var objectProto = Object$1.prototype;
+var objectProto = Object.prototype;
 
 var hasOwnProperty = objectProto.hasOwnProperty;
 
@@ -173,7 +129,7 @@ function getRawTag(value) {
 
 var _getRawTag = getRawTag;
 
-var objectProto$1 = Object$1.prototype;
+var objectProto$1 = Object.prototype;
 
 var nativeObjectToString$1 = objectProto$1.toString;
 
@@ -191,7 +147,7 @@ function baseGetTag(value) {
     if (value == null) {
         return value === undefined ? undefinedTag : nullTag;
     }
-    return symToStringTag$1 && symToStringTag$1 in Object$1(value) ? _getRawTag(value) : _objectToString(value);
+    return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
 }
 
 var _baseGetTag = baseGetTag;
@@ -462,7 +418,7 @@ class ObserverTarget {
     }
 }
 
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys$1, preventExtensions: preventExtensions} = Reflect;
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
 
 function get(target, propertyKey) {
     if (isMap(target) || isWeakMap(target)) {
@@ -634,171 +590,101 @@ function rewatch(state) {
     state[addallistenerssymbol]();
 }
 
-const acceptValue = [ "input", "textarea", "option", "select" ];
+const t = [ "input", "textarea", "option", "select" ];
 
-var mustUseDomProp = (tag, attr, attrtype) => attr === "value" && acceptValue.includes(tag) && attrtype !== "button" || attr === "selected" && tag === "option" || attr === "checked" && tag === "input" || attr === "muted" && tag === "video";
+var e = (e, r, n) => "value" === r && t.includes(e) && "button" !== n || "selected" === r && "option" === e || "checked" === r && "input" === e || "muted" === r && "video" === e;
 
-const hyphenateRE = /\B([A-Z])/g;
+const r = /\B([A-Z])/g, n = t => t.replace(r, "-$1").toLowerCase(), o = window.String, i = window.Reflect, {get: u, set: c, ownKeys: s} = i, f = "value";
 
-const hyphenate = str => str.replace(hyphenateRE, "-$1").toLowerCase();
-
-const String$1 = window.String;
-
-const Reflect$1 = window.Reflect;
-
-const {get: get$1, set: set$1, ownKeys: ownKeys$1$1} = Reflect$1;
-
-const valuestring = "value";
-
-function isobject$1(a) {
-    return typeof a === "object" && a !== null;
+function a(t) {
+    return "object" == typeof t && null !== t;
 }
 
-function isstring$1(a) {
-    return typeof a === "string";
+function l(t) {
+    return "string" == typeof t;
 }
 
-function isArray(a) {
-    return Array.isArray(a);
+function p(t) {
+    return t instanceof Set;
 }
 
-function isSet$1(a) {
-    return a instanceof Set;
+const y = t => "input" === d(t) && ("checkbox" === u(t, "type") || "radio" === u(t, "type"));
+
+function d(t) {
+    return t.tagName.toLowerCase();
 }
 
-const isinputcheckbox = ele => "input" === geteletagname(ele) && (get$1(ele, "type") === "checkbox" || get$1(ele, "type") === "radio");
-
-function objtostylestring(obj) {
-    obj = JSON.parse(JSON.stringify(obj));
-    const objentries = Object$1.entries(obj).map(([key, value]) => [ hyphenate(key).trim(), value ]);
-    return objentries.map(([key, value]) => key + ":" + value).join(";");
+function w(t, e, r) {
+    return t.setAttribute(e, r);
 }
 
-function asserthtmlelement(ele) {
-    if (!(ele instanceof Element)) {
-        console.error(ele);
-        console.error("invalid HTMLElement!");
-        throw TypeError();
-    }
+function g(t, e) {
+    return t.removeAttribute(e);
 }
 
-function createeleattragentreadwrite(ele) {
-    asserthtmlelement(ele);
-    var temp = Object$1.create(null);
-    const outputattrs = new Proxy(temp, {
+function createeleattr(t) {
+    !function(t) {
+        if (!(t instanceof Element)) throw TypeError();
+    }(t);
+    var r = Object.create(null);
+    const i = new Proxy(r, {
         ownKeys() {
-            const isinputtextortextareaflag = isinputtextortextarea(ele);
-            const keys = attributesownkeys(ele);
-            return Array.from(new Set([ ...keys, isinputcheckbox(ele) ? "checked" : undefined, isinputtextortextareaflag ? valuestring : undefined ].flat(Infinity).filter(a => !!a)));
+            const e = function(t) {
+                const e = d(t);
+                return "textarea" === e || "select" === e || "input" === e && "text" === u(t, "type");
+            }(t), r = function(t) {
+                return t.getAttributeNames();
+            }(t);
+            return Array.from(new Set([ ...r, y(t) ? "checked" : void 0, e ? f : void 0 ].flat(1 / 0).filter(t => !!t)));
         },
-        get(target, key) {
-            if (mustUseDomProp(geteletagname(ele), String$1(key), get$1(ele, "type"))) {
-                return get$1(ele, String$1(key));
-            } else {
-                const v = getattribute(ele, String$1(key));
-                if (v === "") {
-                    return true;
-                }
-                if (v === null) {
-                    return;
-                }
-                if (isstring$1(v)) {
-                    try {
-                        return JSON.parse(String$1(v));
-                    } catch (error) {
-                        return v;
-                    }
-                } else return;
-            }
-        },
-        set(t, key, v) {
-            if ("function" === typeof v) {
-                console.error(v);
-                console.error("Setting properties as functions is not allowed");
-                throw TypeError();
-            }
-            if (mustUseDomProp(geteletagname(ele), String$1(key), get$1(ele, "type"))) {
-                return set$1(ele, String$1(key), v);
-            } else if (key === "style") {
-                const csstext = isstring$1(v) ? v : isobject$1(v) ? objtostylestring(v) : String$1(v);
-                set$1(get$1(ele, "style"), "cssText", csstext.trim());
-                return true;
-            } else if (key === "class" && isobject$1(v)) {
-                const classtext = isArray(v) ? v.join(" ") : isSet$1(v) ? [ ...v ].join(" ") : String$1(v);
-                setattribute(ele, String$1(key), classtext);
-                return true;
-            } else {
-                if (false === v || v === null || v === undefined) {
-                    removeAttribute(ele, String$1(key));
-                    return true;
-                }
-                if (isSet$1(v)) {
-                    setattribute(ele, String$1(key), JSON.stringify([ ...v ]));
-                    return true;
-                } else {
-                    if (v === true) {
-                        v = "";
-                    }
-                    setattribute(ele, String$1(key), isobject$1(v) ? JSON.stringify(v) : String$1(v));
-                    return true;
+        get(r, n) {
+            if (e(d(t), o(n), u(t, "type"))) return u(t, o(n));
+            {
+                const e = function(t, e) {
+                    return t.getAttribute(e);
+                }(t, o(n));
+                if ("" === e) return !0;
+                if (null === e) return;
+                if (!l(e)) return;
+                try {
+                    return JSON.parse(o(e));
+                } catch (t) {
+                    return e;
                 }
             }
         },
-        deleteProperty(t, k) {
-            removeAttribute(ele, String$1(k));
-            return true;
-        },
-        has(target, key) {
-            return ownKeys$1$1(outputattrs).includes(key);
-        },
-        defineProperty() {
-            return false;
-        },
-        getOwnPropertyDescriptor(target, key) {
-            const otherdescipter = {
-                enumerable: true,
-                configurable: true,
-                writable: true
-            };
-            const myvalue = get$1(outputattrs, key);
-            if (typeof myvalue !== "undefined") {
-                return _objectSpread2({
-                    value: myvalue
-                }, otherdescipter);
-            } else {
-                return;
+        set(r, i, s) {
+            if ("function" == typeof s) throw TypeError();
+            if (e(d(t), o(i), u(t, "type"))) return c(t, o(i), s);
+            if ("style" === i) {
+                const e = l(s) ? s : a(s) ? (y = s, y = JSON.parse(JSON.stringify(y)), Object.entries(y).map(([t, e]) => [ n(t).trim(), e ]).map(([t, e]) => t + ":" + e).join(";")) : o(s);
+                return c(u(t, "style"), "cssText", e.trim()), !0;
             }
+            if ("class" === i && a(s)) {
+                const e = (f = s, Array.isArray(f) ? s.join(" ") : p(s) ? [ ...s ].join(" ") : o(s));
+                return w(t, o(i), e), !0;
+            }
+            return !1 === s || null == s ? (g(t, o(i)), !0) : p(s) ? (w(t, o(i), JSON.stringify([ ...s ])), 
+            !0) : (!0 === s && (s = ""), w(t, o(i), a(s) ? JSON.stringify(s) : o(s)), !0);
+            var f, y;
         },
-        setPrototypeOf() {
-            return false;
-        }
+        deleteProperty: (e, r) => (g(t, o(r)), !0),
+        has: (t, e) => s(i).includes(e),
+        defineProperty: () => !1,
+        getOwnPropertyDescriptor(t, e) {
+            const r = {
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }, n = u(i, e);
+            return void 0 !== n ? {
+                value: n,
+                ...r
+            } : void 0;
+        },
+        setPrototypeOf: () => !1
     });
-    return outputattrs;
-}
-
-function attributesownkeys(ele) {
-    return ele.getAttributeNames();
-}
-
-function getattribute(ele, key) {
-    return ele.getAttribute(key);
-}
-
-function geteletagname(ele) {
-    return ele.tagName.toLowerCase();
-}
-
-function setattribute(ele, key, value) {
-    return ele.setAttribute(key, value);
-}
-
-function removeAttribute(ele, key) {
-    return ele.removeAttribute(key);
-}
-
-function isinputtextortextarea(ele) {
-    const tagname = geteletagname(ele);
-    return tagname === "textarea" || tagname === "select" || tagname === "input" && get$1(ele, "type") === "text";
+    return i;
 }
 
 function merge_entries(a) {
@@ -811,7 +697,7 @@ function merge_entries(a) {
             m[key].add(v);
         });
     });
-    return Object$1.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
+    return Object.entries(m).map(([k, v]) => [ k, [ ...v ] ]);
 }
 
 const VirtualElementSet = new WeakSet;
@@ -823,12 +709,12 @@ function isVirtualdom(a) {
 }
 
 function createVirtualElement(type, props = {}, children = []) {
-    props = Object$1.assign({}, props);
+    props = Object.assign({}, props);
     children = children.flat(1 / 0);
-    const propsentries = Object$1.entries(props);
+    const propsentries = Object.entries(props);
     const propsentriesNOTevents = propsentries.filter(([key]) => !(key.startsWith("@") || key.startsWith("on")));
     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
-    const virtual = Object$1.create(null);
+    const virtual = Object.create(null);
     const vdom = virtual;
     [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
         defineProperty(virtual, key, {
@@ -836,20 +722,20 @@ function createVirtualElement(type, props = {}, children = []) {
         });
     });
     vdom.element = [];
-    Object$1.assign(virtual, {
+    Object.assign(virtual, {
         type: type,
-        bindattr: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
-        props: Object$1.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
+        bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
+        props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
         children: children,
-        onevent: Object$1.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-        directives: Object$1.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+        onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
     });
     defineProperty(virtual, Symbol.toStringTag, {
         value: "VirtualElement"
     });
     preventExtensions(virtual);
     VirtualElementSet.add(virtual);
-    Object$1.freeze(vdom);
+    Object.freeze(vdom);
     return virtual;
 }
 
@@ -989,7 +875,7 @@ if (!isobject(window.customElements)) {
 }
 
 function Usevaluetoquerythekeyfromthetable(table, Componentstatusname) {
-    const outputentrie = Object$1.entries(table).find(v => v[1] === Componentstatusname);
+    const outputentrie = Object.entries(table).find(v => v[1] === Componentstatusname);
     return outputentrie ? outputentrie[0] : undefined;
 }
 
@@ -1056,7 +942,7 @@ customElements$1.define = function(name, constructor, options) {
 };
 
 set(customElements$1, Symbol.iterator, () => {
-    const entries = Object$1.entries(customElements$1[elementmap]);
+    const entries = Object.entries(customElements$1[elementmap]);
     return entries[Symbol.iterator].call(entries);
 });
 
@@ -1128,7 +1014,7 @@ function extenddirectives(options = {}) {
         console.error(options);
         throw new TypeError;
     }
-    Object$1.entries(options).forEach(([key, value]) => {
+    Object.entries(options).forEach(([key, value]) => {
         if (typeof value !== "function") {
             console.error(value);
             console.error(invalid_Function);
@@ -1213,7 +1099,7 @@ function readdlisteners(ele) {
 function handleprops(element, vdom) {
     vdom.element.push(element);
     ((element, vdom) => {
-        Object$1.entries(vdom.directives).forEach(([name, value]) => {
+        Object.entries(vdom.directives).forEach(([name, value]) => {
             if (isfunction(directive[name])) {
                 directive[name](value, element, vdom);
             } else {
@@ -1222,9 +1108,9 @@ function handleprops(element, vdom) {
                 throw new Error;
             }
         });
-        const attribute1 = createeleattragentreadwrite(element);
-        Object$1.assign(attribute1, vdom.props);
-        Object$1.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+        const attribute1 = createeleattr(element);
+        Object.assign(attribute1, vdom.props);
+        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
             watch(primitivestate, () => {
                 const state = primitivestate;
@@ -1233,11 +1119,11 @@ function handleprops(element, vdom) {
                 }
             });
         });
-        Object$1.entries(vdom.onevent).forEach(([event, callbacks]) => {
+        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
     })(element, vdom);
-    [ ...Object$1.values(vdom.bindattr), ...Object$1.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
+    [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
         if (!has(element, bindstatesymbol)) {
             set(element, bindstatesymbol, new Set);
         }
@@ -1296,9 +1182,15 @@ function render(vdom, namespace) {
             }
         } else if (typeof type == "function") {
             if (isobject(type["defaultProps"])) {
-                Object$1.assign(vdom.props, JSON.parse(JSON.stringify(_objectSpread2({}, type["defaultProps"], {}, vdom.props))));
+                Object.assign(vdom.props, JSON.parse(JSON.stringify({
+                    ...type["defaultProps"],
+                    ...vdom.props
+                })));
             }
-            const propsjson = JSON.parse(JSON.stringify(_objectSpread2({}, vdom.props, {}, Object$1.fromEntries(Object$1.entries(vdom.bindattr).map(([key, value]) => [ key, value.value ])))));
+            const propsjson = JSON.parse(JSON.stringify({
+                ...vdom.props,
+                ...Object.fromEntries(Object.entries(vdom.bindattr).map(([key, value]) => [ key, value.value ]))
+            }));
             element = createcostumelemet(type, propsjson, vdom.children);
         } else {
             throwinvalideletype(vdom);
@@ -1618,9 +1510,9 @@ class AttrChange extends HTMLElement {
         super();
         this[_a$1] = false;
         const defaultProps = get(this.constructor, "defaultProps");
-        const attrs = createeleattragentreadwrite(this);
+        const attrs = createeleattr(this);
         if (isobject(defaultProps)) {
-            Object$1.assign(attrs, defaultProps);
+            Object.assign(attrs, defaultProps);
         }
         new MutationObserver(mutations => {
             mutations.forEach(mutation => {
@@ -1700,14 +1592,14 @@ function createComponentold(custfun) {
                         });
                     }
                 }
-                const attrs = createeleattragentreadwrite(this);
+                const attrs = createeleattr(this);
                 if (isobject(propsjson)) {
-                    Object$1.assign(attrs, propsjson);
+                    Object.assign(attrs, propsjson);
                 }
                 const props = attrs;
                 openctx();
-                const thisattributess = Object$1.fromEntries(Object$1.entries(props).map(([key]) => [ key, (() => {
-                    const attributes = createeleattragentreadwrite(this);
+                const thisattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
+                    const attributes = createeleattr(this);
                     const state = new ReactiveState;
                     defineProperty(state, "value", {
                         get() {
@@ -1718,7 +1610,7 @@ function createComponentold(custfun) {
                     return state;
                 })() ]));
                 this[attributessymbol] = thisattributess;
-                const readonlyprop = readonlyproxy(Object$1.fromEntries(Object$1.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
+                const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 let possiblyvirtualdom;
                 try {
                     possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
@@ -1864,7 +1756,7 @@ const handlefalse = Symbol("handlefalse");
 
 const currentelementsymbol = Symbol("currentelement");
 
-const Condition = function Condition(conditon, iftrue, iffalse) {
+const Condition = function(conditon, iftrue, iffalse) {
     var _a, _b, _c, _d, _e;
     if (!(isReactiveState(conditon) || isboolean(conditon))) {
         console.error(conditon);
@@ -1956,7 +1848,7 @@ function getproperyreadproxy(a) {
         ownKeys(target) {
             let myvalue = get(target, "value");
             const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(myvalueobj) ]));
+            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
         },
         has(target, key) {
             const myvalue = get(target, "value");
@@ -1968,7 +1860,7 @@ function getproperyreadproxy(a) {
                 return get(target, key);
             } else {
                 const myvalue = get(target, "value");
-                const myvalueobj = Object$1(myvalue);
+                const myvalueobj = Object(myvalue);
                 if (has(myvalueobj, key)) {
                     const property = get(myvalueobj, key);
                     return isfunction(property) ? property.bind(myvalueobj) : property;
@@ -1978,7 +1870,7 @@ function getproperyreadproxy(a) {
     });
 }
 
-const computed = function computed(state, callback, setter) {
+const computed = function(state, callback, setter) {
     if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
@@ -2024,195 +1916,90 @@ function Arraycomputed(state, callback, setter) {
     return getproperyreadproxy(reactivestate);
 }
 
-const Setprototype = Set.prototype;
+const e$1 = Set.prototype, t$1 = Map.prototype;
 
-const Mapprototype = Map.prototype;
-
-function ispromise(a) {
-    return a instanceof Promise;
+function r$1(e) {
+    return e instanceof Map;
 }
 
-function isdate(a) {
-    return a instanceof Date;
+function o$1(e) {
+    return e instanceof Set;
 }
 
-function isregexp(a) {
-    return a instanceof RegExp;
+function n$1(e) {
+    return Array.isArray(e);
 }
 
-function isMap$1(a) {
-    return a instanceof Map;
+const l$1 = window.Reflect, {ownKeys: i$1, deleteProperty: c$1, apply: a$1, construct: d$1, defineProperty: f$1, get: u$1, getOwnPropertyDescriptor: p$1, getPrototypeOf: s$1, has: y$1, set: v, setPrototypeOf: g$1} = l$1;
+
+function P(e) {
+    return "object" == typeof e && null !== e;
 }
 
-function isSet$2(a) {
-    return a instanceof Set;
+function w$1(e) {
+    return "function" == typeof e;
 }
 
-function isArray$1(a) {
-    return Array.isArray(a);
-}
-
-const Reflect$2 = window.Reflect;
-
-const {ownKeys: ownKeys$2, deleteProperty: deleteProperty$1, apply: apply$1, construct: construct$1, defineProperty: defineProperty$1, get: get$2, getOwnPropertyDescriptor: getOwnPropertyDescriptor$1, getPrototypeOf: getPrototypeOf$1, has: has$1, set: set$2, setPrototypeOf: setPrototypeOf} = Reflect$2;
-
-function isobject$2(a) {
-    return typeof a === "object" && a !== null;
-}
-
-function isfunction$1(a) {
-    return typeof a === "function";
-}
-
-function deepobserveaddpath(target, callback, patharray = [], ancestor = target) {
-    if (!isfunction$1(callback)) {
-        console.error(callback);
-        console.error("observe callback invalid !");
-        throw Error();
-    }
-    if (ispromise(target) || isregexp(target) || isdate(target)) {
-        return target;
-    }
-    if (isfunction$1(target) || isobject$2(target)) {
-        let fakeobj;
-        if (isSet$2(target)) {
-            fakeobj = new Set([ ...target ]);
-            set$2(fakeobj, "add", value => {
-                Setprototype.add.call(target, value);
-                callback(ancestor, patharray, undefined, undefined);
-                return Setprototype.add.call(fakeobj, value);
-            });
-            set$2(fakeobj, "delete", value => {
-                Setprototype.delete.call(target, value);
-                callback(ancestor, patharray, undefined, undefined);
-                return Setprototype.delete.call(fakeobj, value);
-            });
-            set$2(fakeobj, "clear", () => {
-                Setprototype.clear.call(target);
-                callback(ancestor, patharray, undefined, undefined);
-                return Setprototype.clear.call(fakeobj);
-            });
-        } else if (isMap$1(target)) {
-            fakeobj = new Map([ ...target ]);
-            set$2(fakeobj, "clear", () => {
-                Mapprototype.clear.call(target);
-                callback(ancestor, patharray, undefined, undefined);
-                return Mapprototype.clear.call(fakeobj);
-            });
-            set$2(fakeobj, "set", (key, value) => {
-                Mapprototype.set.call(target, key, value);
-                callback(ancestor, patharray, undefined, undefined);
-                return Mapprototype.set.call(fakeobj, key, value);
-            });
-            set$2(fakeobj, "delete", value => {
-                Mapprototype.delete.call(target, value);
-                callback(ancestor, patharray, undefined, undefined);
-                return Mapprototype.delete.call(fakeobj, value);
-            });
-        } else if (isArray$1(target)) {
-            fakeobj = [];
-        } else if (isfunction$1(target)) {
-            fakeobj = () => {};
-        } else {
-            fakeobj = {};
-        }
-        if (!isSet$2(target) && !isMap$1(target)) {
-            setPrototypeOf(fakeobj, null);
-        }
-        return new Proxy(fakeobj, {
-            defineProperty(t, p, a) {
-                callback(ancestor, [ ...patharray, String(p) ], has$1(a, "value") ? a.value : isfunction$1(a.get) ? a.get() : undefined, get$2(target, p));
-                return defineProperty$1(target, p, a);
+function S(l, h, O = [], x = l) {
+    if (!w$1(h)) throw Error();
+    if (l instanceof Promise || function(e) {
+        return e instanceof RegExp;
+    }(l) || function(e) {
+        return e instanceof Date;
+    }(l)) return l;
+    if (w$1(l) || P(l)) {
+        let E;
+        return o$1(l) ? (E = new Set([ ...l ]), v(E, "add", t => (e$1.add.call(l, t), h(x, O, void 0, void 0), 
+        e$1.add.call(E, t))), v(E, "delete", t => (e$1.delete.call(l, t), h(x, O, void 0, void 0), 
+        e$1.delete.call(E, t))), v(E, "clear", () => (e$1.clear.call(l), h(x, O, void 0, void 0), 
+        e$1.clear.call(E)))) : r$1(l) ? (E = new Map([ ...l ]), v(E, "clear", () => (t$1.clear.call(l), 
+        h(x, O, void 0, void 0), t$1.clear.call(E))), v(E, "set", (e, r) => (t$1.set.call(l, e, r), 
+        h(x, O, void 0, void 0), t$1.set.call(E, e, r))), v(E, "delete", e => (t$1.delete.call(l, e), 
+        h(x, O, void 0, void 0), t$1.delete.call(E, e)))) : E = n$1(l) ? [] : w$1(l) ? () => {} : {}, 
+        o$1(l) || r$1(l) || g$1(E, null), new Proxy(E, {
+            defineProperty: (e, t, r) => (h(x, [ ...O, String(t) ], y$1(r, "value") ? r.value : w$1(r.get) ? r.get() : void 0, u$1(l, t)), 
+            f$1(l, t, r)),
+            deleteProperty: (e, t) => (h(x, [ ...O, String(t) ], void 0, u$1(l, t)), c$1(l, t)),
+            ownKeys: () => i$1(l),
+            has: (e, t) => y$1(l, t),
+            getPrototypeOf: () => s$1(l),
+            setPrototypeOf: (e, t) => g$1(l, t),
+            construct(e, t) {
+                if (w$1(l)) return d$1(l, t);
             },
-            deleteProperty(t, p) {
-                callback(ancestor, [ ...patharray, String(p) ], undefined, get$2(target, p));
-                return deleteProperty$1(target, p);
+            apply(e, t, r) {
+                if (w$1(l)) return a$1(l, t, r);
             },
-            ownKeys() {
-                return ownKeys$2(target);
+            getOwnPropertyDescriptor(e, t) {
+                var r = p$1(l, t);
+                return n$1(l) && "length" === t ? r : r ? (r.configurable = !0, r) : void 0;
             },
-            has(t, p) {
-                return has$1(target, p);
-            },
-            getPrototypeOf() {
-                return getPrototypeOf$1(target);
-            },
-            setPrototypeOf(t, v) {
-                return setPrototypeOf(target, v);
-            },
-            construct(t, argumentslist) {
-                if (isfunction$1(target)) {
-                    return construct$1(target, argumentslist);
-                }
-            },
-            apply(t, thisarg, argarray) {
-                if (isfunction$1(target)) {
-                    return apply$1(target, thisarg, argarray);
-                }
-            },
-            getOwnPropertyDescriptor(t, k) {
-                var descripter = getOwnPropertyDescriptor$1(target, k);
-                if (isArray$1(target) && k === "length") {
-                    return descripter;
-                } else {
-                    if (descripter) {
-                        descripter.configurable = true;
-                        return descripter;
-                    } else {
-                        return;
-                    }
-                }
-            },
-            set(t, k, v) {
-                if (isfunction$1(callback)) {
-                    callback(ancestor, [ ...patharray, String(k) ], v, get$2(target, k));
-                }
-                return set$2(target, k, v);
-            },
-            get(t, k) {
-                var value = get$2(target, k);
-                if (isfunction$1(value) && (isSet$2(target) || isMap$1(target))) {
-                    return get$2(fakeobj, k).bind(fakeobj);
-                }
-                if (isfunction$1(value) || isobject$2(value)) {
-                    return deepobserveaddpath(value, callback, [ ...patharray, String(k) ], target);
-                } else {
-                    return value;
-                }
+            set: (e, t, r) => (w$1(h) && h(x, [ ...O, String(t) ], r, u$1(l, t)), v(l, t, r)),
+            get(e, t) {
+                var n = u$1(l, t);
+                return w$1(n) && (o$1(l) || r$1(l)) ? u$1(E, t).bind(E) : w$1(n) || P(n) ? S(n, h, [ ...O, String(t) ], l) : n;
             }
         });
-    } else {
-        return target;
     }
+    return l;
 }
 
-function observedeepagent(target, callback) {
-    if (!isfunction$1(callback)) {
-        console.error(callback);
-        console.error("observe callback  invalid function !");
-        throw Error();
-    }
-    if (!isfunction$1(Proxy)) {
-        console.error("Proxy unsupported!");
-        throw Error();
-    }
-    if (isfunction$1(target) || isobject$2(target)) {
-        return deepobserveaddpath(target, callback);
-    } else {
-        return target;
-    }
+function deepobserve(e, t) {
+    if (!w$1(t)) throw Error();
+    if (!w$1(Proxy)) throw Error();
+    return w$1(e) || P(e) ? S(e, t) : e;
 }
 
 function handleobjectstate(init) {
     const reactive = new ReactiveState(init);
     let initobj = init;
-    const containReactiveState = isplainobject(init) && Object$1.values(init).some(a => isReactiveState(a));
-    const state_entries = Object$1.entries(init).filter(e => {
+    const containReactiveState = isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
+    const state_entries = Object.entries(init).filter(e => {
         const a = e[1];
         return isReactiveState(a);
     });
     if (containReactiveState) {
-        initobj = Object$1.assign({}, init);
+        initobj = Object.assign({}, init);
         state_entries.forEach(([key, state]) => {
             defineProperty(initobj, key, {
                 enumerable: true,
@@ -2235,7 +2022,7 @@ function handleobjectstate(init) {
     }
     reactive.value = initobj;
     const objproxyhandler = {};
-    objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys$1(target), ...ownKeys$1(get(target, "value")) ]));
+    objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
     objproxyhandler.setPrototypeOf = () => false;
     objproxyhandler.defineProperty = () => false;
     objproxyhandler.getOwnPropertyDescriptor = (target, key) => {
@@ -2267,7 +2054,7 @@ function handleobjectstate(init) {
         const value = get(target, "value");
         const deepflage = isarray(value) || isplainobject(value);
         if (key === "value" && deepflage) {
-            return observedeepagent(get(target, key), (_target_, patharray) => {
+            return deepobserve(get(target, key), (_target_, patharray) => {
                 target[dispatchsymbol]();
             });
         } else if (has(target, key)) {
@@ -2317,7 +2104,7 @@ function handleobjectstate(init) {
                     return isfunction(resultvalue) ? resultvalue.bind(value) : resultvalue;
                 }
             } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
-                return observedeepagent(resultvalue, () => {
+                return deepobserve(resultvalue, () => {
                     target[dispatchsymbol]();
                 });
             } else {
@@ -2428,7 +2215,7 @@ function ListMap(list, mapfun) {
         attributeChangedCallback)](name) {
             if (this[readysymbol]) {
                 if (name === "value") {
-                    const attrs = createeleattragentreadwrite(this);
+                    const attrs = createeleattr(this);
                     const value = attrs["value"];
                     if (!isarray(value)) {
                         console.log(value);
@@ -2464,7 +2251,7 @@ function ListMap(list, mapfun) {
             });
         }
         [firstinstalledcallback]() {
-            const attrs = createeleattragentreadwrite(this);
+            const attrs = createeleattr(this);
             const value = attrs["value"];
             if (!isarray(value)) {
                 console.log(value);
@@ -2473,7 +2260,7 @@ function ListMap(list, mapfun) {
             set(this[listvalueattr], "value", value);
             this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
             this[listinnerelement] = render(this[listinnervdom]);
-            Object$1.entries(this[listinnerelement]).forEach(([key, value]) => {
+            Object.entries(this[listinnerelement]).forEach(([key, value]) => {
                 set(this[cached_realele], Number(key), value);
             });
             mountrealelement(this[listinnerelement], this);
@@ -2553,37 +2340,34 @@ function createRef(value) {
     };
 }
 
-var n = function n(t, r, u, e) {
-    for (var p = 1; p < r.length; p++) {
-        var s = r[p], h = "number" == typeof s ? u[s] : s, a = r[++p];
-        1 === a ? e[0] = h : 3 === a ? e[1] = Object$1.assign(e[1] || {}, h) : 5 === a ? (e[1] = e[1] || {})[r[++p]] = h : 6 === a ? e[1][r[++p]] += h + "" : e.push(a ? t.apply(null, n(t, h, u, [ "", null ])) : h);
+var n$2 = function(t, s, r, e) {
+    var u;
+    s[0] = 0;
+    for (var h = 1; h < s.length; h++) {
+        var p = s[h++], a = s[h] ? (s[0] |= p ? 1 : 2, r[s[h++]]) : s[++h];
+        3 === p ? e[0] = a : 4 === p ? e[1] = Object.assign(e[1] || {}, a) : 5 === p ? (e[1] = e[1] || {})[s[++h]] = a : 6 === p ? e[1][s[++h]] += a + "" : p ? (u = t.apply(a, n$2(t, a, r, [ "", null ])), 
+        e.push(u), a[0] ? s[0] |= 2 : (s[h - 2] = 0, s[h] = u)) : e.push(a);
     }
     return e;
-}, t = function t(n) {
-    for (var t, r, u = 1, e = "", p = "", s = [ 0 ], h = function h(n) {
-        1 === u && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? s.push(n || e, 0) : 3 === u && (n || e) ? (s.push(n || e, 1), 
-        u = 2) : 2 === u && "..." === e && n ? s.push(n, 3) : 2 === u && e && !n ? s.push(!0, 5, e) : u >= 5 && ((e || !n && 5 === u) && (s.push(e, u, r), 
-        u = 6), n && (s.push(n, u, r), u = 6)), e = "";
-    }, a = 0; a < n.length; a++) {
-        a && (1 === u && h(), h(a));
-        for (var f = 0; f < n[a].length; f++) t = n[a][f], 1 === u ? "<" === t ? (h(), s = [ s ], 
-        u = 3) : e += t : 4 === u ? "--" === e && ">" === t ? (u = 1, e = "") : e = t + e[0] : p ? t === p ? p = "" : e += t : '"' === t || "'" === t ? p = t : ">" === t ? (h(), 
-        u = 1) : u && ("=" === t ? (u = 5, r = e, e = "") : "/" === t && (u < 5 || ">" === n[a][f + 1]) ? (h(), 
-        3 === u && (s = s[0]), u = s, (s = s[0]).push(u, 2), u = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (h(), 
-        u = 2) : e += t), 3 === u && "!--" === e && (u = 4, s = s[0]);
-    }
-    return h(), s;
-}, r = "function" == typeof Map, u = r ? new Map : {}, e = r ? function(n) {
-    var r = u.get(n);
-    return r || u.set(n, r = t(n)), r;
-} : function(n) {
-    for (var r = "", e = 0; e < n.length; e++) r += n[e].length + "-" + n[e];
-    return u[r] || (u[r] = t(n));
-};
+}, t$2 = new Map;
 
-function htm(t) {
-    var r = n(this, e(t), arguments, []);
-    return r.length > 1 ? r : r[0];
+function htm(s) {
+    var r = t$2.get(this);
+    return r || (r = new Map, t$2.set(this, r)), (r = n$2(this, r.get(s) || (r.set(s, r = function(n) {
+        for (var t, s, r = 1, e = "", u = "", h = [ 0 ], p = function(n) {
+            1 === r && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? h.push(0, n, e) : 3 === r && (n || e) ? (h.push(3, n, e), 
+            r = 2) : 2 === r && "..." === e && n ? h.push(4, n, 0) : 2 === r && e && !n ? h.push(5, 0, !0, e) : r >= 5 && ((e || !n && 5 === r) && (h.push(r, 0, e, s), 
+            r = 6), n && (h.push(r, n, 0, s), r = 6)), e = "";
+        }, a = 0; a < n.length; a++) {
+            a && (1 === r && p(), p(a));
+            for (var l = 0; l < n[a].length; l++) t = n[a][l], 1 === r ? "<" === t ? (p(), h = [ h ], 
+            r = 3) : e += t : 4 === r ? "--" === e && ">" === t ? (r = 1, e = "") : e = t + e[0] : u ? t === u ? u = "" : e += t : '"' === t || "'" === t ? u = t : ">" === t ? (p(), 
+            r = 1) : r && ("=" === t ? (r = 5, s = e, e = "") : "/" === t && (r < 5 || ">" === n[a][l + 1]) ? (p(), 
+            3 === r && (h = h[0]), r = h, (h = h[0]).push(2, 0, r), r = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (p(), 
+            r = 2) : e += t), 3 === r && "!--" === e && (r = 4, h = h[0]);
+        }
+        return p(), h;
+    }(s)), r), arguments, [])).length > 1 ? r : r[0];
 }
 
 function htmlold(...inargs) {
