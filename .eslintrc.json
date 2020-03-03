@@ -1,35 +1,35 @@
 {
-  "plugins": ["@typescript-eslint"],
-  "parser": "@typescript-eslint/parser",
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "worker": true,
-    "commonjs": true,
-    "amd": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended"
-  ],
-  "globals": { "Atomics": "readonly", "SharedArrayBuffer": "readonly" },
-  "parserOptions": {
-    "ecmaVersion": 2019,
-    "sourceType": "module",
-    "ecmaFeatures": { "jsx": true }
-  },
-  "rules": {
-    "prefer-rest-params": 0,
-    "@typescript-eslint/camelcase": 0,
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/no-explicit-any": 0,
-    "no-empty": 0,
-    "@typescript-eslint/no-use-before-define": 0,
-    "no-useless-escape": 0,
-    "no-var": 0,
-    "prefer-const": 0,
-    "@typescript-eslint/no-inferrable-types": 0
-  }
+    "plugins": ["@typescript-eslint"],
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "worker": true,
+        "commonjs": true,
+        "amd": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "globals": { "Atomics": "readonly", "SharedArrayBuffer": "readonly" },
+    "parserOptions": {
+        "ecmaVersion": 2019,
+        "sourceType": "module",
+        "ecmaFeatures": { "jsx": true }
+    },
+    "rules": {
+        "prefer-rest-params": 0,
+        "@typescript-eslint/camelcase": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/no-explicit-any": 0,
+        "no-empty": 0,
+        "@typescript-eslint/no-use-before-define": 0,
+        "no-useless-escape": 0,
+        "no-var": 0,
+        "prefer-const": 0,
+        "@typescript-eslint/no-inferrable-types": 0
+    }
 }
