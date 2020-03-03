@@ -1,3 +1,4 @@
+import "./Directives/built-in-directs";
 import "./assetbrowser";
 import Condition from "./AttributeClass/conditon";
 import createComponent from "./AttributeClass/createComponent";

@@ -26,14 +26,14 @@ watch(liststate, a => console.dir([liststate, a]));
 const testlistvdom = (
     <div>
         <button
-            _text="push"
+            $text="push"
             onclick={() => {
                 // @ts-ignore
                 liststate.push(Math.random());
             }}
         />
         <button
-            _text="pop"
+            $text="pop"
             onclick={() => {
                 // @ts-ignore
                 liststate.pop();
@@ -41,14 +41,14 @@ const testlistvdom = (
         />
 
         <button
-            _text="shift"
+            $text="shift"
             onclick={() => {
                 // @ts-ignore
                 liststate.shift();
             }}
         />
         <button
-            _text="unshift"
+            $text="unshift"
             onclick={() => {
                 // @ts-ignore
                 liststate.unshift(Math.random());
@@ -56,7 +56,7 @@ const testlistvdom = (
         />
         {/* {ListMap(liststate, (value, index) => (
             <div
-                _ref={ele => {
+                $ref={ele => {
                     // @ts-ignore
                     refarray.length = liststate.length;
                     refarray[index] = ele;

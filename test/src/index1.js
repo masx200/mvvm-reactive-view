@@ -151,8 +151,8 @@ console.log([h, createElement]);
     const state3 = createState("<a>绑定innerhtml</a>");
     const vdom4 = (
         <>
-            <div _text={state3}></div>
-            <div _html={state3}></div>
+            <div $text={state3}></div>
+            <div $html={state3}></div>
 
             <script> </script>
         </>

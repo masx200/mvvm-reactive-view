@@ -167,7 +167,7 @@ console.log([h, createElement]);
     const vdom = html`
         <hr />
         <h1 style=${stylestate}>input color ${colortext}</h1>
-        <input _value=${colortext} />
+        <input $value=${colortext} />
         <hr />
     `;
     /* watch(stylestate, console.log);
@@ -191,7 +191,7 @@ console.log([h, createElement]);
     const vdom = html`
         <hr />
         <h1 style=${stylestate}>input color ${colortext}</h1>
-        <input _value=${colortext} />
+        <input $value=${colortext} />
         <hr />
     `;
     /* watch(stylestate, console.log);

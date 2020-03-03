@@ -12,7 +12,7 @@ console.log([h, createElement]);
 const lirefs = [];
 // console.log()
 // export{vdom}
-const temp_ref = createRef();
+const temp$ref = createRef();
 const check = createState(false);
 const check2 = createState(true);
 watch(check2, a => console.log(a));
@@ -37,13 +37,13 @@ watch(check, a => console.log(a));
 watch(notcheck, a => console.log(a));
 var vdom = (
     <>
-        <input type="radio" _checked={check4} name="myname1" />
-        <input type="radio" _checked={check3} name="myname1" />
-        <input type="radio" _checked={check2} name="myname2" />
-        <input type="radio" _checked={check4} name="myname2" />
+        <input type="radio" $checked={check4} name="myname1" />
+        <input type="radio" $checked={check3} name="myname1" />
+        <input type="radio" $checked={check2} name="myname2" />
+        <input type="radio" $checked={check4} name="myname2" />
         {[
-            <input type="checkbox" _checked={check} />,
-            <input type="checkbox" _checked={notcheck} />,
+            <input type="checkbox" $checked={check} />,
+            <input type="checkbox" $checked={notcheck} />,
             <>
                 <ul>
                     {list.map((a, index) => (
@@ -60,7 +60,7 @@ var vdom = (
                 <header
                     class="common-header fixed noborder floating"
                     id="git-header-nav"
-                    _ref={temp_ref}
+                    $ref={temp$ref}
                 >
                     <div class="ui container">
                         <div class="ui menu header-menu">
@@ -557,5 +557,5 @@ var vdom = (
         ]}
     </>
 );
-console.log(vdom, temp_ref, lirefs);
+console.log(vdom, temp$ref, lirefs);
 document.body.appendChild(MountElement(vdom, document.createElement("div")));

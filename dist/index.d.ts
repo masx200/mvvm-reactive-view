@@ -4,7 +4,7 @@ interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-declare const createComponent: (custfun: Custom | Htmlelementconstructor) => Htmlelementconstructor;
+declare const createComponent: (custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
 declare class ObserverTarget {
     Listeners: Set<Listener>;
     addListener(listener: Listener): void;
