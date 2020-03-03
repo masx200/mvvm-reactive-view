@@ -13,7 +13,7 @@
         "build": "rollup -c rollup.config.js",
         "watch": "rollup -c rollup.config.js --watch",
         "test": "live-server test",
-        "prettier": "prettier *.js  *.json --write  *.md  ./src/**/*.ts  ./test/**/*.js ./src/*.ts  "
+        "prettier": "prettier *.js  *.json --write  *.md *.ts ./src/**/*.ts  ./test/**/*.js ./src/*.ts  "
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
@@ -23,7 +23,9 @@
         "url": "https://github.com/masx200/mvvm-reactive-view/issues"
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
-    "dependencies": {},
+    "dependencies": {
+        "csstype": "^2.6.9"
+    },
     "devDependencies": {
         "@babel/core": "^7.8.4",
         "@babel/plugin-proposal-class-properties": "^7.8.3",

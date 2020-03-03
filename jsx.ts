@@ -1,111 +1,5 @@
-import * as CSS from "csstype";
-interface Htmlelementconstructor {
-    new (): HTMLElement;
-    prototype: HTMLElement;
-    defaultProps?: Record<string, any>;
-    css?: string;
-}
-declare const createComponent: (custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
-declare class ObserverTarget {
-    Listeners: Set<Listener>;
-    addListener(listener: Listener): void;
-    dispatch(): void;
-    removeListener(listener: Listener): void;
-}
-interface Listener {
-    (): any;
-}
-type Primitivetype = string | number | boolean | undefined | bigint;
-type CancelWatchfun = () => void;
-type UnwrapedState = any;
-interface gettercallback {
-    (...args: UnwrapedState[]): any;
-}
-declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: gettercallback): CancelWatchfun;
-declare const addonelistner: unique symbol;
-declare const removeonelistner: unique symbol;
-declare const cancelsubscribe: unique symbol;
-declare const debouncedispatch: unique symbol;
-declare const Targetsymbol: unique symbol;
-declare const memlisteners: unique symbol;
-declare const dispatchsymbol: unique symbol;
-declare const subscribesymbol: unique symbol;
-declare const removeallistenerssymbol: unique symbol;
-declare const addallistenerssymbol: unique symbol;
-declare class ReactiveState<T extends UnwrapedState> {
-    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
-    readonly [Symbol.toStringTag] = "ReactiveState";
-    constructor(init?: T);
-    [debouncedispatch]: () => void;
-    [removeallistenerssymbol](): void;
-    [removeonelistner](callback: Listener): void;
-    [addonelistner](callback: Listener): void;
-    [addallistenerssymbol](): void;
-    [Targetsymbol]: ObserverTarget;
-    [memlisteners]: Set<Listener>;
-    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
-    toString(): string;
-    [dispatchsymbol](): void;
-    [subscribesymbol](eventlistener: Listener): void;
-    [cancelsubscribe](eventlistener: Listener): void;
-    [Symbol.toPrimitive](): string | undefined | Primitivetype;
-}
-type VaildVDom = Virtualdom<any> | string | number | Vdomchildren | ReactiveState<any>;
-interface Custom {
-    (props?: Record<string, ReactiveState<any>>, children?: Vdomchildren): VaildVDom;
-    defaultProps?: Record<string, any>;
-    css?: string;
-}
-type styleprop = string | object | ReactiveState<string> | ReactiveState<object>;
-type classprop = string | Set<string> | Array<string> | ReactiveState<string | Set<string> | Array<string>>;
-interface ElementAttrs {
-    style?: styleprop;
-    class?: classprop;
-    [key: string]: any;
-}
-declare function h<T extends Htmlelementconstructor | string | Custom>(type: T, propsorchildren?: Vdomchildren, ...children: Vdomchildren): Virtualdom<T>;
-declare function h<T extends Vdomchildren>(type: "", propsorchildren?: T, ...children: T): T;
-declare function h<T extends Vdomchildren>(type: "", props?: ElementAttrs, ...children: T): T;
-declare function h<T extends Htmlelementconstructor | string | Custom>(type: T, props?: ElementAttrs, ...children: Vdomchildren): Virtualdom<T>;
-type Vdomchildren = Array<VaildVDom>;
-interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
-    readonly [Symbol.toStringTag]: "VirtualElement";
-    readonly element: Element[];
-    readonly type: T;
-    readonly props: ElementAttrs;
-    readonly children: Vdomchildren;
-    readonly directives: Record<string, any>;
-    readonly onevent: Record<string, Array<EventListener>>;
-    readonly bindattr: Record<string, ReactiveState<any>>;
-}
-declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
-declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
-declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
-type SetterFun = (v: any) => void;
-declare function useMounted(fun: Function): void;
-declare function useUnMounted(fun: Function): void;
-interface Ref<T = any | undefined> {
-    value: T | undefined;
-}
-declare function createRef<T = any | undefined>(value?: T): Ref<T>;
-declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
-declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
-interface Extendfun {
-    (element: Element, vdom: Virtualdom<any>, value: any): void;
-}
-declare function extenddirectives(name: string, fun: Extendfun): void;
-declare const Directives: typeof extenddirectives;
-declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
-declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
-declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
-declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
-declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
-declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
-declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
-declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
-declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
-interface Attributes {
-}
+import Virtualdom from "./src/CreateElement/VirtualElement";
+interface Attributes {}
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
     crossorigin?: string;
@@ -133,7 +27,7 @@ interface InputHTMLAttributes extends HTMLAttributes {
     alt?: string;
     autocomplete?: string;
     autofocus?: boolean;
-    capture?: boolean;
+    capture?: boolean; // https://www.w3.org/tr/html-media-capture/#the-capture-attribute
     checked?: boolean;
     crossorigin?: string;
     disabled?: boolean;
@@ -193,6 +87,7 @@ interface IframeHTMLAttributes extends HTMLAttributes {
     srcdoc?: string;
     width?: number | string;
 }
+
 interface MapHTMLAttributes extends HTMLAttributes {
     name?: string;
 }
@@ -259,6 +154,8 @@ interface DelHTMLAttributes extends HTMLAttributes {
 interface DataHTMLAttributes extends HTMLAttributes {
     value?: string | string[] | number;
 }
+import * as CSS from "csstype";
+import ReactiveState from "./src/Reactivity/reactivestate";
 interface OptgroupHTMLAttributes extends HTMLAttributes {
     disabled?: boolean;
     label?: string;
@@ -282,6 +179,9 @@ interface ParamHTMLAttributes extends HTMLAttributes {
     value?: string | string[] | number;
 }
 interface QuoteHTMLAttributes extends HTMLAttributes {
+    cite?: string;
+}
+interface BlockquoteHTMLAttributes extends HTMLAttributes {
     cite?: string;
 }
 interface OptionHTMLAttributes extends HTMLAttributes {
@@ -405,7 +305,7 @@ interface CanvasHTMLAttributes extends HTMLAttributes {
     height?: number | string;
     width?: number | string;
 }
-interface BlockquoteHTMLAttributes$0 extends HTMLAttributes {
+interface BlockquoteHTMLAttributes extends HTMLAttributes {
     cite?: string;
 }
 interface BaseHTMLAttributes extends HTMLAttributes {
@@ -431,8 +331,7 @@ interface VideoHTMLAttributes extends MediaHTMLAttributes {
     width?: number | string;
     disablePictureInPicture?: boolean;
 }
-interface AudioHTMLAttributes extends MediaHTMLAttributes {
-}
+interface AudioHTMLAttributes extends MediaHTMLAttributes {}
 interface AreaHTMLAttributes extends HTMLAttributes {
     alt?: string;
     coords?: string;
@@ -465,6 +364,7 @@ interface WebViewHTMLAttributes extends HTMLAttributes {
 }
 interface SVGAttributes extends AriaAttributes {
     domPropsInnerHTML?: string;
+
     color?: string;
     height?: number | string;
     id?: string;
@@ -477,12 +377,29 @@ interface SVGAttributes extends AriaAttributes {
     target?: string;
     type?: string;
     width?: number | string;
+
+    // Other HTML properties supported by SVG elements in browsers
     role?: string;
     tabindex?: number;
+
+    // SVG Specific attributes
     "accent-height"?: number | string;
     accumulate?: "none" | "sum";
     additive?: "replace" | "sum";
-    "alignment-baseline"?: "auto" | "baseline" | "before-edge" | "text-before-edge" | "middle" | "central" | "after-edge" | "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit";
+    "alignment-baseline"?:
+        | "auto"
+        | "baseline"
+        | "before-edge"
+        | "text-before-edge"
+        | "middle"
+        | "central"
+        | "after-edge"
+        | "text-after-edge"
+        | "ideographic"
+        | "alphabetic"
+        | "hanging"
+        | "mathematical"
+        | "inherit";
     allowReorder?: "no" | "yes";
     alphabetic?: number | string;
     amplitude?: number | string;
@@ -716,63 +633,233 @@ interface SVGAttributes extends AriaAttributes {
     zoomAndPan?: string;
 }
 interface AriaAttributes {
+    /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
     "aria-activedescendant"?: string;
+    /** Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. */
     "aria-atomic"?: boolean | "false" | "true";
+    /**
+     * Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be
+     * presented if they are made.
+     */
     "aria-autocomplete"?: "none" | "inline" | "list" | "both";
+    /** Indicates an element is being modified and that assistive technologies MAY want to wait until the modifications are complete before exposing them to the user. */
     "aria-busy"?: boolean | "false" | "true";
+    /**
+     * Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
+     * @see aria-pressed @see aria-selected.
+     */
     "aria-checked"?: boolean | "false" | "mixed" | "true";
+    /**
+     * Defines the total number of columns in a table, grid, or treegrid.
+     * @see aria-colindex.
+     */
     "aria-colcount"?: number;
+    /**
+     * Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid.
+     * @see aria-colcount @see aria-colspan.
+     */
     "aria-colindex"?: number;
+    /**
+     * Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid.
+     * @see aria-colindex @see aria-rowspan.
+     */
     "aria-colspan"?: number;
+    /**
+     * Identifies the element (or elements) whose contents or presence are controlled by the current element.
+     * @see aria-owns.
+     */
     "aria-controls"?: string;
-    "aria-current"?: boolean | "false" | "true" | "page" | "step" | "location" | "date" | "time";
+    /** Indicates the element that represents the current item within a container or set of related elements. */
+    "aria-current"?:
+        | boolean
+        | "false"
+        | "true"
+        | "page"
+        | "step"
+        | "location"
+        | "date"
+        | "time";
+    /**
+     * Identifies the element (or elements) that describes the object.
+     * @see aria-labelledby
+     */
     "aria-describedby"?: string;
+    /**
+     * Identifies the element that provides a detailed, extended description for the object.
+     * @see aria-describedby.
+     */
     "aria-details"?: string;
+    /**
+     * Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable.
+     * @see aria-hidden @see aria-readonly.
+     */
     "aria-disabled"?: boolean | "false" | "true";
+    /**
+     * Indicates what functions can be performed when a dragged object is released on the drop target.
+     * @deprecated in ARIA 1.1
+     */
     "aria-dropeffect"?: "none" | "copy" | "execute" | "link" | "move" | "popup";
+    /**
+     * Identifies the element that provides an error message for the object.
+     * @see aria-invalid @see aria-describedby.
+     */
     "aria-errormessage"?: string;
+    /** Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. */
     "aria-expanded"?: boolean | "false" | "true";
+    /**
+     * Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,
+     * allows assistive technology to override the general default of reading in document source order.
+     */
     "aria-flowto"?: string;
+    /**
+     * Indicates an element's "grabbed" state in a drag-and-drop operation.
+     * @deprecated in ARIA 1.1
+     */
     "aria-grabbed"?: boolean | "false" | "true";
-    "aria-haspopup"?: boolean | "false" | "true" | "menu" | "listbox" | "tree" | "grid" | "dialog";
+    /** Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. */
+    "aria-haspopup"?:
+        | boolean
+        | "false"
+        | "true"
+        | "menu"
+        | "listbox"
+        | "tree"
+        | "grid"
+        | "dialog";
+    /**
+     * Indicates whether the element is exposed to an accessibility API.
+     * @see aria-disabled.
+     */
     "aria-hidden"?: boolean | "false" | "true";
+    /**
+     * Indicates the entered value does not conform to the format expected by the application.
+     * @see aria-errormessage.
+     */
     "aria-invalid"?: boolean | "false" | "true" | "grammar" | "spelling";
+    /** Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. */
     "aria-keyshortcuts"?: string;
+    /**
+     * Defines a string value that labels the current element.
+     * @see aria-labelledby.
+     */
     "aria-label"?: string;
+    /**
+     * Identifies the element (or elements) that labels the current element.
+     * @see aria-describedby.
+     */
     "aria-labelledby"?: string;
+    /** Defines the hierarchical level of an element within a structure. */
     "aria-level"?: number;
+    /** Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. */
     "aria-live"?: "off" | "assertive" | "polite";
+    /** Indicates whether an element is modal when displayed. */
     "aria-modal"?: boolean | "false" | "true";
+    /** Indicates whether a text box accepts multiple lines of input or only a single line. */
     "aria-multiline"?: boolean | "false" | "true";
+    /** Indicates that the user may select more than one item from the current selectable descendants. */
     "aria-multiselectable"?: boolean | "false" | "true";
+    /** Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous. */
     "aria-orientation"?: "horizontal" | "vertical";
+    /**
+     * Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
+     * between DOM elements where the DOM hierarchy cannot be used to represent the relationship.
+     * @see aria-controls.
+     */
     "aria-owns"?: string;
+    /**
+     * Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value.
+     * A hint could be a sample value or a brief description of the expected format.
+     */
     "aria-placeholder"?: string;
+    /**
+     * Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
+     * @see aria-setsize.
+     */
     "aria-posinset"?: number;
+    /**
+     * Indicates the current "pressed" state of toggle buttons.
+     * @see aria-checked @see aria-selected.
+     */
     "aria-pressed"?: boolean | "false" | "mixed" | "true";
+    /**
+     * Indicates that the element is not editable, but is otherwise operable.
+     * @see aria-disabled.
+     */
     "aria-readonly"?: boolean | "false" | "true";
-    "aria-relevant"?: "additions" | "additions text" | "all" | "removals" | "text";
+    /**
+     * Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified.
+     * @see aria-atomic.
+     */
+    "aria-relevant"?:
+        | "additions"
+        | "additions text"
+        | "all"
+        | "removals"
+        | "text";
+    /** Indicates that user input is required on the element before a form may be submitted. */
     "aria-required"?: boolean | "false" | "true";
+    /** Defines a human-readable, author-localized description for the role of an element. */
     "aria-roledescription"?: string;
+    /**
+     * Defines the total number of rows in a table, grid, or treegrid.
+     * @see aria-rowindex.
+     */
     "aria-rowcount"?: number;
+    /**
+     * Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid.
+     * @see aria-rowcount @see aria-rowspan.
+     */
     "aria-rowindex"?: number;
+    /**
+     * Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid.
+     * @see aria-rowindex @see aria-colspan.
+     */
     "aria-rowspan"?: number;
+    /**
+     * Indicates the current "selected" state of various widgets.
+     * @see aria-checked @see aria-pressed.
+     */
     "aria-selected"?: boolean | "false" | "true";
+    /**
+     * Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
+     * @see aria-posinset.
+     */
     "aria-setsize"?: number;
+    /** Indicates if items in a table or grid are sorted in ascending or descending order. */
     "aria-sort"?: "none" | "ascending" | "descending" | "other";
+    /** Defines the maximum allowed value for a range widget. */
     "aria-valuemax"?: number;
+    /** Defines the minimum allowed value for a range widget. */
     "aria-valuemin"?: number;
+    /**
+     * Defines the current value for a range widget.
+     * @see aria-valuetext.
+     */
     "aria-valuenow"?: number;
+    /** Defines the human readable text alternative of aria-valuenow for a range widget. */
     "aria-valuetext"?: string;
 }
 type CSSProperties = CSS.Properties<string | number>;
 type Booleanish = boolean | "true" | "false";
-type styleprop$0 = CSSProperties | string | object | ReactiveState<string> | ReactiveState<object>;
-type classprop$0 = string | Set<string> | Array<string> | ReactiveState<string | Set<string> | Array<string>>;
+type styleprop =
+    | CSSProperties
+    | string
+    | object
+    | ReactiveState<string>
+    | ReactiveState<object>;
+
+type classprop =
+    | string
+    | Set<string>
+    | Array<string>
+    | ReactiveState<string | Set<string> | Array<string>>;
 interface HTMLAttributes extends AriaAttributes {
     domPropsInnerHTML?: string;
-    class?: classprop$0;
-    style?: styleprop$0;
+
+    class?: classprop;
+    style?: styleprop;
+
+    // Standard HTML Attributes
     accesskey?: string;
     contenteditable?: Booleanish | "inherit";
     contextmenu?: string;
@@ -786,8 +873,14 @@ interface HTMLAttributes extends AriaAttributes {
     tabindex?: number;
     title?: string;
     translate?: "yes" | "no";
-    radiogroup?: string;
+
+    // Unknown
+    radiogroup?: string; // <command>, <menuitem>
+
+    // WAI-ARIA
     role?: string;
+
+    // RDFa Attributes
     about?: string;
     datatype?: string;
     inlist?: any;
@@ -796,6 +889,8 @@ interface HTMLAttributes extends AriaAttributes {
     resource?: string;
     typeof?: string;
     vocab?: string;
+
+    // Non-standard Attributes
     autocapitalize?: string;
     autocorrect?: string;
     autocave?: string;
@@ -808,10 +903,28 @@ interface HTMLAttributes extends AriaAttributes {
     results?: number;
     security?: string;
     unselectable?: "on" | "off";
-    inputmode?: "none" | "text" | "tel" | "url" | "email" | "numeric" | "decimal" | "search";
+
+    // Living Standard
+    /**
+     * Hints at the type of data that might be entered by the user while editing the element or its contents
+     * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
+     */
+    inputmode?:
+        | "none"
+        | "text"
+        | "tel"
+        | "url"
+        | "email"
+        | "numeric"
+        | "decimal"
+        | "search";
+    /**
+     * Specify that a standard HTML element should behave like a defined custom built-in element
+     * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
+     */
     is?: string;
 }
-interface AnchorHTMLAttributes extends HTMLAttributes {
+export interface AnchorHTMLAttributes extends HTMLAttributes {
     download?: any;
     href?: string;
     hreflang?: string;
@@ -835,7 +948,7 @@ interface IntrinsicElementAttributes {
     bdi: HTMLAttributes;
     bdo: HTMLAttributes;
     big: HTMLAttributes;
-    blockquote: BlockquoteHTMLAttributes$0;
+    blockquote: BlockquoteHTMLAttributes;
     body: HTMLAttributes;
     br: HTMLAttributes;
     button: ButtonHTMLAttributes;
@@ -939,7 +1052,10 @@ interface IntrinsicElementAttributes {
     video: VideoHTMLAttributes;
     wbr: HTMLAttributes;
     webview: WebViewHTMLAttributes;
+
+    // SVG
     svg: SVGAttributes;
+
     animate: SVGAttributes;
     animateMotion: SVGAttributes;
     animateTransform: SVGAttributes;
@@ -998,13 +1114,19 @@ interface IntrinsicElementAttributes {
     use: SVGAttributes;
     view: SVGAttributes;
 }
-interface Events {
+
+export interface Events {
+    // clipboard events
     onCopy: ClipboardEvent;
     onCut: ClipboardEvent;
     onPaste: ClipboardEvent;
+
+    // composition events
     onCompositionend: CompositionEvent;
     onCompositionstart: CompositionEvent;
     onCompositionupdate: CompositionEvent;
+
+    // drag drop events
     onDrag: DragEvent;
     onDragend: DragEvent;
     onDragenter: DragEvent;
@@ -1013,19 +1135,29 @@ interface Events {
     onDragover: DragEvent;
     onDragstart: DragEvent;
     onDrop: DragEvent;
+
+    // focus events
     onFocus: FocusEvent;
     onBlur: FocusEvent;
+
+    // form events
     onChange: Event;
     onBeforeinput: Event;
     onInput: Event;
     onReset: Event;
     onSubmit: Event;
     onInvalid: Event;
+
+    // image events
     onLoad: Event;
     onError: Event;
+
+    // keyboard events
     onKeydown: KeyboardEvent;
     onKeypress: KeyboardEvent;
     onKeyup: KeyboardEvent;
+
+    // mouse events
     onAuxclick: MouseEvent;
     onClick: MouseEvent;
     onContextmenu: MouseEvent;
@@ -1037,6 +1169,8 @@ interface Events {
     onMouseout: MouseEvent;
     onMouseover: MouseEvent;
     onMouseup: MouseEvent;
+
+    // media events
     onAbort: Event;
     onCanplay: Event;
     onCanplaythrough: Event;
@@ -1059,12 +1193,20 @@ interface Events {
     onTimeupdate: Event;
     onVolumechange: Event;
     onWaiting: Event;
+
+    // selection events
     onSelect: Event;
+
+    // UI events
     onScroll: UIEvent;
+
+    // touch events
     onTouchcancel: TouchEvent;
     onTouchend: TouchEvent;
     onTouchmove: TouchEvent;
     onTouchstart: TouchEvent;
+
+    // pointer events
     onPointerdown: PointerEvent;
     onPointermove: PointerEvent;
     onPointerup: PointerEvent;
@@ -1073,38 +1215,46 @@ interface Events {
     onPointerleave: PointerEvent;
     onPointerover: PointerEvent;
     onPointerout: PointerEvent;
+
+    // wheel events
     onWheel: WheelEvent;
+
+    // animation events
     onAnimationstart: AnimationEvent;
     onAnimationend: AnimationEvent;
     onAnimationiteration: AnimationEvent;
+
+    // transition events
     onTransitionend: TransitionEvent;
     onTransitionstart: TransitionEvent;
 }
 type StringKeyOf<T> = Extract<keyof T, string>;
 type EventHandlers<E> = {
-    [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void;
+    [K in StringKeyOf<E>]?: E[K] extends Function
+        ? E[K]
+        : (payload: E[K]) => void;
 };
-type ElementAttrs$0<T> = T & EventHandlers<Events>;
+type ElementAttrs<T> = T & EventHandlers<Events>;
+
 type NativeElements = {
-    [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs$0<IntrinsicElementAttributes[K]>;
+    [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs<
+        IntrinsicElementAttributes[K]
+    >;
 };
+
 declare global {
     namespace JSX {
-        interface Element extends Virtualdom<any> {
-        }
-        interface ElementClass {
-        }
-        interface ElementAttributesProperty {
-        }
-        interface ElementChildrenAttribute {
-        }
-        interface IntrinsicClassAttributes {
-        }
-        interface IntrinsicAttributes extends Attributes {
-        }
+        interface Element extends Virtualdom<any> {}
+        interface ElementClass {}
+        interface ElementAttributesProperty {}
+        interface ElementChildrenAttribute {}
+        interface IntrinsicClassAttributes {}
+        interface IntrinsicAttributes extends Attributes {}
         interface IntrinsicElements extends NativeElements {
             [name: string]: any;
         }
     }
 }
-export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, JSX };
+/* https://www.tslang.cn/docs/handbook/jsx.html */
+export {};
+export default JSX
