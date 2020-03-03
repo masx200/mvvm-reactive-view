@@ -1,6 +1,6 @@
 # mvvm-reactive-view
 
-此代码库仅供学习交流使用
+这是一个实验性项目,此代码库仅供学习交流使用
 
 ## 面向未来的,轻量级,响应式,`mvvm`,构建视图,声明式,组件化,基于 `webcomponent` ,基于`虚拟 dom`
 
@@ -531,7 +531,7 @@ const stylestate = createState({
 const vdom = html`
     <hr />
     <h1 style=${stylestate}>input color ${colortext}</h1>
-    <input _value=${colortext} />
+    <input $value=${colortext} />
     <hr />
 `;
 
@@ -666,7 +666,7 @@ const vdom = (
     <>
         {ListMap(liststate, (value, index) => (
             <div
-                _ref={ele => {
+                $ref={ele => {
                     refarray.length = liststate.length;
                     refarray[index] = ele;
                 }}
@@ -676,26 +676,26 @@ const vdom = (
         ))}
 
         <button
-            _text="push"
+            $text="push"
             onclick={() => {
                 liststate.push(Math.random());
             }}
         />
         <button
-            _text="pop"
+            $text="pop"
             onclick={() => {
                 liststate.pop();
             }}
         />
 
         <button
-            _text="shift"
+            $text="shift"
             onclick={() => {
                 liststate.shift();
             }}
         />
         <button
-            _text="unshift"
+            $text="unshift"
             onclick={() => {
                 liststate.unshift(Math.random());
             }}
@@ -841,9 +841,7 @@ html`
 
 1.属性名为'\*'+指令名称
 
-2.使用"\_"+指令名称
-
-3..使用"\$"+指令名称
+2.使用"\$"+指令名称
 
 现已支持的指令有 `'ref','html','text'，"value","checked"`
 
@@ -868,7 +866,7 @@ console.log(ref.value);
 ```tsx
 const ref = createRef();
 
-var vdom = <div _ref={ele => (ref.value = ele)} />;
+var vdom = <div $ref={ele => (ref.value = ele)} />;
 
 console.log(ref.value);
 ```
@@ -906,40 +904,38 @@ console.log(lirefs);
 `*text=${state}`
 
 ```jsx
-<button _text="click me" />
+<button $text="click me" />
 ```
 
 ### 指令`value`只是一个简单的表单`textarea`或者`input`或者`select`元素的`value`值双向绑定语法糖
 
 ```jsx
-<input _value={state} />
+<input $value={state} />
 ```
 
 ```jsx
-<textarea _value={state} />
+<textarea $value={state} />
 ```
 
 ```jsx
-<select _value={state}></select>
+<select $value={state}></select>
 ```
 
 ### 指令`checked`只是一个简单的`checkbox`或者`radio`表单`input`元素的`checked`值双向绑定语法糖
 
 ```jsx
-<input type="checkbox" _checked={state} />
+<input type="checkbox" $checked={state} />
 ```
 
 ```jsx
-<input type="radio" _checked={state} />
+<input type="radio" $checked={state} />
 ```
 
 # 扩展自定义指令
 
 ```js
-Directives({
-    myfocus(value, element, vdom) {
-        console.log(value, element, vdom);
-    }
+Directives("myfocus", (element, vdom, value) => {
+    console.log(value, element, vdom);
 });
 const myvalue = "your directive value";
 html`
@@ -976,7 +972,7 @@ const vdomobj = html`
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
-## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
+<!-- ## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
 ```ts
 declare function ListMap(
@@ -992,7 +988,7 @@ interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-```
+``` -->
 
 ## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
 
