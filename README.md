@@ -77,7 +77,7 @@ https://tc39.es/proposal-flatMap/
 ```js
 import {
     Switchable,
-    ListMap,
+    
     computed,
     createComponent,
     useMounted,
@@ -102,7 +102,7 @@ import {
 ```js
 import {
     Switchable,
-    ListMap,
+  
     computed,
     createComponent,
     useMounted,
@@ -652,7 +652,7 @@ MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 ```
 
 ## 2.可变的列表，有响应式
-
+<!-- 
 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
 ```jsx
@@ -703,7 +703,7 @@ const vdom = (
     </>
 );
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
-```
+``` -->
 
 # 可自由切换的组件,可配合前端路由使用
 
