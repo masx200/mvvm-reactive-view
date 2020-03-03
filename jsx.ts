@@ -1,4 +1,8 @@
+/* https://github.com/vuejs/vue-next/blob/master/packages/runtime-dom/jsx.d.ts */
+import * as CSS from "csstype";
 import Virtualdom from "./src/CreateElement/VirtualElement";
+import ReactiveState from "./src/Reactivity/reactivestate";
+
 interface Attributes {}
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
@@ -154,8 +158,6 @@ interface DelHTMLAttributes extends HTMLAttributes {
 interface DataHTMLAttributes extends HTMLAttributes {
     value?: string | string[] | number;
 }
-import * as CSS from "csstype";
-import ReactiveState from "./src/Reactivity/reactivestate";
 interface OptgroupHTMLAttributes extends HTMLAttributes {
     disabled?: boolean;
     label?: string;
@@ -1257,4 +1259,4 @@ declare global {
 }
 /* https://www.tslang.cn/docs/handbook/jsx.html */
 export {};
-export default JSX
+export default JSX;
