@@ -967,9 +967,11 @@ const vdomobj = html`
 `;
 ```
 
-# `API` : 可在 `TypeScript` 类型声明文件`index.d.ts`中查看更多
+# `API` : 可在 `TypeScript` 类型声明文件中查看更多
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
+
+https://github.com/masx200/mvvm-reactive-view/blob/master/jsx.ts
 
 <!-- ## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
