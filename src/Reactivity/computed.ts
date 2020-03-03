@@ -14,17 +14,17 @@ import ReactiveState, {
     dispatchsymbol,
     isReactiveState
 } from "./reactivestate.js";
-import watch, { CallbackReactiveState, UnwrapedState } from "./watch";
+import watch, { gettercallback, UnwrapedState } from "./watch";
 import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 
-/* interface CallbackReactiveState<
+/* interface gettercallback<
 import { invalid_Function } from '../mounted-unmounted/Component-context';
 import { apply, defineProperty } from '../UtilTools/reflect';
 import { toArray } from '../UtilTools/toArray';
 import { isArray, isFunction, isfunction, isobject, isprimitive } from '../UtilTools/util';
 import { getproperyreadproxy } from './getproperyread-proxy';
 import ReactiveState, { dispatchsymbol, isReactiveState } from './ReactiveState';
-import { CallbackReactiveState, UnwrapedState, watch } from './watch';
+import { gettercallback, UnwrapedState, watch } from './watch';
 
  
 > {
@@ -33,7 +33,7 @@ import { CallbackReactiveState, UnwrapedState, watch } from './watch';
 
 const computed = function<T extends UnwrapedState>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
-    callback: CallbackReactiveState,
+    callback: gettercallback,
     setter?: SetterFun
 ): ReactiveState<any> {
     if (!((isArray(state) || isReactiveState(state)) && isFunction(callback))) {
@@ -62,7 +62,7 @@ export default computed;
 type SetterFun = (v: any) => void;
 function Arraycomputed<T extends UnwrapedState>(
     state: ReactiveState<T>[],
-    callback: CallbackReactiveState,
+    callback: gettercallback,
     setter?: SetterFun
 ): ReactiveState<any> {
     const reactivestate = new ReactiveState();

@@ -17,10 +17,10 @@ interface Listener {
 type Primitivetype = string | number | boolean | undefined | bigint;
 type CancelWatchfun = () => void;
 type UnwrapedState = any;
-interface CallbackReactiveState {
+interface gettercallback {
     (...args: UnwrapedState[]): any;
 }
-declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: CallbackReactiveState): CancelWatchfun;
+declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: gettercallback): CancelWatchfun;
 declare const addonelistner: unique symbol;
 declare const removeonelistner: unique symbol;
 declare const cancelsubscribe: unique symbol;
@@ -79,7 +79,7 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
 }
 declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
 declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
-declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: CallbackReactiveState, setter?: SetterFun | undefined) => ReactiveState<any>;
+declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
 declare function useMounted(fun: Function): void;
 declare function useUnMounted(fun: Function): void;

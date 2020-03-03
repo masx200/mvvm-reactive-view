@@ -1032,12 +1032,12 @@ interface Custom {
 ```ts
 type CancelWatchfun = () => void;
 type UnwrapedState = any;
-interface CallbackReactiveState {
+interface gettercallback {
     (...args: UnwrapedState[]): any;
 }
 declare function watch<T extends UnwrapedState>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
-    callback: CallbackReactiveState
+    callback: gettercallback
 ): CancelWatchfun;
 ```
 
@@ -1112,7 +1112,7 @@ declare class ReactiveState<T extends UnwrapedState> {
 ```ts
 declare const computed: <T extends any>(
     state: ReactiveState<T> | ReactiveState<T>[],
-    callback: CallbackReactiveState,
+    callback: gettercallback,
     setter?: SetterFun | undefined
 ) => ReactiveState<any>;
 type SetterFun = (v: any) => void;

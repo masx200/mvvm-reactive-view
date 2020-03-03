@@ -19,7 +19,7 @@ import { Listener } from "./custom-observer-target";
 export type CancelWatchfun = () => void;
 export type UnwrapedState = any;
 
-export interface CallbackReactiveState /* <
+export interface gettercallback /* <
   
 > */ {
     (...args: UnwrapedState[]): any;
@@ -28,7 +28,7 @@ export interface CallbackReactiveState /* <
 export function watch<T extends UnwrapedState>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
 
-    callback: CallbackReactiveState
+    callback: gettercallback
 ): CancelWatchfun {
     if (isarray(state) || isReactiveState(state)) {
         const statearray: ReactiveState<any>[] = toArray(state);
