@@ -22,6 +22,7 @@ const beautifyterserplugin = terser({
     }
 });
 const mybabelplugin = babel({
+    babelHelpers: "bundled",
     presets: [
         [
             "@babel/preset-env",
@@ -146,6 +147,7 @@ export default [
         plugins: [
             sourcemaps(),
             babel({
+                babelHelpers: "bundled",
                 plugins: [
                     [
                         "@babel/plugin-transform-react-jsx",

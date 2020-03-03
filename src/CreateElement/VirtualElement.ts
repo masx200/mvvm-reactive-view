@@ -92,7 +92,10 @@ function createVirtualElement<
             propsentriesNOTevents
                 .filter(
                     ([key]) =>
-                        key[0] === "*" || key[0] === "_" || key[0] === "$"
+                        key[0] === "*" ||
+                        /*  || key[0] === "_"  */
+
+                        key[0] === "$"
                 )
                 .map(([key, value]) => [
                     key

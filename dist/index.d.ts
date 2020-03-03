@@ -78,7 +78,6 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly bindattr: Record<string, ReactiveState<any>>;
 }
 declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
-declare function ListMap(list: any[] | Set<any> | ReactiveState<any[] | Set<any>>, mapfun: (value: ReactiveState<any>, index: number) => Virtualdom<any> | string): Virtualdom<Htmlelementconstructor>;
 declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
 declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: CallbackReactiveState, setter?: SetterFun | undefined) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
@@ -91,12 +90,9 @@ declare function createRef<T = any | undefined>(value?: T): Ref<T>;
 declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
 declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
 interface Extendfun {
-    (value: any, element: Element, vdom: Virtualdom<any>): void;
+    (element: Element, vdom: Virtualdom<any>, value: any): void;
 }
-interface ExtendOptions {
-    [s: string]: Extendfun;
-}
-declare function extenddirectives(options?: ExtendOptions): ExtendOptions;
+declare function extenddirectives(name: string, fun: Extendfun): void;
 declare const Directives: typeof extenddirectives;
 declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
 declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
@@ -107,4 +103,4 @@ declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | El
 declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
 declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
 declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
-export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, ListMap, Switchable };
+export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable };

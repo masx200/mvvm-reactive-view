@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     Condition,
-    ListMap,
+    // ListMap,
     // @ts-ignore
     computed,
     // @ts-ignore
@@ -54,7 +54,7 @@ const testlistvdom = (
                 liststate.unshift(Math.random());
             }}
         />
-        {ListMap(liststate, (value, index) => (
+        {/* {ListMap(liststate, (value, index) => (
             <div
                 _ref={ele => {
                     // @ts-ignore
@@ -64,7 +64,7 @@ const testlistvdom = (
             >
                 {["item:", "value:", value, "index:", index]}
             </div>
-        ))}
+        ))} */}
     </div>
 );
 const weathercondition = createState(true);

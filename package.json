@@ -13,7 +13,7 @@
         "build": "rollup -c rollup.config.js",
         "watch": "rollup -c ./rollup.config.js --watch",
         "serve": "live-server test",
-        "prettier": "prettier *.js --write&&prettier *.json --write && prettier *.md --write &&prettier --parser=typescript --write ./src/**/*.ts&&prettier --parser=babel --write ./test/**/*.js"
+        "prettier": "prettier *.js  *.json --write  *.md  ./src/**/*.ts  ./test/**/*.js ./src/*.ts  "
     },
     "repository": "git+https://github.com/masx200/mvvm-reactive-view.git",
     "keywords": [],
@@ -48,7 +48,7 @@
         "object-hash": "^2.0.2",
         "prettier": "^1.19.1",
         "rollup": "^1.31.0",
-        "rollup-plugin-babel": "^4.3.3",
+        "rollup-plugin-babel": "^5.0.0-alpha.1",
         "rollup-plugin-postcss": "^2.0.6",
         "rollup-plugin-sourcemaps": "^0.5.0",
         "rollup-plugin-terser": "^5.2.0",
@@ -57,6 +57,6 @@
         "serialize-javascript": "^2.1.2",
         "terser": "^4.6.3",
         "tslib": "^1.10.0",
-        "typescript": "^3.7.5"
+        "typescript": "^3.8.3"
     }
 }

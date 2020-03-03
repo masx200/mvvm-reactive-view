@@ -24,13 +24,12 @@ function handleprops(
   } */
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
+            const direfun = directives[name];
             if (
-                isfunction(
-                    directives[name]
-                ) /* typeof directives[name] === "function" */
+                isfunction(direfun) /* typeof directives[name] === "function" */
                 /*name in directives &&*/
             ) {
-                directives[name](value, element, vdom);
+                direfun(element, vdom, value);
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);

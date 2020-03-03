@@ -622,7 +622,7 @@ function g(t, e) {
     return t.removeAttribute(e);
 }
 
-function createeleattr(t) {
+function createeleattragentreadwrite(t) {
     !function(t) {
         if (!(t instanceof Element)) throw TypeError();
     }(t);
@@ -728,7 +728,7 @@ function createVirtualElement(type, props = {}, children = []) {
         props: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => !isReactiveState(e[1])).map(([key, value]) => [ key, isstring(value) ? value.trim() : value ])),
         children: children,
         onevent: Object.fromEntries(merge_entries([ ...propsentries.filter(([key]) => "@" == key[0]).map(([key, value]) => [ key.slice(1).toLowerCase().trim(), [ value ].flat(1 / 0) ]), ...propsentries.filter(([key]) => key.startsWith("on")).map(([key, value]) => [ key.slice(2).toLowerCase().trim(), [ value ].flat(1 / 0) ]) ])),
-        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "_" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
+        directives: Object.fromEntries(propsentriesNOTevents.filter(([key]) => key[0] === "*" || key[0] === "$").map(([key, value]) => [ key.slice(1).toLowerCase().trim(), value ]))
     });
     defineProperty(virtual, Symbol.toStringTag, {
         value: "VirtualElement"
@@ -805,10 +805,6 @@ function createmathelement() {
     return createElementNS(mathnamespace, "math");
 }
 
-function removeElement(element) {
-    element.remove();
-}
-
 function replaceChild(newChild, oldChild) {
     let parentNode = oldChild.parentNode;
     if (parentNode) {
@@ -822,10 +818,6 @@ function domaddlisten(ele, event, call) {
 
 function domremovelisten(ele, event, call) {
     ele.removeEventListener(event, call);
-}
-
-function getchildren(ele) {
-    return [ ...ele.children ];
 }
 
 function getchildNodes(ele) {
@@ -1009,54 +1001,91 @@ function createhtmlandtextdirective(seteletext, errorname) {
     };
 }
 
-function extenddirectives(options = {}) {
-    if (!isplainobject(options)) {
-        console.error(options);
+function extenddirectives(name, fun) {
+    if (!isstring(name)) {
+        console.error(name);
         throw new TypeError;
     }
-    Object.entries(options).forEach(([key, value]) => {
-        if (typeof value !== "function") {
-            console.error(value);
-            console.error(invalid_Function);
-            throw TypeError();
+    if (typeof fun !== "function") {
+        console.error(fun);
+        console.error(invalid_Function);
+        throw TypeError();
+    } else {
+        if (!directive[name]) {
+            Reflect.set(directive, name, fun);
         } else {
-            if (!directive[key]) {
-                Reflect.set(directive, key, value);
-            } else {
-                console.error(directive);
-                console.error("do not extend existing directive");
-                throw new Error;
-            }
+            console.error(directive);
+            console.error("can not extend existing directive");
+            throw new Error;
         }
-    });
-    return directive;
+    }
 }
 
-const directive = {
-    ref(ref, ele, _vdom) {
-        if (isfunction(ref)) {
-            apply(ref, undefined, [ ele ]);
-        } else if (isobject(ref)) {
-            set(ref, "value", ele);
-        } else {
-            console.log(_vdom);
-            console.error(ref);
-            console.error("invalid ref");
-            throw TypeError();
-        }
+function model(types, bindattribute, domprop, eventnames, value, vdom) {
+    if (!isReactiveState(value)) {
+        console.error(value);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
+        throw TypeError();
     }
-};
+    if (types.includes(vdom.type)) {
+        set(vdom.bindattr, bindattribute, value);
+        eventnames.forEach(eventname => {
+            const origin = vdom.onevent[eventname];
+            const eventsarray = toArray(origin);
+            set(vdom.onevent, eventname, toArray([ ...eventsarray, e => value.value = get(e.target, domprop) ]).filter(Boolean));
+        });
+    } else {
+        console.error(vdom);
+        console.error(invalid_ReactiveState + invalid_Virtualdom);
+        throw TypeError();
+    }
+}
 
-extenddirectives({
-    html(html, ele, _vdom) {
+extenddirectives("ref", (ele, _vdom, ref) => {
+    if (isfunction(ref)) {
+        apply(ref, undefined, [ ele ]);
+    } else if (isobject(ref)) {
+        set(ref, "value", ele);
+    } else {
         console.log(_vdom);
-        createhtmlandtextdirective(setelehtml, "html")(ele, html);
-    },
-    text(text, ele, _vdom) {
-        console.log(_vdom);
-        createhtmlandtextdirective(seteletext, "text")(ele, text);
+        console.error(ref);
+        console.error("invalid ref");
+        throw TypeError();
     }
 });
+
+extenddirectives("html", (ele, _vdom, html) => {
+    console.log(_vdom);
+    createhtmlandtextdirective(setelehtml, "html")(ele, html);
+});
+
+extenddirectives("text", (ele, _vdom, text) => {
+    console.log(_vdom);
+    createhtmlandtextdirective(seteletext, "text")(ele, text);
+});
+
+extenddirectives("value", (element, vdom, value) => {
+    model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+});
+
+extenddirectives("checked", (element, vdom, value) => {
+    model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
+    const eventname = "click";
+    const origin = toArray(vdom.onevent[eventname]);
+    const eventsarray = origin;
+    const dispatchallsamename = event => {
+        const inputelement = event.target;
+        const name = event.target.name;
+        if (name) {
+            querySelectorAll(`input[name=${name}]`).filter(ele => ele !== inputelement).forEach(element => {
+                element.dispatchEvent(new Event("change"));
+            });
+        }
+    };
+    set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
+});
+
+const directive = {};
 
 const eventlistenerssymbol = Symbol("eventlisteners");
 
@@ -1100,15 +1129,16 @@ function handleprops(element, vdom) {
     vdom.element.push(element);
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
-            if (isfunction(directive[name])) {
-                directive[name](value, element, vdom);
+            const direfun = directive[name];
+            if (isfunction(direfun)) {
+                direfun(element, vdom, value);
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);
                 throw new Error;
             }
         });
-        const attribute1 = createeleattr(element);
+        const attribute1 = createeleattragentreadwrite(element);
         Object.assign(attribute1, vdom.props);
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
@@ -1510,7 +1540,7 @@ class AttrChange extends HTMLElement {
         super();
         this[_a$1] = false;
         const defaultProps = get(this.constructor, "defaultProps");
-        const attrs = createeleattr(this);
+        const attrs = createeleattragentreadwrite(this);
         if (isobject(defaultProps)) {
             Object.assign(attrs, defaultProps);
         }
@@ -1592,14 +1622,14 @@ function createComponentold(custfun) {
                         });
                     }
                 }
-                const attrs = createeleattr(this);
+                const attrs = createeleattragentreadwrite(this);
                 if (isobject(propsjson)) {
                     Object.assign(attrs, propsjson);
                 }
                 const props = attrs;
                 openctx();
                 const thisattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
-                    const attributes = createeleattr(this);
+                    const attributes = createeleattragentreadwrite(this);
                     const state = new ReactiveState;
                     defineProperty(state, "value", {
                         get() {
@@ -1828,10 +1858,58 @@ const Condition = function(conditon, iftrue, iffalse) {
     return vdom;
 };
 
-function asserttype(con) {
-    if (!con) {
+const cancel_watch_symbol = Symbol("cancel_watch");
+
+const cached_class_element = Symbol("cached_class_element");
+
+const switch_mount_symbol = Symbol("switch_mount");
+
+function Switchable(funstate) {
+    var _a, _b, _c;
+    if (!isReactiveState(funstate)) {
+        console.error(funstate);
         throw new TypeError;
     }
+    class Switchable extends AttrChange {
+        constructor() {
+            super(...arguments);
+            this[_a] = new WeakMap;
+            this[_c] = false;
+        }
+        disconnectedCallback() {
+            setimmediate(() => {
+                disconnectedCallback(this);
+                if (isfunction(this[cancel_watch_symbol])) {
+                    this[cancel_watch_symbol]();
+                }
+            });
+        }
+        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
+            eleclass = autocreateclass(eleclass);
+            const eleme = this[cached_class_element].get(eleclass);
+            if (eleme) {
+                mountrealelement(eleme, this);
+            } else {
+                const elementreal = render(h(eleclass));
+                this[cached_class_element].set(eleclass, elementreal);
+                mountrealelement(elementreal, this);
+            }
+        }
+        [firstinstalledcallback]() {
+            const callmountswitch = () => {
+                this[switch_mount_symbol](funstate.valueOf());
+            };
+            callmountswitch();
+            this[cancel_watch_symbol] = watch(funstate, () => {
+                callmountswitch();
+            });
+        }
+        connectedCallback() {
+            connectedCallback(this);
+        }
+    }
+    Switchable[_b] = componentsymbol;
+    return h(Switchable);
 }
 
 function getproperyreadproxy(a) {
@@ -1914,6 +1992,12 @@ function Arraycomputed(state, callback, setter) {
         });
     });
     return getproperyreadproxy(reactivestate);
+}
+
+function createRef(value) {
+    return {
+        value: value
+    };
 }
 
 const e$1 = Set.prototype, t$1 = Map.prototype;
@@ -2177,169 +2261,6 @@ function createState(init) {
     }
 }
 
-const listvalueattr = Symbol("listvalueattr");
-
-const listinnervdom = Symbol("listinnervdom");
-
-const listinnerelement = Symbol("listinnerelement");
-
-const cached_realele = Symbol("cached_realele");
-
-function ListMap(list, mapfun) {
-    var _a, _b, _c, _d;
-    if (!isarray(list) && !isSet(list) && !isReactiveState(list)) {
-        console.error(list);
-        throw new TypeError;
-    }
-    if (!isfunction(mapfun)) {
-        console.error(mapfun);
-        throw new TypeError;
-    }
-    const ITEMfactory = (value, index) => {
-        const possiblevdom = mapfun(value, index);
-        asserttype(isVirtualdom(possiblevdom) || isstring(possiblevdom));
-        return possiblevdom;
-    };
-    function indextovdom(index, thiscom) {
-        const vdom = ITEMfactory(computed(thiscom[listvalueattr], v => v[index]), index);
-        return vdom;
-    }
-    class ListMap extends AttrChange {
-        constructor() {
-            super(...arguments);
-            this[_a] = new Map;
-            this[_b] = createState([]);
-            this[_d] = false;
-        }
-        [(_a = cached_realele, _b = listvalueattr, _c = componentsymbol, _d = readysymbol, 
-        attributeChangedCallback)](name) {
-            if (this[readysymbol]) {
-                if (name === "value") {
-                    const attrs = createeleattr(this);
-                    const value = attrs["value"];
-                    if (!isarray(value)) {
-                        console.log(value);
-                        throw new TypeError;
-                    }
-                    set(this[listvalueattr], "value", value);
-                    const domchildren = getchildren(this);
-                    const newlength = value.length;
-                    const oldlength = domchildren.length;
-                    if (newlength > oldlength) {
-                        const numindexs = Array(newlength).fill(undefined).map((v, i) => i).slice(oldlength);
-                        const realelementstoadd = numindexs.map(index => {
-                            const cached_element = get(this[cached_realele], index);
-                            if (cached_element) {
-                                return cached_element;
-                            } else {
-                                const vdom = indextovdom(index, this);
-                                const element = render(vdom);
-                                set(this[cached_realele], index, element);
-                                return element;
-                            }
-                        });
-                        realelementstoadd.forEach(element => appendchild(this, element));
-                    } else if (newlength < oldlength) {
-                        getchildren(this).slice(newlength).forEach(element => removeElement(element));
-                    }
-                }
-            }
-        }
-        disconnectedCallback() {
-            setimmediate(() => {
-                disconnectedCallback(this);
-            });
-        }
-        [firstinstalledcallback]() {
-            const attrs = createeleattr(this);
-            const value = attrs["value"];
-            if (!isarray(value)) {
-                console.log(value);
-                throw new TypeError;
-            }
-            set(this[listvalueattr], "value", value);
-            this[listinnervdom] = value.map((v, index) => ITEMfactory(computed(this[listvalueattr], v => v[index]), index));
-            this[listinnerelement] = render(this[listinnervdom]);
-            Object.entries(this[listinnerelement]).forEach(([key, value]) => {
-                set(this[cached_realele], Number(key), value);
-            });
-            mountrealelement(this[listinnerelement], this);
-            this[listinnerelement] = [];
-            this[listinnervdom] = [];
-        }
-        connectedCallback() {
-            connectedCallback(this);
-        }
-    }
-    ListMap.defaultProps = {
-        value: []
-    };
-    ListMap[_c] = componentsymbol;
-    return h(ListMap, {
-        value: list
-    });
-}
-
-const cancel_watch_symbol = Symbol("cancel_watch");
-
-const cached_class_element = Symbol("cached_class_element");
-
-const switch_mount_symbol = Symbol("switch_mount");
-
-function Switchable(funstate) {
-    var _a, _b, _c;
-    if (!isReactiveState(funstate)) {
-        console.error(funstate);
-        throw new TypeError;
-    }
-    class Switchable extends AttrChange {
-        constructor() {
-            super(...arguments);
-            this[_a] = new WeakMap;
-            this[_c] = false;
-        }
-        disconnectedCallback() {
-            setimmediate(() => {
-                disconnectedCallback(this);
-                if (isfunction(this[cancel_watch_symbol])) {
-                    this[cancel_watch_symbol]();
-                }
-            });
-        }
-        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
-            eleclass = autocreateclass(eleclass);
-            const eleme = this[cached_class_element].get(eleclass);
-            if (eleme) {
-                mountrealelement(eleme, this);
-            } else {
-                const elementreal = render(h(eleclass));
-                this[cached_class_element].set(eleclass, elementreal);
-                mountrealelement(elementreal, this);
-            }
-        }
-        [firstinstalledcallback]() {
-            const callmountswitch = () => {
-                this[switch_mount_symbol](funstate.valueOf());
-            };
-            callmountswitch();
-            this[cancel_watch_symbol] = watch(funstate, () => {
-                callmountswitch();
-            });
-        }
-        connectedCallback() {
-            connectedCallback(this);
-        }
-    }
-    Switchable[_b] = componentsymbol;
-    return h(Switchable);
-}
-
-function createRef(value) {
-    return {
-        value: value
-    };
-}
-
 var n$2 = function(t, s, r, e) {
     var u;
     s[0] = 0;
@@ -2386,47 +2307,5 @@ function html(...args) {
     }
 }
 
-extenddirectives({
-    value(value, element, vdom) {
-        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
-    },
-    checked(value, element, vdom) {
-        model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
-        const eventname = "click";
-        const origin = toArray(vdom.onevent[eventname]);
-        const eventsarray = origin;
-        const dispatchallsamename = event => {
-            const inputelement = event.target;
-            const name = event.target.name;
-            if (name) {
-                querySelectorAll(`input[name=${name}]`).filter(ele => ele !== inputelement).forEach(element => {
-                    element.dispatchEvent(new Event("change"));
-                });
-            }
-        };
-        set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
-    }
-});
-
-function model(types, bindattribute, domprop, eventnames, value, vdom) {
-    if (!isReactiveState(value)) {
-        console.error(value);
-        console.error(invalid_ReactiveState + invalid_Virtualdom);
-        throw TypeError();
-    }
-    if (types.includes(vdom.type)) {
-        set(vdom.bindattr, bindattribute, value);
-        eventnames.forEach(eventname => {
-            const origin = vdom.onevent[eventname];
-            const eventsarray = toArray(origin);
-            set(vdom.onevent, eventname, toArray([ ...eventsarray, e => value.value = get(e.target, domprop) ]).filter(Boolean));
-        });
-    } else {
-        console.error(vdom);
-        console.error(invalid_ReactiveState + invalid_Virtualdom);
-        throw TypeError();
-    }
-}
-
-export { Condition, extenddirectives as Directives, ListMap, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createState, h, html, render, useMounted, useUnMounted, watch };
+export { Condition, extenddirectives as Directives, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createState, h, html, render, useMounted, useUnMounted, watch };
 //# sourceMappingURL=index.js.map
