@@ -1,5 +1,5 @@
 import Virtualdom from "../CreateElement/VirtualElement";
-import { invalid_Function } from "../mounted-unmounted/Component-context";
+import { invalid_Function } from "../life-cycle-context/Component-context";
 import { isstring } from "../UtilTools/util";
 import directives from "./directives";
 export interface Extendfun {

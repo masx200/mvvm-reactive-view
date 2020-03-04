@@ -5,7 +5,7 @@ import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 import { defineProperty } from "../UtilTools/reflect";
 import { isobject, isSet } from "../UtilTools/util";
 import { UnwrapedState } from "./watch";
-import { recordusestste } from "../mounted-unmounted/Component-context";
+import { useststerecord } from "../life-cycle-context/useststerecord";
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 
@@ -47,7 +47,7 @@ export default class ReactiveState<T extends UnwrapedState> {
             writable: true
         });
 
-        recordusestste(this);
+        useststerecord(this);
     }
     [debouncedispatch]: () => void = (() => {
         const debouncedfun = debounce(() => {

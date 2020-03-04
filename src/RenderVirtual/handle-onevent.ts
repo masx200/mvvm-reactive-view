@@ -1,6 +1,6 @@
 import onevent /*  eventlistenerssymbol  */ from "./handle-onevent";
 export { onevent };
-import { invalid_Function } from "../mounted-unmounted/Component-context";
+import { invalid_Function } from "../life-cycle-context/Component-context";
 import { domaddlisten, domremovelisten } from "../UtilTools/dom";
 import { get, has, set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";

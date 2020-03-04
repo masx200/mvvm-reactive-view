@@ -327,12 +327,6 @@ function getwatchrecords() {
     return [ ...watchrecord ];
 }
 
-function usewatch(state, callback) {
-    if (ctxopen) {
-        watchrecord.push([ state, callback ]);
-    }
-}
-
 function clearwatch() {
     watchrecord = [];
 }
@@ -353,48 +347,12 @@ function getstates() {
     return [ ...StateSet ];
 }
 
-function recordusestste(state) {
-    if (ctxopen) {
-        StateSet.add(state);
-    }
-}
-
 function getMounted() {
     return [ ...MountedSet ];
 }
 
 function getUnMounted() {
     return [ ...UnMountedSet ];
-}
-
-function useMounted(fun) {
-    if (isfunction(fun)) {
-        if (ctxopen) {
-            MountedSet.add(fun);
-        } else {
-            console.error(errormessage);
-            throw Error();
-        }
-    } else {
-        console.error(fun);
-        console.error(invalid_Function);
-        throw TypeError();
-    }
-}
-
-function useUnMounted(fun) {
-    if (isfunction(fun)) {
-        if (ctxopen) {
-            UnMountedSet.add(fun);
-        } else {
-            console.error(errormessage);
-            throw Error();
-        }
-    } else {
-        console.error(fun);
-        console.error(invalid_Function);
-        throw TypeError();
-    }
 }
 
 function clearMounted() {
@@ -424,6 +382,12 @@ function clearall() {
     clearUnMounted();
     clearstate();
     clearwatch();
+}
+
+function useststerecord(state) {
+    if (ctxopen) {
+        StateSet.add(state);
+    }
 }
 
 var _a, _b, _c;
@@ -474,7 +438,7 @@ class ReactiveState {
             configurable: true,
             writable: true
         });
-        recordusestste(this);
+        useststerecord(this);
     }
     [(_a = debouncedispatch, removeallistenerssymbol)]() {
         this[memlisteners].forEach(callback => {
@@ -1770,6 +1734,12 @@ const Condition = function(conditon, iftrue, iffalse) {
     return vdom;
 };
 
+function usewatch(state, callback) {
+    if (ctxopen) {
+        watchrecord.push([ state, callback ]);
+    }
+}
+
 function watch(state, callback) {
     if (isarray(state) || isReactiveState(state)) {
         const statearray = toArray(state);
@@ -2135,6 +2105,29 @@ function Arraycomputed(state, callback, setter) {
         });
     });
     return getproperyreadproxy(reactivestate);
+}
+
+function checkctxandcallbck(callback) {
+    if (isfunction(callback)) {
+        if (ctxopen) ; else {
+            console.error(errormessage);
+            throw Error();
+        }
+    } else {
+        console.error(callback);
+        console.error(invalid_Function);
+        throw TypeError();
+    }
+}
+
+function useMounted(fun) {
+    checkctxandcallbck(fun);
+    MountedSet.add(fun);
+}
+
+function useUnMounted(fun) {
+    checkctxandcallbck(fun);
+    UnMountedSet.add(fun);
 }
 
 function createRef(value) {

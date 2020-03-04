@@ -1,4 +1,4 @@
-import { invalid_Function } from "src/mounted-unmounted/Component-context";
+import { invalid_Function } from "src/life-cycle-context/Component-context";
 import { apply, defineProperty } from "src/UtilTools/reflect";
 import { toArray } from "src/UtilTools/toArray";
 import {

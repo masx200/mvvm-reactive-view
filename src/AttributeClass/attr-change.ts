@@ -3,7 +3,7 @@ import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-pr
 import {
     onmounted,
     onunmounted
-} from "../mounted-unmounted/element-onmount-unmount";
+} from "../life-cycle-context/element-onmount-unmount";
 import { get } from "../UtilTools/reflect";
 import { isFunction, isfunction, isobject } from "../UtilTools/util";
 import { readysymbol } from "./readysymbol";
