@@ -1,11 +1,22 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { addmountedlistner, addunmountedlistner } from "src/addlistener-mount-unmount-updated";
+import {
+    addmountedlistner,
+    addunmountedlistner,
+    addcreatedlistner,
+    addupdatedlistner
+} from "src/addlistener-mount-unmount-updated";
 import { cached_create_componet } from "../cached-map";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
 import { isclassextendsHTMLElement } from "../CustomClass/isclassextendsHTMLElement";
-import { closectx, getstates, getwatchrecords, invalid_Function, openctx } from "../life-cycle-context/Component-context";
+import {
+    closectx,
+    getstates,
+    getwatchrecords,
+    invalid_Function,
+    openctx
+} from "../life-cycle-context/Component-context";
 import { getUnMounted } from "../life-cycle-context/getUnMounted";
 import { getMounted } from "../life-cycle-context/getMounted";
 import mount from "../MountElement/mount-real-element";
@@ -21,10 +32,17 @@ import { apply, defineProperty, get, set } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
 import { isfunction, isobject, isstring } from "../UtilTools/util";
-import { AttrChange, attributeChangedCallback, connectedCallback, disconnectedCallback, firstinstalledcallback } from "./attr-change";
+import {
+    AttrChange,
+    attributeChangedCallback,
+    connectedCallback,
+    disconnectedCallback,
+    firstinstalledcallback
+} from "./attr-change";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
-
+import { getcreated } from "src/life-cycle-context/created-get";
+import { getupdated } from "src/life-cycle-context/updated-get";
 
 const waittranformcsssymbol = Symbol("waittranformcss");
 export const innerwatchrecords = Symbol("innerwatchrecord");
@@ -173,6 +191,8 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                         .filter(Boolean);
                     const mountedcallbacks = getMounted();
                     const unmountedcallbacks = getUnMounted();
+                    const createdcallbacks = getcreated();
+                    const updatedcallbacks = getupdated();
                     this[innerstatesymbol] = getstates();
                     this[innerwatchrecords] = getwatchrecords();
                     closectx();
@@ -181,6 +201,12 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     });
                     unmountedcallbacks.forEach(callback => {
                         addunmountedlistner(this, callback);
+                    });
+                    createdcallbacks.forEach(callback => {
+                        addcreatedlistner(this, callback);
+                    });
+                    updatedcallbacks.forEach(callback => {
+                        addupdatedlistner(this, callback);
                     });
                 } else {
                     closectx();
@@ -336,4 +362,3 @@ export function autocreateclass(
     }
 }
 export { createComponent };
-

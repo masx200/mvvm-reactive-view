@@ -8,26 +8,69 @@ const global = globalThis;
 
 const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt} = globalThis;
 
-class ObserverTarget {
-    constructor() {
-        this.Listeners = new Set;
-    }
-    addListener(listener) {
-        const listenerset = this.Listeners;
-        listenerset.add(listener);
-    }
-    dispatch() {
-        const listenerset = this.Listeners;
-        listenerset.forEach(listener => {
-            Promise.resolve().then(() => {
-                listener();
-            });
-        });
-    }
-    removeListener(listener) {
-        const listenerset = this.Listeners;
-        listenerset.delete(listener);
-    }
+function isprimitive(a) {
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
+}
+
+function isbigint(a) {
+    return typeof a === "bigint";
+}
+
+function issymbol(a) {
+    return typeof a === "symbol";
+}
+
+const isplainobject = a => isobject(a) && gettagtype(a) === "Object";
+
+function isundefined(a) {
+    return !a && a === void 0 || a === null;
+}
+
+function isnumber(a) {
+    return typeof a === "number";
+}
+
+function isboolean(a) {
+    return typeof a === "boolean";
+}
+
+function isobject(a) {
+    return typeof a === "object" && a !== null;
+}
+
+function isstring(a) {
+    return typeof a === "string";
+}
+
+function isfunction(a) {
+    return typeof a === "function";
+}
+
+function isarray(a) {
+    return Array.isArray(a) && a instanceof Array;
+}
+
+function gettagtype(a) {
+    return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
+}
+
+function isSet(a) {
+    return a instanceof Set;
+}
+
+function isMap(a) {
+    return a instanceof Map;
+}
+
+function isWeakMap(a) {
+    return a instanceof WeakMap;
+}
+
+const {HTMLElement: HTMLElement$1, customElements: customElements, Proxy: Proxy$1} = window;
+
+if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElements)) {
+    console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
+    throw new TypeError;
 }
 
 function isObject(value) {
@@ -244,62 +287,135 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-function issymbol(a) {
-    return typeof a === "symbol";
+const cached_create_componet = new WeakMap;
+
+const cached_callback_debounced_watchs = new WeakMap;
+
+function clearMounted() {
+    mountedctx.clear();
 }
 
-const isplainobject = a => isobject(a) && gettagtype(a) === "Object";
-
-function isundefined(a) {
-    return !a && a === void 0 || a === null;
+function clearUnMounted() {
+    unmountedctx.clear();
 }
 
-function isnumber(a) {
-    return typeof a === "number";
+function checkctxandcallbck(callback) {
+    if (isfunction(callback)) {
+        if (ctxopen) ; else {
+            console.error(errormessage);
+            throw Error();
+        }
+    } else {
+        console.error(callback);
+        console.error(invalid_Function);
+        throw TypeError();
+    }
 }
 
-function isboolean(a) {
-    return typeof a === "boolean";
+function createlifecyclecontext() {
+    let callbackset = new Set;
+    const getall = () => [ ...callbackset ];
+    const clear = () => {
+        callbackset = new Set;
+    };
+    const add = fun => {
+        checkctxandcallbck(fun);
+        callbackset.add(fun);
+    };
+    return {
+        add: add,
+        getall: getall,
+        clear: clear
+    };
 }
 
-function isobject(a) {
-    return typeof a === "object" && a !== null;
+function clearupdated() {
+    updatedctx.clear();
 }
 
-function isstring(a) {
-    return typeof a === "string";
+function clearcreated() {
+    createdctx.clear();
 }
 
-function isfunction(a) {
-    return typeof a === "function";
+let StateSet = new Set;
+
+let watchrecord = [];
+
+function getwatchrecords() {
+    return [ ...watchrecord ];
 }
 
-function isarray(a) {
-    return Array.isArray(a) && a instanceof Array;
+function clearwatch() {
+    watchrecord = [];
 }
 
-function gettagtype(a) {
-    return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
+const invalid_Function = "invalid Function";
+
+const errormessage = "invalid useMounted or useUnMounted out of createComponent";
+
+let ctxopen = false;
+
+function getstates() {
+    return [ ...StateSet ];
 }
 
-function isSet(a) {
-    return a instanceof Set;
+function clearstate() {
+    StateSet = new Set;
 }
 
-function isMap(a) {
-    return a instanceof Map;
+function openctx() {
+    ctxopen = true;
+    clearall();
 }
 
-function isWeakMap(a) {
-    return a instanceof WeakMap;
+function closectx() {
+    ctxopen = false;
+    clearall();
 }
 
-function isprimitive(a) {
-    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
+function clearall() {
+    clearcreated();
+    clearupdated();
+    clearMounted();
+    clearUnMounted();
+    clearstate();
+    clearwatch();
 }
 
-function isbigint(a) {
-    return typeof a === "bigint";
+const mountedctx = createlifecyclecontext();
+
+const unmountedctx = createlifecyclecontext();
+
+const updatedctx = createlifecyclecontext();
+
+const createdctx = createlifecyclecontext();
+
+function usewatch(state, callback) {
+    if (ctxopen) {
+        watchrecord.push([ state, callback ]);
+    }
+}
+
+class ObserverTarget {
+    constructor() {
+        this.Listeners = new Set;
+    }
+    addListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.add(listener);
+    }
+    dispatch() {
+        const listenerset = this.Listeners;
+        listenerset.forEach(listener => {
+            Promise.resolve().then(() => {
+                listener();
+            });
+        });
+    }
+    removeListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.delete(listener);
+    }
 }
 
 const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
@@ -319,69 +435,6 @@ function set(target, propertyKey, value) {
     } else {
         return Reflect.set(target, propertyKey, value);
     }
-}
-
-let watchrecord = [];
-
-function getwatchrecords() {
-    return [ ...watchrecord ];
-}
-
-function clearwatch() {
-    watchrecord = [];
-}
-
-const invalid_Function = "invalid Function";
-
-const errormessage = "invalid useMounted or useUnMounted out of createComponent";
-
-let ctxopen = false;
-
-let MountedSet = new Set;
-
-let UnMountedSet = new Set;
-
-let StateSet = new Set;
-
-function getstates() {
-    return [ ...StateSet ];
-}
-
-function getMounted() {
-    return [ ...MountedSet ];
-}
-
-function getUnMounted() {
-    return [ ...UnMountedSet ];
-}
-
-function clearMounted() {
-    MountedSet = new Set;
-}
-
-function clearstate() {
-    StateSet = new Set;
-}
-
-function clearUnMounted() {
-    UnMountedSet = new Set;
-}
-
-function openctx() {
-    ctxopen = true;
-    clearall();
-}
-
-function closectx() {
-    ctxopen = false;
-    clearall();
-}
-
-function clearall() {
-    clearMounted();
-    clearUnMounted();
-    clearstate();
-    clearwatch();
 }
 
 function useststerecord(state) {
@@ -479,84 +532,69 @@ class ReactiveState {
     }
 }
 
-function seteletext(e, v) {
-    e.textContent = v;
-}
-
-function setelehtml(e, v) {
-    e.innerHTML = v;
-}
-
-function appendchild(container, ele) {
-    container.appendChild(ele);
-}
-
-function createsvgelement() {
-    return createElementNS(svgnamespace, "svg");
-}
-
-function createDocumentFragment() {
-    return document.createDocumentFragment();
-}
-
-function createnativeelement(type) {
-    return document.createElement(type);
-}
-
-function createElementNS(namespace, name) {
-    return document.createElementNS(namespace, name);
-}
-
-function createtextnode(data) {
-    return document.createTextNode(String(data));
-}
-
-const svgnamespace = "http://www.w3.org/2000/svg";
-
-function changetext(textnode, value) {
-    textnode.nodeValue = String(value);
-}
-
-const mathnamespace = "http://www.w3.org/1998/Math/MathML";
-
-function createmathelement() {
-    return createElementNS(mathnamespace, "math");
-}
-
-function replaceChild(newChild, oldChild) {
-    let parentNode = oldChild.parentNode;
-    if (parentNode) {
-        parentNode.replaceChild(newChild, oldChild);
-    }
-}
-
-function domaddlisten(ele, event, call) {
-    ele.addEventListener(event, call);
-}
-
-function domremovelisten(ele, event, call) {
-    ele.removeEventListener(event, call);
-}
-
-function getchildNodes(ele) {
-    return [ ...ele.childNodes ];
-}
-
-function createanotherhtmldocument() {
-    return document.implementation.createHTMLDocument("");
-}
-
-function querySelectorAll(selector) {
-    return [ ...document.querySelectorAll(selector) ];
-}
-
 function toArray(a) {
     return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
 }
 
-const cached_create_componet = new WeakMap;
+function watch(state, callback) {
+    if (isarray(state) || isReactiveState(state)) {
+        const statearray = toArray(state);
+        if (!statearray.length) {
+            console.error("Empty array not allowed");
+            throw new Error;
+        }
+        const debouncedcallback = debounce_1(callback);
+        const stateandlisteners = statearray.map(state1 => {
+            const listener = (() => {
+                const cachedfun = cached_callback_debounced_watchs.get(callback);
+                if (cachedfun) {
+                    return cachedfun;
+                } else {
+                    const listenfun = () => {
+                        debouncedcallback(...statearray.map(r => r.valueOf()));
+                    };
+                    cached_callback_debounced_watchs.set(callback, listenfun);
+                    return listenfun;
+                }
+            })();
+            watchsingle(state1, listener);
+            return [ state1, listener ];
+        });
+        const cancelWatch = () => {
+            stateandlisteners.forEach(([state, listener]) => {
+                state[cancelsubscribe](listener);
+            });
+        };
+        return cancelWatch;
+    } else {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw new TypeError;
+    }
+}
 
-const cached_callback_debounced_watchs = new WeakMap;
+function watchsingle(state, callback) {
+    if (!(isReactiveState(state) && isfunction(callback))) {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError();
+    }
+    state[subscribesymbol](callback);
+    requestAnimationFrame(() => {
+        rewatch(state);
+    });
+    usewatch(state, callback);
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
+}
+
+function rewatch(state) {
+    state[addallistenerssymbol]();
+}
 
 const t = [ "input", "textarea", "option", "select" ];
 
@@ -741,6 +779,18 @@ function dispatchupdated(e) {
     }));
 }
 
+const createdeventname = Symbol("created").toString();
+
+function addcreatedlistner(ele, call) {
+    ele.addEventListener(createdeventname, () => {
+        call();
+    });
+}
+
+function dispatchcreated(e) {
+    e.dispatchEvent(new Event(createdeventname));
+}
+
 function merge_entries(a) {
     const m = {};
     a.forEach(([key, value]) => {
@@ -815,6 +865,85 @@ function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
 }
 
+function getUnMounted() {
+    return unmountedctx.getall();
+}
+
+function getMounted() {
+    return mountedctx.getall();
+}
+
+function seteletext(e, v) {
+    e.textContent = v;
+}
+
+function setelehtml(e, v) {
+    e.innerHTML = v;
+}
+
+function appendchild(container, ele) {
+    container.appendChild(ele);
+}
+
+function createsvgelement() {
+    return createElementNS(svgnamespace, "svg");
+}
+
+function createDocumentFragment() {
+    return document.createDocumentFragment();
+}
+
+function createnativeelement(type) {
+    return document.createElement(type);
+}
+
+function createElementNS(namespace, name) {
+    return document.createElementNS(namespace, name);
+}
+
+function createtextnode(data) {
+    return document.createTextNode(String(data));
+}
+
+const svgnamespace = "http://www.w3.org/2000/svg";
+
+function changetext(textnode, value) {
+    textnode.nodeValue = String(value);
+}
+
+const mathnamespace = "http://www.w3.org/1998/Math/MathML";
+
+function createmathelement() {
+    return createElementNS(mathnamespace, "math");
+}
+
+function replaceChild(newChild, oldChild) {
+    let parentNode = oldChild.parentNode;
+    if (parentNode) {
+        parentNode.replaceChild(newChild, oldChild);
+    }
+}
+
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
+function domremovelisten(ele, event, call) {
+    ele.removeEventListener(event, call);
+}
+
+function getchildNodes(ele) {
+    return [ ...ele.childNodes ];
+}
+
+function createanotherhtmldocument() {
+    return document.implementation.createHTMLDocument("");
+}
+
+function querySelectorAll(selector) {
+    return [ ...document.querySelectorAll(selector) ];
+}
+
 function mountrealelement(ele, container, clear = true) {
     if (clear) {
         seteletext(container, "");
@@ -862,14 +991,14 @@ const elementmap = Symbol.for("elementmap");
 
 const {CustomElementRegistry: CustomElementRegistry} = window;
 
-const customElements = window.customElements;
+const customElements$1 = window.customElements;
 
-if (!has(customElements, elementset)) {
-    Reflect.set(customElements, elementset, new Set);
+if (!has(customElements$1, elementset)) {
+    Reflect.set(customElements$1, elementset, new Set);
 }
 
-if (!has(customElements, elementmap)) {
-    Reflect.set(customElements, elementmap, {});
+if (!has(customElements$1, elementmap)) {
+    Reflect.set(customElements$1, elementmap, {});
 }
 
 var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
@@ -880,44 +1009,44 @@ function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
         console.error(invalid_custom_element_class);
         throw TypeError();
     }
-    if (!get(customElements, elementset).has(initclass)) {
+    if (!get(customElements$1, elementset).has(initclass)) {
         const elementname = getrandomstringandnumber(length);
-        if (customElements.get(elementname)) {
+        if (customElements$1.get(elementname)) {
             return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
         } else {
             if (extendsname) {
-                customElements.define(elementname, initclass, {
+                customElements$1.define(elementname, initclass, {
                     extends: extendsname
                 });
             } else {
-                customElements.define(elementname, initclass);
+                customElements$1.define(elementname, initclass);
             }
         }
         return elementname;
     } else {
-        return Usevaluetoquerythekeyfromthetable(get(customElements, elementmap), initclass);
+        return Usevaluetoquerythekeyfromthetable(get(customElements$1, elementmap), initclass);
     }
 }
 
-customElements.define = function(name, constructor, options) {
+customElements$1.define = function(name, constructor, options) {
     if (!isclassextendsHTMLElement(constructor)) {
         console.error(constructor);
         console.error(invalid_custom_element_class);
         throw TypeError();
     }
-    if (!get(customElements, elementset).has(constructor)) {
-        if (has(customElements[elementmap], name)) {
+    if (!get(customElements$1, elementset).has(constructor)) {
+        if (has(customElements$1[elementmap], name)) {
             RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
         } else {
-            CustomElementRegistry.prototype.define.call(customElements, name, constructor, options);
-            customElements[elementset].add(constructor);
-            customElements[elementmap][name] = constructor;
+            CustomElementRegistry.prototype.define.call(customElements$1, name, constructor, options);
+            customElements$1[elementset].add(constructor);
+            customElements$1[elementmap][name] = constructor;
         }
     }
 };
 
-set(customElements, Symbol.iterator, () => {
-    const entries = Object.entries(customElements[elementmap]);
+set(customElements$1, Symbol.iterator, () => {
+    const entries = Object.entries(customElements$1[elementmap]);
     return entries[Symbol.iterator].call(entries);
 });
 
@@ -1078,13 +1207,17 @@ function render(vdom, namespace) {
         let element = undefined;
         if (typeof type === "string") {
             if (type === "script") {
-                return createDocumentFragment();
+                return createElementNS("never", "script");
             } else if (type === "svg") {
                 element = createsvgelement();
             } else if (type === "math") {
                 element = createmathelement();
-            } else if ("" === type || type === "html") {
+            } else if ("" === type) {
                 const fragmentnode = createDocumentFragment();
+                mountrealelement(render(vdom.children), fragmentnode);
+                return fragmentnode;
+            } else if (type === "html") {
+                const fragmentnode = createElementNS("never", "html");
                 mountrealelement(render(vdom.children), fragmentnode);
                 return fragmentnode;
             } else {
@@ -1105,6 +1238,7 @@ function render(vdom, namespace) {
         } else {
             throwinvalideletype(vdom);
         }
+        dispatchcreated(element);
         if (type && (isfunction(type) || isstring(type))) {
             if (!iscomponent(type)) {
                 if (element) {
@@ -1462,6 +1596,14 @@ class AttrChange extends HTMLElement {
 
 _a$1 = readysymbol;
 
+function getcreated() {
+    return createdctx.getall();
+}
+
+function getupdated() {
+    return updatedctx.getall();
+}
+
 const waittranformcsssymbol = Symbol("waittranformcss");
 
 const innerwatchrecords = Symbol("innerwatchrecord");
@@ -1531,6 +1673,8 @@ function createComponentold(custfun) {
                     this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
                     const mountedcallbacks = getMounted();
                     const unmountedcallbacks = getUnMounted();
+                    const createdcallbacks = getcreated();
+                    const updatedcallbacks = getupdated();
                     this[innerstatesymbol] = getstates();
                     this[innerwatchrecords] = getwatchrecords();
                     closectx();
@@ -1539,6 +1683,12 @@ function createComponentold(custfun) {
                     });
                     unmountedcallbacks.forEach(callback => {
                         addunmountedlistner(this, callback);
+                    });
+                    createdcallbacks.forEach(callback => {
+                        addcreatedlistner(this, callback);
+                    });
+                    updatedcallbacks.forEach(callback => {
+                        addupdatedlistner(this, callback);
                     });
                 } else {
                     closectx();
@@ -1734,70 +1884,110 @@ const Condition = function(conditon, iftrue, iffalse) {
     return vdom;
 };
 
-function usewatch(state, callback) {
-    if (ctxopen) {
-        watchrecord.push([ state, callback ]);
+const cancel_watch_symbol = Symbol("cancel_watch");
+
+const cached_class_element = Symbol("cached_class_element");
+
+const switch_mount_symbol = Symbol("switch_mount");
+
+function Switchable(funstate) {
+    var _a, _b, _c;
+    if (!isReactiveState(funstate)) {
+        console.error(funstate);
+        throw new TypeError;
     }
+    class Switchable extends AttrChange {
+        constructor() {
+            super(...arguments);
+            this[_a] = new WeakMap;
+            this[_c] = false;
+        }
+        disconnectedCallback() {
+            setimmediate(() => {
+                disconnectedCallback(this);
+                if (isfunction(this[cancel_watch_symbol])) {
+                    this[cancel_watch_symbol]();
+                }
+            });
+        }
+        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
+            eleclass = autocreateclass(eleclass);
+            const eleme = this[cached_class_element].get(eleclass);
+            if (eleme) {
+                mountrealelement(eleme, this);
+            } else {
+                const elementreal = render(h(eleclass));
+                this[cached_class_element].set(eleclass, elementreal);
+                mountrealelement(elementreal, this);
+            }
+        }
+        [firstinstalledcallback]() {
+            const callmountswitch = () => {
+                this[switch_mount_symbol](funstate.valueOf());
+            };
+            callmountswitch();
+            this[cancel_watch_symbol] = watch(funstate, () => {
+                callmountswitch();
+            });
+        }
+        connectedCallback() {
+            connectedCallback(this);
+        }
+    }
+    Switchable[_b] = componentsymbol;
+    return h(Switchable);
 }
 
-function watch(state, callback) {
-    if (isarray(state) || isReactiveState(state)) {
-        const statearray = toArray(state);
-        if (!statearray.length) {
-            console.error("Empty array not allowed");
-            throw new Error;
+var n$1 = function(t, s, r, e) {
+    var u;
+    s[0] = 0;
+    for (var h = 1; h < s.length; h++) {
+        var p = s[h++], a = s[h] ? (s[0] |= p ? 1 : 2, r[s[h++]]) : s[++h];
+        3 === p ? e[0] = a : 4 === p ? e[1] = Object.assign(e[1] || {}, a) : 5 === p ? (e[1] = e[1] || {})[s[++h]] = a : 6 === p ? e[1][s[++h]] += a + "" : p ? (u = t.apply(a, n$1(t, a, r, [ "", null ])), 
+        e.push(u), a[0] ? s[0] |= 2 : (s[h - 2] = 0, s[h] = u)) : e.push(a);
+    }
+    return e;
+}, t$1 = new Map;
+
+function htm(s) {
+    var r = t$1.get(this);
+    return r || (r = new Map, t$1.set(this, r)), (r = n$1(this, r.get(s) || (r.set(s, r = function(n) {
+        for (var t, s, r = 1, e = "", u = "", h = [ 0 ], p = function(n) {
+            1 === r && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? h.push(0, n, e) : 3 === r && (n || e) ? (h.push(3, n, e), 
+            r = 2) : 2 === r && "..." === e && n ? h.push(4, n, 0) : 2 === r && e && !n ? h.push(5, 0, !0, e) : r >= 5 && ((e || !n && 5 === r) && (h.push(r, 0, e, s), 
+            r = 6), n && (h.push(r, n, 0, s), r = 6)), e = "";
+        }, a = 0; a < n.length; a++) {
+            a && (1 === r && p(), p(a));
+            for (var l = 0; l < n[a].length; l++) t = n[a][l], 1 === r ? "<" === t ? (p(), h = [ h ], 
+            r = 3) : e += t : 4 === r ? "--" === e && ">" === t ? (r = 1, e = "") : e = t + e[0] : u ? t === u ? u = "" : e += t : '"' === t || "'" === t ? u = t : ">" === t ? (p(), 
+            r = 1) : r && ("=" === t ? (r = 5, s = e, e = "") : "/" === t && (r < 5 || ">" === n[a][l + 1]) ? (p(), 
+            3 === r && (h = h[0]), r = h, (h = h[0]).push(2, 0, r), r = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (p(), 
+            r = 2) : e += t), 3 === r && "!--" === e && (r = 4, h = h[0]);
         }
-        const debouncedcallback = debounce_1(callback);
-        const stateandlisteners = statearray.map(state1 => {
-            const listener = (() => {
-                const cachedfun = cached_callback_debounced_watchs.get(callback);
-                if (cachedfun) {
-                    return cachedfun;
-                } else {
-                    const listenfun = () => {
-                        debouncedcallback(...statearray.map(r => r.valueOf()));
-                    };
-                    cached_callback_debounced_watchs.set(callback, listenfun);
-                    return listenfun;
-                }
-            })();
-            watchsingle(state1, listener);
-            return [ state1, listener ];
-        });
-        const cancelWatch = () => {
-            stateandlisteners.forEach(([state, listener]) => {
-                state[cancelsubscribe](listener);
-            });
-        };
-        return cancelWatch;
+        return p(), h;
+    }(s)), r), arguments, [])).length > 1 ? r : r[0];
+}
+
+function htmlold(...inargs) {
+    return apply(htm, h, inargs);
+}
+
+function html(...args) {
+    const prevdom = toArray(htmlold(...args));
+    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
+    if (isvalidvdom(vdom)) {
+        return vdom;
     } else {
-        console.error(state);
-        console.error(callback);
-        console.error(invalid_ReactiveState + invalid_Function);
+        console.error(vdom);
+        console.error(invalid_Virtualdom);
         throw new TypeError;
     }
 }
 
-function watchsingle(state, callback) {
-    if (!(isReactiveState(state) && isfunction(callback))) {
-        console.error(state);
-        console.error(callback);
-        console.error(invalid_ReactiveState + invalid_Function);
-        throw TypeError();
-    }
-    state[subscribesymbol](callback);
-    requestAnimationFrame(() => {
-        rewatch(state);
-    });
-    usewatch(state, callback);
-}
-
-function unwatch(state) {
-    state[removeallistenerssymbol]();
-}
-
-function rewatch(state) {
-    state[addallistenerssymbol]();
+function createRef(value) {
+    return {
+        value: value
+    };
 }
 
 function createhtmlandtextdirective(seteletext, errorname, ele, text) {
@@ -1964,65 +2154,20 @@ Directives("created", (call, ele, vdom, onmount, onunmount, onupdated) => {
     }
 });
 
-const {HTMLElement: HTMLElement$1, customElements: customElements$1, Proxy: Proxy$1} = window;
-
-if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElements$1)) {
-    console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
-    throw new TypeError;
+function useCreated(fun) {
+    createdctx.add(fun);
 }
 
-const cancel_watch_symbol = Symbol("cancel_watch");
+function useUpdated(fun) {
+    updatedctx.add(fun);
+}
 
-const cached_class_element = Symbol("cached_class_element");
+function useMounted(fun) {
+    mountedctx.add(fun);
+}
 
-const switch_mount_symbol = Symbol("switch_mount");
-
-function Switchable(funstate) {
-    var _a, _b, _c;
-    if (!isReactiveState(funstate)) {
-        console.error(funstate);
-        throw new TypeError;
-    }
-    class Switchable extends AttrChange {
-        constructor() {
-            super(...arguments);
-            this[_a] = new WeakMap;
-            this[_c] = false;
-        }
-        disconnectedCallback() {
-            setimmediate(() => {
-                disconnectedCallback(this);
-                if (isfunction(this[cancel_watch_symbol])) {
-                    this[cancel_watch_symbol]();
-                }
-            });
-        }
-        [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
-            eleclass = autocreateclass(eleclass);
-            const eleme = this[cached_class_element].get(eleclass);
-            if (eleme) {
-                mountrealelement(eleme, this);
-            } else {
-                const elementreal = render(h(eleclass));
-                this[cached_class_element].set(eleclass, elementreal);
-                mountrealelement(elementreal, this);
-            }
-        }
-        [firstinstalledcallback]() {
-            const callmountswitch = () => {
-                this[switch_mount_symbol](funstate.valueOf());
-            };
-            callmountswitch();
-            this[cancel_watch_symbol] = watch(funstate, () => {
-                callmountswitch();
-            });
-        }
-        connectedCallback() {
-            connectedCallback(this);
-        }
-    }
-    Switchable[_b] = componentsymbol;
-    return h(Switchable);
+function useUnMounted(fun) {
+    unmountedctx.add(fun);
 }
 
 function getproperyreadproxy(a) {
@@ -2107,36 +2252,7 @@ function Arraycomputed(state, callback, setter) {
     return getproperyreadproxy(reactivestate);
 }
 
-function checkctxandcallbck(callback) {
-    if (isfunction(callback)) {
-        if (ctxopen) ; else {
-            console.error(errormessage);
-            throw Error();
-        }
-    } else {
-        console.error(callback);
-        console.error(invalid_Function);
-        throw TypeError();
-    }
-}
-
-function useMounted(fun) {
-    checkctxandcallbck(fun);
-    MountedSet.add(fun);
-}
-
-function useUnMounted(fun) {
-    checkctxandcallbck(fun);
-    UnMountedSet.add(fun);
-}
-
-function createRef(value) {
-    return {
-        value: value
-    };
-}
-
-const e$1 = Set.prototype, t$1 = Map.prototype;
+const e$1 = Set.prototype, t$2 = Map.prototype;
 
 function r$1(e) {
     return e instanceof Map;
@@ -2146,7 +2262,7 @@ function o$1(e) {
     return e instanceof Set;
 }
 
-function n$1(e) {
+function n$2(e) {
     return Array.isArray(e);
 }
 
@@ -2172,10 +2288,10 @@ function S(l, h, O = [], x = l) {
         return o$1(l) ? (E = new Set([ ...l ]), v(E, "add", t => (e$1.add.call(l, t), h(x, O, void 0, void 0), 
         e$1.add.call(E, t))), v(E, "delete", t => (e$1.delete.call(l, t), h(x, O, void 0, void 0), 
         e$1.delete.call(E, t))), v(E, "clear", () => (e$1.clear.call(l), h(x, O, void 0, void 0), 
-        e$1.clear.call(E)))) : r$1(l) ? (E = new Map([ ...l ]), v(E, "clear", () => (t$1.clear.call(l), 
-        h(x, O, void 0, void 0), t$1.clear.call(E))), v(E, "set", (e, r) => (t$1.set.call(l, e, r), 
-        h(x, O, void 0, void 0), t$1.set.call(E, e, r))), v(E, "delete", e => (t$1.delete.call(l, e), 
-        h(x, O, void 0, void 0), t$1.delete.call(E, e)))) : E = n$1(l) ? [] : w$1(l) ? () => {} : {}, 
+        e$1.clear.call(E)))) : r$1(l) ? (E = new Map([ ...l ]), v(E, "clear", () => (t$2.clear.call(l), 
+        h(x, O, void 0, void 0), t$2.clear.call(E))), v(E, "set", (e, r) => (t$2.set.call(l, e, r), 
+        h(x, O, void 0, void 0), t$2.set.call(E, e, r))), v(E, "delete", e => (t$2.delete.call(l, e), 
+        h(x, O, void 0, void 0), t$2.delete.call(E, e)))) : E = n$2(l) ? [] : w$1(l) ? () => {} : {}, 
         o$1(l) || r$1(l) || g$1(E, null), new Proxy(E, {
             defineProperty: (e, t, r) => (h(x, [ ...O, String(t) ], y$1(r, "value") ? r.value : w$1(r.get) ? r.get() : void 0, u$1(l, t)), 
             f$1(l, t, r)),
@@ -2192,7 +2308,7 @@ function S(l, h, O = [], x = l) {
             },
             getOwnPropertyDescriptor(e, t) {
                 var r = p$1(l, t);
-                return n$1(l) && "length" === t ? r : r ? (r.configurable = !0, r) : void 0;
+                return n$2(l) && "length" === t ? r : r ? (r.configurable = !0, r) : void 0;
             },
             set: (e, t, r) => (w$1(h) && h(x, [ ...O, String(t) ], r, u$1(l, t)), v(l, t, r)),
             get(e, t) {
@@ -2397,51 +2513,5 @@ function createState(init) {
     }
 }
 
-var n$2 = function(t, s, r, e) {
-    var u;
-    s[0] = 0;
-    for (var h = 1; h < s.length; h++) {
-        var p = s[h++], a = s[h] ? (s[0] |= p ? 1 : 2, r[s[h++]]) : s[++h];
-        3 === p ? e[0] = a : 4 === p ? e[1] = Object.assign(e[1] || {}, a) : 5 === p ? (e[1] = e[1] || {})[s[++h]] = a : 6 === p ? e[1][s[++h]] += a + "" : p ? (u = t.apply(a, n$2(t, a, r, [ "", null ])), 
-        e.push(u), a[0] ? s[0] |= 2 : (s[h - 2] = 0, s[h] = u)) : e.push(a);
-    }
-    return e;
-}, t$2 = new Map;
-
-function htm(s) {
-    var r = t$2.get(this);
-    return r || (r = new Map, t$2.set(this, r)), (r = n$2(this, r.get(s) || (r.set(s, r = function(n) {
-        for (var t, s, r = 1, e = "", u = "", h = [ 0 ], p = function(n) {
-            1 === r && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? h.push(0, n, e) : 3 === r && (n || e) ? (h.push(3, n, e), 
-            r = 2) : 2 === r && "..." === e && n ? h.push(4, n, 0) : 2 === r && e && !n ? h.push(5, 0, !0, e) : r >= 5 && ((e || !n && 5 === r) && (h.push(r, 0, e, s), 
-            r = 6), n && (h.push(r, n, 0, s), r = 6)), e = "";
-        }, a = 0; a < n.length; a++) {
-            a && (1 === r && p(), p(a));
-            for (var l = 0; l < n[a].length; l++) t = n[a][l], 1 === r ? "<" === t ? (p(), h = [ h ], 
-            r = 3) : e += t : 4 === r ? "--" === e && ">" === t ? (r = 1, e = "") : e = t + e[0] : u ? t === u ? u = "" : e += t : '"' === t || "'" === t ? u = t : ">" === t ? (p(), 
-            r = 1) : r && ("=" === t ? (r = 5, s = e, e = "") : "/" === t && (r < 5 || ">" === n[a][l + 1]) ? (p(), 
-            3 === r && (h = h[0]), r = h, (h = h[0]).push(2, 0, r), r = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (p(), 
-            r = 2) : e += t), 3 === r && "!--" === e && (r = 4, h = h[0]);
-        }
-        return p(), h;
-    }(s)), r), arguments, [])).length > 1 ? r : r[0];
-}
-
-function htmlold(...inargs) {
-    return apply(htm, h, inargs);
-}
-
-function html(...args) {
-    const prevdom = toArray(htmlold(...args));
-    const vdom = prevdom.length === 1 ? prevdom[0] : prevdom;
-    if (isvalidvdom(vdom)) {
-        return vdom;
-    } else {
-        console.error(vdom);
-        console.error(invalid_Virtualdom);
-        throw new TypeError;
-    }
-}
-
-export { Condition, extenddirectives as Directives, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createState, h, html, render, useMounted, useUnMounted, watch };
+export { Condition, extenddirectives as Directives, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createState, h, html, render, useCreated, useMounted, useUnMounted, useUpdated, watch };
 //# sourceMappingURL=index.js.map

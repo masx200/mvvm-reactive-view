@@ -31,6 +31,7 @@ import Virtualdom, {
 } from "../CreateElement/VirtualElement";
 import handleprops from "./handle-props";
 import { autocreateclass } from "../AttributeClass/createComponent";
+import { dispatchcreated } from 'src/addlistener-mount-unmount-updated';
 
 export const bindstatesymbol = Symbol("bindstate");
 
@@ -186,6 +187,8 @@ export default function render(
         } else {
             throwinvalideletype(vdom);
         }
+        /* 元素已经创建出来了 */
+        dispatchcreated(element);
         /*  if (element) {
       const attribute1: { [key: string]: any } = createeleattr(element);
       Object.assign(

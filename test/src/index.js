@@ -7,7 +7,7 @@ import "./index-teststore.js";
 import "./index-x.js";
 import "./index1.js";
 import "./index2.js";
-import "./index3.js";
+import "./index3-life-cycle.js";
 import "./index-fun-state";
 import "./index-switchable";
 import "./custom-directives";

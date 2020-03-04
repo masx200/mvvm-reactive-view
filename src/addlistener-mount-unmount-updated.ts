@@ -87,3 +87,14 @@ function dispatchupdated(e: Node) {
     /* 冒泡一下,让父节点都触发事件update */
     e.dispatchEvent(new Event(updatedeventname, { bubbles: true }));
 }
+const createdeventname = Symbol("created").toString();
+export function addcreatedlistner(ele: Element, call: () => void) {
+    ele.addEventListener(createdeventname, () => {
+        // Promise.resolve().then(() => {
+        call();
+        // });
+    });
+}
+export function dispatchcreated(e: Node) {
+    e.dispatchEvent(new Event(createdeventname));
+}

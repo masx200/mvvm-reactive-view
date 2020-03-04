@@ -1176,23 +1176,25 @@ declare global {
 }
 declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
 declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
-declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
-type SetterFun = (v: any) => void;
-declare function useMounted(fun: () => void): void;
-declare function useUnMounted(fun: () => void): void;
+declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
 interface Ref<T = any | undefined> {
     value: T | undefined;
 }
 declare function createRef<T = any | undefined>(value?: T): Ref<T>;
-declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
-declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
 interface Extendfun {
     (value: unknown, element: Element, vdom: Virtualdom<any>, onmounted: (call: () => void) => void, onunmounted: (call: () => void) => void, onupdated: (call: () => void) => void): void;
 }
 declare function extenddirectives(name: string, fun: Extendfun): void;
 declare const Directives: typeof extenddirectives;
-declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
+declare function useCreated(fun: () => void): void;
+declare function useUpdated(fun: () => void): void;
+declare function useMounted(fun: () => void): void;
+declare function useUnMounted(fun: () => void): void;
 declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
+declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
+type SetterFun = (v: any) => void;
+declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
+declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
 declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
 declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
 declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
@@ -1200,4 +1202,4 @@ declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | El
 declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
 declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
 declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
-export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, JSX };
+export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, useUpdated, useCreated, JSX };

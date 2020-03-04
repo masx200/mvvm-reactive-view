@@ -10,7 +10,9 @@ import {
     MountElement,
     useMounted,
     useUnMounted,
-    watch
+    watch,
+    useUpdated,
+    useCreated
 } from "./mvvm-view";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -21,14 +23,20 @@ console.log([h, createElement]);
         Object.assign(
             (props, children) => {
                 const number = createState(1);
+                useCreated(() => {
+                    console.log("life-cycle-created");
+                });
+                useUpdated(() => {
+                    console.log("life-cycle-updated");
+                });
                 useMounted(() => {
-                    console.log("mounted1");
+                    console.log("life-cycle-mounted1");
                 });
                 useMounted(() => {
                     console.log("mounted2", props);
                 });
                 useUnMounted(() => {
-                    console.log("unmounted");
+                    console.log("life-cycle-unmounted");
                 });
                 watch(props.cccccc, cccccc => {
                     console.log("cccccc", cccccc);
