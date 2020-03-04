@@ -2,7 +2,7 @@ import babel from "rollup-plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
-import sourcemaps from "rollup-plugin-sourcemaps";
+// import sourcemaps from "rollup-plugin-sourcemaps";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-ts";
 import postcss from "rollup-plugin-postcss";
@@ -117,7 +117,7 @@ export default [
             resolve(),
             commonjs(),
 
-            sourcemaps(),
+            // sourcemaps(),
             typescript(),
             beautifyterserplugin
         ]
@@ -137,7 +137,7 @@ export default [
             json(),
             resolve(),
             commonjs(),
-            sourcemaps(),
+            // sourcemaps(),
             beautifyterserplugin
         ]
     },
@@ -151,11 +151,11 @@ export default [
             }
         ],
         plugins: [
+            // sourcemaps()
             mybabelplugin,
             resolve(),
             commonjs(),
-            myterserplugin,
-            sourcemaps()
+            myterserplugin
         ]
     },
     {
@@ -168,11 +168,11 @@ export default [
             }
         ],
         plugins: [
+            // sourcemaps()
             mybabelplugin,
             resolve(),
             commonjs(),
-            myterserplugin,
-            sourcemaps()
+            myterserplugin
         ]
     },
     {
@@ -207,8 +207,7 @@ export default [
                 minimize: true,
                 extract: false,
                 inject: false
-            }),
-            sourcemaps()
+            })
         ]
     }
 ];
