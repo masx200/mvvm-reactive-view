@@ -934,13 +934,16 @@ console.log(lirefs);
 
 ### 指令`unmounted`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
 
+### 指令`updated`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
+
 ```jsx
 let vdom = (
     <div
         $mounted={() => console.log("mounted")}
         $unmounted={() => console.log("unmounted")}
+        $updated={() => console.log("updated")}
     >
-        测试mounted,unmounted
+        测试mounted,unmounted,updated
     </div>
 );
 ```
@@ -948,16 +951,22 @@ let vdom = (
 # 扩展自定义指令
 
 ```js
-Directives("myfocus", (value, element, vdom, onmounted, onunmounted) => {
-    console.log("created");
-    console.log(value, element, vdom);
-    onmounted(() => {
-        console.log("mounted");
-    });
-    onunmounted(() => {
-        console.log("unmounted");
-    });
-});
+Directives(
+    "myfocus",
+    (value, element, vdom, onmounted, onunmounted, onupdated) => {
+        console.log("created");
+        console.log(value, element, vdom);
+        onmounted(() => {
+            console.log("mounted");
+        });
+        onunmounted(() => {
+            console.log("unmounted");
+        });
+        onupdated(() => {
+            console.log("updated");
+        });
+    }
+);
 const myvalue = "your directive value";
 html`
     <input *myfocus=${myvalue} />

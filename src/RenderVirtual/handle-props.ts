@@ -10,8 +10,9 @@ import { onevent } from "./handle-onevent";
 import { bindstatesymbol /* virtualdomsymbol */ } from "./render-vdom-to-real";
 import {
     addmountedlistner,
-    addunmountedlistner
-} from "src/addlistener-mount-unmount.js";
+    addunmountedlistner,
+    addupdatedlistner
+} from "src/addlistener-mount-unmount-updated.js";
 
 export default handleprops;
 function handleprops(
@@ -43,6 +44,9 @@ function handleprops(
                     },
                     call => {
                         addunmountedlistner(element, call);
+                    },
+                    call => {
+                        addupdatedlistner(element, call);
                     }
                 );
             } else {

@@ -4,8 +4,13 @@ import { isconnected } from "../UtilTools/isconnected";
 import { isstring } from "../UtilTools/util";
 
 export { createhtmlandtextdirective };
-function createhtmlandtextdirective(seteletext: Function, errorname: string) {
-    return function(ele: Element, text: string | ReactiveState<any>) {
+function createhtmlandtextdirective(
+    seteletext: Function,
+    errorname: string,
+    ele: Element,
+    text: string | ReactiveState<any>
+) {
+    {
         const element = ele;
         if (isstring(text)) {
             requestAnimationFrame(() => {
@@ -31,5 +36,5 @@ function createhtmlandtextdirective(seteletext: Function, errorname: string) {
             console.error("invalid " + errorname);
             throw TypeError();
         }
-    };
+    }
 }

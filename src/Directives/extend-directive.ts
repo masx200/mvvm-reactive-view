@@ -9,7 +9,8 @@ export interface Extendfun {
         vdom: Virtualdom<any>,
 
         onmounted: (call: () => void) => void,
-        onunmounted: (call: () => void) => void
+        onunmounted: (call: () => void) => void,
+        onupdated: (call: () => void) => void
     ): void;
 }
 export interface ExtendOptions {

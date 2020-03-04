@@ -1,10 +1,11 @@
+const rootnode = document.body;
 const connectedeventname = Symbol("mounted").toString();
 const disconnectedeventname = Symbol("unmounted").toString();
 const callback = function(
-    mutations: MutationRecord[],
-    observer: MutationObserver
+    mutations: MutationRecord[]
+    // observer: MutationObserver
 ) {
-    console.log(observer);
+    // console.log(observer);
     mutations.forEach(function(record: MutationRecord) {
         console.log("Mutation: ", record);
         /* 子元素也要触发事件 */
@@ -36,15 +37,16 @@ function dispatchconnected(e: Node) {
 function dispatchdisconnected(e: Node) {
     e.dispatchEvent(new Event(disconnectedeventname));
 }
-var mo = new MutationObserver(callback);
+const mo = new MutationObserver(callback);
 
-var option = {
+const option = {
     childList: true,
 
     subtree: true
 };
 
-mo.observe(document.body, option);
+mo.observe(rootnode, option);
+
 export function addmountedlistner(ele: Element, call: () => void) {
     ele.addEventListener(connectedeventname, () => {
         // Promise.resolve().then(() => {
@@ -59,4 +61,27 @@ export function addunmountedlistner(ele: Element, call: () => void) {
         call();
         // });
     });
+}
+const updatedeventname = Symbol("updated").toString();
+export function addupdatedlistner(ele: Element, call: () => void) {
+    ele.addEventListener(updatedeventname, () => {
+        // Promise.resolve().then(() => {
+        call();
+        // });
+    });
+}
+new MutationObserver((mutations: MutationRecord[]) => {
+    mutations.forEach(function(record: MutationRecord) {
+        console.log("Mutation: ", record);
+        const target = record.target;
+        dispatchupdated(target);
+    });
+}).observe(rootnode, {
+    attributes: true,
+    childList: true,
+    characterData: true
+});
+function dispatchupdated(e: Node) {
+    /* 冒泡一下,让父节点都触发事件update */
+    e.dispatchEvent(new Event(updatedeventname, { bubbles: true }));
 }

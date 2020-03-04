@@ -12,6 +12,7 @@ interface Attributes {
     $checked?: ReactiveState<boolean>;
     $mounted?: () => void;
     $unmounted?: () => void;
+    $updated?: () => void;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
