@@ -6,6 +6,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-ts";
 import postcss from "rollup-plugin-postcss";
+// import rollup from 'rollup'
 const banner = `
 const globalThis = Function('return this')();
 const self = globalThis;
