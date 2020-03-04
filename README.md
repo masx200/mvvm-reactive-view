@@ -374,13 +374,15 @@ postcss({
 
 每个组件,每个元素都有 创建, 挂载,更新,卸载 的生命周期
 
+使用`MutationObserver`来高效的监听组件和元素的变化
+
 ### 给组件注册生命周期回调函数
 
 使用`useCreated`来添加组件创建之后的回调函数
 
 使用`useMounted`来添加组件挂载之后的回调函数
 
-使用`useUpdated`来添加组件更新之后的回调函数
+使用`useUpdated`来添加组件及其子节点更新之后的回调函数
 
 使用`useUnMounted`来添加组件卸载之后的回调函数
 
@@ -881,8 +883,6 @@ html`
 
 `<div *ref=${ref}/>`
 
-<hr></hr>
-
 ```ts
 const ref = createRef();
 
@@ -893,8 +893,6 @@ var vdom = html`
 console.log(ref.value);
 ```
 
-<hr></hr>
-
 ```tsx
 const ref = createRef();
 
@@ -902,8 +900,6 @@ var vdom = <div $ref={ele => (ref.value = ele)} />;
 
 console.log(ref.value);
 ```
-
-<hr></hr>
 
 ```jsx
 const lirefs = [];
@@ -967,7 +963,7 @@ console.log(lirefs);
 
 ### 指令`unmounted`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
 
-### 指令`updated`,当元素更新时,会触发回调函数,值类型为`() => void`
+### 指令`updated`,当元素及其子节点更新时,会触发回调函数,值类型为`() => void`
 
 ### 指令`created`,当元素创建时,会触发回调函数,值类型为`() => void`
 
