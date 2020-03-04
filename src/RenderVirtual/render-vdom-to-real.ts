@@ -134,8 +134,14 @@ export default function render(
             } else if (type === "math") {
                 /* 没想到svg的创建方式这么特别?否则显示不出svg */
                 element = createmathelement();
-            } else if ("" === type || type === "html") {
+            } else if ("" === type) {
                 const fragmentnode = createDocumentFragment();
+
+                mount(render(vdom.children), fragmentnode);
+
+                return fragmentnode;
+            } else if (type === "html") {
+                const fragmentnode = createElementNS("never", "html");
 
                 mount(render(vdom.children), fragmentnode);
 
