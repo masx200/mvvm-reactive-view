@@ -89,11 +89,12 @@ function dispatchupdated(e: Node) {
 }
 const createdeventname = Symbol("created").toString();
 export function addcreatedlistner(ele: Element, call: () => void) {
-    ele.addEventListener(createdeventname, () => {
+//created事件每个元素只触发一次   
+ ele.addEventListener(createdeventname, () => {
         // Promise.resolve().then(() => {
         call();
         // });
-    });
+    },{once:true});
 }
 export function dispatchcreated(e: Node) {
     e.dispatchEvent(new Event(createdeventname));
