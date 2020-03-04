@@ -1183,7 +1183,7 @@ declare function createRef<T = any | undefined>(value?: T): Ref<T>;
 declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
 declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
 interface Extendfun {
-    (element: Element, vdom: Virtualdom<any>, value: any): void;
+    (value: unknown, element: Element, vdom: Virtualdom<any>, onmounted: (call: () => void) => void, onunmounted: (call: () => void) => void): void;
 }
 declare function extenddirectives(name: string, fun: Extendfun): void;
 declare const Directives: typeof extenddirectives;

@@ -8,158 +8,6 @@ const global = globalThis;
 
 const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, CustomEvent: CustomEvent, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt, Number: Number} = globalThis;
 
-function seteletext(e, v) {
-    e.textContent = v;
-}
-
-function setelehtml(e, v) {
-    e.innerHTML = v;
-}
-
-function appendchild(container, ele) {
-    container.appendChild(ele);
-}
-
-function createsvgelement() {
-    return createElementNS(svgnamespace, "svg");
-}
-
-function createDocumentFragment() {
-    return document.createDocumentFragment();
-}
-
-function createnativeelement(type) {
-    return document.createElement(type);
-}
-
-function createElementNS(namespace, name) {
-    return document.createElementNS(namespace, name);
-}
-
-function createtextnode(data) {
-    return document.createTextNode(String(data));
-}
-
-const svgnamespace = "http://www.w3.org/2000/svg";
-
-function changetext(textnode, value) {
-    textnode.nodeValue = String(value);
-}
-
-const mathnamespace = "http://www.w3.org/1998/Math/MathML";
-
-function createmathelement() {
-    return createElementNS(mathnamespace, "math");
-}
-
-function replaceChild(newChild, oldChild) {
-    let parentNode = oldChild.parentNode;
-    if (parentNode) {
-        parentNode.replaceChild(newChild, oldChild);
-    }
-}
-
-function domaddlisten(ele, event, call) {
-    ele.addEventListener(event, call);
-}
-
-function domremovelisten(ele, event, call) {
-    ele.removeEventListener(event, call);
-}
-
-function getchildNodes(ele) {
-    return [ ...ele.childNodes ];
-}
-
-function createanotherhtmldocument() {
-    return document.implementation.createHTMLDocument("");
-}
-
-function querySelectorAll(selector) {
-    return [ ...document.querySelectorAll(selector) ];
-}
-
-function isprimitive(a) {
-    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
-}
-
-function isbigint(a) {
-    return typeof a === "bigint";
-}
-
-function issymbol(a) {
-    return typeof a === "symbol";
-}
-
-const isplainobject = a => isobject(a) && gettagtype(a) === "Object";
-
-function isundefined(a) {
-    return !a && a === void 0 || a === null;
-}
-
-function isnumber(a) {
-    return typeof a === "number";
-}
-
-function isboolean(a) {
-    return typeof a === "boolean";
-}
-
-function isobject(a) {
-    return typeof a === "object" && a !== null;
-}
-
-function isstring(a) {
-    return typeof a === "string";
-}
-
-function isfunction(a) {
-    return typeof a === "function";
-}
-
-function isarray(a) {
-    return Array.isArray(a) && a instanceof Array;
-}
-
-function gettagtype(a) {
-    return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
-}
-
-function isSet(a) {
-    return a instanceof Set;
-}
-
-function isMap(a) {
-    return a instanceof Map;
-}
-
-function isWeakMap(a) {
-    return a instanceof WeakMap;
-}
-
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
-
-function get(target, propertyKey) {
-    if (isMap(target) || isWeakMap(target)) {
-        return target.get(propertyKey);
-    } else {
-        return Reflect.get(target, propertyKey);
-    }
-}
-
-function set(target, propertyKey, value) {
-    if (isMap(target) || isWeakMap(target)) {
-        target.set(propertyKey, value);
-        return true;
-    } else {
-        return Reflect.set(target, propertyKey, value);
-    }
-}
-
-function toArray(a) {
-    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
-}
-
 class ObserverTarget {
     constructor() {
         this.Listeners = new Set;
@@ -396,6 +244,83 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
+function issymbol(a) {
+    return typeof a === "symbol";
+}
+
+const isplainobject = a => isobject(a) && gettagtype(a) === "Object";
+
+function isundefined(a) {
+    return !a && a === void 0 || a === null;
+}
+
+function isnumber(a) {
+    return typeof a === "number";
+}
+
+function isboolean(a) {
+    return typeof a === "boolean";
+}
+
+function isobject(a) {
+    return typeof a === "object" && a !== null;
+}
+
+function isstring(a) {
+    return typeof a === "string";
+}
+
+function isfunction(a) {
+    return typeof a === "function";
+}
+
+function isarray(a) {
+    return Array.isArray(a) && a instanceof Array;
+}
+
+function gettagtype(a) {
+    return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
+}
+
+function isSet(a) {
+    return a instanceof Set;
+}
+
+function isMap(a) {
+    return a instanceof Map;
+}
+
+function isWeakMap(a) {
+    return a instanceof WeakMap;
+}
+
+function isprimitive(a) {
+    return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
+}
+
+function isbigint(a) {
+    return typeof a === "bigint";
+}
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
+
+function get(target, propertyKey) {
+    if (isMap(target) || isWeakMap(target)) {
+        return target.get(propertyKey);
+    } else {
+        return Reflect.get(target, propertyKey);
+    }
+}
+
+function set(target, propertyKey, value) {
+    if (isMap(target) || isWeakMap(target)) {
+        target.set(propertyKey, value);
+        return true;
+    } else {
+        return Reflect.set(target, propertyKey, value);
+    }
+}
+
 let watchrecord = [];
 
 function getwatchrecords() {
@@ -588,6 +513,81 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? value : isobject(value) ? JSON.stringify(value) : void 0;
     }
+}
+
+function seteletext(e, v) {
+    e.textContent = v;
+}
+
+function setelehtml(e, v) {
+    e.innerHTML = v;
+}
+
+function appendchild(container, ele) {
+    container.appendChild(ele);
+}
+
+function createsvgelement() {
+    return createElementNS(svgnamespace, "svg");
+}
+
+function createDocumentFragment() {
+    return document.createDocumentFragment();
+}
+
+function createnativeelement(type) {
+    return document.createElement(type);
+}
+
+function createElementNS(namespace, name) {
+    return document.createElementNS(namespace, name);
+}
+
+function createtextnode(data) {
+    return document.createTextNode(String(data));
+}
+
+const svgnamespace = "http://www.w3.org/2000/svg";
+
+function changetext(textnode, value) {
+    textnode.nodeValue = String(value);
+}
+
+const mathnamespace = "http://www.w3.org/1998/Math/MathML";
+
+function createmathelement() {
+    return createElementNS(mathnamespace, "math");
+}
+
+function replaceChild(newChild, oldChild) {
+    let parentNode = oldChild.parentNode;
+    if (parentNode) {
+        parentNode.replaceChild(newChild, oldChild);
+    }
+}
+
+function domaddlisten(ele, event, call) {
+    ele.addEventListener(event, call);
+}
+
+function domremovelisten(ele, event, call) {
+    ele.removeEventListener(event, call);
+}
+
+function getchildNodes(ele) {
+    return [ ...ele.childNodes ];
+}
+
+function createanotherhtmldocument() {
+    return document.implementation.createHTMLDocument("");
+}
+
+function querySelectorAll(selector) {
+    return [ ...document.querySelectorAll(selector) ];
+}
+
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
 }
 
 const cached_create_componet = new WeakMap;
@@ -949,13 +949,55 @@ function readdlisteners(ele) {
     }
 }
 
+var callback = function(mutations, observer) {
+    console.log(observer);
+    mutations.forEach((function(record) {
+        console.log("Mutation: ", record);
+        [ ...record.addedNodes ].forEach(e => {
+            e.dispatchEvent(new Event("connected"));
+        });
+        [ ...record.removedNodes ].forEach(e => {
+            e.dispatchEvent(new Event("disconnected"));
+        });
+    }));
+};
+
+var mo = new MutationObserver(callback);
+
+var option = {
+    childList: true,
+    subtree: true
+};
+
+mo.observe(document.body, option);
+
+function addmountedlistner(ele, call) {
+    ele.addEventListener("connected", () => {
+        Promise.resolve().then(() => {
+            call();
+        });
+    });
+}
+
+function addunmountedlistner(ele, call) {
+    ele.addEventListener("disconnected", () => {
+        Promise.resolve().then(() => {
+            call();
+        });
+    });
+}
+
 function handleprops(element, vdom) {
     vdom.element.push(element);
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
             const direfun = directive[name];
             if (isfunction(direfun)) {
-                direfun(element, vdom, value);
+                direfun(value, element, vdom, call => {
+                    addmountedlistner(element, call);
+                }, call => {
+                    addunmountedlistner(element, call);
+                });
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);
@@ -1807,7 +1849,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-extenddirectives("ref", (ele, _vdom, ref) => {
+extenddirectives("ref", (ref, ele, _vdom) => {
     if (isfunction(ref)) {
         apply(ref, undefined, [ ele ]);
     } else if (isobject(ref)) {
@@ -1820,22 +1862,37 @@ extenddirectives("ref", (ele, _vdom, ref) => {
     }
 });
 
-extenddirectives("html", (ele, _vdom, html) => {
-    console.log(_vdom);
-    createhtmlandtextdirective(setelehtml, "html")(ele, html);
+extenddirectives("html", (html, ele, _vdom) => {
+    if (isstring(html) || isReactiveState(html)) {
+        console.log(_vdom);
+        createhtmlandtextdirective(setelehtml, "html")(ele, html);
+    } else {
+        throw new TypeError;
+    }
 });
 
-extenddirectives("text", (ele, _vdom, text) => {
-    console.log(_vdom);
-    createhtmlandtextdirective(seteletext, "text")(ele, text);
+extenddirectives("text", (text, ele, _vdom) => {
+    if (isstring(text) || isReactiveState(text)) {
+        console.log(_vdom);
+        createhtmlandtextdirective(seteletext, "text")(ele, text);
+    } else {
+        throw new TypeError;
+    }
 });
 
-extenddirectives("value", (element, vdom, value) => {
-    console.log(element);
-    model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+extenddirectives("value", (value, element, vdom) => {
+    if (isReactiveState(value)) {
+        console.log(element);
+        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+    } else {
+        throw new TypeError;
+    }
 });
 
-extenddirectives("checked", (element, vdom, value) => {
+extenddirectives("checked", (value, element, vdom) => {
+    if (!isReactiveState(value)) {
+        throw new TypeError;
+    }
     console.log(element);
     model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
     const eventname = "click";
