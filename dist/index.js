@@ -949,18 +949,42 @@ function readdlisteners(ele) {
     }
 }
 
-var callback = function(mutations, observer) {
+const connectedeventname = Symbol("connected").toString();
+
+const disconnectedeventname = Symbol("disconnected").toString();
+
+const callback = function(mutations, observer) {
     console.log(observer);
     mutations.forEach((function(record) {
         console.log("Mutation: ", record);
-        [ ...record.addedNodes ].forEach(e => {
-            e.dispatchEvent(new Event("connected"));
+        const addedNodes = [ ...record.addedNodes ];
+        addedNodes.forEach(e => {
+            if (e instanceof Element) {
+                const subnodes = [ ...e.querySelectorAll("*"), e ];
+                subnodes.forEach(n => {
+                    dispatchconnected(n);
+                });
+            }
         });
-        [ ...record.removedNodes ].forEach(e => {
-            e.dispatchEvent(new Event("disconnected"));
+        const removedNodes = [ ...record.removedNodes ];
+        removedNodes.forEach(e => {
+            if (e instanceof Element) {
+                const subnodes = [ ...e.querySelectorAll("*"), e ];
+                subnodes.forEach(n => {
+                    dispatchdisconnected(n);
+                });
+            }
         });
     }));
 };
+
+function dispatchconnected(e) {
+    e.dispatchEvent(new Event(connectedeventname));
+}
+
+function dispatchdisconnected(e) {
+    e.dispatchEvent(new Event(disconnectedeventname));
+}
 
 var mo = new MutationObserver(callback);
 
@@ -972,18 +996,14 @@ var option = {
 mo.observe(document.body, option);
 
 function addmountedlistner(ele, call) {
-    ele.addEventListener("connected", () => {
-        Promise.resolve().then(() => {
-            call();
-        });
+    ele.addEventListener(connectedeventname, () => {
+        call();
     });
 }
 
 function addunmountedlistner(ele, call) {
-    ele.addEventListener("disconnected", () => {
-        Promise.resolve().then(() => {
-            call();
-        });
+    ele.addEventListener(disconnectedeventname, () => {
+        call();
     });
 }
 
@@ -1908,6 +1928,26 @@ extenddirectives("checked", (value, element, vdom) => {
         }
     };
     set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
+});
+
+const Directives = extenddirectives;
+
+Directives("mounted", (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+});
+
+Directives("unmounted", (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onunmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
 });
 
 const {HTMLElement: HTMLElement$1, customElements: customElements$1, Proxy: Proxy$1} = window;

@@ -836,15 +836,15 @@ html`
 <button onclick={e => console.log(e)} />
 ```
 
-# 使用指令
+# 使用`jsx 指令`
 
 1.属性名为'\*'+指令名称
 
 2.使用"\$"+指令名称
 
-现已支持的指令有 `'ref','html','text'，"value","checked"`
+现已支持的内置指令有 `'ref','html','text'，"value","checked"`,`mounted`,`unmounted`
 
-### 指令`ref`用来获取元素的引用,值可以是`object`或者`Function`
+### 指令`ref`用来获取元素的引用,值可以是`{ value?: Element } | ((value: Element) => void)`
 
 `*ref=${ref}`
 
@@ -894,19 +894,19 @@ const vdom = (
 console.log(lirefs);
 ```
 
-### 指令`html`用来设置元素的`innerHTML`
+### 指令`html`用来设置元素的`innerHTML`,值类型为`string|ReactiveState<string>`
 
-`*html=${state}`
+`<div *html=${state} />`
 
-### 指令`text`用来设置元素的`textContent`
+### 指令`text`用来设置元素的`textContent`,值类型为`string|ReactiveState<string>`
 
-`*text=${state}`
+`<div *text=${state}/>`
 
 ```jsx
 <button $text="click me" />
 ```
 
-### 指令`value`只是一个简单的表单`textarea`或者`input`或者`select`元素的`value`值双向绑定语法糖
+### 指令`value`只是一个简单的表单`textarea`或者`input`或者`select`元素的`value`值双向绑定语法糖,值类型为`ReactiveState<string>`
 
 ```jsx
 <input $value={state} />
@@ -920,7 +920,7 @@ console.log(lirefs);
 <select $value={state}></select>
 ```
 
-### 指令`checked`只是一个简单的`checkbox`或者`radio`表单`input`元素的`checked`值双向绑定语法糖
+### 指令`checked`只是一个简单的`checkbox`或者`radio`表单`input`元素的`checked`值双向绑定语法糖,值类型为`ReactiveState<boolean>`
 
 ```jsx
 <input type="checkbox" $checked={state} />
@@ -928,6 +928,21 @@ console.log(lirefs);
 
 ```jsx
 <input type="radio" $checked={state} />
+```
+
+### 指令`mounted`,当元素挂载到`document.body`中时,会触发回调函数,值类型为`() => void`
+
+### 指令`unmounted`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
+
+```jsx
+let vdom = (
+    <div
+        $mounted={() => console.log("mounted")}
+        $unmounted={() => console.log("unmounted")}
+    >
+        测试mounted,unmounted
+    </div>
+);
 ```
 
 # 扩展自定义指令

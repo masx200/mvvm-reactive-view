@@ -4,12 +4,14 @@ import Virtualdom from "./src/CreateElement/VirtualElement";
 import ReactiveState from "./src/Reactivity/reactivestate";
 
 interface Attributes {
-    $ref?: { value: Element } | ((value: Element) => void);
-    $html?: string | ReactiveState<any>;
-    $text?: string | ReactiveState<any>;
-    $value?: ReactiveState<any>;
+    $ref?: { value?: Element } | ((value: Element) => void);
+    $html?: string | ReactiveState<string>;
+    $text?: string | ReactiveState<string>;
+    $value?: ReactiveState<string>;
 
-    $checked?: ReactiveState<any>;
+    $checked?: ReactiveState<boolean>;
+    $mounted?: () => void;
+    $unmounted?: () => void;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;

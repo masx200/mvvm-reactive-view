@@ -1,19 +1,41 @@
-var callback = function(
+const connectedeventname = Symbol("connected").toString();
+const disconnectedeventname = Symbol("disconnected").toString();
+const callback = function(
     mutations: MutationRecord[],
     observer: MutationObserver
 ) {
     console.log(observer);
     mutations.forEach(function(record: MutationRecord) {
         console.log("Mutation: ", record);
-        [...record.addedNodes].forEach(e => {
-            e.dispatchEvent(new Event("connected"));
+        /* 子元素也要触发事件 */
+        const addedNodes = [...record.addedNodes];
+        addedNodes.forEach(e => {
+            if (e instanceof Element) {
+                // dispatchconnected(e);
+                const subnodes = [...e.querySelectorAll("*"), e];
+                subnodes.forEach(n => {
+                    dispatchconnected(n);
+                });
+            }
         });
-        [...record.removedNodes].forEach(e => {
-            e.dispatchEvent(new Event("disconnected"));
+        const removedNodes = [...record.removedNodes];
+        removedNodes.forEach(e => {
+            if (e instanceof Element) {
+                // dispatchdisconnected(e);
+                const subnodes = [...e.querySelectorAll("*"), e];
+                subnodes.forEach(n => {
+                    dispatchdisconnected(n);
+                });
+            }
         });
     });
 };
-
+function dispatchconnected(e: Node) {
+    e.dispatchEvent(new Event(connectedeventname));
+}
+function dispatchdisconnected(e: Node) {
+    e.dispatchEvent(new Event(disconnectedeventname));
+}
 var mo = new MutationObserver(callback);
 
 var option = {
@@ -24,17 +46,17 @@ var option = {
 
 mo.observe(document.body, option);
 export function addmountedlistner(ele: Element, call: () => void) {
-    ele.addEventListener("connected", () => {
-        Promise.resolve().then(() => {
-            call();
-        });
+    ele.addEventListener(connectedeventname, () => {
+        // Promise.resolve().then(() => {
+        call();
+        // });
     });
 }
 
 export function addunmountedlistner(ele: Element, call: () => void) {
-    ele.addEventListener("disconnected", () => {
-        Promise.resolve().then(() => {
-            call();
-        });
+    ele.addEventListener(disconnectedeventname, () => {
+        // Promise.resolve().then(() => {
+        call();
+        // });
     });
 }

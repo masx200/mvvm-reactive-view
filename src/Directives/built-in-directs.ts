@@ -114,3 +114,21 @@ extenddirectives(
         );
     }
 );
+const Directives = extenddirectives;
+Directives("mounted", (call, ele, vdom, onmount, onunmount) => {
+    console.log([call, ele, vdom, onmount, onunmount]);
+    if (typeof call === "function") {
+        apply(onmount, undefined, [call]);
+        // onmount(call);
+    } else {
+        throw new TypeError();
+    }
+});
+Directives("unmounted", (call, ele, vdom, onmount, onunmount) => {
+    console.log([call, ele, vdom, onmount, onunmount]);
+    if (typeof call === "function") {
+        apply(onunmount, undefined, [call]);
+    } else {
+        throw new TypeError();
+    }
+});

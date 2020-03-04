@@ -80,12 +80,14 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
 }
 interface Attributes {
     $ref?: {
-        value: Element;
+        value?: Element;
     } | ((value: Element) => void);
-    $html?: string | ReactiveState<any>;
-    $text?: string | ReactiveState<any>;
-    $value?: ReactiveState<any>;
-    $checked?: ReactiveState<any>;
+    $html?: string | ReactiveState<string>;
+    $text?: string | ReactiveState<string>;
+    $value?: ReactiveState<string>;
+    $checked?: ReactiveState<boolean>;
+    $mounted?: () => void;
+    $unmounted?: () => void;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
