@@ -125,8 +125,9 @@ export default function render(
         if (typeof type === "string") {
             if (type === "script") {
                 /* 禁止加载脚本 */
-
-                return createDocumentFragment();
+                /* 创建一个不能运行代码的script */
+                return createElementNS("never", "script");
+                // return createDocumentFragment();
             } else if (type === "svg") {
                 /* 没想到svg的创建方式这么特别?否则显示不出svg */
                 element = createsvgelement();
