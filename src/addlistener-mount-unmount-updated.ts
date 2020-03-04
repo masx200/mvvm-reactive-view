@@ -77,6 +77,8 @@ new MutationObserver((mutations: MutationRecord[]) => {
         dispatchupdated(target);
     });
 }).observe(rootnode, {
+    /* 监听子节点 */
+    subtree: true,
     attributes: true,
     childList: true,
     characterData: true

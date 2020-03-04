@@ -765,6 +765,7 @@ new MutationObserver(mutations => {
         dispatchupdated(target);
     }));
 }).observe(rootnode, {
+    subtree: true,
     attributes: true,
     childList: true,
     characterData: true
