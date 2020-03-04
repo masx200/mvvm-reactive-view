@@ -1,19 +1,11 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-
+import { addmountedlistner, addunmountedlistner } from "src/addlistener-mount-unmount";
 import { cached_create_componet } from "../cached-map";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
 import { isclassextendsHTMLElement } from "../CustomClass/isclassextendsHTMLElement";
-import {
-    closectx,
-    getMounted,
-    getstates,
-    getUnMounted,
-    getwatchrecords,
-    invalid_Function,
-    openctx
-} from "../mounted-unmounted/Component-context";
+import { closectx, getMounted, getstates, getUnMounted, getwatchrecords, invalid_Function, openctx } from "../mounted-unmounted/Component-context";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
 import ReactiveState, { dispatchsymbol } from "../Reactivity/reactivestate.js";
@@ -27,15 +19,10 @@ import { apply, defineProperty, get, set } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
 import { isfunction, isobject, isstring } from "../UtilTools/util";
-import {
-    AttrChange,
-    attributeChangedCallback,
-    connectedCallback,
-    disconnectedCallback,
-    firstinstalledcallback
-} from "./attr-change";
+import { AttrChange, attributeChangedCallback, connectedCallback, disconnectedCallback, firstinstalledcallback } from "./attr-change";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+
 
 const waittranformcsssymbol = Symbol("waittranformcss");
 export const innerwatchrecords = Symbol("innerwatchrecord");
@@ -43,8 +30,8 @@ export const innerstatesymbol = Symbol("innerstate");
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
-const mountedsymbol = Symbol("mounted");
-const unmountedsymbol = Symbol("unmounted");
+// const mountedsymbol = Symbol("mounted");
+// const unmountedsymbol = Symbol("unmounted");
 export interface Htmlelementconstructor {
     new (): HTMLElement;
     prototype: HTMLElement;
@@ -182,11 +169,17 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     this[inner_vdom_symbol] = vdomarray
                         .flat(Infinity)
                         .filter(Boolean);
-                    this[mountedsymbol] = getMounted();
-                    this[unmountedsymbol] = getUnMounted();
+                    const mountedcallbacks = getMounted();
+                    const unmountedcallbacks = getUnMounted();
                     this[innerstatesymbol] = getstates();
                     this[innerwatchrecords] = getwatchrecords();
                     closectx();
+                    mountedcallbacks.forEach(callback => {
+                        addmountedlistner(this, callback);
+                    });
+                    unmountedcallbacks.forEach(callback => {
+                        addunmountedlistner(this, callback);
+                    });
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);
@@ -199,8 +192,8 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             static [componentsymbol] = componentsymbol;
             static css = isstring(css) && css ? css : undefined;
             [readysymbol] = false;
-            [mountedsymbol]: Array<Function>;
-            [unmountedsymbol]: Array<Function>;
+            // [mountedsymbol]: Array<Function>;
+            // [unmountedsymbol]: Array<Function>;
             static defaultProps = isobject(defaultProps)
                 ? JSON.parse(JSON.stringify(defaultProps))
                 : undefined;
@@ -273,18 +266,18 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             connectedCallback() {
                 setimmediate(() => {
                     connectedCallback(this);
-
-                    this[mountedsymbol].forEach(f => {
-                        setimmediate(f);
-                    });
+                    /* onmounted实现方式改成添加事件监听器,使用mutationobserver监听 */
+                    // this[mountedsymbol].forEach(f => {
+                    //     setimmediate(f);
+                    // });
                 });
             }
             disconnectedCallback() {
                 setimmediate(() => {
                     disconnectedCallback(this);
-                    this[unmountedsymbol].forEach(f => {
-                        setimmediate(f);
-                    });
+                    // this[unmountedsymbol].forEach(f => {
+                    //     setimmediate(f);
+                    // });
                 });
             }
             [attributeChangedCallback](
@@ -341,3 +334,4 @@ export function autocreateclass(
     }
 }
 export { createComponent };
+

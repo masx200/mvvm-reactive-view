@@ -20,8 +20,8 @@ export const invalid_Function = "invalid Function";
 const errormessage =
     "invalid useMounted or useUnMounted out of createComponent";
 let ctxopen = false;
-let MountedSet: Set<Function> = new Set();
-let UnMountedSet: Set<Function> = new Set();
+let MountedSet: Set<() => void> = new Set();
+let UnMountedSet: Set<() => void> = new Set();
 let StateSet: Set<ReactiveState<any>> = new Set();
 /* 收集组件内部创建的 ReactiveState*/
 
@@ -33,13 +33,13 @@ export function recordusestste(state: ReactiveState<any>) {
         StateSet.add(state);
     }
 }
-export function getMounted() {
+export function getMounted(): (() => void)[] {
     return [...MountedSet];
 }
-export function getUnMounted() {
+export function getUnMounted(): (() => void)[] {
     return [...UnMountedSet];
 }
-export function useMounted(fun: Function) {
+export function useMounted(fun: () => void) {
     if (isFunction(fun)) {
         if (ctxopen) {
             MountedSet.add(fun);
@@ -54,7 +54,7 @@ export function useMounted(fun: Function) {
     }
 }
 
-export function useUnMounted(fun: Function) {
+export function useUnMounted(fun: () => void) {
     if (isFunction(fun)) {
         if (ctxopen) {
             UnMountedSet.add(fun);

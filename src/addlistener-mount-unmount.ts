@@ -1,5 +1,5 @@
-const connectedeventname = Symbol("connected").toString();
-const disconnectedeventname = Symbol("disconnected").toString();
+const connectedeventname = Symbol("mounted").toString();
+const disconnectedeventname = Symbol("unmounted").toString();
 const callback = function(
     mutations: MutationRecord[],
     observer: MutationObserver
