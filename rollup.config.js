@@ -106,7 +106,7 @@ export default [
         input: "./index.ts",
         output: [
             {
-                sourceMap: true,
+                // sourceMap: true,
                 banner,
                 file: "./dist/index.js",
                 format: "esm",
@@ -127,7 +127,7 @@ export default [
         input: "./dist/index.js",
         output: [
             {
-                sourceMap: true,
+                // sourceMap: true,
                 file: "./dist/index.js",
                 format: "esm",
                 sourcemap: true
@@ -180,8 +180,8 @@ export default [
         input: "./test/src/index.js",
         output: [
             {
-                sourceMap: true,
-                file: "./test/dist/output-es2015.js",
+                // sourceMap: true,
+                file: "./test/dist/es2015.js",
                 format: "iife",
                 sourcemap: true
             }
