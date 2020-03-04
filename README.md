@@ -439,14 +439,17 @@ var mystate = createState("aaeeqtt");
 const mycom = createComponent(
     Object.assign(
         (props, children) => {
-            useMounted(() => {
-                console.log("mounted1");
+            useCreated(() => {
+                console.log("life-cycle-created");
+            });
+            useUpdated(() => {
+                console.log("life-cycle-updated");
             });
             useMounted(() => {
-                console.log("mounted2", props);
+                console.log("life-cycle-mounted1");
             });
             useUnMounted(() => {
-                console.log("unmounted");
+               console.log("life-cycle-unmounted");
             });
             watch(props.cccccc, console.log);
             return createElement("div", null, [

@@ -48,6 +48,7 @@ console.log([h, createElement]);
                             number.value++;
                         }}
                     >
+                        life-cycle-test
                         {[
                             number,
                             <br />,
