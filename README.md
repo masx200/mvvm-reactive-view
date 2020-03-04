@@ -933,8 +933,14 @@ console.log(lirefs);
 # 扩展自定义指令
 
 ```js
-Directives("myfocus", (element, vdom, value) => {
+Directives("myfocus", (value, element, vdom, onmounted, onunmounted) => {
     console.log(value, element, vdom);
+    onmounted(() => {
+        console.log("mounted");
+    });
+    onunmounted(() => {
+        console.log("unmounted");
+    });
 });
 const myvalue = "your directive value";
 html`

@@ -4,10 +4,12 @@ import { isstring } from "../UtilTools/util";
 import directives from "./directives";
 export interface Extendfun {
     (
+        value: unknown,
         element: Element,
-
         vdom: Virtualdom<any>,
-        value: any
+
+        onmounted: (call: () => void) => void,
+        onunmounted: (call: () => void) => void
     ): void;
 }
 export interface ExtendOptions {

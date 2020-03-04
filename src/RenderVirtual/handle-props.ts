@@ -8,6 +8,10 @@ import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
 import { bindstatesymbol /* virtualdomsymbol */ } from "./render-vdom-to-real";
+import {
+    addmountedlistner,
+    addunmountedlistner
+} from "src/addlistener-mount-unmount.js";
 
 export default handleprops;
 function handleprops(
@@ -29,7 +33,18 @@ function handleprops(
                 isfunction(direfun) /* typeof directives[name] === "function" */
                 /*name in directives &&*/
             ) {
-                direfun(element, vdom, value);
+                /* 添加了mounted和unmounted的回调函数 */
+                direfun(
+                    value,
+                    element,
+                    vdom,
+                    call => {
+                        addmountedlistner(element, call);
+                    },
+                    call => {
+                        addunmountedlistner(element, call);
+                    }
+                );
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);
