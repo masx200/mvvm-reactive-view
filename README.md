@@ -79,6 +79,8 @@ import {
     Switchable,
     computed,
     createComponent,
+    useCreated,
+    useUpdated,
     useMounted,
     useUnMounted,
     Condition,
@@ -103,6 +105,8 @@ import {
     Switchable,
     computed,
     createComponent,
+    useCreated,
+    useUpdated,
     useMounted,
     useUnMounted,
     Condition,
@@ -329,20 +333,21 @@ document.body.appendChild(
 
 最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
 
-## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`css-loader`引入外部 `css` 文件转成字符串
+## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`to-string-loader`引入外部 `css` 文件转成字符串
+
+### webpack to-string-loader
 
 How to import css string from css file?
 
 If you don't want to write CSS in JS, you can use `to-string-loader` of webpack, For example, the following configuration:
 
 ```js
-{
-  test: /[\\|\/]_[\S]*\.css$/,
-  use: [
-    'to-string-loader',
-    'css-loader'
-  ]
-}
+[
+    {
+        test: /[\\|\/]_[\S]*\.css$/,
+        use: ["to-string-loader", "css-loader"]
+    }
+];
 ```
 
 If your CSS file starts with "\_", CSS will use `to-string-loader`, such as:
@@ -351,7 +356,33 @@ If your CSS file starts with "\_", CSS will use `to-string-loader`, such as:
 const css = require("./_index.css");
 ```
 
+### rollup postcss plugin
+
+```js
+import postcss from "rollup-plugin-postcss";
+
+postcss({
+    minimize: true,
+    extract: false,
+    inject: false
+});
+```
+
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后给`selectorText`添加前缀,再转换成 `css` 文本
+
+## 关于组件,元素的生命周期
+
+每个组件,每个元素都有 创建, 挂载,更新,卸载 的生命周期
+
+### 给组件注册生命周期回调函数
+
+使用`useCreated`来添加组件创建之后的回调函数
+
+使用`useMounted`来添加组件挂载之后的回调函数
+
+使用`useUpdated`来添加组件更新之后的回调函数
+
+使用`useUnMounted`来添加组件卸载之后的回调函数
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,只能在组件初始化函数里面使用，这些`callback`函数都会异步执行
 
@@ -381,7 +412,7 @@ Mixin 非常多时，组件是可以感知到的，
 
 HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难。
 
-HOC 可以劫持 props，在不遵守约定的情况下也可能造成冲突。
+HOC 可以劫持 `props`，在不遵守约定的情况下也可能造成冲突。
 
 ## 更好的逻辑组合复用方法
 
@@ -838,6 +869,8 @@ html`
 
 # 使用`jsx 指令`
 
+所有指令都将在组件或元素的创建之后,挂载之前调用.
+
 1.属性名为'\*'+指令名称
 
 2.使用"\$"+指令名称
@@ -934,7 +967,11 @@ console.log(lirefs);
 
 ### 指令`unmounted`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
 
-### 指令`updated`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
+### 指令`updated`,当元素更新时,会触发回调函数,值类型为`() => void`
+
+### 指令`created`,当元素创建时,会触发回调函数,值类型为`() => void`
+
+给元素注册生命周期回调函数
 
 ```jsx
 let vdom = (
@@ -942,8 +979,9 @@ let vdom = (
         $mounted={() => console.log("mounted")}
         $unmounted={() => console.log("unmounted")}
         $updated={() => console.log("updated")}
+        $created={() => console.log("created")}
     >
-        测试mounted,unmounted,updated
+        测试mounted,unmounted,updated,created
     </div>
 );
 ```

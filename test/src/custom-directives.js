@@ -19,8 +19,10 @@ let vdom = (
         <div
             $mounted={() => console.log("mounted")}
             $unmounted={() => console.log("unmounted")}
+            $updated={() => console.log("updated")}
+            $created={() => console.log("created")}
         >
-            测试mounted,unmounted
+            测试mounted,unmounted,updated,created
         </div>
         <button
             $text="移除当前容器元素"

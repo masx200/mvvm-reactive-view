@@ -13,6 +13,7 @@ interface Attributes {
     $mounted?: () => void;
     $unmounted?: () => void;
     $updated?: () => void;
+    $created?: () => void;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;

@@ -31,12 +31,12 @@ extenddirectives(
     (
         html: unknown, //string | ReactiveState<any>,
         ele: Element,
-        _vdom: Virtualdom<any>,
-        onmounted
+        _vdom: Virtualdom<any>
+        // onmounted
     ) => {
         if (isstring(html) || isReactiveState(html)) {
             console.log(_vdom);
-            createhtmlandtextdirective(setelehtml, "html",ele, html);
+            createhtmlandtextdirective(setelehtml, "html", ele, html);
         } else {
             throw new TypeError();
         }
@@ -47,12 +47,12 @@ extenddirectives(
     (
         text: unknown, //string | ReactiveState<any>,
         ele: Element,
-        _vdom: Virtualdom<any>,
-        onmounted
+        _vdom: Virtualdom<any>
+        // onmounted
     ) => {
         if (isstring(text) || isReactiveState(text)) {
             console.log(_vdom);
-            createhtmlandtextdirective(seteletext, "text",ele, text);
+            createhtmlandtextdirective(seteletext, "text", ele, text);
         } else {
             throw new TypeError();
         }
@@ -138,6 +138,15 @@ Directives("updated", (call, ele, vdom, onmount, onunmount, onupdated) => {
     console.log([call, ele, vdom, onmount, onunmount]);
     if (typeof call === "function") {
         apply(onupdated, undefined, [call]);
+    } else {
+        throw new TypeError();
+    }
+});
+Directives("created", (call, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log([call, ele, vdom, onmount, onunmount, onupdated]);
+    if (typeof call === "function") {
+        // apply(onupdated, undefined, [call]);
+        call();
     } else {
         throw new TypeError();
     }

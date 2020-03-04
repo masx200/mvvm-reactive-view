@@ -88,6 +88,8 @@ interface Attributes {
     $checked?: ReactiveState<boolean>;
     $mounted?: () => void;
     $unmounted?: () => void;
+    $updated?: () => void;
+    $created?: () => void;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
@@ -1176,8 +1178,8 @@ declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: s
 declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
 declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
-declare function useMounted(fun: Function): void;
-declare function useUnMounted(fun: Function): void;
+declare function useMounted(fun: () => void): void;
+declare function useUnMounted(fun: () => void): void;
 interface Ref<T = any | undefined> {
     value: T | undefined;
 }
@@ -1185,7 +1187,7 @@ declare function createRef<T = any | undefined>(value?: T): Ref<T>;
 declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
 declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
 interface Extendfun {
-    (value: unknown, element: Element, vdom: Virtualdom<any>, onmounted: (call: () => void) => void, onunmounted: (call: () => void) => void): void;
+    (value: unknown, element: Element, vdom: Virtualdom<any>, onmounted: (call: () => void) => void, onunmounted: (call: () => void) => void, onupdated: (call: () => void) => void): void;
 }
 declare function extenddirectives(name: string, fun: Extendfun): void;
 declare const Directives: typeof extenddirectives;

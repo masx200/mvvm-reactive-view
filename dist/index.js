@@ -691,6 +691,91 @@ function createeleattragentreadwrite(t) {
     return i;
 }
 
+const rootnode = document.body;
+
+const connectedeventname = Symbol("mounted").toString();
+
+const disconnectedeventname = Symbol("unmounted").toString();
+
+const callback = function(mutations) {
+    mutations.forEach((function(record) {
+        console.log("Mutation: ", record);
+        const addedNodes = [ ...record.addedNodes ];
+        addedNodes.forEach(e => {
+            if (e instanceof Element) {
+                const subnodes = [ ...e.querySelectorAll("*"), e ];
+                subnodes.forEach(n => {
+                    dispatchconnected(n);
+                });
+            }
+        });
+        const removedNodes = [ ...record.removedNodes ];
+        removedNodes.forEach(e => {
+            if (e instanceof Element) {
+                const subnodes = [ ...e.querySelectorAll("*"), e ];
+                subnodes.forEach(n => {
+                    dispatchdisconnected(n);
+                });
+            }
+        });
+    }));
+};
+
+function dispatchconnected(e) {
+    e.dispatchEvent(new Event(connectedeventname));
+}
+
+function dispatchdisconnected(e) {
+    e.dispatchEvent(new Event(disconnectedeventname));
+}
+
+const mo = new MutationObserver(callback);
+
+const option = {
+    childList: true,
+    subtree: true
+};
+
+mo.observe(rootnode, option);
+
+function addmountedlistner(ele, call) {
+    ele.addEventListener(connectedeventname, () => {
+        call();
+    });
+}
+
+function addunmountedlistner(ele, call) {
+    ele.addEventListener(disconnectedeventname, () => {
+        call();
+    });
+}
+
+const updatedeventname = Symbol("updated").toString();
+
+function addupdatedlistner(ele, call) {
+    ele.addEventListener(updatedeventname, () => {
+        call();
+    });
+}
+
+new MutationObserver(mutations => {
+    mutations.forEach((function(record) {
+        console.log("Mutation: ", record);
+        const target = record.target;
+        dispatchupdated(target);
+    }));
+}).observe(rootnode, {
+    attributes: true,
+    childList: true,
+    characterData: true
+});
+
+function dispatchupdated(e) {
+    e.dispatchEvent(new Event(updatedeventname, {
+        bubbles: true
+    }));
+}
+
 function merge_entries(a) {
     const m = {};
     a.forEach(([key, value]) => {
@@ -949,64 +1034,6 @@ function readdlisteners(ele) {
     }
 }
 
-const connectedeventname = Symbol("connected").toString();
-
-const disconnectedeventname = Symbol("disconnected").toString();
-
-const callback = function(mutations, observer) {
-    console.log(observer);
-    mutations.forEach((function(record) {
-        console.log("Mutation: ", record);
-        const addedNodes = [ ...record.addedNodes ];
-        addedNodes.forEach(e => {
-            if (e instanceof Element) {
-                const subnodes = [ ...e.querySelectorAll("*"), e ];
-                subnodes.forEach(n => {
-                    dispatchconnected(n);
-                });
-            }
-        });
-        const removedNodes = [ ...record.removedNodes ];
-        removedNodes.forEach(e => {
-            if (e instanceof Element) {
-                const subnodes = [ ...e.querySelectorAll("*"), e ];
-                subnodes.forEach(n => {
-                    dispatchdisconnected(n);
-                });
-            }
-        });
-    }));
-};
-
-function dispatchconnected(e) {
-    e.dispatchEvent(new Event(connectedeventname));
-}
-
-function dispatchdisconnected(e) {
-    e.dispatchEvent(new Event(disconnectedeventname));
-}
-
-var mo = new MutationObserver(callback);
-
-var option = {
-    childList: true,
-    subtree: true
-};
-
-mo.observe(document.body, option);
-
-function addmountedlistner(ele, call) {
-    ele.addEventListener(connectedeventname, () => {
-        call();
-    });
-}
-
-function addunmountedlistner(ele, call) {
-    ele.addEventListener(disconnectedeventname, () => {
-        call();
-    });
-}
-
 function handleprops(element, vdom) {
     vdom.element.push(element);
     ((element, vdom) => {
@@ -1017,6 +1044,8 @@ function handleprops(element, vdom) {
                     addmountedlistner(element, call);
                 }, call => {
                     addunmountedlistner(element, call);
+                }, call => {
+                    addupdatedlistner(element, call);
                 });
             } else {
                 console.error(vdom.directives);
@@ -1480,10 +1509,6 @@ const elementsymbol = Symbol("innerelement");
 
 const inner_vdom_symbol = Symbol("innervdom");
 
-const mountedsymbol = Symbol("mounted");
-
-const unmountedsymbol = Symbol("unmounted");
-
 function createComponentold(custfun) {
     var _a, _b, _c;
     if (isfunction(custfun)) {
@@ -1539,11 +1564,17 @@ function createComponentold(custfun) {
                 if (isvalidvdom(possiblyvirtualdom)) {
                     const vdomarray = toArray(possiblyvirtualdom);
                     this[inner_vdom_symbol] = vdomarray.flat(Infinity).filter(Boolean);
-                    this[mountedsymbol] = getMounted();
-                    this[unmountedsymbol] = getUnMounted();
+                    const mountedcallbacks = getMounted();
+                    const unmountedcallbacks = getUnMounted();
                     this[innerstatesymbol] = getstates();
                     this[innerwatchrecords] = getwatchrecords();
                     closectx();
+                    mountedcallbacks.forEach(callback => {
+                        addmountedlistner(this, callback);
+                    });
+                    unmountedcallbacks.forEach(callback => {
+                        addunmountedlistner(this, callback);
+                    });
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);
@@ -1583,17 +1614,11 @@ function createComponentold(custfun) {
             connectedCallback() {
                 setimmediate(() => {
                     connectedCallback(this);
-                    this[mountedsymbol].forEach(f => {
-                        setimmediate(f);
-                    });
                 });
             }
             disconnectedCallback() {
                 setimmediate(() => {
                     disconnectedCallback(this);
-                    this[unmountedsymbol].forEach(f => {
-                        setimmediate(f);
-                    });
                 });
             }
             [attributeChangedCallback](name) {
@@ -1804,8 +1829,8 @@ function rewatch(state) {
     state[addallistenerssymbol]();
 }
 
-function createhtmlandtextdirective(seteletext, errorname) {
-    return function(ele, text) {
+function createhtmlandtextdirective(seteletext, errorname, ele, text) {
+    {
         const element = ele;
         if (isstring(text)) {
             requestAnimationFrame(() => {
@@ -1826,7 +1851,7 @@ function createhtmlandtextdirective(seteletext, errorname) {
             console.error("invalid " + errorname);
             throw TypeError();
         }
-    };
+    }
 }
 
 function extenddirectives(name, fun) {
@@ -1885,7 +1910,7 @@ extenddirectives("ref", (ref, ele, _vdom) => {
 extenddirectives("html", (html, ele, _vdom) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(_vdom);
-        createhtmlandtextdirective(setelehtml, "html")(ele, html);
+        createhtmlandtextdirective(setelehtml, "html", ele, html);
     } else {
         throw new TypeError;
     }
@@ -1894,7 +1919,7 @@ extenddirectives("html", (html, ele, _vdom) => {
 extenddirectives("text", (text, ele, _vdom) => {
     if (isstring(text) || isReactiveState(text)) {
         console.log(_vdom);
-        createhtmlandtextdirective(seteletext, "text")(ele, text);
+        createhtmlandtextdirective(seteletext, "text", ele, text);
     } else {
         throw new TypeError;
     }
@@ -1945,6 +1970,24 @@ Directives("unmounted", (call, ele, vdom, onmount, onunmount) => {
     console.log([ call, ele, vdom, onmount, onunmount ]);
     if (typeof call === "function") {
         apply(onunmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+});
+
+Directives("updated", (call, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onupdated, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+});
+
+Directives("created", (call, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log([ call, ele, vdom, onmount, onunmount, onupdated ]);
+    if (typeof call === "function") {
+        call();
     } else {
         throw new TypeError;
     }
