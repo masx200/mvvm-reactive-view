@@ -3,7 +3,14 @@ import * as CSS from "csstype";
 import Virtualdom from "./src/CreateElement/VirtualElement";
 import ReactiveState from "./src/Reactivity/reactivestate";
 
-interface Attributes {}
+interface Attributes {
+    $ref?: { value: Element } | ((value: Element) => void);
+    $html?: string | ReactiveState<any>;
+    $text?: string | ReactiveState<any>;
+    $value?: ReactiveState<any>;
+
+    $checked?: ReactiveState<any>;
+}
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
     crossorigin?: string;
@@ -52,8 +59,8 @@ interface InputHTMLAttributes extends HTMLAttributes {
     pattern?: string;
     placeholder?: string;
     readonly?: boolean;
-    required?: boolean;
-    size?: number;
+    required?: boolean | string;
+    size?: number | string;
     src?: string;
     step?: number | string;
     type?: string;
@@ -217,7 +224,7 @@ interface SelectHTMLAttributes extends HTMLAttributes {
     form?: string;
     multiple?: boolean;
     name?: string;
-    required?: boolean;
+    required?: boolean | string;
     size?: number;
     value?: string | string[] | number;
 }
@@ -365,6 +372,8 @@ interface WebViewHTMLAttributes extends HTMLAttributes {
     webpreferences?: string;
 }
 interface SVGAttributes extends AriaAttributes {
+    xmlns?: string;
+    class?: string;
     domPropsInnerHTML?: string;
 
     color?: string;
@@ -382,7 +391,7 @@ interface SVGAttributes extends AriaAttributes {
 
     // Other HTML properties supported by SVG elements in browsers
     role?: string;
-    tabindex?: number;
+    tabindex?: number | string;
 
     // SVG Specific attributes
     "accent-height"?: number | string;
@@ -872,7 +881,7 @@ interface HTMLAttributes extends AriaAttributes {
     lang?: string;
     placeholder?: string;
     spellcheck?: Booleanish;
-    tabindex?: number;
+    tabindex?: number | string;
     title?: string;
     translate?: "yes" | "no";
 
@@ -1229,6 +1238,117 @@ export interface Events {
     // transition events
     onTransitionend: TransitionEvent;
     onTransitionstart: TransitionEvent;
+    /* lowercase */
+    oncopy: ClipboardEvent;
+    oncut: ClipboardEvent;
+    onpaste: ClipboardEvent;
+
+    // composition events
+    oncompositionend: CompositionEvent;
+    oncompositionstart: CompositionEvent;
+    oncompositionupdate: CompositionEvent;
+
+    // drag drop events
+    ondrag: DragEvent;
+    ondragend: DragEvent;
+    ondragenter: DragEvent;
+    ondragexit: DragEvent;
+    ondragleave: DragEvent;
+    ondragover: DragEvent;
+    ondragstart: DragEvent;
+    ondrop: DragEvent;
+
+    // focus events
+    onfocus: FocusEvent;
+    onblur: FocusEvent;
+
+    // form events
+    onchange: Event;
+    onbeforeinput: Event;
+    oninput: Event;
+    onreset: Event;
+    onsubmit: Event;
+    oninvalid: Event;
+
+    // image events
+    onload: Event;
+    onerror: Event;
+
+    // keyboard events
+    onkeydown: KeyboardEvent;
+    onkeypress: KeyboardEvent;
+    onkeyup: KeyboardEvent;
+
+    // mouse events
+    onauxclick: MouseEvent;
+    onclick: MouseEvent;
+    oncontextmenu: MouseEvent;
+    ondblclick: MouseEvent;
+    onmousedown: MouseEvent;
+    onmouseenter: MouseEvent;
+    onmouseleave: MouseEvent;
+    onmousemove: MouseEvent;
+    onmouseout: MouseEvent;
+    onmouseover: MouseEvent;
+    onmouseup: MouseEvent;
+
+    // media events
+    onabort: Event;
+    oncanplay: Event;
+    oncanplaythrough: Event;
+    ondurationchange: Event;
+    onemptied: Event;
+    onencrypted: Event;
+    onended: Event;
+    onloadeddata: Event;
+    onloadedmetadata: Event;
+    onloadstart: Event;
+    onpause: Event;
+    onplay: Event;
+    onplaying: Event;
+    onprogress: Event;
+    onratechange: Event;
+    onseeked: Event;
+    onseeking: Event;
+    onstalled: Event;
+    onsuspend: Event;
+    ontimeupdate: Event;
+    onvolumechange: Event;
+    onwaiting: Event;
+
+    // selection events
+    onselect: Event;
+
+    // UI events
+    onscroll: UIEvent;
+
+    // touch events
+    ontouchcancel: TouchEvent;
+    ontouchend: TouchEvent;
+    ontouchmove: TouchEvent;
+    ontouchstart: TouchEvent;
+
+    // pointer events
+    onpointerdown: PointerEvent;
+    onpointermove: PointerEvent;
+    onpointerup: PointerEvent;
+    onpointercancel: PointerEvent;
+    onpointerenter: PointerEvent;
+    onpointerleave: PointerEvent;
+    onpointerover: PointerEvent;
+    onpointerout: PointerEvent;
+
+    // wheel events
+    onwheel: WheelEvent;
+
+    // animation events
+    onanimationstart: AnimationEvent;
+    onanimationend: AnimationEvent;
+    onanimationiteration: AnimationEvent;
+
+    // transition events
+    ontransitionend: TransitionEvent;
+    ontransitionstart: TransitionEvent;
 }
 type StringKeyOf<T> = Extract<keyof T, string>;
 type EventHandlers<E> = {
@@ -1236,7 +1356,7 @@ type EventHandlers<E> = {
         ? E[K]
         : (payload: E[K]) => void;
 };
-type ElementAttrs<T> = T & EventHandlers<Events>;
+type ElementAttrs<T> = T & EventHandlers<Events> & Attributes;
 
 type NativeElements = {
     [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs<

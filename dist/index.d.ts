@@ -78,33 +78,14 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly onevent: Record<string, Array<EventListener>>;
     readonly bindattr: Record<string, ReactiveState<any>>;
 }
-declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
-declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
-declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
-type SetterFun = (v: any) => void;
-declare function useMounted(fun: Function): void;
-declare function useUnMounted(fun: Function): void;
-interface Ref<T = any | undefined> {
-    value: T | undefined;
-}
-declare function createRef<T = any | undefined>(value?: T): Ref<T>;
-declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
-declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
-interface Extendfun {
-    (element: Element, vdom: Virtualdom<any>, value: any): void;
-}
-declare function extenddirectives(name: string, fun: Extendfun): void;
-declare const Directives: typeof extenddirectives;
-declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
-declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
-declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
-declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
-declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
-declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
-declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
-declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
-declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
 interface Attributes {
+    $ref?: {
+        value: Element;
+    } | ((value: Element) => void);
+    $html?: string | ReactiveState<any>;
+    $text?: string | ReactiveState<any>;
+    $value?: ReactiveState<any>;
+    $checked?: ReactiveState<any>;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
@@ -154,8 +135,8 @@ interface InputHTMLAttributes extends HTMLAttributes {
     pattern?: string;
     placeholder?: string;
     readonly?: boolean;
-    required?: boolean;
-    size?: number;
+    required?: boolean | string;
+    size?: number | string;
     src?: string;
     step?: number | string;
     type?: string;
@@ -315,7 +296,7 @@ interface SelectHTMLAttributes extends HTMLAttributes {
     form?: string;
     multiple?: boolean;
     name?: string;
-    required?: boolean;
+    required?: boolean | string;
     size?: number;
     value?: string | string[] | number;
 }
@@ -464,6 +445,8 @@ interface WebViewHTMLAttributes extends HTMLAttributes {
     webpreferences?: string;
 }
 interface SVGAttributes extends AriaAttributes {
+    xmlns?: string;
+    class?: string;
     domPropsInnerHTML?: string;
     color?: string;
     height?: number | string;
@@ -478,7 +461,7 @@ interface SVGAttributes extends AriaAttributes {
     type?: string;
     width?: number | string;
     role?: string;
-    tabindex?: number;
+    tabindex?: number | string;
     "accent-height"?: number | string;
     accumulate?: "none" | "sum";
     additive?: "replace" | "sum";
@@ -783,7 +766,7 @@ interface HTMLAttributes extends AriaAttributes {
     lang?: string;
     placeholder?: string;
     spellcheck?: Booleanish;
-    tabindex?: number;
+    tabindex?: number | string;
     title?: string;
     translate?: "yes" | "no";
     radiogroup?: string;
@@ -1079,12 +1062,92 @@ interface Events {
     onAnimationiteration: AnimationEvent;
     onTransitionend: TransitionEvent;
     onTransitionstart: TransitionEvent;
+    oncopy: ClipboardEvent;
+    oncut: ClipboardEvent;
+    onpaste: ClipboardEvent;
+    oncompositionend: CompositionEvent;
+    oncompositionstart: CompositionEvent;
+    oncompositionupdate: CompositionEvent;
+    ondrag: DragEvent;
+    ondragend: DragEvent;
+    ondragenter: DragEvent;
+    ondragexit: DragEvent;
+    ondragleave: DragEvent;
+    ondragover: DragEvent;
+    ondragstart: DragEvent;
+    ondrop: DragEvent;
+    onfocus: FocusEvent;
+    onblur: FocusEvent;
+    onchange: Event;
+    onbeforeinput: Event;
+    oninput: Event;
+    onreset: Event;
+    onsubmit: Event;
+    oninvalid: Event;
+    onload: Event;
+    onerror: Event;
+    onkeydown: KeyboardEvent;
+    onkeypress: KeyboardEvent;
+    onkeyup: KeyboardEvent;
+    onauxclick: MouseEvent;
+    onclick: MouseEvent;
+    oncontextmenu: MouseEvent;
+    ondblclick: MouseEvent;
+    onmousedown: MouseEvent;
+    onmouseenter: MouseEvent;
+    onmouseleave: MouseEvent;
+    onmousemove: MouseEvent;
+    onmouseout: MouseEvent;
+    onmouseover: MouseEvent;
+    onmouseup: MouseEvent;
+    onabort: Event;
+    oncanplay: Event;
+    oncanplaythrough: Event;
+    ondurationchange: Event;
+    onemptied: Event;
+    onencrypted: Event;
+    onended: Event;
+    onloadeddata: Event;
+    onloadedmetadata: Event;
+    onloadstart: Event;
+    onpause: Event;
+    onplay: Event;
+    onplaying: Event;
+    onprogress: Event;
+    onratechange: Event;
+    onseeked: Event;
+    onseeking: Event;
+    onstalled: Event;
+    onsuspend: Event;
+    ontimeupdate: Event;
+    onvolumechange: Event;
+    onwaiting: Event;
+    onselect: Event;
+    onscroll: UIEvent;
+    ontouchcancel: TouchEvent;
+    ontouchend: TouchEvent;
+    ontouchmove: TouchEvent;
+    ontouchstart: TouchEvent;
+    onpointerdown: PointerEvent;
+    onpointermove: PointerEvent;
+    onpointerup: PointerEvent;
+    onpointercancel: PointerEvent;
+    onpointerenter: PointerEvent;
+    onpointerleave: PointerEvent;
+    onpointerover: PointerEvent;
+    onpointerout: PointerEvent;
+    onwheel: WheelEvent;
+    onanimationstart: AnimationEvent;
+    onanimationend: AnimationEvent;
+    onanimationiteration: AnimationEvent;
+    ontransitionend: TransitionEvent;
+    ontransitionstart: TransitionEvent;
 }
 type StringKeyOf<T> = Extract<keyof T, string>;
 type EventHandlers<E> = {
     [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void;
 };
-type ElementAttrs$0<T> = T & EventHandlers<Events>;
+type ElementAttrs$0<T> = T & EventHandlers<Events> & Attributes;
 type NativeElements = {
     [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs$0<IntrinsicElementAttributes[K]>;
 };
@@ -1107,4 +1170,30 @@ declare global {
         }
     }
 }
+declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
+declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
+declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
+type SetterFun = (v: any) => void;
+declare function useMounted(fun: Function): void;
+declare function useUnMounted(fun: Function): void;
+interface Ref<T = any | undefined> {
+    value: T | undefined;
+}
+declare function createRef<T = any | undefined>(value?: T): Ref<T>;
+declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
+declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
+interface Extendfun {
+    (element: Element, vdom: Virtualdom<any>, value: any): void;
+}
+declare function extenddirectives(name: string, fun: Extendfun): void;
+declare const Directives: typeof extenddirectives;
+declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
+declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
+declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
+declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
+declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
+declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
+declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
+declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
+declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
 export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, JSX };

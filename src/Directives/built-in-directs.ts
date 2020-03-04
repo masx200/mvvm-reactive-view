@@ -9,11 +9,15 @@ import extenddirectives from "./extend-directive";
 import { model } from "./model";
 extenddirectives(
     "ref",
-    (ele: Element, _vdom: Virtualdom<any>, ref: object | Function) => {
+    (
+        ele: Element,
+        _vdom: Virtualdom<any>,
+        ref: { value: Element } | ((value: Element) => void)
+    ) => {
         if (isfunction(ref)) {
-            apply(ref as Function, undefined, [ele]);
+            apply(ref, undefined, [ele]);
         } else if (isobject(ref)) {
-            set(ref as object, "value", ele);
+            set(ref, "value", ele);
         } else {
             console.log(_vdom);
             console.error(ref);
@@ -44,7 +48,8 @@ extenddirectives(
         createhtmlandtextdirective(seteletext, "text")(ele, text);
     }
 );
-extenddirectives("value", (element, vdom, value) => {
+extenddirectives("value", (element, vdom, value: ReactiveState<any>) => {
+    console.log(element);
     model(
         ["input", "textarea", "select"],
         "value",
@@ -54,7 +59,8 @@ extenddirectives("value", (element, vdom, value) => {
         vdom
     );
 });
-extenddirectives("checked", (element, vdom, value) => {
+extenddirectives("checked", (element, vdom, value: ReactiveState<any>) => {
+    console.log(element);
     model(["input"], "checked", "checked", ["change"], value, vdom);
     /* 对于name相同的input,radio,单选框,如果一个改变,其他全都要触发change事件 */
     const eventname = "click";

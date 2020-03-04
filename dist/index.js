@@ -1831,10 +1831,12 @@ extenddirectives("text", (ele, _vdom, text) => {
 });
 
 extenddirectives("value", (element, vdom, value) => {
+    console.log(element);
     model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
 });
 
 extenddirectives("checked", (element, vdom, value) => {
+    console.log(element);
     model([ "input" ], "checked", "checked", [ "change" ], value, vdom);
     const eventname = "click";
     const origin = toArray(vdom.onevent[eventname]);
