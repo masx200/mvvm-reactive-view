@@ -6,11 +6,50 @@ import sourcemaps from "rollup-plugin-sourcemaps";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-ts";
 import postcss from "rollup-plugin-postcss";
-const banner = `const globalThis = Function('return this')();
+const banner = `
+const globalThis = Function('return this')();
 const self = globalThis;
 const window = globalThis;
 const global = globalThis;
-const {WeakSet,WeakMap,Date, RegExp, Event, CustomEvent, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, JSON, Map, clearTimeout, setTimeout, parseInt,Number} = globalThis;`;
+const {WeakSet,WeakMap,Date, RegExp, Event, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, JSON, Map, clearTimeout, setTimeout, parseInt} = globalThis;
+`;
+const babeljsxplugin = babel({
+    sourceMaps: true,
+    inputSourceMap: true,
+    babelHelpers: "bundled",
+    plugins: [
+        [
+            "@babel/plugin-transform-react-jsx",
+            {
+                pragma: "h",
+                pragmaFrag: "''"
+            }
+        ],
+        [
+            "babel-plugin-htm",
+            {
+                tag: "html",
+                pragma: "h"
+            }
+        ],
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-optional-catch-binding",
+        "@babel/plugin-proposal-nullish-coalescing-operator"
+    ],
+    presets: [
+        [
+            "@babel/preset-env",
+            {
+                targets: [
+                    "last 1 edge version",
+                    "last 1 safari version",
+                    "last 1 chrome version",
+                    "last 1 firefox version"
+                ]
+            }
+        ]
+    ]
+});
 const beautifyterserplugin = terser({
     sourcemap: true,
     compress: false,
@@ -22,6 +61,8 @@ const beautifyterserplugin = terser({
     }
 });
 const mybabelplugin = babel({
+    sourceMaps: true,
+    inputSourceMap: true,
     babelHelpers: "bundled",
     presets: [
         [
@@ -145,42 +186,9 @@ export default [
             }
         ],
         plugins: [
-            sourcemaps(),
-            babel({
-                babelHelpers: "bundled",
-                plugins: [
-                    [
-                        "@babel/plugin-transform-react-jsx",
-                        {
-                            pragma: "h",
-                            pragmaFrag: "''"
-                        }
-                    ],
-                    [
-                        "babel-plugin-htm",
-                        {
-                            tag: "html",
-                            pragma: "h"
-                        }
-                    ],
-                    "@babel/plugin-proposal-class-properties",
-                    "@babel/plugin-proposal-optional-catch-binding",
-                    "@babel/plugin-proposal-nullish-coalescing-operator"
-                ],
-                presets: [
-                    [
-                        "@babel/preset-env",
-                        {
-                            targets: [
-                                "last 1 edge version",
-                                "last 1 safari version",
-                                "last 1 chrome version",
-                                "last 1 firefox version"
-                            ]
-                        }
-                    ]
-                ]
-            }),
+            babeljsxplugin,
+            // sourcemaps(),
+
             json(),
             resolve(),
             commonjs(),
