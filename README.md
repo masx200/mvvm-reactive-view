@@ -846,7 +846,7 @@ html`
 
 ### 指令`ref`用来获取元素的引用,值可以是`{ value?: Element } | ((value: Element) => void)`
 
-`*ref=${ref}`
+`<div *ref=${ref}/>`
 
 <hr></hr>
 
@@ -949,6 +949,7 @@ let vdom = (
 
 ```js
 Directives("myfocus", (value, element, vdom, onmounted, onunmounted) => {
+    console.log("created");
     console.log(value, element, vdom);
     onmounted(() => {
         console.log("mounted");
