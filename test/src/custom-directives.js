@@ -41,3 +41,7 @@ let vdom = (
     </>
 );
 document.body.appendChild(MountElement(vdom, container));
+const updatedeventname = Symbol("updated").toString();
+document.body.addEventListener(updatedeventname, () => {
+    console.log("body subtree updated");
+});
