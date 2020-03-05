@@ -49,12 +49,12 @@ export const localfor = (
         } else if (newlength > oldlength) {
             const childs = generatechildrenvdoms(list, fun);
 
-            const nodes = render(childs);
+            const nodes = render(childs.slice(minlength));
 
             nodes.forEach((n, i) => {
-                if (i > minlength - 1) {
+                
                     ele.appendChild(n);
-                }
+                
             });
         }
     };
