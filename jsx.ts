@@ -2,7 +2,10 @@
 import * as CSS from "csstype";
 import Virtualdom from "./src/CreateElement/VirtualElement";
 import ReactiveState from "./src/Reactivity/reactivestate";
-
+interface attrfor<T> extends Array<any> {
+    0: ReactiveState<Array<T>>;
+    1: (v: T, i: number) => Virtualdom<any>;
+}
 interface Attributes {
     $ref?: { value?: Element } | ((value: Element) => void);
     $html?: string | ReactiveState<string>;
@@ -14,6 +17,7 @@ interface Attributes {
     $unmounted?: () => void;
     $updated?: () => void;
     $created?: () => void;
+    $for?: attrfor<any>;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
