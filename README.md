@@ -687,6 +687,29 @@ MountElement(<ul>{listItems}</ul>, document.getElementById("root"));
 
 ## 2.可变的列表，有响应式
 
+使用指令`for`,实现响应式列表渲染
+
+```jsx
+const liststate = createState(
+    Array(10)
+        .fill(undefined)
+
+        .map((v, i) => i)
+);
+let vdom = (
+    <div
+        $for={[
+            liststate,
+            (value, index) => (
+                <div>
+                    <p>{["item:", "value:", value, ",index:", index]} </p>
+                </div>
+            )
+        ]}
+    />
+);
+```
+
 <!--
 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
 
@@ -985,7 +1008,18 @@ let vdom = (
 );
 ```
 
-# 扩展自定义指令
+### 指令 `for`用于响应式列表渲染,
+
+其类型为
+
+```ts
+interface attrfor<T> extends Array<any> {
+    0: ReactiveState<Array<T>>;
+    1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
+}
+```
+
+## 扩展自定义指令
 
 ```js
 Directives(
