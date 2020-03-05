@@ -1,10 +1,10 @@
-import Virtualdom from "src/CreateElement/VirtualElement";
-import { isReactiveState } from "src/Reactivity/reactivestate";
-import { isfunction, isarray } from "src/UtilTools/util";
+import Virtualdom, { isVirtualdom } from "src/CreateElement/VirtualElement";
 import { computed } from "src/Reactivity/computed";
+import ReactiveState, { isReactiveState } from "src/Reactivity/reactivestate";
 import { watch } from "src/Reactivity/watch";
 import render from "src/RenderVirtual/render-vdom-to-real";
 import { removeNode } from "src/UtilTools/dom";
+import { isarray, isfunction } from "src/UtilTools/util";
 
 /* interface attrfor<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
@@ -26,7 +26,11 @@ export const localfor = (
         throw TypeError();
     }
 
-    vdom.children.length = 0;
+    // vdom.children.length = 0;
+    // const childs = generatechildrenvdoms(list, fun);
+    // childs.forEach((vd) => {
+    //     vdom.children.push(vd);
+    // });
     const changecallback = () => {
         const data = list.valueOf();
         if (!isarray(data)) {
@@ -35,19 +39,15 @@ export const localfor = (
         const oldlength = ele.childNodes.length;
         const newlength = data.length;
         const minlength = Math.min(oldlength, newlength);
+
         if (newlength < oldlength) {
             ele.childNodes.forEach((n, i) => {
                 if (i > minlength - 1) {
                     removeNode(n);
                 }
             });
-        } else {
-            const childs = new Array(data.length).map((v, index) => {
-                return Reflect.apply(fun, undefined, [
-                    computed(list, (arr) => arr[index]),
-                    index
-                ]);
-            });
+        } else if (newlength > oldlength) {
+            const childs = generatechildrenvdoms(list, fun);
 
             const nodes = render(childs);
 
@@ -66,3 +66,21 @@ export const localfor = (
         onunmount(cancel);
     });
 };
+function generatechildrenvdoms(
+    liststate: ReactiveState<Array<any>>,
+    fun: (v: ReactiveState<any>, i: number) => Virtualdom<any>
+) {
+    const data = liststate.valueOf();
+
+    const childs = new Array(data.length).fill(undefined).map((v, index) => {
+        const vdom = Reflect.apply(fun, undefined, [
+            computed(liststate, (arr) => arr[index]),
+            index
+        ]);
+        if (!isVirtualdom(vdom)) {
+            throw new TypeError();
+        }
+        return vdom;
+    });
+    return childs;
+}

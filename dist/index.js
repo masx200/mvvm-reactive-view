@@ -740,25 +740,7 @@ const option = {
 
 mo.observe(rootnode, option);
 
-function addmountedlistner(ele, call) {
-    ele.addEventListener(connectedeventname, () => {
-        call();
-    });
-}
-
-function addunmountedlistner(ele, call) {
-    ele.addEventListener(disconnectedeventname, () => {
-        call();
-    });
-}
-
 const updatedeventname = Symbol("updated").toString();
-
-function addupdatedlistner(ele, call) {
-    ele.addEventListener(updatedeventname, () => {
-        call();
-    });
-}
 
 new MutationObserver(mutations => {
     mutations.forEach((function(record) {
@@ -781,16 +763,26 @@ function dispatchupdated(e) {
 
 const createdeventname = Symbol("created").toString();
 
+function dispatchcreated(e) {
+    e.dispatchEvent(new Event(createdeventname));
+}
+
+function addmountedlistner(ele, call) {
+    ele.addEventListener(connectedeventname, call);
+}
+
 function addcreatedlistner(ele, call) {
-    ele.addEventListener(createdeventname, () => {
-        call();
-    }, {
+    ele.addEventListener(createdeventname, call, {
         once: true
     });
 }
 
-function dispatchcreated(e) {
-    e.dispatchEvent(new Event(createdeventname));
+function addupdatedlistner(ele, call) {
+    ele.addEventListener(updatedeventname, call);
+}
+
+function addunmountedlistner(ele, call) {
+    ele.addEventListener(disconnectedeventname, call);
 }
 
 function merge_entries(a) {
@@ -2159,7 +2151,6 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     if (!isReactiveState(list) || !isfunction(fun)) {
         throw TypeError();
     }
-    vdom.children.length = 0;
     const changecallback = () => {
         const data = list.valueOf();
         if (!isarray(data)) {
@@ -2174,8 +2165,8 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
                     removeNode(n);
                 }
             });
-        } else {
-            const childs = new Array(data.length).map((v, index) => Reflect.apply(fun, undefined, [ computed(list, arr => arr[index]), index ]));
+        } else if (newlength > oldlength) {
+            const childs = generatechildrenvdoms(list, fun);
             const nodes = render(childs);
             nodes.forEach((n, i) => {
                 if (i > minlength - 1) {
@@ -2186,10 +2177,25 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     };
     console.log(value, ele, vdom, onmount, onunmount, onupdated);
     onmount(changecallback);
-    watch(list, changecallback);
+    onmount(() => {
+        const cancel = watch(list, changecallback);
+        onunmount(cancel);
+    });
 };
 
-function createhtmlandtextdirective(seteletext, errorname, ele, text) {
+function generatechildrenvdoms(liststate, fun) {
+    const data = liststate.valueOf();
+    const childs = new Array(data.length).fill(undefined).map((v, index) => {
+        const vdom = Reflect.apply(fun, undefined, [ computed(liststate, arr => arr[index]), index ]);
+        if (!isVirtualdom(vdom)) {
+            throw new TypeError;
+        }
+        return vdom;
+    });
+    return childs;
+}
+
+function createhtmlandtextdirective(seteletext, errorname, ele, text, onmount, onunmount) {
     {
         const element = ele;
         if (isstring(text)) {
@@ -2197,11 +2203,14 @@ function createhtmlandtextdirective(seteletext, errorname, ele, text) {
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
-            watch(text, () => {
-                const state = text;
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
+            onmount(() => {
+                const cancel = watch(text, () => {
+                    const state = text;
+                    if (isconnected(element)) {
+                        seteletext(ele, String(state));
+                    }
+                });
+                onunmount(cancel);
             });
             requestAnimationFrame(() => {
                 seteletext(ele, String(text));
@@ -2214,11 +2223,10 @@ function createhtmlandtextdirective(seteletext, errorname, ele, text) {
     }
 }
 
-const Localhtml = (html, ele, vdom) => {
+const Localhtml = (html, ele, vdom, onmount, onunmount) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(vdom);
-        vdom.children.length = 0;
-        createhtmlandtextdirective(setelehtml, "html", ele, html);
+        createhtmlandtextdirective(setelehtml, "html", ele, html, onmount, onunmount);
     } else {
         throw new TypeError;
     }
@@ -2246,11 +2254,10 @@ const Localref = (ref, ele, _vdom) => {
     }
 };
 
-const Localtext = (text, ele, vdom) => {
+const Localtext = (text, ele, vdom, onmount, onunmount) => {
     if (isstring(text) || isReactiveState(text)) {
         console.log(vdom);
-        vdom.children.length = 0;
-        createhtmlandtextdirective(seteletext, "text", ele, text);
+        createhtmlandtextdirective(seteletext, "text", ele, text, onmount, onunmount);
     } else {
         throw new TypeError;
     }

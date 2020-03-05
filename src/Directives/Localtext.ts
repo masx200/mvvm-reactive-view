@@ -12,7 +12,7 @@ export const Localtext = (
 ) => {
     if (isstring(text) || isReactiveState(text)) {
         console.log(vdom);
-        vdom.children.length = 0;
+        // vdom.children.length = 0;
 
         createhtmlandtextdirective(
             seteletext,

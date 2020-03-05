@@ -54,6 +54,22 @@ const testlistvdom = (
                 liststate.unshift(Math.random());
             }}
         />
+        <div
+            $for={[
+                liststate,
+                (value, index) => (
+                    <div
+                        $ref={(ele) => {
+                            // @ts-ignore
+                            refarray.length = liststate.length;
+                            refarray[index] = ele;
+                        }}
+                    >
+                        <p>{["item:", "value:", value, ",index:", index]} </p>
+                    </div>
+                )
+            ]}
+        />
         {/* {ListMap(liststate, (value, index) => (
             <div
                 $ref={ele => {
@@ -67,6 +83,7 @@ const testlistvdom = (
         ))} */}
     </div>
 );
+console.log("testlistvdom", testlistvdom);
 const weathercondition = createState(true);
 const vdom = [
     Condition(weathercondition, testlistvdom),
