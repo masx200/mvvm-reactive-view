@@ -60,9 +60,17 @@ function handleprops(
             vdom.props
         );
 
-        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+addmountedlistner(element,()=>{
+
+addunmountedlistner(element,()=>{})
+
+
+})
+
+
+    const cacelarr=    Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
-            watch(primitivestate, () => {
+           return watch(primitivestate, () => {
                 const state = primitivestate;
                 if (isconnected(element)) {
                     attribute1[key] = state.valueOf();
