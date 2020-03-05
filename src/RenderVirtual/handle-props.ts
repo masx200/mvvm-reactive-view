@@ -11,22 +11,8 @@ import { bindstatesymbol } from "./render-vdom-to-real";
 import { addmountedlistner } from "src/others/addmountedlistner";
 import { addupdatedlistner } from "src/others/addupdatedlistner";
 import { addunmountedlistner } from "src/others/addunmountedlistner";
-
-export default handleprops;
-function handleprops(
-    element: HTMLElement | Element | SVGSVGElement | SVGElement,
-    vdom: Virtualdom<any>
-) {
-    /* if (!vdom.element) {
-    vdom.element = element;
-  }
- */
-    vdom.element.push(element);
-    /*  if (vdom.element.length > 1) {
-    console.log(vdom);
-  } */
-    ((element, vdom) => {
-        Object.entries(vdom.directives).forEach(([name, value]) => {
+const applydirects=function (element:Element,vdom: Virtualdom<any>){
+Object.entries(vdom.directives).forEach(([name, value]) => {
             const direfun = directives[name];
             if (isfunction(direfun)) {
                 direfun(
@@ -46,9 +32,26 @@ function handleprops(
             } else {
                 console.error(vdom.directives);
                 console.error("invalid directives " + name);
-                throw new Error();
+                throw new TypeError();
             }
         });
+}
+export{applydirects}
+export default handleprops;
+function handleprops(
+    element: HTMLElement | Element | SVGSVGElement | SVGElement,
+    vdom: Virtualdom<any>
+) {
+    /* if (!vdom.element) {
+    vdom.element = element;
+  }
+ */
+    vdom.element.push(element);
+    /*  if (vdom.element.length > 1) {
+    console.log(vdom);
+  } */
+   // ((element, vdom) => {
+        
 
         const attribute1: Record<string, any> = createeleattr(element);
         Object.assign(
@@ -78,7 +81,7 @@ function handleprops(
         Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
-    })(element, vdom);
+  //  })(element, vdom);
     /*  if (!element[bindstatesymbol]) {
       element[bindstatesymbol] = new Set();
     }
