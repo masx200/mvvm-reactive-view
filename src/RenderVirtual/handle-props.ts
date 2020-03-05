@@ -61,14 +61,7 @@ function handleprops(
         );
 
 addmountedlistner(element,()=>{
-
-addunmountedlistner(element,()=>{})
-
-
-})
-
-
-    const cacelarr=    Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
+const cacelarr=    Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
            return watch(primitivestate, () => {
                 const state = primitivestate;
@@ -76,16 +69,20 @@ addunmountedlistner(element,()=>{})
                     attribute1[key] = state.valueOf();
                 }
             });
-            /*     primitivestate[subscribesymbol]();
-        requestAnimationFrame(() => {
-          primitivestate[addallistenerssymbol]();
-        }); */
+           
         });
+addunmountedlistner(element,()=>{
+cacelarr.forEach(f=>{f()})
 
-        /*  if (!element[eventlistenerssymbol]) {
-        element[eventlistenerssymbol] = [];
-      }
-  */
+})
+
+
+})
+
+
+    
+
+       
         Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
             onevent(element, event, callbacks);
         });
