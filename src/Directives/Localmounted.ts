@@ -10,7 +10,6 @@ export const Localmounted = (
     console.log([call, ele, vdom, onmount, onunmount]);
     if (typeof call === "function") {
         apply(onmount, undefined, [call]);
-        // onmount(call);
     } else {
         throw new TypeError();
     }

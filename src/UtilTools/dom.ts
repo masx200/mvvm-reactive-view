@@ -1,7 +1,3 @@
-// const document = window.document;
-//import { seteletext, setelehtml } from "./directives";
-//export { seteletext, setelehtml };
-
 export function seteletext(e: Element | Node, v: string) {
     e.textContent = v;
 }
@@ -36,7 +32,6 @@ export const svgnamespace = "http://www.w3.org/2000/svg";
 export function changetext(textnode: Text, value: string) {
     textnode.nodeValue = String(value);
 }
-// export default document;
 
 export const mathnamespace = "http://www.w3.org/1998/Math/MathML";
 
@@ -50,7 +45,6 @@ export function removeElement(element: Element) {
     element.remove();
 }
 export function removeNode(node: Element | Node) {
-    //   node.remove();
     let parentNode = node.parentNode;
     if (parentNode) {
         parentNode.removeChild(node);

@@ -6,7 +6,7 @@ import { toArray } from "../UtilTools/toArray";
 import { model } from "./model";
 export const Localchecked = (
     value: unknown,
-    //ReactiveState<any>,
+
     element: Element,
     vdom: Virtualdom<any>
 ): void => {

@@ -50,8 +50,7 @@ export const innerstatesymbol = Symbol("innerstate");
 export const attributessymbol = Symbol("attributes");
 const elementsymbol = Symbol("innerelement");
 const inner_vdom_symbol = Symbol("innervdom");
-// const mountedsymbol = Symbol("mounted");
-// const unmountedsymbol = Symbol("unmounted");
+
 export interface Htmlelementconstructor {
     new (): HTMLElement;
     prototype: HTMLElement;
@@ -213,8 +212,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             static [componentsymbol] = componentsymbol;
             static css = isstring(css) && css ? css : undefined;
             [readysymbol] = false;
-            // [mountedsymbol]: Array<Function>;
-            // [unmountedsymbol]: Array<Function>;
+
             static defaultProps = isobject(defaultProps)
                 ? JSON.parse(JSON.stringify(defaultProps))
                 : undefined;
@@ -279,18 +277,11 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             connectedCallback() {
                 setimmediate(() => {
                     connectedCallback(this);
-
-                    // this[mountedsymbol].forEach(f => {
-                    //     setimmediate(f);
-                    // });
                 });
             }
             disconnectedCallback() {
                 setimmediate(() => {
                     disconnectedCallback(this);
-                    // this[unmountedsymbol].forEach(f => {
-                    //     setimmediate(f);
-                    // });
                 });
             }
             [attributeChangedCallback](name: string) {

@@ -10,7 +10,6 @@ export const Localcreated = (
 ): void => {
     console.log([call, ele, vdom, onmount, onunmount, onupdated]);
     if (typeof call === "function") {
-        // apply(onupdated, undefined, [call]);
         call();
     } else {
         throw new TypeError();

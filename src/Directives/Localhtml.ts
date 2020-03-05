@@ -4,10 +4,9 @@ import { setelehtml } from "../UtilTools/dom";
 import { isstring } from "../UtilTools/util";
 import { createhtmlandtextdirective } from "./create-html-and-text-directive";
 export const Localhtml = (
-    html: unknown, //string | ReactiveState<any>,
+    html: unknown,
     ele: Element,
     _vdom: Virtualdom<any>
-    // onmounted
 ) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(_vdom);

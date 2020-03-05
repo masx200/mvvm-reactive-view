@@ -2,7 +2,7 @@ import Virtualdom from "../CreateElement/VirtualElement";
 import { apply, set } from "../UtilTools/reflect";
 import { isfunction, isobject } from "../UtilTools/util";
 export const Localref = (
-    ref: unknown, //{ value: Element } | ((value: Element) => void),
+    ref: unknown,
     ele: Element,
     _vdom: Virtualdom<any>
 ) => {

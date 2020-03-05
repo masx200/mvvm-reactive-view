@@ -45,7 +45,7 @@ interface InputHTMLAttributes extends HTMLAttributes {
     alt?: string;
     autocomplete?: string;
     autofocus?: boolean;
-    capture?: boolean; // https://www.w3.org/tr/html-media-capture/#the-capture-attribute
+    capture?: boolean;
     checked?: boolean;
     crossorigin?: string;
     disabled?: boolean;
@@ -396,11 +396,9 @@ interface SVGAttributes extends AriaAttributes {
     type?: string;
     width?: number | string;
 
-    // Other HTML properties supported by SVG elements in browsers
     role?: string;
     tabindex?: number | string;
 
-    // SVG Specific attributes
     "accent-height"?: number | string;
     accumulate?: "none" | "sum";
     additive?: "replace" | "sum";
@@ -876,7 +874,6 @@ interface HTMLAttributes extends AriaAttributes {
     class?: classprop;
     style?: styleprop;
 
-    // Standard HTML Attributes
     accesskey?: string;
     contenteditable?: Booleanish | "inherit";
     contextmenu?: string;
@@ -891,13 +888,10 @@ interface HTMLAttributes extends AriaAttributes {
     title?: string;
     translate?: "yes" | "no";
 
-    // Unknown
-    radiogroup?: string; // <command>, <menuitem>
+    radiogroup?: string;
 
-    // WAI-ARIA
     role?: string;
 
-    // RDFa Attributes
     about?: string;
     datatype?: string;
     inlist?: any;
@@ -907,7 +901,6 @@ interface HTMLAttributes extends AriaAttributes {
     typeof?: string;
     vocab?: string;
 
-    // Non-standard Attributes
     autocapitalize?: string;
     autocorrect?: string;
     autocave?: string;
@@ -921,10 +914,9 @@ interface HTMLAttributes extends AriaAttributes {
     security?: string;
     unselectable?: "on" | "off";
 
-    // Living Standard
     /**
      * Hints at the type of data that might be entered by the user while editing the element or its contents
-     * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
+     * @see https:
      */
     inputmode?:
         | "none"
@@ -937,7 +929,7 @@ interface HTMLAttributes extends AriaAttributes {
         | "search";
     /**
      * Specify that a standard HTML element should behave like a defined custom built-in element
-     * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
+     * @see https:
      */
     is?: string;
 }
@@ -1070,7 +1062,6 @@ interface IntrinsicElementAttributes {
     wbr: HTMLAttributes;
     webview: WebViewHTMLAttributes;
 
-    // SVG
     svg: SVGAttributes;
 
     animate: SVGAttributes;
@@ -1133,17 +1124,14 @@ interface IntrinsicElementAttributes {
 }
 
 export interface Events {
-    // clipboard events
     onCopy: ClipboardEvent;
     onCut: ClipboardEvent;
     onPaste: ClipboardEvent;
 
-    // composition events
     onCompositionend: CompositionEvent;
     onCompositionstart: CompositionEvent;
     onCompositionupdate: CompositionEvent;
 
-    // drag drop events
     onDrag: DragEvent;
     onDragend: DragEvent;
     onDragenter: DragEvent;
@@ -1153,11 +1141,9 @@ export interface Events {
     onDragstart: DragEvent;
     onDrop: DragEvent;
 
-    // focus events
     onFocus: FocusEvent;
     onBlur: FocusEvent;
 
-    // form events
     onChange: Event;
     onBeforeinput: Event;
     onInput: Event;
@@ -1165,16 +1151,13 @@ export interface Events {
     onSubmit: Event;
     onInvalid: Event;
 
-    // image events
     onLoad: Event;
     onError: Event;
 
-    // keyboard events
     onKeydown: KeyboardEvent;
     onKeypress: KeyboardEvent;
     onKeyup: KeyboardEvent;
 
-    // mouse events
     onAuxclick: MouseEvent;
     onClick: MouseEvent;
     onContextmenu: MouseEvent;
@@ -1187,7 +1170,6 @@ export interface Events {
     onMouseover: MouseEvent;
     onMouseup: MouseEvent;
 
-    // media events
     onAbort: Event;
     onCanplay: Event;
     onCanplaythrough: Event;
@@ -1211,19 +1193,15 @@ export interface Events {
     onVolumechange: Event;
     onWaiting: Event;
 
-    // selection events
     onSelect: Event;
 
-    // UI events
     onScroll: UIEvent;
 
-    // touch events
     onTouchcancel: TouchEvent;
     onTouchend: TouchEvent;
     onTouchmove: TouchEvent;
     onTouchstart: TouchEvent;
 
-    // pointer events
     onPointerdown: PointerEvent;
     onPointermove: PointerEvent;
     onPointerup: PointerEvent;
@@ -1233,15 +1211,12 @@ export interface Events {
     onPointerover: PointerEvent;
     onPointerout: PointerEvent;
 
-    // wheel events
     onWheel: WheelEvent;
 
-    // animation events
     onAnimationstart: AnimationEvent;
     onAnimationend: AnimationEvent;
     onAnimationiteration: AnimationEvent;
 
-    // transition events
     onTransitionend: TransitionEvent;
     onTransitionstart: TransitionEvent;
 
@@ -1249,12 +1224,10 @@ export interface Events {
     oncut: ClipboardEvent;
     onpaste: ClipboardEvent;
 
-    // composition events
     oncompositionend: CompositionEvent;
     oncompositionstart: CompositionEvent;
     oncompositionupdate: CompositionEvent;
 
-    // drag drop events
     ondrag: DragEvent;
     ondragend: DragEvent;
     ondragenter: DragEvent;
@@ -1264,11 +1237,9 @@ export interface Events {
     ondragstart: DragEvent;
     ondrop: DragEvent;
 
-    // focus events
     onfocus: FocusEvent;
     onblur: FocusEvent;
 
-    // form events
     onchange: Event;
     onbeforeinput: Event;
     oninput: Event;
@@ -1276,16 +1247,13 @@ export interface Events {
     onsubmit: Event;
     oninvalid: Event;
 
-    // image events
     onload: Event;
     onerror: Event;
 
-    // keyboard events
     onkeydown: KeyboardEvent;
     onkeypress: KeyboardEvent;
     onkeyup: KeyboardEvent;
 
-    // mouse events
     onauxclick: MouseEvent;
     onclick: MouseEvent;
     oncontextmenu: MouseEvent;
@@ -1298,7 +1266,6 @@ export interface Events {
     onmouseover: MouseEvent;
     onmouseup: MouseEvent;
 
-    // media events
     onabort: Event;
     oncanplay: Event;
     oncanplaythrough: Event;
@@ -1322,19 +1289,15 @@ export interface Events {
     onvolumechange: Event;
     onwaiting: Event;
 
-    // selection events
     onselect: Event;
 
-    // UI events
     onscroll: UIEvent;
 
-    // touch events
     ontouchcancel: TouchEvent;
     ontouchend: TouchEvent;
     ontouchmove: TouchEvent;
     ontouchstart: TouchEvent;
 
-    // pointer events
     onpointerdown: PointerEvent;
     onpointermove: PointerEvent;
     onpointerup: PointerEvent;
@@ -1344,15 +1307,12 @@ export interface Events {
     onpointerover: PointerEvent;
     onpointerout: PointerEvent;
 
-    // wheel events
     onwheel: WheelEvent;
 
-    // animation events
     onanimationstart: AnimationEvent;
     onanimationend: AnimationEvent;
     onanimationiteration: AnimationEvent;
 
-    // transition events
     ontransitionend: TransitionEvent;
     ontransitionstart: TransitionEvent;
 }

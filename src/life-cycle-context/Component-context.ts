@@ -1,5 +1,3 @@
-// export let MountedSet: Set<() => void> = new Set();
-// export let UnMountedSet: Set<() => void> = new Set();
 export let StateSet: Set<ReactiveState<any>> = new Set();
 export let watchrecord: [ReactiveState<any>, Function][] = [];
 /* 记录组件中使用的watch的state和callback,
