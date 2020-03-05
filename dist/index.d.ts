@@ -78,6 +78,10 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly onevent: Record<string, Array<EventListener>>;
     readonly bindattr: Record<string, ReactiveState<any>>;
 }
+interface attrfor<T> extends Array<any> {
+    0: ReactiveState<Array<T>>;
+    1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
+}
 interface Attributes {
     $ref?: {
         value?: Element;
@@ -90,6 +94,7 @@ interface Attributes {
     $unmounted?: () => void;
     $updated?: () => void;
     $created?: () => void;
+    $for?: attrfor<any>;
 }
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;

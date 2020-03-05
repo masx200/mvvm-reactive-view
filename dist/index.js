@@ -784,6 +784,8 @@ const createdeventname = Symbol("created").toString();
 function addcreatedlistner(ele, call) {
     ele.addEventListener(createdeventname, () => {
         call();
+    }, {
+        once: true
     });
 }
 
@@ -1990,31 +1992,6 @@ function createRef(value) {
     };
 }
 
-function createhtmlandtextdirective(seteletext, errorname, ele, text) {
-    {
-        const element = ele;
-        if (isstring(text)) {
-            requestAnimationFrame(() => {
-                seteletext(ele, text);
-            });
-        } else if (isReactiveState(text)) {
-            watch(text, () => {
-                const state = text;
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
-            });
-            requestAnimationFrame(() => {
-                seteletext(ele, String(text));
-            });
-        } else {
-            console.error(text);
-            console.error("invalid " + errorname);
-            throw TypeError();
-        }
-    }
-}
-
 function extenddirectives(name, fun) {
     if (!isstring(name)) {
         console.error(name);
@@ -2055,47 +2032,7 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
     }
 }
 
-extenddirectives("ref", (ref, ele, _vdom) => {
-    if (isfunction(ref)) {
-        apply(ref, undefined, [ ele ]);
-    } else if (isobject(ref)) {
-        set(ref, "value", ele);
-    } else {
-        console.log(_vdom);
-        console.error(ref);
-        console.error("invalid ref");
-        throw TypeError();
-    }
-});
-
-extenddirectives("html", (html, ele, _vdom) => {
-    if (isstring(html) || isReactiveState(html)) {
-        console.log(_vdom);
-        createhtmlandtextdirective(setelehtml, "html", ele, html);
-    } else {
-        throw new TypeError;
-    }
-});
-
-extenddirectives("text", (text, ele, _vdom) => {
-    if (isstring(text) || isReactiveState(text)) {
-        console.log(_vdom);
-        createhtmlandtextdirective(seteletext, "text", ele, text);
-    } else {
-        throw new TypeError;
-    }
-});
-
-extenddirectives("value", (value, element, vdom) => {
-    if (isReactiveState(value)) {
-        console.log(element);
-        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
-    } else {
-        throw new TypeError;
-    }
-});
-
-extenddirectives("checked", (value, element, vdom) => {
+const Localchecked = (value, element, vdom) => {
     if (!isReactiveState(value)) {
         throw new TypeError;
     }
@@ -2114,45 +2051,134 @@ extenddirectives("checked", (value, element, vdom) => {
         }
     };
     set(vdom.onevent, eventname, toArray([ ...eventsarray, dispatchallsamename ]).filter(Boolean));
-});
+};
 
-const Directives = extenddirectives;
-
-Directives("mounted", (call, ele, vdom, onmount, onunmount) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onmount, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-});
-
-Directives("unmounted", (call, ele, vdom, onmount, onunmount) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onunmount, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-});
-
-Directives("updated", (call, ele, vdom, onmount, onunmount, onupdated) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onupdated, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-});
-
-Directives("created", (call, ele, vdom, onmount, onunmount, onupdated) => {
+const Localcreated = (call, ele, vdom, onmount, onunmount, onupdated) => {
     console.log([ call, ele, vdom, onmount, onunmount, onupdated ]);
     if (typeof call === "function") {
         call();
     } else {
         throw new TypeError;
     }
-});
+};
+
+const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log(value, ele, vdom, onmount, onunmount, onupdated);
+};
+
+function createhtmlandtextdirective(seteletext, errorname, ele, text) {
+    {
+        const element = ele;
+        if (isstring(text)) {
+            requestAnimationFrame(() => {
+                seteletext(ele, text);
+            });
+        } else if (isReactiveState(text)) {
+            watch(text, () => {
+                const state = text;
+                if (isconnected(element)) {
+                    seteletext(ele, String(state));
+                }
+            });
+            requestAnimationFrame(() => {
+                seteletext(ele, String(text));
+            });
+        } else {
+            console.error(text);
+            console.error("invalid " + errorname);
+            throw TypeError();
+        }
+    }
+}
+
+const Localhtml = (html, ele, _vdom) => {
+    if (isstring(html) || isReactiveState(html)) {
+        console.log(_vdom);
+        createhtmlandtextdirective(setelehtml, "html", ele, html);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localmounted = (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localref = (ref, ele, _vdom) => {
+    if (isfunction(ref)) {
+        apply(ref, undefined, [ ele ]);
+    } else if (isobject(ref)) {
+        set(ref, "value", ele);
+    } else {
+        console.log(_vdom);
+        console.error(ref);
+        console.error("invalid ref");
+        throw TypeError();
+    }
+};
+
+const Localtext = (text, ele, _vdom) => {
+    if (isstring(text) || isReactiveState(text)) {
+        console.log(_vdom);
+        createhtmlandtextdirective(seteletext, "text", ele, text);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localunmounted = (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onunmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localupdated = (call, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onupdated, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localvalue = (value, element, vdom) => {
+    if (isReactiveState(value)) {
+        console.log(element);
+        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+    } else {
+        throw new TypeError;
+    }
+};
+
+extenddirectives("ref", Localref);
+
+extenddirectives("html", Localhtml);
+
+extenddirectives("text", Localtext);
+
+extenddirectives("value", Localvalue);
+
+extenddirectives("checked", Localchecked);
+
+const Directives = extenddirectives;
+
+Directives("mounted", Localmounted);
+
+Directives("unmounted", Localunmounted);
+
+Directives("updated", Localupdated);
+
+Directives("created", Localcreated);
+
+extenddirectives("for", localfor);
 
 function useCreated(fun) {
     createdctx.add(fun);
