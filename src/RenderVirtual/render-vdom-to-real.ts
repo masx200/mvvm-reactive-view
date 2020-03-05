@@ -35,11 +35,12 @@ import { dispatchcreated } from "src/others/addlistener-mount-unmount-updated";
 
 export const bindstatesymbol = Symbol("bindstate");
 
+/* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
 function throwinvalideletype(type?: any): never {
     console.error(type);
     console.error("invalid element type!");
     console.error(invalid_Virtualdom);
-    throw TypeError();
+    throw TypeError(/*"invalid element type!"*/);
 }
 export default function render(
     vdom: Virtualdom<any> | string,
@@ -87,7 +88,7 @@ export default function render(
         const textnode = createtextnode(vdom);
 
         return textnode;
-    } else if (isReactiveState(vdom)) {
+    } else if (isReactiveState(vdom) /*instanceof ReactiveState*/) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
 
@@ -97,7 +98,7 @@ export default function render(
       console.warn(error);
     } */
 
-        watch(reactive, () => {
+        watch(reactive, (/* state: ReactiveState<any> */) => {
             const state = reactive;
             if (isconnected(element)) {
                 changetext(textnode, String(state));
@@ -124,11 +125,15 @@ export default function render(
             | undefined = undefined;
         if (typeof type === "string") {
             if (type === "script") {
+                /* 禁止加载脚本 */
+                /* 创建一个不能运行代码的script */
                 return createElementNS("never", "script");
                 // return createDocumentFragment();
             } else if (type === "svg") {
+                /* 没想到svg的创建方式这么特别?否则显示不出svg */
                 element = createsvgelement();
             } else if (type === "math") {
+                /* 没想到svg的创建方式这么特别?否则显示不出svg */
                 element = createmathelement();
             } else if ("" === type) {
                 const fragmentnode = createDocumentFragment();
@@ -153,6 +158,7 @@ export default function render(
         myAge: 18
   }*/
             if (isobject(type["defaultProps"])) {
+                /*  改成了readonly属性 props*/
                 Object.assign(
                     vdom.props,
                     JSON.parse(
@@ -181,33 +187,33 @@ export default function render(
         } else {
             throwinvalideletype(vdom);
         }
-
+        /* 元素已经创建出来了 */
         dispatchcreated(element);
         /*  if (element) {
       const attribute1: { [key: string]: any } = createeleattr(element);
       Object.assign(
         attribute1,
 
-        
+        /* 把属性为false的先不设置 */
 
-        
-        
+        /* 自定义组件不添加children,而是从构造函数传入 */
+        /* web components也可以设置 childnodes,比如说slot */
         /* https:
-    
+    /*  */
 
         if (
             type &&
             (isfunction(type) || isstring(type))
 
-            
+            /* typeof type !== "function" */
         ) {
-            
+            /* 如果自己创造的组件就不加children, */
             if (!iscomponent(type)) {
                 if (element) {
                     mount(
                         vdom.children.map(e => {
                             if (type === "svg" && isVirtualdom(e)) {
-                                
+                                /* 没想到svg的创建方式这么特别?否则显示不出svg */
 
                                 return render(e, svgnamespace);
                             } else if (type === "math" && isVirtualdom(e)) {
