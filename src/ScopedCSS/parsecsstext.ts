@@ -8,8 +8,6 @@ export function parsecsstext(text: string): Array<CSSRule> {
         createElement("style", [text])
     ) as HTMLStyleElement;
 
-    /* 只有添加到document之后才会有sheet */
-
     const otherdocument = createanotherhtmldocument();
     appendchild(otherdocument.documentElement, styleelement);
 

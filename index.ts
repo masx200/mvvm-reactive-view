@@ -1,5 +1,3 @@
-/* // / <reference path="jsx.ts" /> */
-
 import JSX from "./jsx";
 // declare global{
 //     JSX:JSX

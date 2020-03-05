@@ -10,7 +10,7 @@ import ReactiveState, {
     dispatchsymbol,
     removeonelistner
 } from "../Reactivity/reactivestate.js";
-import { rewatch /* , unwatch */, unwatch } from "../Reactivity/watch";
+import { rewatch, unwatch } from "../Reactivity/watch";
 import {
     readdlisteners,
     removelisteners
@@ -30,15 +30,13 @@ export function onmounted(ele: Element | Node | Array<Node>) {
         readdlisteners(ele);
 
         if (has(ele, bindstatesymbol)) {
-            (get(ele, bindstatesymbol) as ReactiveState<any>[])
-
-                /*  ele[bindstatesymbol] */
-                .forEach((state: ReactiveState<any>) => {
+            (get(ele, bindstatesymbol) as ReactiveState<any>[]).forEach(
+                (state: ReactiveState<any>) => {
                     rewatch(state);
 
-                    /* 当组件挂载时把状态跟dom元素同步一次 */
                     state[dispatchsymbol]();
-                });
+                }
+            );
         }
         if (has(ele, innerstatesymbol)) {
             (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
@@ -83,7 +81,7 @@ export function onunmounted(ele: Element | Node | Array<Node>) {
  */
 
         //
-        /* 组件卸载时unwatch组件内部的 ReactiveState*/
+
         if (has(ele, innerstatesymbol)) {
             (get(ele, innerstatesymbol) as ReactiveState<any>[]).forEach(
                 (state: ReactiveState<any>) => {

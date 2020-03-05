@@ -15,21 +15,17 @@ function createhtmlandtextdirective(
         if (isstring(text)) {
             requestAnimationFrame(() => {
                 seteletext(ele, text);
-                /*    ele.textContent = text;*/
             });
         } else if (isReactiveState(text)) {
-            watch(text, (/* state: { value: any } */) => {
+            watch(text, () => {
                 const state = text;
                 if (isconnected(element)) {
                     seteletext(ele, String(state));
                 }
-                /* ele.textContent = String(state);*/
             });
 
             requestAnimationFrame(() => {
                 seteletext(ele, String(text));
-
-                /*  ele.textContent = String(text);*/
             });
         } else {
             console.error(text);

@@ -18,7 +18,6 @@ export function waitloadallstyle(
             ) {
                 return Promise.resolve();
             } else {
-                /* 如果已经有过相同的linkstylesheet挂载着的话,则不重复挂载 */
                 return loadlinkstyle(
                     createlinkstylesheet(styleurl),
                     containerthis

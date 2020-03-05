@@ -26,7 +26,7 @@ export function createcostumelemet(
       customElements.define(elementname, initclass);
     } */
         RandomDefineCustomElement(initclass);
-        return construct(initclass, [propsjson, children /* , options */]);
+        return construct(initclass, [propsjson, children]);
     } else {
         console.error(initclass);
         console.error(invalid_custom_element_class);

@@ -93,10 +93,6 @@ export class AttrChange extends HTMLElement {
     super();
   } */
 
-    /* 跟seteletext发生冲突,清空children */
-
-    /* _name?: any, _oldValue?: any, _newValue?: any */
-
     //
 
     /* constructor() {

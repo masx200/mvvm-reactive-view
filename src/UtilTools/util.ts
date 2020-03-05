@@ -10,7 +10,7 @@ const isplainobject = (a: any): a is Record<any, any> =>
     isobject(a) && gettagtype(a) === "Object";
 
 import isprimitive from "./isprimitive";
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 export function isundefined(a: any): a is void {
     return (!a && a === void 0) || a === null;
 }

@@ -6,9 +6,7 @@
         [["value",["f","f","f","f"]]]
         
         */
-export function merge_entries(
-    a: [string, any][] /* Array<[any, Array<any>]> */
-): [string, any][] {
+export function merge_entries(a: [string, any][]): [string, any][] {
     const m: { [s: string]: Set<any> } = {};
 
     a.forEach(([key, value]) => {

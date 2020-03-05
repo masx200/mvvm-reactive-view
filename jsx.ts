@@ -1,4 +1,3 @@
-/* https://github.com/vuejs/vue-next/blob/master/packages/runtime-dom/jsx.d.ts */
 import * as CSS from "csstype";
 import Virtualdom from "./src/CreateElement/VirtualElement";
 import ReactiveState from "./src/Reactivity/reactivestate";
@@ -652,16 +651,15 @@ interface SVGAttributes extends AriaAttributes {
     zoomAndPan?: string;
 }
 interface AriaAttributes {
-    /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
     "aria-activedescendant"?: string;
-    /** Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. */
+
     "aria-atomic"?: boolean | "false" | "true";
     /**
      * Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be
      * presented if they are made.
      */
     "aria-autocomplete"?: "none" | "inline" | "list" | "both";
-    /** Indicates an element is being modified and that assistive technologies MAY want to wait until the modifications are complete before exposing them to the user. */
+
     "aria-busy"?: boolean | "false" | "true";
     /**
      * Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
@@ -688,7 +686,7 @@ interface AriaAttributes {
      * @see aria-owns.
      */
     "aria-controls"?: string;
-    /** Indicates the element that represents the current item within a container or set of related elements. */
+
     "aria-current"?:
         | boolean
         | "false"
@@ -723,7 +721,7 @@ interface AriaAttributes {
      * @see aria-invalid @see aria-describedby.
      */
     "aria-errormessage"?: string;
-    /** Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. */
+
     "aria-expanded"?: boolean | "false" | "true";
     /**
      * Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,
@@ -735,7 +733,7 @@ interface AriaAttributes {
      * @deprecated in ARIA 1.1
      */
     "aria-grabbed"?: boolean | "false" | "true";
-    /** Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. */
+
     "aria-haspopup"?:
         | boolean
         | "false"
@@ -755,7 +753,7 @@ interface AriaAttributes {
      * @see aria-errormessage.
      */
     "aria-invalid"?: boolean | "false" | "true" | "grammar" | "spelling";
-    /** Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. */
+
     "aria-keyshortcuts"?: string;
     /**
      * Defines a string value that labels the current element.
@@ -767,17 +765,17 @@ interface AriaAttributes {
      * @see aria-describedby.
      */
     "aria-labelledby"?: string;
-    /** Defines the hierarchical level of an element within a structure. */
+
     "aria-level"?: number;
-    /** Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. */
+
     "aria-live"?: "off" | "assertive" | "polite";
-    /** Indicates whether an element is modal when displayed. */
+
     "aria-modal"?: boolean | "false" | "true";
-    /** Indicates whether a text box accepts multiple lines of input or only a single line. */
+
     "aria-multiline"?: boolean | "false" | "true";
-    /** Indicates that the user may select more than one item from the current selectable descendants. */
+
     "aria-multiselectable"?: boolean | "false" | "true";
-    /** Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous. */
+
     "aria-orientation"?: "horizontal" | "vertical";
     /**
      * Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
@@ -815,9 +813,9 @@ interface AriaAttributes {
         | "all"
         | "removals"
         | "text";
-    /** Indicates that user input is required on the element before a form may be submitted. */
+
     "aria-required"?: boolean | "false" | "true";
-    /** Defines a human-readable, author-localized description for the role of an element. */
+
     "aria-roledescription"?: string;
     /**
      * Defines the total number of rows in a table, grid, or treegrid.
@@ -844,18 +842,18 @@ interface AriaAttributes {
      * @see aria-posinset.
      */
     "aria-setsize"?: number;
-    /** Indicates if items in a table or grid are sorted in ascending or descending order. */
+
     "aria-sort"?: "none" | "ascending" | "descending" | "other";
-    /** Defines the maximum allowed value for a range widget. */
+
     "aria-valuemax"?: number;
-    /** Defines the minimum allowed value for a range widget. */
+
     "aria-valuemin"?: number;
     /**
      * Defines the current value for a range widget.
      * @see aria-valuetext.
      */
     "aria-valuenow"?: number;
-    /** Defines the human readable text alternative of aria-valuenow for a range widget. */
+
     "aria-valuetext"?: string;
 }
 type CSSProperties = CSS.Properties<string | number>;
@@ -1246,7 +1244,7 @@ export interface Events {
     // transition events
     onTransitionend: TransitionEvent;
     onTransitionstart: TransitionEvent;
-    /* lowercase */
+
     oncopy: ClipboardEvent;
     oncut: ClipboardEvent;
     onpaste: ClipboardEvent;
@@ -1385,6 +1383,6 @@ declare global {
         }
     }
 }
-/* https://www.tslang.cn/docs/handbook/jsx.html */
+
 export {};
 export default JSX;

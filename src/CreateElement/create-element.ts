@@ -5,7 +5,7 @@ import {
     autocreateclass,
     Htmlelementconstructor
 } from "../AttributeClass/createComponent";
-import { /* Class, */ Custom } from "../CustomClass/customclass";
+import { Custom } from "../CustomClass/customclass";
 import ReactiveState from "../Reactivity/reactivestate.js";
 import { apply } from "../UtilTools/reflect";
 import {
@@ -111,8 +111,6 @@ function createElement<T extends Function | string | Htmlelementconstructor>(
     props: ElementAttrs = {},
     ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
-    /* add fragment element */
-
     let typenormalized: "" | Function | string =
         isstring(type) || isfunction(type) ? type : "";
     const propsnormalized = isplainobject(props) ? props : {};

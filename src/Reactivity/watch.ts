@@ -34,14 +34,13 @@ export function watch<T extends UnwrapedState>(
             console.error("Empty array not allowed");
             throw new Error();
         }
-        /* 给watch的callback自动防抖 */
+
         const debouncedcallback = debounce(callback);
         const stateandlisteners: [
             ReactiveState<any>,
             Listener
         ][] = statearray.map(state1 => {
             const listener = (() => {
-                /* 缓存callback和listener */
                 const cachedfun = cached_callback_debounced_watchs.get(
                     callback
                 );

@@ -162,7 +162,6 @@ export default function(init: object): ReactiveState<object> {
                         }
                     }
                 } else {
-                    /* VM1933:1 Uncaught TypeError: Method Set.prototype.values called on incompatible receiver [object Object] */
                     return isfunction(resultvalue)
                         ? resultvalue.bind(value)
                         : resultvalue;
@@ -184,7 +183,7 @@ export default function(init: object): ReactiveState<object> {
             value = value.valueOf();
         }
         const myvalue = get(target, "value");
-        /* 若初始值数组,则只能赋值数组 */
+
         if (
             key === "value" &&
             isobject(value) &&

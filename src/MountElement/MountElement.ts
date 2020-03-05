@@ -53,7 +53,7 @@ export default function MountElement<T extends Element>(
     const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
         mount(render(elesarray), container);
-    } else if (isNode(vdom) /*  instanceof Node */ || isNodeArray(vdom)) {
+    } else if (isNode(vdom) || isNodeArray(vdom)) {
         mount(elesarray, container);
     } else {
         console.error(vdom);

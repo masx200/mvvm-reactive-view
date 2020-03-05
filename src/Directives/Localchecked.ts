@@ -15,7 +15,7 @@ export const Localchecked = (
     }
     console.log(element);
     model(["input"], "checked", "checked", ["change"], value, vdom);
-    /* 对于name相同的input,radio,单选框,如果一个改变,其他全都要触发change事件 */
+
     const eventname = "click";
     const origin = toArray(vdom.onevent[eventname]);
     const eventsarray = origin;
@@ -24,7 +24,6 @@ export const Localchecked = (
         const name = (event.target as HTMLInputElement).name;
         if (name) {
             querySelectorAll(`input[name=${name}]`)
-                /* 通知其他inputelement */
                 .filter(ele => ele !== inputelement)
                 .forEach(element => {
                     element.dispatchEvent(new Event("change"));

@@ -74,7 +74,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             [waittranformcsssymbol]: undefined | (() => Promise<void>);
             constructor(
                 propsjson: Record<string, any> = {},
-                children: Vdomchildren = [] /* , options?: any */
+                children: Vdomchildren = []
             ) {
                 super();
 
@@ -82,12 +82,8 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
 
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
-                    if (
-                        !get(componentsstylesheet, prefix)
-                        /*  componentsstylesheet[prefix] */
-                    ) {
+                    if (!get(componentsstylesheet, prefix)) {
                         set(componentsstylesheet, prefix, new Set());
-                        /* 改成异步解析css转换 */
 
                         this[waittranformcsssymbol] = () => {
                             return setimmediate(() => {
@@ -95,7 +91,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                             });
                         };
 
-                        /* 把css文本先解析成cssom ,然后添加前缀,然后转成字符串,生成blob,再生成link-stylesheet,添加*/
                         /* const cssomold = parsecsstext(css);
                 const cssomnew = prefixcssrules(cssomold, prefix);
                 
@@ -122,7 +117,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     Object.entries(props).map(([key]) => [
                         key,
                         (() => {
-                            /* 使用getter来保证每次访问到最新的attribute */
                             const attributes = createeleattragentreadwrite(
                                 this
                             ) as Record<string, any>;
@@ -140,7 +134,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                 );
                 this[attributessymbol] = thisattributess;
 
-                /* 把attributes的reactivestates也放进innerstates中 */
                 const readonlyprop = readonlyproxy(
                     Object.fromEntries(
                         Object.entries(thisattributess).map(([key, value]) => [
@@ -233,9 +226,8 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
 
             [firstinstalledcallback]() {
                 const thencallbackfirst = () => {
-                    /* 异步解析转换css */
                     seteletext(this, "");
-                    /* 挂载link style sheet到head上 */
+
                     return waitloadallstyle(prefix, document.head);
                 };
                 const thencallbacksecond = () => {
@@ -247,13 +239,12 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     if (innervdom) {
                         this[elementsymbol] = render(innervdom).flat(Infinity);
                         this[inner_vdom_symbol] = [];
-                        /*清除不再使用的引用, 垃圾回收 */
                     }
                 }
 
                 const css = get(this.constructor, "css");
                 const prefix = this.tagName.toLowerCase();
-                if (css /*  && componentsstylesheet[prefix] */) {
+                if (css) {
                     const waitcallback = this[waittranformcsssymbol];
                     if (waitcallback) {
                         waitcallback()
@@ -264,12 +255,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                             thencallbacksecond
                         );
                     }
-
-                    /* 先清空当前组件 的children */
-
-                    /* 应该要等待css加载完成之后再渲染出来,否则会有页面跳动 */
-                    /* 是css里面的@import导致的 */
-                    /* 挂载样式到组件最前面 */
 
                     /* const stylelinkelement = createlinkstylesheet(
               componentsstylesheet[prefix]
@@ -294,7 +279,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
             connectedCallback() {
                 setimmediate(() => {
                     connectedCallback(this);
-                    /* onmounted实现方式改成添加事件监听器,使用mutationobserver监听 */
+
                     // this[mountedsymbol].forEach(f => {
                     //     setimmediate(f);
                     // });
@@ -308,9 +293,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     // });
                 });
             }
-            [attributeChangedCallback](
-                name: string /* , oldValue: any, newValue: any */
-            ) {
+            [attributeChangedCallback](name: string) {
                 if (this[readysymbol]) {
                     {
                         const propreactivestate = this[attributessymbol][name];
@@ -319,10 +302,8 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
               any
             >; */
                         if (propreactivestate) {
-                            /* 使用getter来保证每次访问到最新的attribute */
                             propreactivestate[dispatchsymbol]();
 
-                            /* 当属性改变时要跟ReactiveState同步状态 */
                             /*   set(
             get(this, attributessymbol)[name],
             "value,",

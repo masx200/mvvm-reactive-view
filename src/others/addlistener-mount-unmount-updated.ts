@@ -8,7 +8,7 @@ const callback = function(
     // console.log(observer);
     mutations.forEach(function(record: MutationRecord) {
         console.log("Mutation: ", record);
-        /* 子元素也要触发事件 */
+
         const addedNodes = [...record.addedNodes];
         addedNodes.forEach(e => {
             if (e instanceof Element) {
@@ -77,14 +77,12 @@ new MutationObserver((mutations: MutationRecord[]) => {
         dispatchupdated(target);
     });
 }).observe(rootnode, {
-    /* 监听子节点 */
     subtree: true,
     attributes: true,
     childList: true,
     characterData: true
 });
 function dispatchupdated(e: Node) {
-    /* 冒泡一下,让父节点都触发事件update */
     e.dispatchEvent(new Event(updatedeventname, { bubbles: true }));
 }
 const createdeventname = Symbol("created").toString();

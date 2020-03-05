@@ -29,7 +29,6 @@ const listvalueattr = Symbol("listvalueattr");
 
 const listinnervdom = Symbol("listinnervdom");
 const listinnerelement = Symbol("listinnerelement");
-/* 不需要中间缓存了 */
 
 const cached_realele = Symbol("cached_realele");
 function ListMap(
@@ -57,8 +56,6 @@ function ListMap(
         index: number,
         thiscom: ListMap
     ): string | Virtualdom<any> {
-        /* 只要缓存从index到element就够了,不需要中间缓存了 */
-
         /* const cached_vdom1 = get(thiscom[cached_vdom_symbol], index);
     if (cached_vdom1) {
       return cached_vdom1;
@@ -71,8 +68,6 @@ function ListMap(
 
         return vdom;
     }
-
-    /* 没有必要创建一个class */
 
     class ListMap extends AttrChange {
         static defaultProps = { value: [] };
@@ -95,7 +90,6 @@ function ListMap(
                         throw new TypeError();
                     }
 
-                    /* 状态变化时同步一次 */
                     set(this[listvalueattr], "value", value);
 
                     const domchildren = getchildren(this);
@@ -114,7 +108,7 @@ function ListMap(
                                 this[cached_realele],
                                 index
                             );
-                            /* 直接从缓存中获取element */
+
                             if (cached_element) {
                                 return cached_element;
                             } else {
@@ -130,7 +124,6 @@ function ListMap(
                             appendchild(this, element)
                         );
                     } else if (newlength < oldlength) {
-                        /* 把旧的清除掉 */
                         /*  this[listinnervdom] = this[listinnervdom].slice(0, newlength);
             this[listinnerelement] = this[listinnerelement].slice(0, newlength); */
                         getchildren(this)
@@ -156,7 +149,6 @@ function ListMap(
                 console.log(value);
                 throw new TypeError();
             }
-            /* 挂载时同步一次 */
 
             set(this[listvalueattr], "value", value);
             this[listinnervdom] = value.map((v, index) =>
@@ -179,7 +171,6 @@ function ListMap(
 
             mount(this[listinnerelement], this);
 
-            /* 清除不使用的变量引用,垃圾回收 */
             this[listinnerelement] = [];
             this[listinnervdom] = [];
         }

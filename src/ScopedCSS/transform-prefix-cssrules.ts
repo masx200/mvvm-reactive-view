@@ -14,8 +14,6 @@ export function prefixcssrules(
 
                 return resultoutput;
             } else if (isCSSMediaRule(cssrule)) {
-                /*  selectoraddprefix函数返回新对象,不是修改原来的对象*/
-
                 return prefixcssmediarule(cssrule, prefix);
             } else if (isCSSImportRule(cssrule)) {
                 savestyleblob(prefix, undefined, cssrule.href);

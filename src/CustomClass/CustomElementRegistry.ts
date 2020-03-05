@@ -101,7 +101,6 @@ customElements.define = function(
     }
     if (!get(customElements, elementset).has(constructor)) {
         if (has(customElements[elementmap], name)) {
-            /* 防止定义重名 */
             RandomDefineCustomElement(
                 constructor,
                 options ? options.extends : undefined

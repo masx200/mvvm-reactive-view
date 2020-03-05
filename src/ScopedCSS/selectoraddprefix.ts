@@ -1,7 +1,4 @@
-/*  selectoraddprefix函数返回新对象,不是修改原来的对象*/
 export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
-    /* 突然发现Edge浏览器的 CSSStyleRule的selectorText属性居然是只读的?*/
-
     const selectorold = cssstylerule.selectorText;
     const stylebodyold = cssstylerule.cssText.slice(selectorold.length);
     const selectorTextss = selectorold;
@@ -25,8 +22,6 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
     } else { */
 
     return {
-        /* 没有用到的变量,消耗性能 */
-
         selectorText: selectoraftertransform,
         cssText: selectoraftertransform + stylebodyold,
 
@@ -38,7 +33,7 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
     if (selectorText.startsWith("*")) {
       cssstylerule.selectorText =
         selectorText.replace("*", prefix) + "," + prefixselector;
-      /* 对于'* '的处理,变成两个selectorrule*/
+      
 
     /* 
       *{font-size:80px !important;}

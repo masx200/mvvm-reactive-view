@@ -31,8 +31,7 @@ export function isvalidvdom(v: any): v is VaildVDom {
         : true;
       return flag;*/
 
-        /* children可能为空数组 */
-        return /* !! */ /* v.length */ /* && */ v.every(e => isvalidvdom(e));
+        return v.every(e => isvalidvdom(e));
     } else if (isVirtualdom(v)) {
         return isvalidvdom(v.children);
         /*  if (isvalidvdom(v.children)) {

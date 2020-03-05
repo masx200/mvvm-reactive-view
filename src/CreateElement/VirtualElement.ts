@@ -90,13 +90,7 @@ function createVirtualElement<
         ),
         directives: Object.fromEntries(
             propsentriesNOTevents
-                .filter(
-                    ([key]) =>
-                        key[0] === "*" ||
-                        /*  || key[0] === "_"  */
-
-                        key[0] === "$"
-                )
+                .filter(([key]) => key[0] === "*" || key[0] === "$")
                 .map(([key, value]) => [
                     key
                         .slice(1)

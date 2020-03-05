@@ -23,8 +23,6 @@ export const errormessage =
     "invalid useMounted or useUnMounted out of createComponent";
 export let ctxopen = false;
 
-/* 收集组件内部创建的 ReactiveState*/
-
 export function getstates() {
     return [...StateSet];
 }

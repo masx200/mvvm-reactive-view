@@ -13,7 +13,7 @@ export const {
     ownKeys,
     preventExtensions
 } = Reflect;
-/* get和set函数同时实现reflect.get和reflect.set和map.set和map.get */
+
 export function get(
     target: Map<any, any> | WeakMap<any, any>,
     propertyKey: PropertyKey
@@ -26,7 +26,7 @@ export function get(target: object, propertyKey: PropertyKey): any {
     if (isMap(target) || isWeakMap(target)) {
         return target.get(propertyKey);
     } else {
-        return Reflect.get(target, propertyKey /* , receiver */);
+        return Reflect.get(target, propertyKey);
     }
 }
 export function set(
@@ -49,7 +49,7 @@ export function set(
 
         return true;
     } else {
-        return Reflect.set(target, propertyKey, value /* , receiver */);
+        return Reflect.set(target, propertyKey, value);
     }
 }
 

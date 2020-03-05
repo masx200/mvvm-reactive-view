@@ -8,7 +8,6 @@ import {
 
 export function getproperyreadproxy<T extends object>(a: T): T {
     const __proto__ = "__proto__";
-    /* 把基本类型原型的属性 也加上*/
 
     const target = a;
     return new Proxy(target, {
@@ -41,12 +40,9 @@ export function getproperyreadproxy<T extends object>(a: T): T {
                 return get(target, key);
             } else {
                 const myvalue = get(target, "value");
-                const myvalueobj = /*  isobject(myvalue) ? myvalue :  */ Object(
-                    myvalue
-                );
+                const myvalueobj = Object(myvalue);
 
                 if (has(myvalueobj, key)) {
-                    /* 对于string,number等原始类型,返回的函数要绑定this */
                     const property = get(myvalueobj, key);
                     return isFunction(property)
                         ? property.bind(myvalueobj)

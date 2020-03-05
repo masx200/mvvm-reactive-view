@@ -58,9 +58,7 @@ const Condition = function(
     ? optionstrue.filter(Boolean)
     : */
 
-        [falsevdomsymbol]: Virtualdom<any>[] = toArray(
-            optionsfalse
-        ) /* [optionsfalse] .filter(Boolean */;
+        [falsevdomsymbol]: Virtualdom<any>[] = toArray(optionsfalse);
 
         /* isarray(optionsfalse)
     ? optionsfalse.filter(Boolean)
@@ -84,13 +82,11 @@ const Condition = function(
             if (!this[trueelesymbol]) {
                 this[trueelesymbol] = render(this[truevdomsymbol]);
 
-                /* 垃圾回收 */
                 this[truevdomsymbol] = [];
             }
             //
             const elementtomount = this[trueelesymbol][0] || this;
 
-            /* 使用新节点替换旧节点 */
             replaceChild(elementtomount, this[currentelementsymbol]);
             this[currentelementsymbol] = elementtomount;
         }
@@ -136,11 +132,10 @@ const Condition = function(
             disconnectedCallback(this);
         }
     }
-    /* vdom.options = { true: iftrue, false: iffalse }; */
+
     const vdom = createElement(Condition);
-    /*  const vdom = createElement(Condition, { value: conditon }); */
+
     return vdom;
-    /*  */
 };
 export default Condition;
 export { Condition };

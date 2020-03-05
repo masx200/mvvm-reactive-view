@@ -9,10 +9,8 @@ import { isvalidvdom } from "./isvalidvdom";
 import ReactiveState from "src/Reactivity/reactivestate.js";
 
 function htmlold(...inargs: any[]): Virtualdom<any> | Vdomchildren {
-    return apply(htm /* as HTM */, h, inargs);
+    return apply(htm, h, inargs);
 }
-
-/* 如果出现未闭合标签会产生错误的vdom */
 
 export { html };
 export default function html(

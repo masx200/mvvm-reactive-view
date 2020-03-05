@@ -1,4 +1,4 @@
-import { appendchild, /* setelehtml,  */ seteletext } from "../UtilTools/dom";
+import { appendchild, seteletext } from "../UtilTools/dom";
 import { toArray } from "../UtilTools/toArray";
 export default function<
     T extends HTMLElement | SVGSVGElement | SVGElement | Element | Node

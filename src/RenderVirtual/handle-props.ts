@@ -7,7 +7,7 @@ import { isfunction } from "../UtilTools/util";
 import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
-import { bindstatesymbol /* virtualdomsymbol */ } from "./render-vdom-to-real";
+import { bindstatesymbol } from "./render-vdom-to-real";
 import {
     addmountedlistner,
     addunmountedlistner,
@@ -30,11 +30,7 @@ function handleprops(
     ((element, vdom) => {
         Object.entries(vdom.directives).forEach(([name, value]) => {
             const direfun = directives[name];
-            if (
-                isfunction(direfun) /* typeof directives[name] === "function" */
-                /*name in directives &&*/
-            ) {
-                /* 添加了mounted和unmounted的回调函数 */
+            if (isfunction(direfun)) {
                 direfun(
                     value,
                     element,
@@ -60,18 +56,12 @@ function handleprops(
         Object.assign(
             attribute1,
 
-            /* 把属性为false的先不设置 */
             vdom.props
         );
-        /* 添加常量的属性 */
-
-        /* 为了垃圾回收,所以不要给dom元素添加没必要的属性 */
-
-        /* 添加绑定属性 */
 
         Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
-            watch(primitivestate, (/* state: ReactiveState<any> */) => {
+            watch(primitivestate, () => {
                 const state = primitivestate;
                 if (isconnected(element)) {
                     attribute1[key] = state.valueOf();
@@ -82,8 +72,6 @@ function handleprops(
           primitivestate[addallistenerssymbol]();
         }); */
         });
-
-        /* 添加事件绑定和指令执行 */
 
         /*  if (!element[eventlistenerssymbol]) {
         element[eventlistenerssymbol] = [];

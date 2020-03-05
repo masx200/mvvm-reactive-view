@@ -43,14 +43,12 @@ function createState<T extends UnwrapedState>(
           return set(target, key, value);
         } */
 
-                    /* 若初始值函数,则只能赋值函数 */
                     if (
                         key === "value" &&
                         ((isprimitive(value) && isprimitive(init)) ||
                             (isfunction(value) && isfunction(init)))
                     ) {
                         if (target[key] !== value) {
-                            /* 如果相同则不触发事件 */
                             set(target, key, value);
                             target[dispatchsymbol]();
                         }
