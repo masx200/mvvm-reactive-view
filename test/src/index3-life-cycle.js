@@ -38,7 +38,7 @@ console.log([h, createElement]);
                 useUnMounted(() => {
                     console.log("life-cycle-unmounted");
                 });
-                watch(props.cccccc, cccccc => {
+                watch(props.cccccc, (cccccc) => {
                     console.log("cccccc", cccccc);
                 });
                 return (
@@ -82,7 +82,7 @@ console.log([h, createElement]);
         MountElement(vdom, document.createElement("div"))
     );
     setTimeout(() => {
-        vdom.element.forEach(e => {
+        vdom.element.forEach((e) => {
             e.setAttribute(
                 "cccccc",
                 "aaaaaaaaaaaaaaaaaabbbbbbbbbbnnnnnnnnnnnnn"

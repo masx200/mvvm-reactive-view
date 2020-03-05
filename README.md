@@ -126,9 +126,9 @@ const vdom = html`
     <div style=${{ display: "block", width: "500px" }}>hello world!</div>
     <input
         style="width:800px"
-        @input=${e => (state1.value = e.target.value)}
+        @input=${(e) => (state1.value = e.target.value)}
         *ref=${inputref}
-        @change=${e => (state1.value = e.target.value)}
+        @change=${(e) => (state1.value = e.target.value)}
         id="code16"
         class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
         value=${state1}
@@ -521,7 +521,7 @@ function useMousePosition() {
 
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
-    const plus = computed(x, x => {
+    const plus = computed(x, (x) => {
         return x + 100;
     });
     const multi = computed([x, y], (x, y) => {
@@ -578,7 +578,7 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
 /* 
 第二种用法
 */
-watch(colortext, unwrapedstate => (stylestate.color = unwrapedstate));
+watch(colortext, (unwrapedstate) => (stylestate.color = unwrapedstate));
 ```
 
 ## 对于不接收`props`和`children` 参数,且不使用局部`css`的组件,没有副作用的纯函数,甚至可以不使用`createComponent`
@@ -678,7 +678,7 @@ document.body.appendChild(
 
 ```tsx
 const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map(number => {
+const listItems = numbers.map((number) => {
     return <li>{number}</li>;
 });
 
@@ -869,7 +869,7 @@ html`
 2.使用"on"+事件名称
 
 ```jsx
-<button onclick={e => console.log(e)} />
+<button onclick={(e) => console.log(e)} />
 ```
 
 # 使用`jsx 指令`
@@ -899,7 +899,7 @@ console.log(ref.value);
 ```tsx
 const ref = createRef();
 
-var vdom = <div $ref={ele => (ref.value = ele)} />;
+var vdom = <div $ref={(ele) => (ref.value = ele)} />;
 
 console.log(ref.value);
 ```
@@ -913,7 +913,7 @@ const vdom = (
     <ul>
         {list.map((a, index) => (
             <li
-                $ref={ele => {
+                $ref={(ele) => {
                     lirefs[index] = ele;
                     lirefs.length = list.length;
                 }}
@@ -1018,8 +1018,8 @@ html`
 html`
     <textarea
         value=${state1}
-        @input=${e => (state1.value = e.target.value)}
-        @change=${e => (state1.value = e.target.value)}
+        @input=${(e) => (state1.value = e.target.value)}
+        @change=${(e) => (state1.value = e.target.value)}
     />
 `;
 ```

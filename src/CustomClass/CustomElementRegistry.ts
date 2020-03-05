@@ -13,7 +13,7 @@ function Usevaluetoquerythekeyfromthetable(
     table: object,
     Componentstatusname: any
 ): string | undefined {
-    const outputentrie = Object.entries(table).find(v => {
+    const outputentrie = Object.entries(table).find((v) => {
         return v[1] === Componentstatusname;
     });
     return outputentrie ? outputentrie[0] : undefined;

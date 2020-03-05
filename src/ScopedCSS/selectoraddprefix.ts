@@ -5,7 +5,7 @@ export function selectoraddprefix(cssstylerule: CSSStyleRule, prefix: string) {
 
     const selectorarray = selectorTextss.split(",");
     const selectoraftertransform = selectorarray
-        .map(selectorTextone => {
+        .map((selectorTextone) => {
             let prefixselector = prefix + " " + selectorTextone;
 
             if (selectorTextone.startsWith("*")) {

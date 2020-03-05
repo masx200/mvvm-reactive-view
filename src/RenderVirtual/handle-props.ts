@@ -35,13 +35,13 @@ function handleprops(
                     value,
                     element,
                     vdom,
-                    call => {
+                    (call) => {
                         addmountedlistner(element, call);
                     },
-                    call => {
+                    (call) => {
                         addunmountedlistner(element, call);
                     },
-                    call => {
+                    (call) => {
                         addupdatedlistner(element, call);
                     }
                 );
@@ -87,7 +87,7 @@ function handleprops(
   */
     [...Object.values(vdom.bindattr), ...Object.values(vdom.directives)]
         .flat(1 / 0)
-        .filter(e => isReactiveState(e))
+        .filter((e) => isReactiveState(e))
 
         .forEach((e: ReactiveState<any>) => {
             if (!has(element, bindstatesymbol)) {

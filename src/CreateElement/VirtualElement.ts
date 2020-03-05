@@ -45,7 +45,7 @@ function createVirtualElement<
         "children",
         "directives",
         "bindattr"
-    ].forEach(key => {
+    ].forEach((key) => {
         defineProperty(virtual, key, {
             writable: true
         });
@@ -55,11 +55,11 @@ function createVirtualElement<
     Object.assign(virtual, {
         type,
         bindattr: Object.fromEntries(
-            Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))
+            Entries_beginning_with_a_letter.filter((e) => isReactiveState(e[1]))
         ),
         props: Object.fromEntries(
             Entries_beginning_with_a_letter.filter(
-                e => !isReactiveState(e[1])
+                (e) => !isReactiveState(e[1])
             ).map(([key, value]) => [
                 key,
                 isstring(value) ? value.trim() : value

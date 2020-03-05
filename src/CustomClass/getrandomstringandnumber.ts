@@ -4,12 +4,12 @@ import { get } from "../UtilTools/reflect";
 const charactorlist = Array(26)
     .fill(undefined)
     .map((v, i) => 97 + i)
-    .map(n => String.fromCharCode(n));
+    .map((n) => String.fromCharCode(n));
 
 const hexnumberlist = Array(16)
     .fill(undefined)
     .map((v, i) => i)
-    .map(a => a.toString(16));
+    .map((a) => a.toString(16));
 
 const charactorandnumberlist = [
     ...new Set([...hexnumberlist, ...charactorlist])

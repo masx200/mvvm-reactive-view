@@ -11,7 +11,7 @@ export function waitloadallstyle(
     containerthis: Element | HTMLElement | SVGSVGElement | SVGElement
 ) {
     return Promise.all(
-        [...get(componentsstylesheet, prefix)].map(styleurl => {
+        [...get(componentsstylesheet, prefix)].map((styleurl) => {
             if (
                 querySelectorAll(`link[rel="stylesheet"][href="${styleurl}"]`)
                     .length

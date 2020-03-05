@@ -68,8 +68,8 @@ export class AttrChange extends HTMLElement {
             Object.assign(attrs, defaultProps);
         }
 
-        new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
+        new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
                 if (mutation.type == "attributes") {
                     console.log(
                         "The " +

@@ -22,7 +22,7 @@ const liststate = createState(
         // @ts-ignore
         .map((v, i) => i)
 );
-watch(liststate, a => console.dir([liststate, a]));
+watch(liststate, (a) => console.dir([liststate, a]));
 const testlistvdom = (
     <div>
         <button

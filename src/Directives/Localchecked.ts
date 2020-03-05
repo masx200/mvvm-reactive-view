@@ -24,8 +24,8 @@ export const Localchecked = (
         const name = (event.target as HTMLInputElement).name;
         if (name) {
             querySelectorAll(`input[name=${name}]`)
-                .filter(ele => ele !== inputelement)
-                .forEach(element => {
+                .filter((ele) => ele !== inputelement)
+                .forEach((element) => {
                     element.dispatchEvent(new Event("change"));
                 });
         }

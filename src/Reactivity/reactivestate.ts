@@ -59,7 +59,7 @@ export default class ReactiveState<T extends UnwrapedState> {
     })();
 
     [removeallistenerssymbol]() {
-        this[memlisteners].forEach(callback => {
+        this[memlisteners].forEach((callback) => {
             this[removeonelistner](callback);
         });
     }
@@ -70,7 +70,7 @@ export default class ReactiveState<T extends UnwrapedState> {
         this[Targetsymbol].addListener(callback);
     }
     [addallistenerssymbol]() {
-        this[memlisteners].forEach(callback => {
+        this[memlisteners].forEach((callback) => {
             this[addonelistner](callback);
         });
     }

@@ -6,10 +6,12 @@ import { createhtmlandtextdirective } from "./create-html-and-text-directive";
 export const Localtext = (
     text: unknown,
     ele: Element,
-    _vdom: Virtualdom<any>
+    vdom: Virtualdom<any>
 ) => {
     if (isstring(text) || isReactiveState(text)) {
-        console.log(_vdom);
+        console.log(vdom);
+        vdom.children.length = 0;
+
         createhtmlandtextdirective(seteletext, "text", ele, text);
     } else {
         throw new TypeError();

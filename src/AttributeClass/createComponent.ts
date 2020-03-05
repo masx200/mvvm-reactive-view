@@ -188,16 +188,16 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     this[innerstatesymbol] = getstates();
                     this[innerwatchrecords] = getwatchrecords();
                     closectx();
-                    mountedcallbacks.forEach(callback => {
+                    mountedcallbacks.forEach((callback) => {
                         addmountedlistner(this, callback);
                     });
-                    unmountedcallbacks.forEach(callback => {
+                    unmountedcallbacks.forEach((callback) => {
                         addunmountedlistner(this, callback);
                     });
-                    createdcallbacks.forEach(callback => {
+                    createdcallbacks.forEach((callback) => {
                         addcreatedlistner(this, callback);
                     });
-                    updatedcallbacks.forEach(callback => {
+                    updatedcallbacks.forEach((callback) => {
                         addupdatedlistner(this, callback);
                     });
                 } else {

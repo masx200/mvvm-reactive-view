@@ -39,7 +39,7 @@ export function watch<T extends UnwrapedState>(
         const stateandlisteners: [
             ReactiveState<any>,
             Listener
-        ][] = statearray.map(state1 => {
+        ][] = statearray.map((state1) => {
             const listener = (() => {
                 const cachedfun = cached_callback_debounced_watchs.get(
                     callback
@@ -48,7 +48,9 @@ export function watch<T extends UnwrapedState>(
                     return cachedfun;
                 } else {
                     const listenfun = () => {
-                        debouncedcallback(...statearray.map(r => r.valueOf()));
+                        debouncedcallback(
+                            ...statearray.map((r) => r.valueOf())
+                        );
                     };
                     cached_callback_debounced_watchs.set(callback, listenfun);
                     return listenfun;

@@ -1,7 +1,7 @@
 import { createState, watch } from "./mvvm-view";
 
 const funstate = createState(() => {});
-watch(funstate, fun => {
+watch(funstate, (fun) => {
     console.log([funstate, fun]);
 });
 requestAnimationFrame(() => {

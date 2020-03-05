@@ -33,7 +33,7 @@ setTimeout(() => {
     }, 2000);
 }, 2000);
 console.log([vdom, mystate, com1, com2, com3, com4]);
-watch(mystate, state => {
+watch(mystate, (state) => {
     console.log([state, element]);
 });
 

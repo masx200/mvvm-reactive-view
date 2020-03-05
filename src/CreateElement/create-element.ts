@@ -116,8 +116,8 @@ function createElement<T extends Function | string | Htmlelementconstructor>(
     const propsnormalized = isplainobject(props) ? props : {};
     const childrennormalized: Vdomchildren = children
         .flat(Infinity)
-        .map(a => (a === 0 ? "0" : a))
-        .filter(a => !!a);
+        .map((a) => (a === 0 ? "0" : a))
+        .filter((a) => !!a);
     if (isstring(typenormalized)) {
         typenormalized = typenormalized.trim().toLowerCase();
     }

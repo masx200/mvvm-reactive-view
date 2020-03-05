@@ -24,7 +24,7 @@ export function model(
       "change",
       "input"
     ]. */
-        eventnames.forEach(eventname => {
+        eventnames.forEach((eventname) => {
             const origin = vdom.onevent[eventname];
             const eventsarray = toArray(origin);
             set(

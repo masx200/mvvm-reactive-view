@@ -81,7 +81,7 @@ export default function render(
             | ReactiveState<any>
             | Virtualdom<any>
         )[])
-            .map(a => render(a as any))
+            .map((a) => render(a as any))
             .flat(1 / 0);
     }
     if (isnumber(vdom) || isstring(vdom)) {
@@ -210,7 +210,7 @@ export default function render(
             if (!iscomponent(type)) {
                 if (element) {
                     mount(
-                        vdom.children.map(e => {
+                        vdom.children.map((e) => {
                             if (type === "svg" && isVirtualdom(e)) {
                                 /* 没想到svg的创建方式这么特别?否则显示不出svg */
 

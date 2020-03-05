@@ -5,7 +5,9 @@ import { isstring } from "../UtilTools/util";
 
 export { createhtmlandtextdirective };
 function createhtmlandtextdirective(
-    seteletext: Function,
+    seteletext: {
+        (e: Element, v: string): void;
+    },
     errorname: string,
     ele: Element,
     text: string | ReactiveState<any>

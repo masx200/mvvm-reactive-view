@@ -31,8 +31,8 @@ export default function(init: object): ReactiveState<object> {
     let initobj = init;
     const containReactiveState =
         isplainobject(init) &&
-        Object.values(init).some(a => isReactiveState(a));
-    const state_entries = Object.entries(init).filter(e => {
+        Object.values(init).some((a) => isReactiveState(a));
+    const state_entries = Object.entries(init).filter((e) => {
         const a = e[1];
         return isReactiveState(a);
     });
@@ -45,7 +45,7 @@ export default function(init: object): ReactiveState<object> {
                 get() {
                     return state.valueOf();
                 },
-                set: nvalue => {
+                set: (nvalue) => {
                     state.value = nvalue;
                 },
                 configurable: true
@@ -63,7 +63,7 @@ export default function(init: object): ReactiveState<object> {
     reactive.value = initobj;
 
     const objproxyhandler: ProxyHandler<object> = {};
-    objproxyhandler.ownKeys = target => {
+    objproxyhandler.ownKeys = (target) => {
         return Array.from(
             new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
         );

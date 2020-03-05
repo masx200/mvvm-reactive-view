@@ -235,12 +235,12 @@ const mycomapp = createComponent(() => {
                                             <p>
                                                 <input
                                                     *ref=${inputref}
-                                                    @change=${e =>
+                                                    @change=${(e) =>
                                                         console.log(
                                                             e,
                                                             inputref
                                                         )}
-                                                    @input=${e =>
+                                                    @input=${(e) =>
                                                         console.log(e)}
                                                     id="password"
                                                     placeholder="输入密码"
@@ -259,7 +259,7 @@ const mycomapp = createComponent(() => {
                                                 <input
                                                     *ref=${inputref2}
                                                     *value=${inputpassword}
-                                                    @input=${e =>
+                                                    @input=${(e) =>
                                                         console.log(e)}
                                                     id="key"
                                                     placeholder="输入代号"

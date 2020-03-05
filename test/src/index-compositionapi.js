@@ -34,7 +34,7 @@ function useMousePosition() {
 
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
-    const plus = computed(x, x => {
+    const plus = computed(x, (x) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
         return x + 100;

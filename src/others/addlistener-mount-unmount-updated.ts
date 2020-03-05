@@ -6,19 +6,19 @@ const callback = function(mutations: MutationRecord[]) {
         console.log("Mutation: ", record);
 
         const addedNodes = [...record.addedNodes];
-        addedNodes.forEach(e => {
+        addedNodes.forEach((e) => {
             if (e instanceof Element) {
                 const subnodes = [...e.querySelectorAll("*"), e];
-                subnodes.forEach(n => {
+                subnodes.forEach((n) => {
                     dispatchconnected(n);
                 });
             }
         });
         const removedNodes = [...record.removedNodes];
-        removedNodes.forEach(e => {
+        removedNodes.forEach((e) => {
             if (e instanceof Element) {
                 const subnodes = [...e.querySelectorAll("*"), e];
-                subnodes.forEach(n => {
+                subnodes.forEach((n) => {
                     dispatchdisconnected(n);
                 });
             }

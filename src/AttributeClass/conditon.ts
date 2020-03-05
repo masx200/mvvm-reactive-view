@@ -38,7 +38,7 @@ const Condition = function(
         console.error(invalid_ReactiveState);
         throw TypeError();
     }
-    [iftrue, iffalse].forEach(a => {
+    [iftrue, iffalse].forEach((a) => {
         if (!(isundefined(a) || isVirtualdom(a) || isstring(a))) {
             console.error(a);
             console.error(invalid_Virtualdom);
@@ -101,7 +101,7 @@ const Condition = function(
 
             if (isReactiveState(conditon)) {
                 handleconditionchange(conditon.valueOf() as boolean);
-                watch(conditon, trueorfalse => {
+                watch(conditon, (trueorfalse) => {
                     handleconditionchange(trueorfalse);
                 });
             } else {

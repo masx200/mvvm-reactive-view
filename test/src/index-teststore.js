@@ -27,7 +27,7 @@ setTimeout(() => {
     clearInterval(timer);
 }, 8000);
 const mycomappclass = createComponent(() => {
-    watch(store.number, number => {
+    watch(store.number, (number) => {
         // console.trace();
         console.log({ ...store }, number);
     });
@@ -51,18 +51,18 @@ let vdom = [
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 setTimeout(() => {
-    vdom.forEach(vdom => {
+    vdom.forEach((vdom) => {
         const element = vdom.element;
         // element.parentNode.removeChild(element);
-        element.forEach(e => e.remove());
+        element.forEach((e) => e.remove());
     });
     // @ts-ignore
     number.value = -50;
 
-    vdom.forEach(vdom => {
+    vdom.forEach((vdom) => {
         const element = vdom.element;
         // document.body.appendChild(element);
-        element.forEach(e => document.body.appendChild(e));
+        element.forEach((e) => document.body.appendChild(e));
     });
     vdom = undefined;
 }, 5000);

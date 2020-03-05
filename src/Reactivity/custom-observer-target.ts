@@ -7,7 +7,7 @@ export default class ObserverTarget {
     }
     dispatch() {
         const listenerset: Set<Listener> = this.Listeners;
-        listenerset.forEach(listener => {
+        listenerset.forEach((listener) => {
             Promise.resolve().then(() => {
                 listener();
             });

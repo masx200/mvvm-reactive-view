@@ -69,9 +69,9 @@ console.log([h, createElement]);
         <div style=${{ display: "block", width: "100%" }}>hello world!</div>
         <input
             style="width:100%"
-            @input=${e => (state1.value = e.target.value)}
+            @input=${(e) => (state1.value = e.target.value)}
             *ref=${inputref}
-            @change=${e => (state1.value = e.target.value)}
+            @change=${(e) => (state1.value = e.target.value)}
             id="co11111111111de16"
             class="col-lg-12 col-md-12 col-sm-12 col-xs-12 snippet code16d form-control"
             value=${state1}
@@ -125,17 +125,17 @@ console.log([h, createElement]);
 }, 2000); */
     const vdom3 = html`
   <textarea value=${state1} @input=${[
-        e => {
+        (e) => {
             state1.value = e.target.value;
         }
     ]}></textarea>
   <input value=${state2} style='width:100%' @change=${[
-        e => {
+        (e) => {
             state2.value = e.target.value;
         }
     ]}  
 @input=${[
-        e => {
+        (e) => {
             state2.value = e.target.value;
         }
     ]}
@@ -161,8 +161,8 @@ console.log([h, createElement]);
     // setInterval(() => {
     //   state3.value = String(Math.random());
     // }, 2000);
-    watch(state1, state => (state3.value = state));
-    watch(state2, state => (state1.value = state));
+    watch(state1, (state) => (state3.value = state));
+    watch(state2, (state) => (state1.value = state));
     console.log(state3);
     // watch(state3, console.log);
     console.log(vdom4);
@@ -198,7 +198,7 @@ console.log([h, createElement]);
     );
 
     console.log("classsetstate", classsetstate);
-    watch(classsetstate, a => console.log(a));
+    watch(classsetstate, (a) => console.log(a));
     setTimeout(() => {
         classsetstate.add("vvvvvvvvvvv");
     }, 5000);

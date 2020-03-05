@@ -61,7 +61,7 @@ function ListMap(
       return cached_vdom1;
     } else { */
         const vdom = ITEMfactory(
-            computed(thiscom[listvalueattr], v => (v as any[])[index] as any),
+            computed(thiscom[listvalueattr], (v) => (v as any[])[index] as any),
 
             index
         );
@@ -103,7 +103,7 @@ function ListMap(
 
                         const realelementstoadd:
                             | Element[]
-                            | Node[] = numindexs.map(index => {
+                            | Node[] = numindexs.map((index) => {
                             const cached_element = get(
                                 this[cached_realele],
                                 index
@@ -120,7 +120,7 @@ function ListMap(
                         });
                         /* this[listinnervdom].push(...vdomstoadd);
             this[listinnerelement].push(...realelementstoadd); */
-                        realelementstoadd.forEach(element =>
+                        realelementstoadd.forEach((element) =>
                             appendchild(this, element)
                         );
                     } else if (newlength < oldlength) {
@@ -128,7 +128,7 @@ function ListMap(
             this[listinnerelement] = this[listinnerelement].slice(0, newlength); */
                         getchildren(this)
                             .slice(newlength)
-                            .forEach(element => removeElement(element));
+                            .forEach((element) => removeElement(element));
                     }
                 }
             }
@@ -155,7 +155,7 @@ function ListMap(
                 ITEMfactory(
                     computed(
                         this[listvalueattr],
-                        v => (v as any[])[index] as any
+                        (v) => (v as any[])[index] as any
                     ),
 
                     index

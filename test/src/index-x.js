@@ -15,15 +15,15 @@ const lirefs = [];
 const temp$ref = createRef();
 const check = createState(false);
 const check2 = createState(true);
-watch(check2, a => console.log(a));
+watch(check2, (a) => console.log(a));
 const check3 = createState(true);
-watch(check3, a => console.log(a));
+watch(check3, (a) => console.log(a));
 const check4 = createState(true);
-watch(check4, a => console.log(a));
+watch(check4, (a) => console.log(a));
 const notcheck = computed(
     check,
-    a => !a,
-    v => {
+    (a) => !a,
+    (v) => {
         // console.log(v);
         console.log(notcheck, check, v);
         // check3.value = v;
@@ -33,8 +33,8 @@ const notcheck = computed(
 var list = Array(10)
     .fill(undefined)
     .map((v, i) => i);
-watch(check, a => console.log(a));
-watch(notcheck, a => console.log(a));
+watch(check, (a) => console.log(a));
+watch(notcheck, (a) => console.log(a));
 var vdom = (
     <>
         <input type="radio" $checked={check4} name="myname1" />
@@ -48,7 +48,7 @@ var vdom = (
                 <ul>
                     {list.map((a, index) => (
                         <li
-                            $ref={ele => {
+                            $ref={(ele) => {
                                 lirefs[index] = ele;
                                 lirefs.length = list.length;
                             }}
@@ -73,7 +73,7 @@ var vdom = (
                                         <div class="gitee-nav__avatar-box">
                                             <a
                                                 href="/masx200"
-                                                onclick={e =>
+                                                onclick={(e) =>
                                                     e.preventDefault()
                                                 }
                                             >

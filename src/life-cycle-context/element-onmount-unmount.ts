@@ -23,7 +23,7 @@ import { Listener } from "src/Reactivity/custom-observer-target";
 
 export function onmounted(ele: Element | Node | Array<Node>) {
     if (isArray(ele)) {
-        ele.forEach(e => {
+        ele.forEach((e) => {
             onmounted(e);
         });
     } else if (isNode(ele)) {
@@ -68,7 +68,7 @@ export function onmounted(ele: Element | Node | Array<Node>) {
 }
 export function onunmounted(ele: Element | Node | Array<Node>) {
     if (isArray(ele)) {
-        ele.forEach(e => {
+        ele.forEach((e) => {
             onunmounted(e);
         });
     } else if (isNode(ele)) {

@@ -12,7 +12,7 @@ import {
 console.log([h, createElement]);
 const vdom = (
     <select
-        onchange={e => console.log(e)}
+        onchange={(e) => console.log(e)}
         style={{ textAlign: "center", fontSize: "30px", color: "#65a4f0" }}
         value="94b92331-e2f4-40c6-90ee-80e203a4de3a"
         name="version_id"

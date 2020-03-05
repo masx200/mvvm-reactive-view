@@ -70,7 +70,7 @@ function Arraycomputed<T extends UnwrapedState>(
         const value = apply(
             callback,
             undefined,
-            state.map(st => st.valueOf())
+            state.map((st) => st.valueOf())
         );
 
         const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
@@ -91,7 +91,7 @@ function Arraycomputed<T extends UnwrapedState>(
         configurable: true
     });
 
-    state.forEach(state => {
+    state.forEach((state) => {
         watch(state, () => {
             let newvalue = getter();
             if (newvalue !== memorized) {
