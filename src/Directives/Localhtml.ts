@@ -12,7 +12,7 @@ export const Localhtml = (
 ) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(vdom);
-        // vdom.children.length = 0;
+        vdom.children.length = 0;
         createhtmlandtextdirective(
             setelehtml,
             "html",
