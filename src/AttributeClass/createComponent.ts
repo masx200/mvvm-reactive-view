@@ -1,10 +1,8 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import {
-    addmountedlistner,
-    addunmountedlistner,
-    addcreatedlistner,
-    addupdatedlistner
-} from "src/others/addlistener-mount-unmount-updated";
+import { addmountedlistner } from "src/others/addmountedlistner";
+import { addcreatedlistner } from "src/others/addcreatedlistner";
+import { addupdatedlistner } from "src/others/addupdatedlistner";
+import { addunmountedlistner } from "src/others/addunmountedlistner";
 import { cached_create_componet } from "../others/cached-map";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";

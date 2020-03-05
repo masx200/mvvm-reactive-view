@@ -1,6 +1,6 @@
 const rootnode = document.body;
-const connectedeventname = Symbol("mounted").toString();
-const disconnectedeventname = Symbol("unmounted").toString();
+export const connectedeventname = Symbol("mounted").toString();
+export const disconnectedeventname = Symbol("unmounted").toString();
 const callback = function(mutations: MutationRecord[]) {
     mutations.forEach(function(record: MutationRecord) {
         console.log("Mutation: ", record);
@@ -41,23 +41,7 @@ const option = {
 
 mo.observe(rootnode, option);
 
-export function addmountedlistner(ele: Element, call: () => void) {
-    ele.addEventListener(connectedeventname, () => {
-        call();
-    });
-}
-
-export function addunmountedlistner(ele: Element, call: () => void) {
-    ele.addEventListener(disconnectedeventname, () => {
-        call();
-    });
-}
-const updatedeventname = Symbol("updated").toString();
-export function addupdatedlistner(ele: Element, call: () => void) {
-    ele.addEventListener(updatedeventname, () => {
-        call();
-    });
-}
+export const updatedeventname = Symbol("updated").toString();
 new MutationObserver((mutations: MutationRecord[]) => {
     mutations.forEach(function(record: MutationRecord) {
         console.log("Mutation: ", record);
@@ -73,16 +57,7 @@ new MutationObserver((mutations: MutationRecord[]) => {
 function dispatchupdated(e: Node) {
     e.dispatchEvent(new Event(updatedeventname, { bubbles: true }));
 }
-const createdeventname = Symbol("created").toString();
-export function addcreatedlistner(ele: Element, call: () => void) {
-    ele.addEventListener(
-        createdeventname,
-        () => {
-            call();
-        },
-        { once: true }
-    );
-}
+export const createdeventname = Symbol("created").toString();
 export function dispatchcreated(e: Node) {
     e.dispatchEvent(new Event(createdeventname));
 }

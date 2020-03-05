@@ -10,7 +10,9 @@ function createhtmlandtextdirective(
     },
     errorname: string,
     ele: Element,
-    text: string | ReactiveState<any>
+    text: string | ReactiveState<any>,
+    onmount: (call: () => void) => void,
+    onunmount: (call: () => void) => void
 ) {
     {
         const element = ele;
@@ -19,11 +21,14 @@ function createhtmlandtextdirective(
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
-            watch(text, () => {
-                const state = text;
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
+            onmount(() => {
+                const cancel = watch(text, () => {
+                    const state = text;
+                    if (isconnected(element)) {
+                        seteletext(ele, String(state));
+                    }
+                });
+                onunmount(cancel);
             });
 
             requestAnimationFrame(() => {

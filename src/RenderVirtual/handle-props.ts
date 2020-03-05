@@ -8,11 +8,9 @@ import Virtualdom from "../CreateElement/VirtualElement";
 import directives from "../Directives/directives";
 import { onevent } from "./handle-onevent";
 import { bindstatesymbol } from "./render-vdom-to-real";
-import {
-    addmountedlistner,
-    addunmountedlistner,
-    addupdatedlistner
-} from "src/others/addlistener-mount-unmount-updated.js";
+import { addmountedlistner } from "src/others/addmountedlistner";
+import { addupdatedlistner } from "src/others/addupdatedlistner";
+import { addunmountedlistner } from "src/others/addunmountedlistner";
 
 export default handleprops;
 function handleprops(

@@ -919,6 +919,13 @@ function createmathelement() {
     return createElementNS(mathnamespace, "math");
 }
 
+function removeNode(node) {
+    let parentNode = node.parentNode;
+    if (parentNode) {
+        parentNode.removeChild(node);
+    }
+}
+
 function replaceChild(newChild, oldChild) {
     let parentNode = oldChild.parentNode;
     if (parentNode) {
@@ -2062,140 +2069,6 @@ const Localcreated = (call, ele, vdom, onmount, onunmount, onupdated) => {
     }
 };
 
-const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
-    console.log(value, ele, vdom, onmount, onunmount, onupdated);
-};
-
-function createhtmlandtextdirective(seteletext, errorname, ele, text) {
-    {
-        const element = ele;
-        if (isstring(text)) {
-            requestAnimationFrame(() => {
-                seteletext(ele, text);
-            });
-        } else if (isReactiveState(text)) {
-            watch(text, () => {
-                const state = text;
-                if (isconnected(element)) {
-                    seteletext(ele, String(state));
-                }
-            });
-            requestAnimationFrame(() => {
-                seteletext(ele, String(text));
-            });
-        } else {
-            console.error(text);
-            console.error("invalid " + errorname);
-            throw TypeError();
-        }
-    }
-}
-
-const Localhtml = (html, ele, _vdom) => {
-    if (isstring(html) || isReactiveState(html)) {
-        console.log(_vdom);
-        createhtmlandtextdirective(setelehtml, "html", ele, html);
-    } else {
-        throw new TypeError;
-    }
-};
-
-const Localmounted = (call, ele, vdom, onmount, onunmount) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onmount, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-};
-
-const Localref = (ref, ele, _vdom) => {
-    if (isfunction(ref)) {
-        apply(ref, undefined, [ ele ]);
-    } else if (isobject(ref)) {
-        set(ref, "value", ele);
-    } else {
-        console.log(_vdom);
-        console.error(ref);
-        console.error("invalid ref");
-        throw TypeError();
-    }
-};
-
-const Localtext = (text, ele, _vdom) => {
-    if (isstring(text) || isReactiveState(text)) {
-        console.log(_vdom);
-        createhtmlandtextdirective(seteletext, "text", ele, text);
-    } else {
-        throw new TypeError;
-    }
-};
-
-const Localunmounted = (call, ele, vdom, onmount, onunmount) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onunmount, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-};
-
-const Localupdated = (call, ele, vdom, onmount, onunmount, onupdated) => {
-    console.log([ call, ele, vdom, onmount, onunmount ]);
-    if (typeof call === "function") {
-        apply(onupdated, undefined, [ call ]);
-    } else {
-        throw new TypeError;
-    }
-};
-
-const Localvalue = (value, element, vdom) => {
-    if (isReactiveState(value)) {
-        console.log(element);
-        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
-    } else {
-        throw new TypeError;
-    }
-};
-
-extenddirectives("ref", Localref);
-
-extenddirectives("html", Localhtml);
-
-extenddirectives("text", Localtext);
-
-extenddirectives("value", Localvalue);
-
-extenddirectives("checked", Localchecked);
-
-const Directives = extenddirectives;
-
-Directives("mounted", Localmounted);
-
-Directives("unmounted", Localunmounted);
-
-Directives("updated", Localupdated);
-
-Directives("created", Localcreated);
-
-extenddirectives("for", localfor);
-
-function useCreated(fun) {
-    createdctx.add(fun);
-}
-
-function useUpdated(fun) {
-    updatedctx.add(fun);
-}
-
-function useMounted(fun) {
-    mountedctx.add(fun);
-}
-
-function useUnMounted(fun) {
-    unmountedctx.add(fun);
-}
-
 function getproperyreadproxy(a) {
     const __proto__ = "__proto__";
     const target = a;
@@ -2276,6 +2149,176 @@ function Arraycomputed(state, callback, setter) {
         });
     });
     return getproperyreadproxy(reactivestate);
+}
+
+const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
+    if (!Array.isArray(value)) {
+        throw TypeError();
+    }
+    const [list, fun] = value;
+    if (!isReactiveState(list) || !isfunction(fun)) {
+        throw TypeError();
+    }
+    vdom.children.length = 0;
+    const changecallback = () => {
+        const data = list.valueOf();
+        if (!isarray(data)) {
+            throw TypeError();
+        }
+        const oldlength = ele.childNodes.length;
+        const newlength = data.length;
+        const minlength = Math.min(oldlength, newlength);
+        if (newlength < oldlength) {
+            ele.childNodes.forEach((n, i) => {
+                if (i > minlength - 1) {
+                    removeNode(n);
+                }
+            });
+        } else {
+            const childs = new Array(data.length).map((v, index) => Reflect.apply(fun, undefined, [ computed(list, arr => arr[index]), index ]));
+            const nodes = render(childs);
+            nodes.forEach((n, i) => {
+                if (i > minlength - 1) {
+                    ele.appendChild(n);
+                }
+            });
+        }
+    };
+    console.log(value, ele, vdom, onmount, onunmount, onupdated);
+    onmount(changecallback);
+    watch(list, changecallback);
+};
+
+function createhtmlandtextdirective(seteletext, errorname, ele, text) {
+    {
+        const element = ele;
+        if (isstring(text)) {
+            requestAnimationFrame(() => {
+                seteletext(ele, text);
+            });
+        } else if (isReactiveState(text)) {
+            watch(text, () => {
+                const state = text;
+                if (isconnected(element)) {
+                    seteletext(ele, String(state));
+                }
+            });
+            requestAnimationFrame(() => {
+                seteletext(ele, String(text));
+            });
+        } else {
+            console.error(text);
+            console.error("invalid " + errorname);
+            throw TypeError();
+        }
+    }
+}
+
+const Localhtml = (html, ele, vdom) => {
+    if (isstring(html) || isReactiveState(html)) {
+        console.log(vdom);
+        vdom.children.length = 0;
+        createhtmlandtextdirective(setelehtml, "html", ele, html);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localmounted = (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localref = (ref, ele, _vdom) => {
+    if (isfunction(ref)) {
+        apply(ref, undefined, [ ele ]);
+    } else if (isobject(ref)) {
+        set(ref, "value", ele);
+    } else {
+        console.log(_vdom);
+        console.error(ref);
+        console.error("invalid ref");
+        throw TypeError();
+    }
+};
+
+const Localtext = (text, ele, vdom) => {
+    if (isstring(text) || isReactiveState(text)) {
+        console.log(vdom);
+        vdom.children.length = 0;
+        createhtmlandtextdirective(seteletext, "text", ele, text);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localunmounted = (call, ele, vdom, onmount, onunmount) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onunmount, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localupdated = (call, ele, vdom, onmount, onunmount, onupdated) => {
+    console.log([ call, ele, vdom, onmount, onunmount ]);
+    if (typeof call === "function") {
+        apply(onupdated, undefined, [ call ]);
+    } else {
+        throw new TypeError;
+    }
+};
+
+const Localvalue = (value, element, vdom) => {
+    if (isReactiveState(value)) {
+        console.log(element);
+        model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
+    } else {
+        throw new TypeError;
+    }
+};
+
+extenddirectives("ref", Localref);
+
+extenddirectives("html", Localhtml);
+
+extenddirectives("text", Localtext);
+
+extenddirectives("value", Localvalue);
+
+extenddirectives("checked", Localchecked);
+
+const Directives = extenddirectives;
+
+Directives("mounted", Localmounted);
+
+Directives("unmounted", Localunmounted);
+
+Directives("updated", Localupdated);
+
+Directives("created", Localcreated);
+
+extenddirectives("for", localfor);
+
+function useCreated(fun) {
+    createdctx.add(fun);
+}
+
+function useUpdated(fun) {
+    updatedctx.add(fun);
+}
+
+function useMounted(fun) {
+    mountedctx.add(fun);
+}
+
+function useUnMounted(fun) {
+    unmountedctx.add(fun);
 }
 
 const e$1 = Set.prototype, t$2 = Map.prototype;

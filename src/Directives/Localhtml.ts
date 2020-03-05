@@ -6,12 +6,21 @@ import { createhtmlandtextdirective } from "./create-html-and-text-directive";
 export const Localhtml = (
     html: unknown,
     ele: Element,
-    vdom: Virtualdom<any>
+    vdom: Virtualdom<any>,
+    onmount: (call: () => void) => void,
+    onunmount: (call: () => void) => void
 ) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(vdom);
         vdom.children.length = 0;
-        createhtmlandtextdirective(setelehtml, "html", ele, html);
+        createhtmlandtextdirective(
+            setelehtml,
+            "html",
+            ele,
+            html,
+            onmount,
+            onunmount
+        );
     } else {
         throw new TypeError();
     }
