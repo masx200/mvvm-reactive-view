@@ -1,5 +1,5 @@
 import { apply } from "../UtilTools/reflect";
-import Virtualdom from 'src/CreateElement/VirtualElement';
+import Virtualdom from "src/CreateElement/VirtualElement";
 export const Localunmounted = (
     call: unknown,
     ele: Element,

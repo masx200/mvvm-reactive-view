@@ -16,7 +16,7 @@
 //     //     throw TypeError();
 //     // }
 
-import { unmountedctx } from './Component-context';
+import { unmountedctx } from "./Component-context";
 
 // }
 export function useUnMounted(fun: () => void) {

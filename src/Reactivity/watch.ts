@@ -1,8 +1,7 @@
 import debounce from "lodash/debounce";
-import { cached_callback_debounced_watchs } from "../cached-map";
+import { cached_callback_debounced_watchs } from "../others/cached-map";
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
-import {
-    invalid_Function} from "../life-cycle-context/Component-context";
+import { invalid_Function } from "../life-cycle-context/Component-context";
 import { usewatch } from "../life-cycle-context/usewatchrecord";
 import ReactiveState, {
     addallistenerssymbol,

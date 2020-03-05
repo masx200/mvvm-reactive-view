@@ -1,6 +1,6 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
 
-import { asserttype } from "../asserttype";
+import { asserttype } from "../others/asserttype";
 import createElement from "../CreateElement/create-element";
 import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import mount from "../MountElement/mount-real-element";

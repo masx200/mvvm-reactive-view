@@ -12,7 +12,7 @@ import {
     addmountedlistner,
     addunmountedlistner,
     addupdatedlistner
-} from "src/addlistener-mount-unmount-updated.js";
+} from "src/others/addlistener-mount-unmount-updated.js";
 
 export default handleprops;
 function handleprops(

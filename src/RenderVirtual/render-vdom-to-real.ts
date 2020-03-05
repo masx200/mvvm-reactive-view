@@ -31,7 +31,7 @@ import Virtualdom, {
 } from "../CreateElement/VirtualElement";
 import handleprops from "./handle-props";
 import { autocreateclass } from "../AttributeClass/createComponent";
-import { dispatchcreated } from 'src/addlistener-mount-unmount-updated';
+import { dispatchcreated } from "src/others/addlistener-mount-unmount-updated";
 
 export const bindstatesymbol = Symbol("bindstate");
 

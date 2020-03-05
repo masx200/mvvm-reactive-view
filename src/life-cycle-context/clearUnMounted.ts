@@ -1,6 +1,6 @@
-import { unmountedctx } from './Component-context';
+import { unmountedctx } from "./Component-context";
 
 export function clearUnMounted() {
     // UnMountedSet = new Set();
-    unmountedctx.clear()
+    unmountedctx.clear();
 }

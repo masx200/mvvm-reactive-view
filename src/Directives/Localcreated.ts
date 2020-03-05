@@ -1,4 +1,4 @@
-import Virtualdom from 'src/CreateElement/VirtualElement';
+import Virtualdom from "src/CreateElement/VirtualElement";
 
 export const Localcreated = (
     call: unknown,

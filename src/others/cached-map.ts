@@ -1,6 +1,6 @@
-import { Htmlelementconstructor } from "./AttributeClass/createComponent";
-import { gettercallback } from "./Reactivity/watch";
-import { Listener } from "./Reactivity/custom-observer-target";
+import { Htmlelementconstructor } from "../AttributeClass/createComponent";
+import { gettercallback } from "../Reactivity/watch";
+import { Listener } from "../Reactivity/custom-observer-target";
 
 export const cached_create_componet = new WeakMap<
     Function,

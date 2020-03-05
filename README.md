@@ -449,7 +449,7 @@ const mycom = createComponent(
                 console.log("life-cycle-mounted1");
             });
             useUnMounted(() => {
-               console.log("life-cycle-unmounted");
+                console.log("life-cycle-unmounted");
             });
             watch(props.cccccc, console.log);
             return createElement("div", null, [

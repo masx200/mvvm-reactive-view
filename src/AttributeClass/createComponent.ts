@@ -4,8 +4,8 @@ import {
     addunmountedlistner,
     addcreatedlistner,
     addupdatedlistner
-} from "src/addlistener-mount-unmount-updated";
-import { cached_create_componet } from "../cached-map";
+} from "src/others/addlistener-mount-unmount-updated";
+import { cached_create_componet } from "../others/cached-map";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";

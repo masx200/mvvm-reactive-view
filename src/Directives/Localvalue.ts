@@ -1,6 +1,6 @@
 import { isReactiveState } from "../Reactivity/reactivestate.js";
 import { model } from "./model";
-import Virtualdom from 'src/CreateElement/VirtualElement.js';
+import Virtualdom from "src/CreateElement/VirtualElement.js";
 export const Localvalue = (
     value: unknown, //ReactiveState<any>,
     element: Element,

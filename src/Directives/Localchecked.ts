@@ -4,9 +4,12 @@ import { querySelectorAll } from "../UtilTools/dom";
 import { set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
 import { model } from "./model";
-export const Localchecked = (value: unknown,
+export const Localchecked = (
+    value: unknown,
     //ReactiveState<any>,
-    element: Element, vdom: Virtualdom<any>): void => {
+    element: Element,
+    vdom: Virtualdom<any>
+): void => {
     if (!isReactiveState(value)) {
         throw new TypeError();
     }
@@ -28,5 +31,9 @@ export const Localchecked = (value: unknown,
                 });
         }
     };
-    set(vdom.onevent, eventname, toArray([...eventsarray, dispatchallsamename]).filter(Boolean));
+    set(
+        vdom.onevent,
+        eventname,
+        toArray([...eventsarray, dispatchallsamename]).filter(Boolean)
+    );
 };

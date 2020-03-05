@@ -1,10 +1,10 @@
-import "./assetbrowser";
+import "./others/assetbrowser";
 import Condition from "./AttributeClass/conditon";
 import createComponent from "./AttributeClass/createComponent";
 import Switchable from "./AttributeClass/switchable";
 import h from "./CreateElement/create-element";
 import html from "./CreateElement/html";
-import createRef from "./createref";
+import createRef from "./others/createref";
 import "./CustomClass/CustomElementRegistry";
 import "./Directives/built-in-directs";
 import Directives from "./Directives/extend-directive";
