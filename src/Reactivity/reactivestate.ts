@@ -1,11 +1,10 @@
-import ObserverTarget, { Listener } from "./custom-observer-target";
 import debounce from "lodash/debounce";
-
+import { useststerecord } from "../life-cycle-context/useststerecord";
 import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 import { defineProperty } from "../UtilTools/reflect";
-import { isobject, isSet } from "../UtilTools/util";
-import { UnwrapedState } from "./watch";
-import { useststerecord } from "../life-cycle-context/useststerecord";
+import { isobject, isSet, gettagtype } from "../UtilTools/util";
+import ObserverTarget, { Listener } from "./custom-observer-target";
+
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 
@@ -19,37 +18,95 @@ export function isReactiveState(a: any): a is ReactiveState<any> {
     );
 }
 
-export const changetextnodesymbol = Symbol("changetextnode");
-export const Targetsymbol = Symbol("eventtatget");
-export const memlisteners = Symbol("memlisteners");
+const Targetsymbol = Symbol("eventtatget");
+const memlisteners = Symbol("memlisteners");
 export const dispatchsymbol = Symbol("dispatch");
 export const subscribesymbol = Symbol("subscribe");
 export const removeallistenerssymbol = Symbol("removeallisteners");
 export const addallistenerssymbol = Symbol("addallisteners");
+const tagtypesym = Symbol("tagtype");
+export default class ReactiveState<T> {
+    constructor(init: { value: T });
+    constructor(init: { get: () => T; set?: (v: T) => void });
+    constructor(init: { value?: T; get?: () => T; set?: (v: T) => void }) {
+        // let getter: undefined | (() => T);
+        // let setter: undefined | ((v: T) => void);
 
-export default class ReactiveState<T extends UnwrapedState> {
-    value: T extends Array<any>
-        ? Array<any>
-        : T extends Function
-        ? Function
-        : T extends Primitivetype
-        ? Primitivetype
-        : object;
+        if ("value" in init) {
+            let value = init.value;
+            this[tagtypesym] = gettagtype(value);
+            defineProperty(this, "value", {
+                configurable: false,
+                get: () => value,
+                set: (v: T) => {
+                    const tag = gettagtype(v);
+                    if (tag !== this[tagtypesym]) {
+                        throw TypeError();
+                    }
+                    value = v;
+                }
+            });
+        } else {
+            const getter = init.get;
+            const setter = init.set;
+            if (!getter) {
+                throw TypeError();
+            }
+            this[tagtypesym] = gettagtype(getter());
+            if (setter) {
+                defineProperty(this, "value", {
+                    configurable: false,
+                    get: getter,
+                    set: (v: T) => {
+                        const tag = gettagtype(v);
+                        if (tag !== this[tagtypesym]) {
+                            throw TypeError();
+                        }
+                        setter(v);
+                    }
+                });
+            } else {
+                defineProperty(this, "value", {
+                    configurable: false,
+                    get: getter
+                });
+            }
+        }
 
-    readonly [Symbol.toStringTag] = "ReactiveState";
+        // this.value = init as any;
 
-    constructor(init?: T) {
-        this.value = init as any;
-
-        defineProperty(this, "value", {
-            value: init,
-            configurable: true,
-            writable: true
-        });
+        // defineProperty(this, "value", {
+        //     value: init,
+        //     configurable: true,
+        //     writable: true
+        // });
 
         useststerecord(this);
     }
-    [debouncedispatch]: () => void = (() => {
+    private [tagtypesym]: string;
+    value!: T extends Array<any>
+        ? Array<any>
+        : T extends Function
+        ? Function
+        : T extends string
+        ? string
+        : T extends number
+        ? number
+        : T extends boolean
+        ? boolean
+        : T extends void
+        ? void
+        : T extends symbol
+        ? symbol
+        : T extends bigint
+        ? bigint
+        : T extends object
+        ? T
+        : never;
+
+    readonly [Symbol.toStringTag] = "ReactiveState";
+
+    private [debouncedispatch]: () => void = (() => {
         const debouncedfun = debounce(() => {
             this[Targetsymbol].dispatch();
         });
@@ -75,8 +132,8 @@ export default class ReactiveState<T extends UnwrapedState> {
         });
     }
 
-    [Targetsymbol] = new ObserverTarget();
-    [memlisteners] = new Set<Listener>();
+    private [Targetsymbol] = new ObserverTarget();
+    private [memlisteners] = new Set<Listener>();
 
     valueOf = () => {
         return this.value;

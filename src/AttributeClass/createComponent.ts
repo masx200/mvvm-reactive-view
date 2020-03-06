@@ -1,12 +1,13 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
-import { addmountedlistner } from "src/others/addmountedlistner";
+import { getcreated } from "src/life-cycle-context/created-get";
+import { getupdated } from "src/life-cycle-context/updated-get";
 import { addcreatedlistner } from "src/others/addcreatedlistner";
-import {
-    addupdatedlistner,
-    addstopupdatelistener
-} from "src/others/addupdatedlistner";
+import { addmountedlistner } from "src/others/addmountedlistner";
 import { addunmountedlistner } from "src/others/addunmountedlistner";
-import { cached_create_componet } from "../others/cached-map";
+import {
+    addstopupdatelistener,
+    addupdatedlistner
+} from "src/others/addupdatedlistner";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
 import Virtualdom, { Vdomchildren } from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
@@ -18,10 +19,11 @@ import {
     invalid_Function,
     openctx
 } from "../life-cycle-context/Component-context";
-import { getUnMounted } from "../life-cycle-context/getUnMounted";
 import { getMounted } from "../life-cycle-context/getMounted";
+import { getUnMounted } from "../life-cycle-context/getUnMounted";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
+import { cached_create_componet } from "../others/cached-map";
 import ReactiveState, { dispatchsymbol } from "../Reactivity/reactivestate.js";
 import readonlyproxy from "../Reactivity/readonly-proxy";
 import render from "../RenderVirtual/render-vdom-to-real";
@@ -29,7 +31,7 @@ import { componentsstylesheet } from "../ScopedCSS/parsecss-transformcss";
 import { registercssprefix } from "../ScopedCSS/registercssprefix";
 import { waitloadallstyle } from "../ScopedCSS/waitloadallstyle";
 import { seteletext } from "../UtilTools/dom";
-import { apply, defineProperty, get, set } from "../UtilTools/reflect";
+import { apply, get, set } from "../UtilTools/reflect";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { toArray } from "../UtilTools/toArray";
 import { isfunction, isobject, isstring } from "../UtilTools/util";
@@ -42,8 +44,6 @@ import {
 } from "./attr-change";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
-import { getcreated } from "src/life-cycle-context/created-get";
-import { getupdated } from "src/life-cycle-context/updated-get";
 
 const waittranformcsssymbol = Symbol("waittranformcss");
 export const innerwatchrecords = Symbol("innerwatchrecord");
@@ -90,11 +90,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                                 registercssprefix(css, prefix);
                             });
                         };
-
-                        /* const cssomold = parsecsstext(css);
-                const cssomnew = prefixcssrules(cssomold, prefix);
-                
-                const cssnewtext = cssrulestocsstext(cssomnew); */
                     }
                 }
 
@@ -102,10 +97,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     this
                 );
 
-                /*    if (isobject(defaultProps)) {
-          Object.assign(attrs, defaultProps);
-          
-        } */
                 if (isobject(propsjson)) {
                     Object.assign(attrs, propsjson);
                 }
@@ -120,12 +111,16 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                             const attributes = createeleattragentreadwrite(
                                 this
                             ) as Record<string, any>;
-                            const state = new ReactiveState();
-                            defineProperty(state, "value", {
+                            const state = new ReactiveState({
                                 get() {
                                     return get(attributes, key);
                                 }
                             });
+                            // defineProperty(state, "value", {
+                            //     get() {
+                            //         return get(attributes, key);
+                            //     }
+                            // });
 
                             return state;
                         })()
@@ -153,30 +148,15 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                         readonlyprop,
                         children.flat(1 / 0)
                     ]);
-                    /* custfun.call(
-            undefined,
-            
-            
-            readonlyprop,
-            children */
                 } catch (error) {
                     closectx();
                     console.error("error in component");
                     throw error;
                 }
-                /* 
-        if (isArray(possiblyvirtualdom)) {
-          possiblyvirtualdom = possiblyvirtualdom
-            .flat(Infinity)
-            .filter(Boolean);
-        } */
+
                 possiblyvirtualdom = toArray(possiblyvirtualdom);
                 if (isvalidvdom(possiblyvirtualdom)) {
-                    const vdomarray /* isArray(possiblyvirtualdom)
-                ? possiblyvirtualdom
-                : [possiblyvirtualdom]; */ = toArray(
-                        possiblyvirtualdom
-                    );
+                    const vdomarray = toArray(possiblyvirtualdom);
                     //
                     this[inner_vdom_symbol] = vdomarray
                         .flat(Infinity)
@@ -254,23 +234,6 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                             thencallbacksecond
                         );
                     }
-
-                    /* const stylelinkelement = createlinkstylesheet(
-              componentsstylesheet[prefix]
-            ); */
-                    /*   stylelinkelement.onload = () => {
-              mount(this[elementsymbol], this, false);
-            };
-            stylelinkelement.onerror = () => {
-              mount(this[elementsymbol], this, false);
-            }; */
-
-                    /*  Promise.all(
-              [...componentsstylesheet[prefix]].map(styleurl =>
-                loadlinkstyle(createlinkstylesheet(styleurl), this)
-              )
-            )
-*/
                 } else {
                     mount(this[elementsymbol], this);
                 }
@@ -289,23 +252,9 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                 if (this[readysymbol]) {
                     {
                         const propreactivestate = this[attributessymbol][name];
-                        /*   const attributes = createeleattragentreadwrite(this) as Record<
-              string,
-              any
-            >; */
+
                         if (propreactivestate) {
                             propreactivestate[dispatchsymbol]();
-
-                            /*   set(
-            get(this, attributessymbol)[name],
-            "value,",
-            (createeleattragentreadwrite(this) as { [key: string]: any })[
-              name
-            ] as any */
-
-                            /*   this[attributessymbol][name].value = createeleattragentreadwrite(
-            this
-          )[name]; */
                         }
                     }
                 }

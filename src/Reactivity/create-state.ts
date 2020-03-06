@@ -31,40 +31,41 @@ function createState<T extends UnwrapedState>(
   } */
 
     if (isprimitive(init) || isfunction(init)) {
-        return getproperyreadproxy(
-            combineproxy(new ReactiveState(init), {
-                defineProperty() {
-                    return false;
-                },
-                deleteProperty() {
-                    return false;
-                },
-                set(target, key, value) {
-                    /*  if (key === textnodesymbol) {
-          return set(target, key, value);
-        } */
+        const handler: ProxyHandler<any> = {
+            defineProperty() {
+                return false;
+            },
+            deleteProperty() {
+                return false;
+            },
+            set(target, key, value) {
+                /*  if (key === textnodesymbol) {
+      return set(target, key, value);
+    } */
 
-                    if (
-                        key === "value" &&
-                        ((isprimitive(value) && isprimitive(init)) ||
-                            (isfunction(value) && isfunction(init)))
-                    ) {
-                        if (target[key] !== value) {
-                            set(target, key, value);
-                            target[dispatchsymbol]();
-                        }
-                        return true;
-                    } else {
-                        console.error(value);
-                        console.error(init);
-                        console.error(invalid_primitive_or_object_state);
-                        throw TypeError();
+                if (
+                    key === "value" &&
+                    ((isprimitive(value) && isprimitive(init)) ||
+                        (isfunction(value) && isfunction(init)))
+                ) {
+                    if (target[key] !== value) {
+                        set(target, key, value);
+                        target[dispatchsymbol]();
                     }
-                },
-                setPrototypeOf() {
-                    return false;
+                    return true;
+                } else {
+                    console.error(value);
+                    console.error(init);
+                    console.error(invalid_primitive_or_object_state);
+                    throw TypeError();
                 }
-            })
+            },
+            setPrototypeOf() {
+                return false;
+            }
+        };
+        return getproperyreadproxy(
+            combineproxy(new ReactiveState({ value: init }), handler)
         );
     } else if (isReactiveState(init)) {
         return createState(init.valueOf() as any);

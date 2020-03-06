@@ -1,5 +1,6 @@
+import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 import { invalid_Function } from "src/life-cycle-context/Component-context";
-import { apply, defineProperty } from "src/UtilTools/reflect";
+import { apply } from "src/UtilTools/reflect";
 import { toArray } from "src/UtilTools/toArray";
 import {
     isArray,
@@ -8,28 +9,12 @@ import {
     isobject,
     isprimitive
 } from "src/UtilTools/util";
-
 import { getproperyreadproxy } from "./getproperyread-proxy";
 import ReactiveState, {
     dispatchsymbol,
     isReactiveState
 } from "./reactivestate.js";
 import watch, { gettercallback, UnwrapedState } from "./watch";
-import { invalid_ReactiveState } from "src/AttributeClass/conditon";
-
-/* interface gettercallback<
-import { invalid_Function } from '../mounted-unmounted/Component-context';
-import { apply, defineProperty } from '../UtilTools/reflect';
-import { toArray } from '../UtilTools/toArray';
-import { isArray, isFunction, isfunction, isobject, isprimitive } from '../UtilTools/util';
-import { getproperyreadproxy } from './getproperyread-proxy';
-import ReactiveState, { dispatchsymbol, isReactiveState } from './ReactiveState';
-import { gettercallback, UnwrapedState, watch } from './watch';
-
- 
-> {
-  (...args: T[]): any;
-} */
 
 const computed = function<T extends UnwrapedState>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
@@ -48,11 +33,6 @@ const computed = function<T extends UnwrapedState>(
         console.error("Empty array not allowed");
         throw new Error();
     }
-    /*  state1 = Arraycomputed(
-      toArray(state),
-
-      callback
-    ); */
 
     const state1 = Arraycomputed(state1array, callback, setter);
 
@@ -65,7 +45,6 @@ function Arraycomputed<T extends UnwrapedState>(
     callback: gettercallback,
     setter?: SetterFun
 ): ReactiveState<any> {
-    const reactivestate = new ReactiveState();
     const getter = () => {
         const value = apply(
             callback,
@@ -84,12 +63,15 @@ function Arraycomputed<T extends UnwrapedState>(
     };
 
     let memorized = getter();
-
-    defineProperty(reactivestate, "value", {
+    const reactivestate = new ReactiveState({
         set: isfunction(setter) ? setter : undefined,
-        get: getter,
-        configurable: true
+        get: getter
     });
+    // defineProperty(reactivestate, "value", {
+    //     set: isfunction(setter) ? setter : undefined,
+    //     get: getter,
+    //     configurable: true
+    // });
 
     state.forEach((state) => {
         watch(state, () => {

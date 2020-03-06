@@ -27,8 +27,6 @@ import { watch } from "./watch";
 import { combineproxy } from "src/others/combineproxy";
 
 export default function(init: object): ReactiveState<object> {
-    const reactive: ReactiveState<object> = new ReactiveState(init);
-
     let initobj = init;
     const containReactiveState =
         isplainobject(init) &&
@@ -53,7 +51,9 @@ export default function(init: object): ReactiveState<object> {
             });
         });
     }
-
+    const reactive: ReactiveState<object> = new ReactiveState({
+        value: initobj
+    });
     if (containReactiveState) {
         state_entries.forEach(([key, state]) => {
             watch(state, () => {
@@ -61,7 +61,7 @@ export default function(init: object): ReactiveState<object> {
             });
         });
     }
-    reactive.value = initobj;
+    // reactive.value = initobj;
 
     const objproxyhandler: ProxyHandler<object> = {};
     objproxyhandler.ownKeys = (target) => {
