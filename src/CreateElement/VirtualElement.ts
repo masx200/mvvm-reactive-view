@@ -11,9 +11,7 @@ import { VaildVDom } from "./isvalidvdom";
 
 export function isVirtualdom(a: any): a is Virtualdom<any> {
     return VirtualElementSet.has(a);
-    /*   isobject(a) &&
-    
-    get(a, isvirtualelement) === isvirtualelement */
+ 
 }
 
 export type Vdomchildren = Array<VaildVDom>;
