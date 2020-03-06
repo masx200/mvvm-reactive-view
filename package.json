@@ -1,6 +1,6 @@
 {
     "type": "module",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "main": "./dist/index.min.js",
     "types": "./dist/index.d.ts",
     "module": "./dist/index.min.js",
@@ -24,6 +24,8 @@
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
     "dependencies": {
+        "typescript": "^3.8.3",
+        "@types/rollup-plugin-postcss": "^2.0.0",
         "csstype": "^2.6.9"
     },
     "devDependencies": {
@@ -58,7 +60,6 @@
         "rollup-plugin-typescript2": "^0.26.0",
         "serialize-javascript": "^2.1.2",
         "terser": "^4.6.3",
-        "tslib": "^1.10.0",
-        "typescript": "^3.8.3"
+        "tslib": "^1.10.0"
     }
 }
