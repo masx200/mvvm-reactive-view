@@ -84,7 +84,8 @@ p{color:blue !important;}
 var vdom = createElement(mycomapp);
 // MountElement(vdom, document.getElementById("root"));
 const container = document.createElement("div");
-document.body.appendChild(MountElement(vdom, container));
+MountElement(vdom, container)
+document.body.appendChild(container);
 const removecom = () => (
     <button
         $text="移除当前容器元素"

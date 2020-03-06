@@ -271,8 +271,9 @@ const vdom = [
     createElement(mycomappclass),
     createElement(mycomappclass)
 ];
-
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 # 条件渲染
@@ -286,10 +287,14 @@ var vdom = Condition(
     createElement("p", null, ["testtrue"]),
     createElement("div", undefined, "testfalese")
 );
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+
 setTimeout(() => {
     mystate.value = false;
 }, 3000);
+
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 # 组件化
@@ -318,13 +323,10 @@ const Hellowordclass = createComponent(
         { css, defaultProps }
     )
 );
-document.body.appendChild(
-    MountElement(
-        <Hellowordclass />,
-
-        document.createElement("div")
-    )
-);
+const vdom = <Hellowordclass />;
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 ## 更新:可以不使用`createComponent`,创建组件了,内部会自动使用`createComponent`,自动转换
@@ -482,10 +484,13 @@ const vdom = createElement(
     ["children"]
 );
 console.log(vdom);
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+
 setTimeout(() => {
     mystate.value = "bbbbbbbbbbnnnnnnnnnnnnn";
 }, 5000);
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 # 组件中逻辑提取和重用
@@ -547,8 +552,9 @@ const mycomapp = createComponent(() => {
     );
 });
 var vdom = createElement(mycomapp);
-
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 ## 另一种状态之间有依赖关系的用法,看起来是状态里面嵌套状态,但是实际上只是个语法糖
@@ -571,7 +577,9 @@ const vdom = html`
 
 console.log([vdom, colortext, stylestate]);
 watch([colortext, stylestate], (a, b) => console.log([a, b]));
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 ```js
@@ -590,7 +598,9 @@ function App1() {
 
 var vdom = <div>{App1()}</div>;
 
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 ## 不建议在组件局部样式 css 中使用`@import`加载外部样式表
@@ -628,13 +638,11 @@ document.body.appendChild(MountElement(vdom, document.createElement("div")));
             { css, defaultProps }
         )
     );
-    document.body.appendChild(
-        MountElement(
-            createElement(Hellowordclass),
+    const vdom = createElement(Hellowordclass);
 
-            document.createElement("div")
-        )
-    );
+    const container = document.createElement("div");
+    MountElement(vdom, container);
+    document.body.appendChild(container);
 })();
 ```
 
@@ -653,23 +661,24 @@ var vdom = html`
     <${mycom} />
 `;
 
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 ```ts
-document.body.appendChild(
-    MountElement(
-        createElement(
-            class extends HTMLElement {
-                static defaultProps = {
-                    name: "HelloKitty",
-                    myAge: 18
-                };
-            }
-        ),
-        document.createElement("div")
-    )
+const vdom = createElement(
+    class extends HTMLElement {
+        static defaultProps = {
+            name: "HelloKitty",
+            myAge: 18
+        };
+    }
 );
+
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 ```
 
 # 列表渲染
@@ -709,59 +718,6 @@ let vdom = (
     />
 );
 ```
-
-<!--
-使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
-
-```jsx
-const refarray = [];
-const liststate = createState(
-    Array(10)
-        .fill(undefined)
-        .map((v, i) => i)
-);
-const vdom = (
-    <>
-        {ListMap(liststate, (value, index) => (
-            <div
-                $ref={ele => {
-                    refarray.length = liststate.length;
-                    refarray[index] = ele;
-                }}
-            >
-                {["item:", "value:", value, "index:", index]}
-            </div>
-        ))}
-
-        <button
-            $text="push"
-            onclick={() => {
-                liststate.push(Math.random());
-            }}
-        />
-        <button
-            $text="pop"
-            onclick={() => {
-                liststate.pop();
-            }}
-        />
-
-        <button
-            $text="shift"
-            onclick={() => {
-                liststate.shift();
-            }}
-        />
-        <button
-            $text="unshift"
-            onclick={() => {
-                liststate.unshift(Math.random());
-            }}
-        />
-    </>
-);
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
-``` -->
 
 # 可自由切换的组件,可配合前端路由使用
 
@@ -1125,13 +1081,13 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/jsx.ts
 
 ### 第三个参数可选，是`setter`函数
 
-## 使用`Directives`函数来扩展指令,返回已有的指令合集
+## 使用`Directives`函数来扩展指令
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
 ## 函数`h`等同于`createElement`,用来生成虚拟 `dom`,第一个参数可以是元素的标签名，或者`costum element`的构造函数，第二个参数可以是子元素数组，或者元素的`attributes`,后面的剩余参数都是子元素
 
-## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
+## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上
 
 ## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
 
