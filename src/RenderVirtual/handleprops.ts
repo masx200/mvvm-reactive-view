@@ -9,19 +9,14 @@ import { bindstatesymbol } from "./render-vdom-to-real";
 import { addmountedlistner } from "src/others/addmountedlistner";
 import { addunmountedlistner } from "src/others/addunmountedlistner";
 export function handleprops(element: HTMLElement | Element | SVGSVGElement | SVGElement, vdom: Virtualdom<any>) {
-    /* if (!vdom.element) {
-    vdom.element = element;
-  }
- */
-    vdom.element.push(element);
-    /*  if (vdom.element.length > 1) {
-    console.log(vdom);
-  } */
-    // ((element, vdom) => {
+    
+    
+  
     const attribute1: Record<string, any> = createeleattr(element);
     Object.assign(attribute1, vdom.props);
+let cancelarr:undefined|Array<()=>void>
     addmountedlistner(element, () => {
-        const cacelarr = Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
+         cacelarr = Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
             return watch(primitivestate, () => {
                 const state = primitivestate;
@@ -30,20 +25,17 @@ export function handleprops(element: HTMLElement | Element | SVGSVGElement | SVG
                 }
             });
         });
-        addunmountedlistner(element, () => {
-            cacelarr.forEach((f) => {
+        
+    });
+addunmountedlistner(element, () => {
+     cacelarr&&       cacelarr.forEach((f) => {
                 f();
             });
         });
-    });
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
         onevent(element, event, callbacks);
     });
-    //  })(element, vdom);
-    /*  if (!element[bindstatesymbol]) {
-      element[bindstatesymbol] = new Set();
-    }
-  */
+    
     [...Object.values(vdom.bindattr), ...Object.values(vdom.directives)]
         .flat(1 / 0)
         .filter((e) => isReactiveState(e))
