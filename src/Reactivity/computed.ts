@@ -1,26 +1,20 @@
 import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 import { invalid_Function } from "src/life-cycle-context/Component-context";
-import { apply } from "src/UtilTools/reflect";
 import { toArray } from "src/UtilTools/toArray";
 import {
     isArray,
-    isFunction,
-    isfunction,
-    isobject,
-    isprimitive
-} from "src/UtilTools/util";
-import { getproperyreadproxy } from "./getproperyread-proxy";
+    isFunction} from "src/UtilTools/util";
 import ReactiveState, {
-    dispatchsymbol,
     isReactiveState
 } from "./reactivestate.js";
-import watch, { gettercallback, UnwrapedState } from "./watch";
+import { gettercallback, UnwrapedState } from "./watch";
+import { Arraycomputed } from './Arraycomputed';
 
 const computed = function<T extends UnwrapedState>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
-    callback: gettercallback,
+    callback: gettercallback<T>,
     setter?: SetterFun
-): ReactiveState<any> {
+): ReactiveState<T> {
     if (!((isArray(state) || isReactiveState(state)) && isFunction(callback))) {
         console.error(state);
         console.error(callback);
@@ -39,53 +33,5 @@ const computed = function<T extends UnwrapedState>(
     return state1;
 };
 export default computed;
-type SetterFun = (v: any) => void;
-function Arraycomputed<T extends UnwrapedState>(
-    state: ReactiveState<T>[],
-    callback: gettercallback,
-    setter?: SetterFun
-): ReactiveState<any> {
-    const getter = () => {
-        const value = apply(
-            callback,
-            undefined,
-            state.map((st) => st.valueOf())
-        );
-
-        const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
-
-        if (isobject(possiblevalue) || isprimitive(possiblevalue)) {
-            return possiblevalue;
-        } else {
-            console.error(possiblevalue);
-            throw TypeError();
-        }
-    };
-
-    let memorized = getter();
-    const reactivestate = new ReactiveState({
-        set: isfunction(setter) ? setter : undefined,
-        get: getter
-    });
-    // defineProperty(reactivestate, "value", {
-    //     set: isfunction(setter) ? setter : undefined,
-    //     get: getter,
-    //     configurable: true
-    // });
-
-    state.forEach((state) => {
-        watch(state, () => {
-            let newvalue = getter();
-            if (newvalue !== memorized) {
-                reactivestate[dispatchsymbol]();
-
-                memorized = newvalue;
-            }
-            //
-        });
-    });
-
-    return getproperyreadproxy(reactivestate);
-}
-
+export type SetterFun = (v: any) => void;
 export { computed };

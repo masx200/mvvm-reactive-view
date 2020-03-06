@@ -26,10 +26,6 @@ export function getproperyreadproxy<T extends object>(a: T): T {
             return Array.from(
                 new Set([...ownKeys(target), ...ownKeys(myvalueobj)])
             );
-
-            /* Array.from(
-          new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
-        ); */
         },
         has(target, key) {
             const myvalue = get(target, "value");
@@ -50,14 +46,6 @@ export function getproperyreadproxy<T extends object>(a: T): T {
                         : property;
                 }
             }
-
-            /*  const myvalue = get(target, "value");
-  
-        if (has(target, key)) {
-          return get(target, key);
-        } else if (has(myvalue, key)) {
-          return get(myvalue, key);
-        } */
         }
     });
 }

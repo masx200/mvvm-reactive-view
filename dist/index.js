@@ -396,25 +396,9 @@ function usewatch(state, callback) {
     }
 }
 
-class ObserverTarget {
-    constructor() {
-        this.Listeners = new Set;
-    }
-    addListener(listener) {
-        const listenerset = this.Listeners;
-        listenerset.add(listener);
-    }
-    dispatch() {
-        const listenerset = this.Listeners;
-        listenerset.forEach(listener => {
-            Promise.resolve().then(() => {
-                listener();
-            });
-        });
-    }
-    removeListener(listener) {
-        const listenerset = this.Listeners;
-        listenerset.delete(listener);
+function useststerecord(state) {
+    if (ctxopen) {
+        StateSet.add(state);
     }
 }
 
@@ -437,9 +421,25 @@ function set(target, propertyKey, value) {
     }
 }
 
-function useststerecord(state) {
-    if (ctxopen) {
-        StateSet.add(state);
+class ObserverTarget {
+    constructor() {
+        this.Listeners = new Set;
+    }
+    addListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.add(listener);
+    }
+    dispatch() {
+        const listenerset = this.Listeners;
+        listenerset.forEach(listener => {
+            Promise.resolve().then(() => {
+                listener();
+            });
+        });
+    }
+    removeListener(listener) {
+        const listenerset = this.Listeners;
+        listenerset.delete(listener);
     }
 }
 
@@ -471,6 +471,8 @@ const removeallistenerssymbol = Symbol("removeallisteners");
 
 const addallistenerssymbol = Symbol("addallisteners");
 
+const tagtypesym = Symbol("tagtype");
+
 class ReactiveState {
     constructor(init) {
         this[Symbol.toStringTag] = "ReactiveState";
@@ -485,12 +487,46 @@ class ReactiveState {
         this[_b] = new ObserverTarget;
         this[_c] = new Set;
         this.valueOf = () => this.value;
-        this.value = init;
-        defineProperty(this, "value", {
-            value: init,
-            configurable: true,
-            writable: true
-        });
+        if ("value" in init) {
+            let value = init.value;
+            this[tagtypesym] = gettagtype(value);
+            defineProperty(this, "value", {
+                configurable: false,
+                get: () => value,
+                set: v => {
+                    const tag = gettagtype(v);
+                    if (tag !== this[tagtypesym]) {
+                        throw TypeError();
+                    }
+                    value = v;
+                }
+            });
+        } else {
+            const getter = init.get;
+            const setter = init.set;
+            if (!getter) {
+                throw TypeError();
+            }
+            this[tagtypesym] = gettagtype(getter());
+            if (setter) {
+                defineProperty(this, "value", {
+                    configurable: false,
+                    get: getter,
+                    set: v => {
+                        const tag = gettagtype(v);
+                        if (tag !== this[tagtypesym]) {
+                            throw TypeError();
+                        }
+                        setter(v);
+                    }
+                });
+            } else {
+                defineProperty(this, "value", {
+                    configurable: false,
+                    get: getter
+                });
+            }
+        }
         useststerecord(this);
     }
     [(_a = debouncedispatch, removeallistenerssymbol)]() {
@@ -693,6 +729,14 @@ function createeleattragentreadwrite(t) {
     return i;
 }
 
+function getcreated() {
+    return createdctx.getall();
+}
+
+function getupdated() {
+    return updatedctx.getall();
+}
+
 const rootnode = document.body;
 
 const connectedeventname = Symbol("mounted").toString();
@@ -767,14 +811,18 @@ function dispatchcreated(e) {
     e.dispatchEvent(new Event(createdeventname));
 }
 
-function addmountedlistner(ele, call) {
-    ele.addEventListener(connectedeventname, call);
-}
-
 function addcreatedlistner(ele, call) {
     ele.addEventListener(createdeventname, call, {
         once: true
     });
+}
+
+function addmountedlistner(ele, call) {
+    ele.addEventListener(connectedeventname, call);
+}
+
+function addunmountedlistner(ele, call) {
+    ele.addEventListener(disconnectedeventname, call);
 }
 
 function addupdatedlistner(ele, call) {
@@ -787,10 +835,6 @@ function addstopupdatelistener(ele) {
             e.stopPropagation();
         }
     });
-}
-
-function addunmountedlistner(ele, call) {
-    ele.addEventListener(disconnectedeventname, call);
 }
 
 function merge_entries(a) {
@@ -867,12 +911,12 @@ function isclassextendsHTMLElement(initclass) {
     return !!(isfunction(initclass) && initclass.prototype && initclass.prototype instanceof HTMLElement);
 }
 
-function getUnMounted() {
-    return unmountedctx.getall();
-}
-
 function getMounted() {
     return mountedctx.getall();
+}
+
+function getUnMounted() {
+    return unmountedctx.getall();
 }
 
 function seteletext(e, v) {
@@ -1331,8 +1375,6 @@ function isproxy(a) {
     return proxyset.has(a);
 }
 
-const proxytotarget = new WeakMap;
-
 const proxytohandler = new WeakMap;
 
 function combineproxy(target, newhandler) {
@@ -1346,7 +1388,6 @@ function combineproxy(target, newhandler) {
         return target;
     } else {
         const pro = new Proxy(target, newhandler);
-        proxytotarget.set(pro, target);
         proxytohandler.set(pro, newhandler);
         proxyset.add(pro);
         return pro;
@@ -1642,14 +1683,6 @@ class AttrChange extends HTMLElement {
 
 _a$1 = readysymbol;
 
-function getcreated() {
-    return createdctx.getall();
-}
-
-function getupdated() {
-    return updatedctx.getall();
-}
-
 const waittranformcsssymbol = Symbol("waittranformcss");
 
 const innerwatchrecords = Symbol("innerwatchrecord");
@@ -1694,8 +1727,7 @@ function createComponentold(custfun) {
                 openctx();
                 const propattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
                     const attributes = createeleattragentreadwrite(this);
-                    const state = new ReactiveState;
-                    defineProperty(state, "value", {
+                    const state = new ReactiveState({
                         get() {
                             return get(attributes, key);
                         }
@@ -2159,7 +2191,6 @@ const computed = function(state, callback, setter) {
 };
 
 function Arraycomputed(state, callback, setter) {
-    const reactivestate = new ReactiveState;
     const getter = () => {
         const value = apply(callback, undefined, state.map(st => st.valueOf()));
         const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
@@ -2171,10 +2202,9 @@ function Arraycomputed(state, callback, setter) {
         }
     };
     let memorized = getter();
-    defineProperty(reactivestate, "value", {
+    const reactivestate = new ReactiveState({
         set: isfunction(setter) ? setter : undefined,
-        get: getter,
-        configurable: true
+        get: getter
     });
     state.forEach(state => {
         watch(state, () => {
@@ -2452,7 +2482,6 @@ function deepobserve(e, t) {
 }
 
 function handleobjectstate(init) {
-    const reactive = new ReactiveState(init);
     let initobj = init;
     const containReactiveState = isplainobject(init) && Object.values(init).some(a => isReactiveState(a));
     const state_entries = Object.entries(init).filter(e => {
@@ -2474,6 +2503,9 @@ function handleobjectstate(init) {
             });
         });
     }
+    const reactive = new ReactiveState({
+        value: initobj
+    });
     if (containReactiveState) {
         state_entries.forEach(([key, state]) => {
             watch(state, () => {
@@ -2481,7 +2513,6 @@ function handleobjectstate(init) {
             });
         });
     }
-    reactive.value = initobj;
     const objproxyhandler = {};
     objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
     objproxyhandler.setPrototypeOf = () => false;
@@ -2604,7 +2635,7 @@ const set_prototype = Set.prototype;
 
 function createState(init) {
     if (isprimitive(init) || isfunction(init)) {
-        return getproperyreadproxy(combineproxy(new ReactiveState(init), {
+        const handler = {
             defineProperty() {
                 return false;
             },
@@ -2628,7 +2659,10 @@ function createState(init) {
             setPrototypeOf() {
                 return false;
             }
-        }));
+        };
+        return getproperyreadproxy(combineproxy(new ReactiveState({
+            value: init
+        }), handler));
     } else if (isReactiveState(init)) {
         return createState(init.valueOf());
     } else if (isobject(init)) {

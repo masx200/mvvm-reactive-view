@@ -6,22 +6,10 @@ interface Htmlelementconstructor {
     css?: string;
 }
 declare const createComponent: (custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
-declare class ObserverTarget {
-    Listeners: Set<Listener>;
-    addListener(listener: Listener): void;
-    dispatch(): void;
-    removeListener(listener: Listener): void;
-}
+type Primitivetype = string | number | boolean | undefined | bigint;
 interface Listener {
     (): any;
 }
-type Primitivetype = string | number | boolean | undefined | bigint;
-type CancelWatchfun = () => void;
-type UnwrapedState = any;
-interface gettercallback {
-    (...args: UnwrapedState[]): any;
-}
-declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: gettercallback): CancelWatchfun;
 declare const addonelistner: unique symbol;
 declare const removeonelistner: unique symbol;
 declare const cancelsubscribe: unique symbol;
@@ -32,18 +20,26 @@ declare const dispatchsymbol: unique symbol;
 declare const subscribesymbol: unique symbol;
 declare const removeallistenerssymbol: unique symbol;
 declare const addallistenerssymbol: unique symbol;
-declare class ReactiveState<T extends UnwrapedState> {
-    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
+declare const tagtypesym: unique symbol;
+declare class ReactiveState<T> {
+    constructor(init: {
+        value: T;
+    });
+    constructor(init: {
+        get: () => T;
+        set?: (v: T) => void;
+    });
+    private [tagtypesym];
+    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
     readonly [Symbol.toStringTag] = "ReactiveState";
-    constructor(init?: T);
-    [debouncedispatch]: () => void;
+    private [debouncedispatch];
     [removeallistenerssymbol](): void;
     [removeonelistner](callback: Listener): void;
     [addonelistner](callback: Listener): void;
     [addallistenerssymbol](): void;
-    [Targetsymbol]: ObserverTarget;
-    [memlisteners]: Set<Listener>;
-    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends Primitivetype ? Primitivetype : object;
+    private [Targetsymbol];
+    private [memlisteners];
+    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
     toString(): string;
     [dispatchsymbol](): void;
     [subscribesymbol](eventlistener: Listener): void;
@@ -1195,6 +1191,12 @@ declare function useUpdated(fun: () => void): void;
 declare function useMounted(fun: () => void): void;
 declare function useUnMounted(fun: () => void): void;
 declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
+type CancelWatchfun = () => void;
+type UnwrapedState = any;
+interface gettercallback {
+    (...args: UnwrapedState[]): any;
+}
+declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: gettercallback): CancelWatchfun;
 declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
 type SetterFun = (v: any) => void;
 declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
