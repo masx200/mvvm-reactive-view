@@ -1196,7 +1196,7 @@ interface gettercallback<T, P extends Array<any>> {
 }
 type UnWrapState<T extends ReactiveState<any>> = T extends ReactiveState<infer R> ? R : never;
 type UnWrapArray<T extends Array<any>> = T extends Array<infer R> ? R : never;
-declare function computed<T extends any, Y extends ReactiveState<any>>(state: Y, callback: gettercallback<T, UnWrapState<Y>[]>, setter?: SetterFun): ReactiveState<T>;
+declare function computed<T extends any, Y extends ReactiveState<any>>(state: Y, callback: gettercallback<T, [UnWrapState<Y>]>, setter?: SetterFun): ReactiveState<T>;
 declare function computed<T extends any, Y extends ReactiveState<any>[]>(state: Y, callback: gettercallback<T, UnWrapState<UnWrapArray<Y>>[]>, setter?: SetterFun): ReactiveState<T>;
 type SetterFun = (v: any) => void;
 declare function createState<T extends any>(init: ReactiveState<T>): ReactiveState<T>;

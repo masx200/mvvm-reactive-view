@@ -11,7 +11,7 @@ import { UnWrapState } from "./unwrapstate";
 import { UnWrapArray } from "./UnWrapArray";
 function computed<T extends any, Y extends ReactiveState<any>>(
     state: Y,
-    callback: gettercallback<T, UnWrapState<Y>[]>,
+    callback: gettercallback<T, [UnWrapState<Y>]>,
     setter?: SetterFun
 ): ReactiveState<T>;
 function computed<T extends any, Y extends ReactiveState<any>[]>(
