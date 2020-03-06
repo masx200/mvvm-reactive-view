@@ -19,6 +19,7 @@ const babeljsxplugin = babel({
     inputSourceMap: true,
     babelHelpers: "bundled",
     plugins: [
+        "@babel/plugin-transform-typescript",
         [
             "@babel/plugin-transform-react-jsx",
             {
@@ -177,7 +178,7 @@ export default [
         ]
     },
     {
-        input: "./test/src/index.js",
+        input: "./test/src/index.ts",
         output: [
             {
                 // sourceMap: true,
