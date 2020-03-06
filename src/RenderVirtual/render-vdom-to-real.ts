@@ -1,6 +1,12 @@
-export { render };
-import { createcostumelemet } from "../CustomClass/create-costum-elemet";
+import { dispatchcreated } from "src/others/addlistener-mount-unmount-updated";
+
+import { autocreateclass } from "../AttributeClass/createComponent";
 import { iscomponent } from "../AttributeClass/iscomponent";
+import Virtualdom, {
+    isVirtualdom,
+    Vdomchildren
+} from "../CreateElement/VirtualElement";
+import { createcostumelemet } from "../CustomClass/create-costum-elemet";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
 import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
@@ -25,13 +31,8 @@ import {
     isobject,
     isstring
 } from "../UtilTools/util";
-import Virtualdom, {
-    isVirtualdom,
-    Vdomchildren
-} from "../CreateElement/VirtualElement";
-import handleprops ,{applydirects}from "./handle-props";
-import { autocreateclass } from "../AttributeClass/createComponent";
-import { dispatchcreated } from "src/others/addlistener-mount-unmount-updated";
+import { applydirects } from "./applydirects";
+import { handleprops } from "./handleprops";
 
 export const bindstatesymbol = Symbol("bindstate");
 
@@ -189,8 +190,7 @@ export default function render(
         /* 元素已经创建出来了 */
         dispatchcreated(element);
 
-
-applydirects(element, vdom)
+        applydirects(element, vdom);
         /*  if (element) {
       const attribute1: { [key: string]: any } = createeleattr(element);
       Object.assign(
@@ -248,3 +248,4 @@ applydirects(element, vdom)
     /* console.error(vdom);
   throw new Error(); */
 }
+export { render };

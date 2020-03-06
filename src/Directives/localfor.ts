@@ -26,7 +26,7 @@ export const localfor = (
         throw TypeError();
     }
 
-     vdom.children.length = 0;
+    vdom.children.length = 0;
     // const childs = generatechildrenvdoms(list, fun);
     // childs.forEach((vd) => {
     //     vdom.children.push(vd);
@@ -52,9 +52,7 @@ export const localfor = (
             const nodes = render(childs.slice(minlength));
 
             nodes.forEach((n, i) => {
-                
-                    ele.appendChild(n);
-                
+                ele.appendChild(n);
             });
         }
     };

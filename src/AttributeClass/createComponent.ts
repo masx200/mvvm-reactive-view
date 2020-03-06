@@ -1,7 +1,7 @@
 import createeleattragentreadwrite from "@masx200/dom-element-attribute-agent-proxy";
 import { addmountedlistner } from "src/others/addmountedlistner";
 import { addcreatedlistner } from "src/others/addcreatedlistner";
-import { addupdatedlistner } from "src/others/addupdatedlistner";
+import { addupdatedlistner, addstopupdatelistener } from "src/others/addupdatedlistner";
 import { addunmountedlistner } from "src/others/addunmountedlistner";
 import { cached_create_componet } from "../others/cached-map";
 import { isvalidvdom } from "../CreateElement/isvalidvdom";
@@ -198,6 +198,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                     updatedcallbacks.forEach((callback) => {
                         addupdatedlistner(this, callback);
                     });
+                    addstopupdatelistener(this)
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);

@@ -1069,36 +1069,27 @@ const vdomobj = html`
 `;
 ```
 
-
-
-# 渲染虚拟dom为真实dom元素的过程
+# 渲染虚拟 dom 为真实 dom 元素的过程
 
 1.判断标签，
 
 1.1.如果标签是字符串
 
-1.1.1.如果是"math"，则使用math的namespace创建元素，其所有子元素的namespace都是math。
+1.1.1.如果是"math"，则使用 math 的 namespace 创建元素，其所有子元素的 namespace 都是 math。
 
-
-1.1.2.如果是"svg"，则使用svg的namespace创建元素，其所有子元素的namespace都是svg。
+1.1.2.如果是"svg"，则使用 svg 的 namespace 创建元素，其所有子元素的 namespace 都是 svg。
 
 1.1.3.如果是其他标签，则使用 `document.createElement`创建元素
 
-
 1.2.如果是自定义组件，则创建自定义组件的实例
-
-
 
 2.调用绑定的指令
 
 3.如果是原生元素，则递归渲染并挂载子元素。自定义组件的子元素是通过参数传递给了组件构造函数
 
-4.设置元素的attributes，如果绑定了响应式状态，则为响应式状态其添加监听器，自动更新attributes
+4.设置元素的 attributes，如果绑定了响应式状态，则为响应式状态其添加监听器，自动更新 attributes
 
 5.给元素添加事件监听器回调函数
-
-
-
 
 # `API` : 可在 `TypeScript` 类型声明文件中查看更多
 
