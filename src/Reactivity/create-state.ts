@@ -9,7 +9,7 @@ import ReactiveState, {
     isReactiveState
 } from "./reactivestate.js";
 import { UnwrapedState } from "./watch";
-import { combineproxy } from 'src/others/combineproxy';
+import { combineproxy } from "src/others/combineproxy";
 export const set_prototype = Set.prototype;
 
 export default createState;

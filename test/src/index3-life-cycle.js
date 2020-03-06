@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-render,
+    render,
     createComponent,
     createElement,
     //   createElement,
@@ -79,18 +79,18 @@ console.log([h, createElement]);
         "children"
     );
     console.log([vdom, myclasscomponent, mycom]);
-const realele=render(vdom)
+    const realele = render(vdom);
     document.body.appendChild(
         MountElement(realele, document.createElement("div"))
     );
     setTimeout(() => {
-        {let e=realele
+        {
+            let e = realele;
             e.setAttribute(
                 "cccccc",
                 "aaaaaaaaaaaaaaaaaabbbbbbbbbbnnnnnnnnnnnnn"
             );
         }
-       
     }, 5000);
     document.body.appendChild(
         MountElement(

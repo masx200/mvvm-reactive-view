@@ -11,7 +11,6 @@ import { VaildVDom } from "./isvalidvdom";
 
 export function isVirtualdom(a: any): a is Virtualdom<any> {
     return VirtualElementSet.has(a);
- 
 }
 
 export type Vdomchildren = Array<VaildVDom>;
@@ -35,21 +34,15 @@ function createVirtualElement<
     );
     const virtual = Object.create(null);
     const vdom = virtual;
-    [
-        "onevent",
-        
-        "type",
-        "props",
-        "children",
-        "directives",
-        "bindattr"
-    ].forEach((key) => {
-        defineProperty(virtual, key, {
-            writable: true,enumerable:false
-        });
-    });
+    ["onevent", "type", "props", "children", "directives", "bindattr"].forEach(
+        (key) => {
+            defineProperty(virtual, key, {
+                writable: true,
+                enumerable: false
+            });
+        }
+    );
 
-   
     Object.assign(virtual, {
         type,
         bindattr: Object.fromEntries(
@@ -109,7 +102,7 @@ function createVirtualElement<
 
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
-   
+
     readonly type: T;
     readonly props: ElementAttrs;
     readonly children: Vdomchildren;
@@ -118,6 +111,5 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly onevent: Record<string, Array<EventListener>>;
 
     readonly bindattr: Record<string, ReactiveState<any>>;
-  
 }
 export default Virtualdom;

@@ -5,7 +5,7 @@ import {
     ownKeys,
     getOwnPropertyDescriptor
 } from "../UtilTools/reflect";
-import { combineproxy } from 'src/others/combineproxy';
+import { combineproxy } from "src/others/combineproxy";
 
 export function getproperyreadproxy<T extends object>(a: T): T {
     const __proto__ = "__proto__";

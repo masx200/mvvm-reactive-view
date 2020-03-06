@@ -24,7 +24,7 @@ import {
     isfunction
 } from "../UtilTools/util";
 import { watch } from "./watch";
-import { combineproxy } from 'src/others/combineproxy';
+import { combineproxy } from "src/others/combineproxy";
 
 export default function(init: object): ReactiveState<object> {
     const reactive: ReactiveState<object> = new ReactiveState(init);

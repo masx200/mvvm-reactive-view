@@ -20,7 +20,7 @@ function issymbol(a) {
     return typeof a === "symbol";
 }
 
-const isplainobject = a => isobject(a) && gettagtype(a) === "Object";
+const isplainobject = a => !!a && gettagtype(a) === "Object" && Reflect.getPrototypeOf(a) === Object.prototype;
 
 function isundefined(a) {
     return !a && a === void 0 || a === null;
@@ -51,7 +51,7 @@ function isarray(a) {
 }
 
 function gettagtype(a) {
-    return {}.toString.call(a).replace("[object ", "").replace("]", "").trim();
+    return Object.prototype.toString.call(a).replace("[object ", "").replace("]", "").trim();
 }
 
 function isSet(a) {
@@ -822,12 +822,12 @@ function createVirtualElement(type, props = {}, children = []) {
     const Entries_beginning_with_a_letter = propsentriesNOTevents.filter(([key]) => Letter_case_and_Chinese.test(key[0]));
     const virtual = Object.create(null);
     const vdom = virtual;
-    [ "onevent", "element", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
+    [ "onevent", "type", "props", "children", "directives", "bindattr" ].forEach(key => {
         defineProperty(virtual, key, {
-            writable: true
+            writable: true,
+            enumerable: false
         });
     });
-    vdom.element = [];
     Object.assign(virtual, {
         type: type,
         bindattr: Object.fromEntries(Entries_beginning_with_a_letter.filter(e => isReactiveState(e[1]))),
@@ -1157,11 +1157,11 @@ function readdlisteners(ele) {
 }
 
 function handleprops(element, vdom) {
-    vdom.element.push(element);
     const attribute1 = createeleattragentreadwrite(element);
     Object.assign(attribute1, vdom.props);
+    let cancelarr;
     addmountedlistner(element, () => {
-        const cacelarr = Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
+        cancelarr = Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
             return watch(primitivestate, () => {
                 const state = primitivestate;
@@ -1170,10 +1170,10 @@ function handleprops(element, vdom) {
                 }
             });
         });
-        addunmountedlistner(element, () => {
-            cacelarr.forEach(f => {
-                f();
-            });
+    });
+    addunmountedlistner(element, () => {
+        cancelarr && cancelarr.forEach(f => {
+            f();
         });
     });
     Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
@@ -1692,19 +1692,18 @@ function createComponentold(custfun) {
                 }
                 const props = attrs;
                 openctx();
-                const thisattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
+                const propattributess = Object.fromEntries(Object.entries(props).map(([key]) => [ key, (() => {
                     const attributes = createeleattragentreadwrite(this);
                     const state = new ReactiveState;
                     defineProperty(state, "value", {
                         get() {
                             return get(attributes, key);
-                        },
-                        configurable: true
+                        }
                     });
                     return state;
                 })() ]));
-                this[attributessymbol] = thisattributess;
-                const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(thisattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
+                this[attributessymbol] = propattributess;
+                const readonlyprop = readonlyproxy(Object.fromEntries(Object.entries(propattributess).map(([key, value]) => [ key, readonlyproxy(value) ])));
                 let possiblyvirtualdom;
                 try {
                     possiblyvirtualdom = apply(custfun, undefined, [ readonlyprop, children.flat(1 / 0) ]);
@@ -2248,14 +2247,17 @@ function createhtmlandtextdirective(seteletext, errorname, ele, text, onmount, o
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
+            let cancel;
             onmount(() => {
-                const cancel = watch(text, () => {
+                cancel = watch(text, () => {
                     const state = text;
                     if (isconnected(element)) {
                         seteletext(ele, String(state));
                     }
                 });
-                onunmount(cancel);
+            });
+            onunmount(() => {
+                cancel && cancel();
             });
             requestAnimationFrame(() => {
                 seteletext(ele, String(text));

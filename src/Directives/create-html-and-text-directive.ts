@@ -21,21 +21,18 @@ function createhtmlandtextdirective(
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
-let cancel:undefined|(()=>void)
+            let cancel: undefined | (() => void);
             onmount(() => {
-                 cancel = watch(text, () => {
+                cancel = watch(text, () => {
                     const state = text;
                     if (isconnected(element)) {
                         seteletext(ele, String(state));
                     }
                 });
-                
             });
-onunmount(()=>{
-
-cancel&&cancel()
-
-});
+            onunmount(() => {
+                cancel && cancel();
+            });
             requestAnimationFrame(() => {
                 seteletext(ele, String(text));
             });

@@ -52,8 +52,8 @@ declare class ReactiveState<T extends UnwrapedState> {
 }
 type VaildVDom = Virtualdom<any> | string | number | Vdomchildren | ReactiveState<any>;
 interface Custom {
-    (props?: Record<string, ReactiveState<any>>, children?: Vdomchildren): VaildVDom;
-    defaultProps?: Record<string, any>;
+    (props?: Record<string, ReactiveState<string>>, children?: Vdomchildren): VaildVDom;
+    defaultProps?: Record<string, string>;
     css?: string;
 }
 type styleprop = string | object | ReactiveState<string> | ReactiveState<object>;
@@ -70,7 +70,6 @@ declare function h<T extends Htmlelementconstructor | string | Custom>(type: T, 
 type Vdomchildren = Array<VaildVDom>;
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
-    readonly element: Element[];
     readonly type: T;
     readonly props: ElementAttrs;
     readonly children: Vdomchildren;

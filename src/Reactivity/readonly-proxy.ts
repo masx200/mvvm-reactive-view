@@ -1,4 +1,4 @@
-import { combineproxy } from 'src/others/combineproxy';
+import { combineproxy } from "src/others/combineproxy";
 
 export default function<T extends object>(target: T): T {
     return combineproxy(target, {
