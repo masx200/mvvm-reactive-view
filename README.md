@@ -159,7 +159,7 @@ MountElement(vdom, document.getElementById("root"));
 `index.html`
 
 ```html
-<script src="https://cdn.staticfile.org/custom-elements/1.2.4/custom-elements.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/polyfill.js"></script>
 <div id="root"></div>
 <script type="module" src="./index.js"></script>
 ```
@@ -1141,10 +1141,10 @@ declare const createComponent: (
 ) => Htmlelementconstructor;
 interface Custom {
     (
-        props?: Record<string, ReactiveState<any>>,
+        props?: Record<string, ReactiveState<string>>,
         children?: Vdomchildren
     ): VaildVDom;
-    defaultProps?: Record<string, any>;
+    defaultProps?: Record<string, string>;
     css?: string;
 }
 ```
