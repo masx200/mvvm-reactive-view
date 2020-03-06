@@ -20,6 +20,7 @@ export function combineproxy<T extends object>(
         const pro = new Proxy(target, newhandler);
         proxytotarget.set(pro, target);
         proxytohandler.set(pro, newhandler);
+        proxyset.add(pro);
         return pro;
     }
 }

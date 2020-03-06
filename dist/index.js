@@ -1325,8 +1325,36 @@ function MountElement(vdom, container) {
     return container;
 }
 
+const proxyset = new WeakSet;
+
+function isproxy(a) {
+    return proxyset.has(a);
+}
+
+const proxytotarget = new WeakMap;
+
+const proxytohandler = new WeakMap;
+
+function combineproxy(target, newhandler) {
+    if (isproxy(target)) {
+        const oldhandler = proxytohandler.get(target);
+        if (oldhandler) {
+            Object.assign(oldhandler, newhandler);
+        } else {
+            throw new TypeError;
+        }
+        return target;
+    } else {
+        const pro = new Proxy(target, newhandler);
+        proxytotarget.set(pro, target);
+        proxytohandler.set(pro, newhandler);
+        proxyset.add(pro);
+        return pro;
+    }
+}
+
 function readonlyproxy(target) {
-    return new Proxy(target, {
+    return combineproxy(target, {
         set() {
             return true;
         },
@@ -2082,7 +2110,7 @@ const Localcreated = (call, ele, vdom, onmount, onunmount, onupdated) => {
 function getproperyreadproxy(a) {
     const __proto__ = "__proto__";
     const target = a;
-    return new Proxy(target, {
+    return combineproxy(target, {
         getOwnPropertyDescriptor(target, key) {
             if (issymbol(key)) {
                 return;
@@ -2567,14 +2595,14 @@ function handleobjectstate(init) {
             throw TypeError();
         }
     };
-    return new Proxy(reactive, objproxyhandler);
+    return combineproxy(reactive, objproxyhandler);
 }
 
 const set_prototype = Set.prototype;
 
 function createState(init) {
     if (isprimitive(init) || isfunction(init)) {
-        return getproperyreadproxy(new Proxy(new ReactiveState(init), {
+        return getproperyreadproxy(combineproxy(new ReactiveState(init), {
             defineProperty() {
                 return false;
             },
