@@ -558,4 +558,6 @@ var vdom = (
     </>
 );
 console.log(vdom, temp$ref, lirefs);
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);

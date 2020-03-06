@@ -8,7 +8,12 @@ import watch, { CancelWatchfun } from "../Reactivity/watch";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { isfunction } from "../UtilTools/util";
-import { AttrChange, connectedCallback, disconnectedCallback, firstinstalledcallback } from "./attr-change";
+import {
+    AttrChange,
+    connectedCallback,
+    disconnectedCallback,
+    firstinstalledcallback
+} from "./attr-change";
 import { autocreateclass, Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";

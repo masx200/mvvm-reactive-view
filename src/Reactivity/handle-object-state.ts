@@ -23,7 +23,7 @@ import {
     issymbol,
     isfunction
 } from "../UtilTools/util";
-import  watch  from "./watch";
+import watch from "./watch";
 import { combineproxy } from "src/others/combineproxy";
 
 export default function(init: object): ReactiveState<object> {

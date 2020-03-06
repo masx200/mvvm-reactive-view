@@ -50,7 +50,7 @@ const vdom = (
     </select>
 );
 
-const element = document.body.appendChild(
-    MountElement(vdom, document.createElement("div"))
-);
-console.log([vdom, element]);
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
+console.log([vdom, container]);

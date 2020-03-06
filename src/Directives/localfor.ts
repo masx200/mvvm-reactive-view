@@ -1,10 +1,10 @@
 import Virtualdom from "src/CreateElement/VirtualElement";
 import { isReactiveState } from "src/Reactivity/isReactiveState";
-import  watch  from "src/Reactivity/watch";
+import watch from "src/Reactivity/watch";
 import render from "src/RenderVirtual/render-vdom-to-real";
 import { removeNode } from "src/UtilTools/dom";
 import { isarray, isfunction } from "src/UtilTools/util";
-import { generatechildrenvdoms } from './generatechildrenvdoms';
+import { generatechildrenvdoms } from "./generatechildrenvdoms";
 
 /* interface attrfor<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
@@ -64,4 +64,3 @@ export const localfor = (
         onunmount(cancel);
     });
 };
-

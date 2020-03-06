@@ -70,17 +70,6 @@ const testlistvdom = (
                 )
             ]}
         />
-        {/* {ListMap(liststate, (value, index) => (
-            <div
-                $ref={ele => {
-                    // @ts-ignore
-                    refarray.length = liststate.length;
-                    refarray[index] = ele;
-                }}
-            >
-                {["item:", "value:", value, "index:", index]}
-            </div>
-        ))} */}
     </div>
 );
 console.log("testlistvdom", testlistvdom);
@@ -98,5 +87,7 @@ const vdom = [
     </>
 ];
 
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
 console.log(vdom, refarray, liststate);
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);

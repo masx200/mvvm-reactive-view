@@ -84,7 +84,7 @@ p{color:blue !important;}
 var vdom = createElement(mycomapp);
 // MountElement(vdom, document.getElementById("root"));
 const container = document.createElement("div");
-MountElement(vdom, container)
+MountElement(vdom, container);
 document.body.appendChild(container);
 const removecom = () => (
     <button

@@ -48,8 +48,9 @@ let vdom = [
     createElement(mycomappclass)
 ];
 
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
-
+const container = document.createElement("div");
+MountElement(vdom, container);
+document.body.appendChild(container);
 setTimeout(() => {
     /*
  vdom.forEach((vdom) => {

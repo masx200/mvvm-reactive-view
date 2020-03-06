@@ -40,7 +40,7 @@ let vdom = (
         />
     </>
 );
-MountElement(vdom, container)
+MountElement(vdom, container);
 document.body.appendChild(container);
 const updatedeventname = Symbol("updated").toString();
 document.body.addEventListener(
