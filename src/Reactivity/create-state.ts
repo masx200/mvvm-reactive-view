@@ -9,6 +9,7 @@ import ReactiveState, {
     isReactiveState
 } from "./reactivestate.js";
 import { UnwrapedState } from "./watch";
+import { combineproxy } from 'src/others/combineproxy';
 export const set_prototype = Set.prototype;
 
 export default createState;
@@ -31,7 +32,7 @@ function createState<T extends UnwrapedState>(
 
     if (isprimitive(init) || isfunction(init)) {
         return getproperyreadproxy(
-            new Proxy(new ReactiveState(init), {
+            combineproxy(new ReactiveState(init), {
                 defineProperty() {
                     return false;
                 },

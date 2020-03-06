@@ -5,12 +5,13 @@ import {
     ownKeys,
     getOwnPropertyDescriptor
 } from "../UtilTools/reflect";
+import { combineproxy } from 'src/others/combineproxy';
 
 export function getproperyreadproxy<T extends object>(a: T): T {
     const __proto__ = "__proto__";
 
     const target = a;
-    return new Proxy(target, {
+    return combineproxy(target, {
         getOwnPropertyDescriptor(target, key) {
             if (issymbol(key)) {
                 return;

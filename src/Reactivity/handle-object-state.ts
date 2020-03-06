@@ -24,6 +24,7 @@ import {
     isfunction
 } from "../UtilTools/util";
 import { watch } from "./watch";
+import { combineproxy } from 'src/others/combineproxy';
 
 export default function(init: object): ReactiveState<object> {
     const reactive: ReactiveState<object> = new ReactiveState(init);
@@ -209,7 +210,7 @@ export default function(init: object): ReactiveState<object> {
             throw TypeError();
         }
     };
-    return new Proxy(
+    return combineproxy(
         reactive,
 
         objproxyhandler

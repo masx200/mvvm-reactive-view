@@ -1,5 +1,7 @@
+import { combineproxy } from 'src/others/combineproxy';
+
 export default function<T extends object>(target: T): T {
-    return new Proxy(target, {
+    return combineproxy(target, {
         set() {
             return true;
         },
