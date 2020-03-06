@@ -6,8 +6,10 @@ export { isplainobject };
 export { isfunction as isFunction, isarray as isArray, isstring as isString };
 export { isprimitive };
 
-const isplainobject = (a: any): a is Record<any, any> =>
-    isobject(a) && gettagtype(a) === "Object";
+const isplainobject = (a: any): a is Record<any, any> =>{
+   return !!(a) && gettagtype(a) === "Object"&&Reflect.getPrototypeOf(a)===Object.prototype;
+
+}
 
 import isprimitive from "./isprimitive";
 
@@ -37,7 +39,7 @@ export function isarray(a: any): a is Array<any> {
 }
 
 export function gettagtype(a: any): string {
-    return {}.toString
+    return Object.prototype.toString
         .call(a)
         .replace("[object ", "")
         .replace("]", "")
