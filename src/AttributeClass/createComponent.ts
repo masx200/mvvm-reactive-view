@@ -110,7 +110,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                 const props = attrs;
                 openctx();
 
-                const thisattributess = Object.fromEntries(
+                const attributess = Object.fromEntries(
                     Object.entries(props).map(([key]) => [
                         key,
                         (() => {
@@ -122,14 +122,14 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
                                 get() {
                                     return get(attributes, key);
                                 },
-                                configurable: true
+                                
                             });
 
                             return state;
                         })()
                     ])
                 );
-                this[attributessymbol] = thisattributess;
+                this[attributessymbol] = attributess;
 
                 const readonlyprop = readonlyproxy(
                     Object.fromEntries(
