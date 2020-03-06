@@ -2,17 +2,13 @@ import { h } from "../CreateElement/create-element";
 import Virtualdom from "../CreateElement/VirtualElement";
 import { Custom } from "../CustomClass/customclass";
 import { mountrealelement } from "../MountElement/mount-real-element";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
-import { CancelWatchfun, watch } from "../Reactivity/watch";
+import { isReactiveState } from "../Reactivity/isReactiveState";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import watch, { CancelWatchfun } from "../Reactivity/watch";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { setimmediate } from "../UtilTools/setimmediate";
 import { isfunction } from "../UtilTools/util";
-import {
-    AttrChange,
-    connectedCallback,
-    disconnectedCallback,
-    firstinstalledcallback
-} from "./attr-change";
+import { AttrChange, connectedCallback, disconnectedCallback, firstinstalledcallback } from "./attr-change";
 import { autocreateclass, Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";

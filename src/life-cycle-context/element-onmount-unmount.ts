@@ -10,7 +10,8 @@ import ReactiveState, {
     dispatchsymbol,
     removeonelistner
 } from "../Reactivity/reactivestate.js";
-import { rewatch, unwatch } from "../Reactivity/watch";
+import { rewatch } from "../Reactivity/rewatch";
+import { unwatch } from "../Reactivity/unwatch";
 import {
     readdlisteners,
     removelisteners

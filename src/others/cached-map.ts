@@ -7,6 +7,6 @@ export const cached_create_componet = new WeakMap<
     Htmlelementconstructor
 >();
 export const cached_callback_debounced_watchs = new WeakMap<
-    gettercallback<void>,
+    gettercallback<void, any[]>,
     Listener
 >();

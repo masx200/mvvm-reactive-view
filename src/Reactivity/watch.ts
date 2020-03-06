@@ -6,15 +6,27 @@ import { toArray } from "../UtilTools/toArray";
 import { isarray } from "../UtilTools/util";
 import { Listener } from "./custom-observer-target";
 import { gettercallback } from "./gettercallback";
-import ReactiveState, { addallistenerssymbol, cancelsubscribe, isReactiveState, removeallistenerssymbol } from "./reactivestate.js";
+import ReactiveState, { cancelsubscribe } from "./reactivestate.js";
+import { isReactiveState } from "./isReactiveState";
 import { watchsingle } from "./watchsingle";
+import { UnWrapState } from "./unwrapstate";
+import { UnWrapArray } from "./UnWrapArray";
 
 export type CancelWatchfun = () => void;
+function watch<T extends any, Y extends ReactiveState<T>>(
+    state: Y,
 
-export function watch<T extends any>(
-    state: ReactiveState<T> | Array<ReactiveState<T>>,
+    callback: gettercallback<void, [UnWrapState<Y>]>
+): CancelWatchfun;
+function watch<T extends any, Y extends Array<ReactiveState<T>>>(
+    state: Y,
 
-    callback: gettercallback<void>
+    callback: gettercallback<void, UnWrapState<UnWrapArray<Y>>[]>
+): CancelWatchfun;
+function watch(
+    state: ReactiveState<any> | Array<ReactiveState<any>>,
+
+    callback: gettercallback<any, any[]>
 ): CancelWatchfun {
     if (isarray(state) || isReactiveState(state)) {
         const statearray: ReactiveState<any>[] = toArray(state);
@@ -67,11 +79,5 @@ export function watch<T extends any>(
     }
 }
 
-export function unwatch(state: ReactiveState<any>): void {
-    state[removeallistenerssymbol]();
-}
-
-export function rewatch(state: ReactiveState<any>): void {
-    state[addallistenerssymbol]();
-}
 export default watch;
+Array.prototype.map;

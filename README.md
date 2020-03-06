@@ -1097,57 +1097,11 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/jsx.ts
 
-<!-- ## 使用函数`ListMap`实现响应式列表渲染,返回`虚拟DOM`
-
-```ts
-declare function ListMap(
-    list: any[] | Set<any> | ReactiveState<any[] | Set<any>>,
-    mapfun: (
-        value: ReactiveState<any>,
-        index: number
-    ) => Virtualdom<any> | string
-): Virtualdom<Htmlelementconstructor>;
-interface Htmlelementconstructor {
-    new (): HTMLElement;
-    prototype: HTMLElement;
-    defaultProps?: Record<string, any>;
-    css?: string;
-}
-``` -->
-
 ## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
-
-```ts
-declare function Switchable(
-    funstate: ReactiveState<Htmlelementconstructor | Custom>
-): Virtualdom<Htmlelementconstructor>;
-```
 
 ## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
 
-```ts
-declare const Condition: (
-    conditon: boolean | ReactiveState<boolean>,
-    iftrue?: string | Virtualdom<any> | undefined,
-    iffalse?: string | Virtualdom<any> | undefined
-) => Virtualdom<Htmlelementconstructor>;
-```
-
 ## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
-
-```ts
-declare const createComponent: (
-    custfun: Custom | Htmlelementconstructor
-) => Htmlelementconstructor;
-interface Custom {
-    (
-        props?: Record<string, ReactiveState<string>>,
-        children?: Vdomchildren
-    ): VaildVDom;
-    defaultProps?: Record<string, string>;
-    css?: string;
-}
-```
 
 ## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,
 
@@ -1155,77 +1109,13 @@ interface Custom {
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
-```ts
-type CancelWatchfun = () => void;
-type UnwrapedState = any;
-interface gettercallback {
-    (...args: UnwrapedState[]): any;
-}
-declare function watch<T extends UnwrapedState>(
-    state: ReactiveState<T> | Array<ReactiveState<T>>,
-    callback: gettercallback
-): CancelWatchfun;
-```
-
 ## 使用`createState`来生成一个引用形式响应式的状态，
-
-```ts
-declare function createState<T extends UnwrapedState>(
-    init: ReactiveState<T>
-): ReactiveState<T>;
-declare function createState<T extends UnwrapedState>(
-    init: Exclude<T, ReactiveState<any>> | undefined
-): ReactiveState<T>;
-```
 
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
 
 ### 如果初始值是原始类型则不能修改为对象类型，
 
 ### 如果初始值是对象类型则不能修改为原始类型，
-
-```ts
-type UnwrapedState = any;
-declare class ObserverTarget {
-    Listeners: Set<Listener>;
-    addListener(listener: Listener): void;
-    dispatch(): void;
-    removeListener(listener: Listener): void;
-}
-interface Listener {
-    (): any;
-}
-declare class ReactiveState<T extends UnwrapedState> {
-    value: T extends Array<any>
-        ? Array<any>
-        : T extends Function
-        ? Function
-        : T extends Primitivetype
-        ? Primitivetype
-        : object;
-    readonly [Symbol.toStringTag] = "ReactiveState";
-    constructor(init?: T);
-    [debouncedispatch]: () => void;
-    [removeallistenerssymbol](): void;
-    [removeonelistner](callback: Listener): void;
-    [addonelistner](callback: Listener): void;
-    [addallistenerssymbol](): void;
-    [Targetsymbol]: ObserverTarget;
-    [memlisteners]: Set<Listener>;
-    valueOf: () => T extends any[]
-        ? any[]
-        : T extends Function
-        ? Function
-        : T extends Primitivetype
-        ? Primitivetype
-        : object;
-    toString(): string;
-    [dispatchsymbol](): void;
-    [subscribesymbol](eventlistener: Listener): void;
-    [cancelsubscribe](eventlistener: Listener): void;
-    [Symbol.toPrimitive](): string | undefined | Primitivetype;
-}
-```
 
 ## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
 
@@ -1235,84 +1125,14 @@ declare class ReactiveState<T extends UnwrapedState> {
 
 ### 第三个参数可选，是`setter`函数
 
-```ts
-declare const computed: <T extends any>(
-    state: ReactiveState<T> | ReactiveState<T>[],
-    callback: gettercallback,
-    setter?: SetterFun | undefined
-) => ReactiveState<any>;
-type SetterFun = (v: any) => void;
-```
-
 ## 使用`Directives`函数来扩展指令,返回已有的指令合集
 
 ## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
 
 ## 函数`h`等同于`createElement`,用来生成虚拟 `dom`,第一个参数可以是元素的标签名，或者`costum element`的构造函数，第二个参数可以是子元素数组，或者元素的`attributes`,后面的剩余参数都是子元素
 
-```typescript
-type styleprop =
-    | string
-    | object
-    | ReactiveState<string>
-    | ReactiveState<object>;
-type classprop =
-    | string
-    | Set<string>
-    | Array<string>
-    | ReactiveState<string | Set<string> | Array<string>>;
-interface ElementAttrs {
-    style?: styleprop;
-    class?: classprop;
-    [key: string]: any;
-}
-function createElement<T extends Htmlelementconstructor | string | Custom>(
-    type: T,
-    propsorchildren?: Vdomchildren,
-    ...children: Vdomchildren
-): Virtualdom<T>;
-function createElement<T extends Vdomchildren>(
-    type: "",
-    propsorchildren?: T,
-    ...children: T
-): T;
-function createElement<T extends Vdomchildren>(
-    type: "",
-    props?: ElementAttrs,
-    ...children: T
-): T;
-function createElement<T extends Htmlelementconstructor | string | Custom>(
-    type: T,
-    props?: ElementAttrs,
-    ...children: Vdomchildren
-): Virtualdom<T>;
-```
-
 ## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上,返回容器元素
 
 ## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
 
 ## `虚拟 dom` `Virtualdom`接口
-
-```ts
-type Vdomchildren = Array<
-    Virtualdom<any> | string | ReactiveState<any> | number
->;
-interface Htmlelementconstructor {
-    new (): HTMLElement;
-    prototype: HTMLElement;
-    defaultProps?: Record<string, any>;
-    css?: string;
-}
-
-interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
-    readonly [Symbol.toStringTag]: "VirtualElement";
-    readonly element: Element[];
-    readonly type: T;
-    readonly props: ElementAttrs;
-    readonly children: Vdomchildren;
-    readonly directives: Record<string, any>;
-    readonly onevent: Record<string, Array<EventListener>>;
-    readonly bindattr: Record<string, ReactiveState<any>>;
-}
-```

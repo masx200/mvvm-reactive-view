@@ -1,5 +1,5 @@
 import Virtualdom from "../CreateElement/VirtualElement";
-import { isReactiveState } from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
 import { setelehtml } from "../UtilTools/dom";
 import { isstring } from "../UtilTools/util";
 import { createhtmlandtextdirective } from "./create-html-and-text-directive";

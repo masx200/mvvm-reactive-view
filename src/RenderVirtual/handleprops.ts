@@ -1,5 +1,6 @@
 import createeleattr from "@masx200/dom-element-attribute-agent-proxy";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
 import watch from "../Reactivity/watch";
 import { isconnected } from "../UtilTools/isconnected";
 import { get, has, set } from "../UtilTools/reflect";

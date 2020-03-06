@@ -1,11 +1,12 @@
-import { watch } from "src/Reactivity/watch";
+import watch from "src/Reactivity/watch";
 import { get } from "src/UtilTools/reflect";
 import { toArray } from "src/UtilTools/toArray";
 
 import createElement from "../CreateElement/create-element";
 import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { replaceChild } from "../UtilTools/dom";
 import { isboolean, isstring, isundefined } from "../UtilTools/util";
@@ -52,13 +53,13 @@ const Condition = function(
         [currentelementsymbol]: Node = this;
         static [componentsymbol] = componentsymbol;
         [readysymbol] = false;
-        [truevdomsymbol]: Virtualdom<any>[] = toArray(optionstrue);
+        [truevdomsymbol]: (Virtualdom<any> | string)[] = toArray(optionstrue);
 
         /*isarray(optionstrue)
     ? optionstrue.filter(Boolean)
     : */
 
-        [falsevdomsymbol]: Virtualdom<any>[] = toArray(optionsfalse);
+        [falsevdomsymbol]: (Virtualdom<any> | string)[] = toArray(optionsfalse);
 
         /* isarray(optionsfalse)
     ? optionsfalse.filter(Boolean)
@@ -101,7 +102,7 @@ const Condition = function(
 
             if (isReactiveState(conditon)) {
                 handleconditionchange(conditon.valueOf() as boolean);
-                watch(conditon, (trueorfalse) => {
+                watch(conditon, (trueorfalse: boolean) => {
                     handleconditionchange(trueorfalse);
                 });
             } else {

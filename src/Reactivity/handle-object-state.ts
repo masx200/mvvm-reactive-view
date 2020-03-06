@@ -2,9 +2,9 @@ import deepobserve from "@masx200/deep-observe-agent-proxy";
 import { set_prototype } from "./create-state";
 import ReactiveState, {
     dispatchsymbol,
-    invalid_primitive_or_object_state,
-    isReactiveState
+    invalid_primitive_or_object_state
 } from "./reactivestate.js";
+import { isReactiveState } from "./isReactiveState";
 import {
     defineProperty,
     deleteProperty,
@@ -23,7 +23,7 @@ import {
     issymbol,
     isfunction
 } from "../UtilTools/util";
-import { watch } from "./watch";
+import  watch  from "./watch";
 import { combineproxy } from "src/others/combineproxy";
 
 export default function(init: object): ReactiveState<object> {

@@ -12,12 +12,6 @@ export const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
     "invalid primitive or object state";
-export function isReactiveState(a: any): a is ReactiveState<any> {
-    return (
-        a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState"
-    );
-}
-
 const Targetsymbol = Symbol("eventtatget");
 const memlisteners = Symbol("memlisteners");
 export const dispatchsymbol = Symbol("dispatch");

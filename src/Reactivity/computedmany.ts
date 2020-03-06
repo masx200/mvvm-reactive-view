@@ -4,11 +4,14 @@ import { SetterFun } from "./computed";
 import { getproperyreadproxy } from "./getproperyread-proxy";
 // import watch, { any } from "./watch";
 import { gettercallback } from "./gettercallback";
-import ReactiveState, { dispatchsymbol, isReactiveState } from "./reactivestate.js";
-import watch from './watch';
-export function Arraycomputed<T extends any>(
-    state: ReactiveState<T>[],
-    callback: gettercallback<T>,
+import ReactiveState, { dispatchsymbol } from "./reactivestate.js";
+import { isReactiveState } from "./isReactiveState";
+import watch from "./watch";
+import { UnWrapState } from "./unwrapstate";
+import { UnWrapArray } from "./UnWrapArray";
+export function computedmany<T extends any, Y extends ReactiveState<any>[]>(
+    state: Y,
+    callback: gettercallback<T, UnWrapState<UnWrapArray<Y>>[]>,
     setter?: SetterFun
 ): ReactiveState<T> {
     const getter = () => {

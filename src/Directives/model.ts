@@ -1,6 +1,7 @@
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
 import { get, set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
 import Virtualdom from "../CreateElement/VirtualElement";

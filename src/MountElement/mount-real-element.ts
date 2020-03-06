@@ -27,14 +27,7 @@ export default function<
         seteletext(container, "");
     }
 
-    /*  let eles: Array<any>;
-  if (Array.isArray(ele)) {
-    eles = ele;
-  } else {
-    
-    eles = [ele];
-  } */
-    const eles = toArray(ele).flat(Infinity);
+    const eles = toArray(ele);
     eles.forEach((e: Node | HTMLElement | Element | SVGElement) =>
         appendchild(container, e)
     );

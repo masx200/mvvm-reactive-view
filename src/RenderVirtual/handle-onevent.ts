@@ -11,21 +11,7 @@ export default function(
     eventname: string,
     callback: EventListener | Array<EventListener>
 ) {
-    /* if (!element[eventlistenerssymbol]) {
-    element[eventlistenerssymbol] = [];
-  }
-*/
     firstaddlisteners(element, eventname, toArray(callback));
-    /*
-
-
-
-
- 
- 
- 
- 
-*/
 }
 export function firstaddlisteners(
     ele: Element | Node,

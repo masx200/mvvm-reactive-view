@@ -1,5 +1,5 @@
 import Virtualdom from "../CreateElement/VirtualElement";
-import { isReactiveState } from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
 import { querySelectorAll } from "../UtilTools/dom";
 import { set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";

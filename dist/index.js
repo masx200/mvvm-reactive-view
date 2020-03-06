@@ -287,10 +287,6 @@ function debounce(func, wait, options) {
 
 var debounce_1 = debounce;
 
-const cached_create_componet = new WeakMap;
-
-const cached_callback_debounced_watchs = new WeakMap;
-
 function clearMounted() {
     mountedctx.clear();
 }
@@ -390,6 +386,14 @@ const updatedctx = createlifecyclecontext();
 
 const createdctx = createlifecyclecontext();
 
+const cached_create_componet = new WeakMap;
+
+const cached_callback_debounced_watchs = new WeakMap;
+
+function toArray(a) {
+    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
+}
+
 function useststerecord(state) {
     if (ctxopen) {
         StateSet.add(state);
@@ -448,10 +452,6 @@ const cancelsubscribe = Symbol("cancelsubscribe");
 const debouncedispatch = Symbol("debouncedispatch");
 
 const invalid_primitive_or_object_state = "invalid primitive or object state";
-
-function isReactiveState(a) {
-    return a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState";
-}
 
 const Targetsymbol = Symbol("eventtatget");
 
@@ -562,14 +562,18 @@ class ReactiveState {
     }
 }
 
-function toArray(a) {
-    return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
+function isReactiveState(a) {
+    return a instanceof ReactiveState && a[Symbol.toStringTag] === "ReactiveState";
 }
 
 function usewatch(state, callback) {
     if (ctxopen) {
         watchrecord.push([ state, callback ]);
     }
+}
+
+function rewatch(state) {
+    state[addallistenerssymbol]();
 }
 
 function watchsingle(state, callback) {
@@ -622,14 +626,6 @@ function watch(state, callback) {
         console.error(invalid_ReactiveState + invalid_Function);
         throw new TypeError;
     }
-}
-
-function unwatch(state) {
-    state[removeallistenerssymbol]();
-}
-
-function rewatch(state) {
-    state[addallistenerssymbol]();
 }
 
 const t = [ "input", "textarea", "option", "select" ];
@@ -1001,7 +997,7 @@ function mountrealelement(ele, container, clear = true) {
     if (clear) {
         seteletext(container, "");
     }
-    const eles = toArray(ele).flat(Infinity);
+    const eles = toArray(ele);
     eles.forEach(e => appendchild(container, e));
     return container;
 }
@@ -1356,17 +1352,17 @@ function MountElement(vdom, container) {
         console.error("Do not mount  to <html> or <body> <head>.");
         throw Error();
     }
-    const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
+        const elesarray = toArray(vdom);
         mountrealelement(render(elesarray), container);
     } else if (isNode(vdom) || isNodeArray(vdom)) {
+        const elesarray = toArray(vdom);
         mountrealelement(elesarray, container);
     } else {
         console.error(vdom);
         console.error(invalid_Virtualdom);
         throw TypeError();
     }
-    return container;
 }
 
 const proxyset = new WeakSet;
@@ -1564,6 +1560,10 @@ function waitloadallstyle(prefix, containerthis) {
 
 function setimmediate(fun) {
     return Promise.resolve().then(() => fun());
+}
+
+function unwatch(state) {
+    state[removeallistenerssymbol]();
 }
 
 function onmounted(ele) {
@@ -2174,7 +2174,7 @@ function getproperyreadproxy(a) {
     });
 }
 
-function Arraycomputed(state, callback, setter) {
+function computedmany(state, callback, setter) {
     const getter = () => {
         const value = apply(callback, undefined, state.map(st => st.valueOf()));
         const possiblevalue = isReactiveState(value) ? value.valueOf() : value;
@@ -2202,7 +2202,7 @@ function Arraycomputed(state, callback, setter) {
     return getproperyreadproxy(reactivestate);
 }
 
-const computed = function(state, callback, setter) {
+function computed(state, callback, setter) {
     if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
         console.error(state);
         console.error(callback);
@@ -2214,9 +2214,21 @@ const computed = function(state, callback, setter) {
         console.error("Empty array not allowed");
         throw new Error;
     }
-    const state1 = Arraycomputed(state1array, callback, setter);
+    const state1 = computedmany(state1array, callback, setter);
     return state1;
-};
+}
+
+function generatechildrenvdoms(liststate, fun) {
+    const data = liststate.valueOf();
+    const childs = new Array(data.length).fill(undefined).map((v, index) => {
+        const vdom = Reflect.apply(fun, undefined, [ computed(liststate, arr => arr[index]), index ]);
+        if (!isVirtualdom(vdom)) {
+            throw new TypeError;
+        }
+        return vdom;
+    });
+    return childs;
+}
 
 const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     if (!Array.isArray(value)) {
@@ -2256,18 +2268,6 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
         onunmount(cancel);
     });
 };
-
-function generatechildrenvdoms(liststate, fun) {
-    const data = liststate.valueOf();
-    const childs = new Array(data.length).fill(undefined).map((v, index) => {
-        const vdom = Reflect.apply(fun, undefined, [ computed(liststate, arr => arr[index]), index ]);
-        if (!isVirtualdom(vdom)) {
-            throw new TypeError;
-        }
-        return vdom;
-    });
-    return childs;
-}
 
 function createhtmlandtextdirective(seteletext, errorname, ele, text, onmount, onunmount) {
     {

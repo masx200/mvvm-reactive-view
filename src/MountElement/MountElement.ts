@@ -6,10 +6,10 @@ import { toArray } from "../UtilTools/toArray";
 import { isArray } from "../UtilTools/util";
 import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import { isNode, isNodeArray } from "./isNodeArray";
-export default function MountElement<T extends Element>(
+export default function MountElement(
     vdom: VaildVDom | Node | Element | Array<Node | Element>,
-    container: T
-): T {
+    container: Element
+): void {
     if (isArray(vdom)) {
         vdom = vdom.flat(Infinity);
         if (!vdom.length) {
@@ -33,27 +33,12 @@ export default function MountElement<T extends Element>(
         console.error("Do not mount  to <html> or <body> <head>.");
         throw Error();
     }
-    /*   if (
-    !(
-      isvalidvdom(vdom) ||
-      vdom instanceof Node ||
-      (isArray(vdom) && isNodeArray(vdom))
-    )
-  ) {
-    console.error(vdom);
-    throw TypeError(invalid_Virtualdom);
-  } */
 
-    /*   let elesarray: Array<any>;
-  if (Array.isArray(vdom)) {
-    elesarray = vdom;
-  } else {
-    elesarray = [vdom];
-  } */
-    const elesarray = toArray(vdom);
     if (isvalidvdom(vdom)) {
+        const elesarray = toArray(vdom);
         mount(render(elesarray), container);
     } else if (isNode(vdom) || isNodeArray(vdom)) {
+        const elesarray = toArray(vdom);
         mount(elesarray, container);
     } else {
         console.error(vdom);
@@ -62,5 +47,5 @@ export default function MountElement<T extends Element>(
     }
 
     //
-    return container;
+    // return container;
 }

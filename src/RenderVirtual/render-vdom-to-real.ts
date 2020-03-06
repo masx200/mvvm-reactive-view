@@ -9,8 +9,9 @@ import Virtualdom, {
 import { createcostumelemet } from "../CustomClass/create-costum-elemet";
 import mount from "../MountElement/mount-real-element";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
-import { watch } from "../Reactivity/watch";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
+import watch from "../Reactivity/watch";
 import {
     changetext,
     createDocumentFragment,

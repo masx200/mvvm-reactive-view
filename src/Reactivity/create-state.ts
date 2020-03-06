@@ -5,9 +5,9 @@ import { getproperyreadproxy } from "./getproperyread-proxy";
 import handleobjectstate from "./handle-object-state";
 import ReactiveState, {
     dispatchsymbol,
-    invalid_primitive_or_object_state,
-    isReactiveState
+    invalid_primitive_or_object_state
 } from "./reactivestate.js";
+import { isReactiveState } from "./isReactiveState";
 // import { any } from "./watch";
 import { combineproxy } from "src/others/combineproxy";
 export const set_prototype = Set.prototype;

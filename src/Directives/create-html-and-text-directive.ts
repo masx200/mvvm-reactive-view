@@ -1,5 +1,6 @@
-import ReactiveState, { isReactiveState } from "../Reactivity/reactivestate.js";
-import { watch } from "../Reactivity/watch";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { isReactiveState } from "../Reactivity/isReactiveState";
+import watch from "../Reactivity/watch";
 import { isconnected } from "../UtilTools/isconnected";
 import { isstring } from "../UtilTools/util";
 
