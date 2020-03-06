@@ -46,6 +46,6 @@ document.body.addEventListener(
     updatedeventname,
     () => {
         console.log("body subtree updated");
-    },
-    { once: true }
+    }
+    // { once: true }
 );

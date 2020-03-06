@@ -781,6 +781,14 @@ function addupdatedlistner(ele, call) {
     ele.addEventListener(updatedeventname, call);
 }
 
+function addstopupdatelistener(ele) {
+    ele.addEventListener(updatedeventname, e => {
+        if (e.target !== ele && ele.tagName.includes("-")) {
+            e.stopPropagation();
+        }
+    });
+}
+
 function addunmountedlistner(ele, call) {
     ele.addEventListener(disconnectedeventname, call);
 }
@@ -954,6 +962,12 @@ function mountrealelement(ele, container, clear = true) {
     return container;
 }
 
+const componentsymbol = Symbol("component");
+
+function iscomponent(a) {
+    return isfunction(a) && get(a, componentsymbol) === componentsymbol;
+}
+
 const charactorlist = Array(26).fill(undefined).map((v, i) => 97 + i).map(n => String.fromCharCode(n));
 
 const hexnumberlist = Array(16).fill(undefined).map((v, i) => i).map(a => a.toString(16));
@@ -1067,12 +1081,6 @@ function createcostumelemet(initclass, propsjson, children) {
     }
 }
 
-const componentsymbol = Symbol("component");
-
-function iscomponent(a) {
-    return isfunction(a) && get(a, componentsymbol) === componentsymbol;
-}
-
 function isconnected(element) {
     const isConnectedstate = element.isConnected;
     if (isboolean(isConnectedstate)) {
@@ -1090,6 +1098,25 @@ function getancestornode(node) {
 }
 
 const directive = {};
+
+const applydirects = function(element, vdom) {
+    Object.entries(vdom.directives).forEach(([name, value]) => {
+        const direfun = directive[name];
+        if (isfunction(direfun)) {
+            direfun(value, element, vdom, call => {
+                addmountedlistner(element, call);
+            }, call => {
+                addunmountedlistner(element, call);
+            }, call => {
+                addupdatedlistner(element, call);
+            });
+        } else {
+            console.error(vdom.directives);
+            console.error("invalid directives " + name);
+            throw new TypeError;
+        }
+    });
+};
 
 const eventlistenerssymbol = Symbol("eventlisteners");
 
@@ -1131,38 +1158,27 @@ function readdlisteners(ele) {
 
 function handleprops(element, vdom) {
     vdom.element.push(element);
-    ((element, vdom) => {
-        Object.entries(vdom.directives).forEach(([name, value]) => {
-            const direfun = directive[name];
-            if (isfunction(direfun)) {
-                direfun(value, element, vdom, call => {
-                    addmountedlistner(element, call);
-                }, call => {
-                    addunmountedlistner(element, call);
-                }, call => {
-                    addupdatedlistner(element, call);
-                });
-            } else {
-                console.error(vdom.directives);
-                console.error("invalid directives " + name);
-                throw new Error;
-            }
-        });
-        const attribute1 = createeleattragentreadwrite(element);
-        Object.assign(attribute1, vdom.props);
-        Object.entries(vdom.bindattr).forEach(([key, primitivestate]) => {
+    const attribute1 = createeleattragentreadwrite(element);
+    Object.assign(attribute1, vdom.props);
+    addmountedlistner(element, () => {
+        const cacelarr = Object.entries(vdom.bindattr).map(([key, primitivestate]) => {
             attribute1[key] = primitivestate.valueOf();
-            watch(primitivestate, () => {
+            return watch(primitivestate, () => {
                 const state = primitivestate;
                 if (isconnected(element)) {
                     attribute1[key] = state.valueOf();
                 }
             });
         });
-        Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
-            onevent(element, event, callbacks);
+        addunmountedlistner(element, () => {
+            cacelarr.forEach(f => {
+                f();
+            });
         });
-    })(element, vdom);
+    });
+    Object.entries(vdom.onevent).forEach(([event, callbacks]) => {
+        onevent(element, event, callbacks);
+    });
     [ ...Object.values(vdom.bindattr), ...Object.values(vdom.directives) ].flat(1 / 0).filter(e => isReactiveState(e)).forEach(e => {
         if (!has(element, bindstatesymbol)) {
             set(element, bindstatesymbol, new Set);
@@ -1240,6 +1256,7 @@ function render(vdom, namespace) {
             throwinvalideletype(vdom);
         }
         dispatchcreated(element);
+        applydirects(element, vdom);
         if (type && (isfunction(type) || isstring(type))) {
             if (!iscomponent(type)) {
                 if (element) {
@@ -1691,6 +1708,7 @@ function createComponentold(custfun) {
                     updatedcallbacks.forEach(callback => {
                         addupdatedlistner(this, callback);
                     });
+                    addstopupdatelistener(this);
                 } else {
                     closectx();
                     console.error(possiblyvirtualdom);
@@ -2151,6 +2169,7 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     if (!isReactiveState(list) || !isfunction(fun)) {
         throw TypeError();
     }
+    vdom.children.length = 0;
     const changecallback = () => {
         const data = list.valueOf();
         if (!isarray(data)) {
@@ -2167,11 +2186,9 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
             });
         } else if (newlength > oldlength) {
             const childs = generatechildrenvdoms(list, fun);
-            const nodes = render(childs);
+            const nodes = render(childs.slice(minlength));
             nodes.forEach((n, i) => {
-                if (i > minlength - 1) {
-                    ele.appendChild(n);
-                }
+                ele.appendChild(n);
             });
         }
     };
@@ -2226,6 +2243,7 @@ function createhtmlandtextdirective(seteletext, errorname, ele, text, onmount, o
 const Localhtml = (html, ele, vdom, onmount, onunmount) => {
     if (isstring(html) || isReactiveState(html)) {
         console.log(vdom);
+        vdom.children.length = 0;
         createhtmlandtextdirective(setelehtml, "html", ele, html, onmount, onunmount);
     } else {
         throw new TypeError;
@@ -2257,6 +2275,7 @@ const Localref = (ref, ele, _vdom) => {
 const Localtext = (text, ele, vdom, onmount, onunmount) => {
     if (isstring(text) || isReactiveState(text)) {
         console.log(vdom);
+        vdom.children.length = 0;
         createhtmlandtextdirective(seteletext, "text", ele, text, onmount, onunmount);
     } else {
         throw new TypeError;

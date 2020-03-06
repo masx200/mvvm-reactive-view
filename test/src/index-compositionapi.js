@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+    useUpdated,
     watch,
     computed,
     createComponent,
@@ -9,7 +10,8 @@ import {
     h,
     MountElement,
     useMounted,
-    useUnMounted
+    useUnMounted,
+    render
 } from "./mvvm-view";
 console.log([h, createElement]);
 function useMousePosition() {
@@ -59,6 +61,11 @@ const mycomapp = createComponent(() => {
             console.timeEnd("watchmousemove50");
         }
     });
+    useUpdated(() => {
+        if (count < 50) {
+            console.log("鼠标组件更新");
+        }
+    });
     return (
         <div>
             <h3> 鼠标位置</h3>
@@ -76,4 +83,14 @@ p{color:blue !important;}
 `;
 var vdom = createElement(mycomapp);
 // MountElement(vdom, document.getElementById("root"));
-document.body.appendChild(MountElement(vdom, document.createElement("div")));
+const container = document.createElement("div");
+document.body.appendChild(MountElement(vdom, container));
+const removecom = () => (
+    <button
+        $text="移除当前容器元素"
+        onClick={() => {
+            container.remove();
+        }}
+    />
+);
+document.body.appendChild(render(h(removecom)));
