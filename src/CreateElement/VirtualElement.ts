@@ -45,7 +45,7 @@ function createVirtualElement<
         "bindattr"
     ].forEach((key) => {
         defineProperty(virtual, key, {
-            writable: true
+            writable: true,enumerable:false
         });
     });
 
