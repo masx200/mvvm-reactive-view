@@ -390,12 +390,6 @@ const updatedctx = createlifecyclecontext();
 
 const createdctx = createlifecyclecontext();
 
-function usewatch(state, callback) {
-    if (ctxopen) {
-        watchrecord.push([ state, callback ]);
-    }
-}
-
 function useststerecord(state) {
     if (ctxopen) {
         StateSet.add(state);
@@ -572,6 +566,26 @@ function toArray(a) {
     return (isarray(a) ? a : [ a ]).flat(1 / 0).filter(a => !isundefined(a));
 }
 
+function usewatch(state, callback) {
+    if (ctxopen) {
+        watchrecord.push([ state, callback ]);
+    }
+}
+
+function watchsingle(state, callback) {
+    if (!(isReactiveState(state) && isfunction(callback))) {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError();
+    }
+    state[subscribesymbol](callback);
+    requestAnimationFrame(() => {
+        rewatch(state);
+    });
+    usewatch(state, callback);
+}
+
 function watch(state, callback) {
     if (isarray(state) || isReactiveState(state)) {
         const statearray = toArray(state);
@@ -608,20 +622,6 @@ function watch(state, callback) {
         console.error(invalid_ReactiveState + invalid_Function);
         throw new TypeError;
     }
-}
-
-function watchsingle(state, callback) {
-    if (!(isReactiveState(state) && isfunction(callback))) {
-        console.error(state);
-        console.error(callback);
-        console.error(invalid_ReactiveState + invalid_Function);
-        throw TypeError();
-    }
-    state[subscribesymbol](callback);
-    requestAnimationFrame(() => {
-        rewatch(state);
-    });
-    usewatch(state, callback);
 }
 
 function unwatch(state) {
@@ -2174,22 +2174,6 @@ function getproperyreadproxy(a) {
     });
 }
 
-const computed = function(state, callback, setter) {
-    if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
-        console.error(state);
-        console.error(callback);
-        console.error(invalid_ReactiveState + invalid_Function);
-        throw TypeError();
-    }
-    const state1array = toArray(state);
-    if (!state1array.length) {
-        console.error("Empty array not allowed");
-        throw new Error;
-    }
-    const state1 = Arraycomputed(state1array, callback, setter);
-    return state1;
-};
-
 function Arraycomputed(state, callback, setter) {
     const getter = () => {
         const value = apply(callback, undefined, state.map(st => st.valueOf()));
@@ -2217,6 +2201,22 @@ function Arraycomputed(state, callback, setter) {
     });
     return getproperyreadproxy(reactivestate);
 }
+
+const computed = function(state, callback, setter) {
+    if (!((isarray(state) || isReactiveState(state)) && isfunction(callback))) {
+        console.error(state);
+        console.error(callback);
+        console.error(invalid_ReactiveState + invalid_Function);
+        throw TypeError();
+    }
+    const state1array = toArray(state);
+    if (!state1array.length) {
+        console.error("Empty array not allowed");
+        throw new Error;
+    }
+    const state1 = Arraycomputed(state1array, callback, setter);
+    return state1;
+};
 
 const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     if (!Array.isArray(value)) {

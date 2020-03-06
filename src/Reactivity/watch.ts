@@ -1,25 +1,17 @@
 import debounce from "lodash/debounce";
-import { cached_callback_debounced_watchs } from "../others/cached-map";
 import { invalid_ReactiveState } from "../AttributeClass/conditon";
 import { invalid_Function } from "../life-cycle-context/Component-context";
-import ReactiveState, {
-    addallistenerssymbol,
-    cancelsubscribe,
-    isReactiveState,
-    removeallistenerssymbol} from "./reactivestate.js";
+import { cached_callback_debounced_watchs } from "../others/cached-map";
 import { toArray } from "../UtilTools/toArray";
-
 import { isarray } from "../UtilTools/util";
 import { Listener } from "./custom-observer-target";
-import { watchsingle } from './watchsingle';
+import { gettercallback } from "./gettercallback";
+import ReactiveState, { addallistenerssymbol, cancelsubscribe, isReactiveState, removeallistenerssymbol } from "./reactivestate.js";
+import { watchsingle } from "./watchsingle";
+
 export type CancelWatchfun = () => void;
-export type UnwrapedState = any;
 
-export interface gettercallback<T> {
-    (...args: UnwrapedState[]): T;
-}
-
-export function watch<T extends UnwrapedState>(
+export function watch<T extends any>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
 
     callback: gettercallback<void>

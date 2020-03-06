@@ -1,16 +1,13 @@
 import { invalid_ReactiveState } from "src/AttributeClass/conditon";
 import { invalid_Function } from "src/life-cycle-context/Component-context";
 import { toArray } from "src/UtilTools/toArray";
-import {
-    isArray,
-    isFunction} from "src/UtilTools/util";
-import ReactiveState, {
-    isReactiveState
-} from "./reactivestate.js";
-import { gettercallback, UnwrapedState } from "./watch";
-import { Arraycomputed } from './Arraycomputed';
+import { isArray, isFunction } from "src/UtilTools/util";
+import { Arraycomputed } from "./Arraycomputed";
+// import { any } from "./watch";
+import { gettercallback } from "./gettercallback";
+import ReactiveState, { isReactiveState } from "./reactivestate.js";
 
-const computed = function<T extends UnwrapedState>(
+const computed = function<T extends any>(
     state: ReactiveState<T> | Array<ReactiveState<T>>,
     callback: gettercallback<T>,
     setter?: SetterFun
@@ -35,3 +32,4 @@ const computed = function<T extends UnwrapedState>(
 export default computed;
 export type SetterFun = (v: any) => void;
 export { computed };
+

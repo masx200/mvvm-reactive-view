@@ -5,7 +5,9 @@ interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-declare const createComponent: (custfun: Htmlelementconstructor | Custom) => Htmlelementconstructor;
+declare const createComponent: (
+    custfun: Htmlelementconstructor | Custom
+) => Htmlelementconstructor;
 type Primitivetype = string | number | boolean | undefined | bigint;
 interface Listener {
     (): any;
@@ -22,15 +24,28 @@ declare const removeallistenerssymbol: unique symbol;
 declare const addallistenerssymbol: unique symbol;
 declare const tagtypesym: unique symbol;
 declare class ReactiveState<T> {
-    constructor(init: {
-        value: T;
-    });
-    constructor(init: {
-        get: () => T;
-        set?: (v: T) => void;
-    });
+    constructor(init: { value: T });
+    constructor(init: { get: () => T; set?: (v: T) => void });
     private [tagtypesym];
-    value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
+    value: T extends Array<any>
+        ? Array<any>
+        : T extends Function
+        ? Function
+        : T extends string
+        ? string
+        : T extends number
+        ? number
+        : T extends boolean
+        ? boolean
+        : T extends void
+        ? void
+        : T extends symbol
+        ? symbol
+        : T extends bigint
+        ? bigint
+        : T extends object
+        ? T
+        : never;
     readonly [Symbol.toStringTag] = "ReactiveState";
     private [debouncedispatch];
     [removeallistenerssymbol](): void;
@@ -39,30 +54,80 @@ declare class ReactiveState<T> {
     [addallistenerssymbol](): void;
     private [Targetsymbol];
     private [memlisteners];
-    valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
+    valueOf: () => T extends any[]
+        ? any[]
+        : T extends Function
+        ? Function
+        : T extends string
+        ? string
+        : T extends number
+        ? number
+        : T extends boolean
+        ? boolean
+        : T extends void
+        ? void
+        : T extends symbol
+        ? symbol
+        : T extends bigint
+        ? bigint
+        : T extends object
+        ? T
+        : never;
     toString(): string;
     [dispatchsymbol](): void;
     [subscribesymbol](eventlistener: Listener): void;
     [cancelsubscribe](eventlistener: Listener): void;
     [Symbol.toPrimitive](): string | undefined | Primitivetype;
 }
-type VaildVDom = Virtualdom<any> | string | number | Vdomchildren | ReactiveState<any>;
+type VaildVDom =
+    | Virtualdom<any>
+    | string
+    | number
+    | Vdomchildren
+    | ReactiveState<any>;
 interface Custom {
-    (props?: Record<string, ReactiveState<string>>, children?: Vdomchildren): VaildVDom;
+    (
+        props?: Record<string, ReactiveState<string>>,
+        children?: Vdomchildren
+    ): VaildVDom;
     defaultProps?: Record<string, string>;
     css?: string;
 }
-type styleprop = string | object | ReactiveState<string> | ReactiveState<object>;
-type classprop = string | Set<string> | Array<string> | ReactiveState<string | Set<string> | Array<string>>;
+type styleprop =
+    | string
+    | object
+    | ReactiveState<string>
+    | ReactiveState<object>;
+type classprop =
+    | string
+    | Set<string>
+    | Array<string>
+    | ReactiveState<string | Set<string> | Array<string>>;
 interface ElementAttrs {
     style?: styleprop;
     class?: classprop;
     [key: string]: any;
 }
-declare function h<T extends Htmlelementconstructor | string | Custom>(type: T, propsorchildren?: Vdomchildren, ...children: Vdomchildren): Virtualdom<T>;
-declare function h<T extends Vdomchildren>(type: "", propsorchildren?: T, ...children: T): T;
-declare function h<T extends Vdomchildren>(type: "", props?: ElementAttrs, ...children: T): T;
-declare function h<T extends Htmlelementconstructor | string | Custom>(type: T, props?: ElementAttrs, ...children: Vdomchildren): Virtualdom<T>;
+declare function h<T extends Htmlelementconstructor | string | Custom>(
+    type: T,
+    propsorchildren?: Vdomchildren,
+    ...children: Vdomchildren
+): Virtualdom<T>;
+declare function h<T extends Vdomchildren>(
+    type: "",
+    propsorchildren?: T,
+    ...children: T
+): T;
+declare function h<T extends Vdomchildren>(
+    type: "",
+    props?: ElementAttrs,
+    ...children: T
+): T;
+declare function h<T extends Htmlelementconstructor | string | Custom>(
+    type: T,
+    props?: ElementAttrs,
+    ...children: Vdomchildren
+): Virtualdom<T>;
 type Vdomchildren = Array<VaildVDom>;
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
@@ -78,9 +143,11 @@ interface attrfor<T> extends Array<any> {
     1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
 }
 interface Attributes {
-    $ref?: {
-        value?: Element;
-    } | ((value: Element) => void);
+    $ref?:
+        | {
+              value?: Element;
+          }
+        | ((value: Element) => void);
     $html?: string | ReactiveState<string>;
     $text?: string | ReactiveState<string>;
     $value?: ReactiveState<string>;
@@ -416,8 +483,7 @@ interface VideoHTMLAttributes extends MediaHTMLAttributes {
     width?: number | string;
     disablePictureInPicture?: boolean;
 }
-interface AudioHTMLAttributes extends MediaHTMLAttributes {
-}
+interface AudioHTMLAttributes extends MediaHTMLAttributes {}
 interface AreaHTMLAttributes extends HTMLAttributes {
     alt?: string;
     coords?: string;
@@ -469,7 +535,20 @@ interface SVGAttributes extends AriaAttributes {
     "accent-height"?: number | string;
     accumulate?: "none" | "sum";
     additive?: "replace" | "sum";
-    "alignment-baseline"?: "auto" | "baseline" | "before-edge" | "text-before-edge" | "middle" | "central" | "after-edge" | "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit";
+    "alignment-baseline"?:
+        | "auto"
+        | "baseline"
+        | "before-edge"
+        | "text-before-edge"
+        | "middle"
+        | "central"
+        | "after-edge"
+        | "text-after-edge"
+        | "ideographic"
+        | "alphabetic"
+        | "hanging"
+        | "mathematical"
+        | "inherit";
     allowReorder?: "no" | "yes";
     alphabetic?: number | string;
     amplitude?: number | string;
@@ -712,7 +791,15 @@ interface AriaAttributes {
     "aria-colindex"?: number;
     "aria-colspan"?: number;
     "aria-controls"?: string;
-    "aria-current"?: boolean | "false" | "true" | "page" | "step" | "location" | "date" | "time";
+    "aria-current"?:
+        | boolean
+        | "false"
+        | "true"
+        | "page"
+        | "step"
+        | "location"
+        | "date"
+        | "time";
     "aria-describedby"?: string;
     "aria-details"?: string;
     "aria-disabled"?: boolean | "false" | "true";
@@ -721,7 +808,15 @@ interface AriaAttributes {
     "aria-expanded"?: boolean | "false" | "true";
     "aria-flowto"?: string;
     "aria-grabbed"?: boolean | "false" | "true";
-    "aria-haspopup"?: boolean | "false" | "true" | "menu" | "listbox" | "tree" | "grid" | "dialog";
+    "aria-haspopup"?:
+        | boolean
+        | "false"
+        | "true"
+        | "menu"
+        | "listbox"
+        | "tree"
+        | "grid"
+        | "dialog";
     "aria-hidden"?: boolean | "false" | "true";
     "aria-invalid"?: boolean | "false" | "true" | "grammar" | "spelling";
     "aria-keyshortcuts"?: string;
@@ -738,7 +833,12 @@ interface AriaAttributes {
     "aria-posinset"?: number;
     "aria-pressed"?: boolean | "false" | "mixed" | "true";
     "aria-readonly"?: boolean | "false" | "true";
-    "aria-relevant"?: "additions" | "additions text" | "all" | "removals" | "text";
+    "aria-relevant"?:
+        | "additions"
+        | "additions text"
+        | "all"
+        | "removals"
+        | "text";
     "aria-required"?: boolean | "false" | "true";
     "aria-roledescription"?: string;
     "aria-rowcount"?: number;
@@ -754,8 +854,17 @@ interface AriaAttributes {
 }
 type CSSProperties = CSS.Properties<string | number>;
 type Booleanish = boolean | "true" | "false";
-type styleprop$0 = CSSProperties | string | object | ReactiveState<string> | ReactiveState<object>;
-type classprop$0 = string | Set<string> | Array<string> | ReactiveState<string | Set<string> | Array<string>>;
+type styleprop$0 =
+    | CSSProperties
+    | string
+    | object
+    | ReactiveState<string>
+    | ReactiveState<object>;
+type classprop$0 =
+    | string
+    | Set<string>
+    | Array<string>
+    | ReactiveState<string | Set<string> | Array<string>>;
 interface HTMLAttributes extends AriaAttributes {
     domPropsInnerHTML?: string;
     class?: classprop$0;
@@ -795,7 +904,15 @@ interface HTMLAttributes extends AriaAttributes {
     results?: number;
     security?: string;
     unselectable?: "on" | "off";
-    inputmode?: "none" | "text" | "tel" | "url" | "email" | "numeric" | "decimal" | "search";
+    inputmode?:
+        | "none"
+        | "text"
+        | "tel"
+        | "url"
+        | "email"
+        | "numeric"
+        | "decimal"
+        | "search";
     is?: string;
 }
 interface AnchorHTMLAttributes extends HTMLAttributes {
@@ -1149,40 +1266,53 @@ interface Events {
 }
 type StringKeyOf<T> = Extract<keyof T, string>;
 type EventHandlers<E> = {
-    [K in StringKeyOf<E>]?: E[K] extends Function ? E[K] : (payload: E[K]) => void;
+    [K in StringKeyOf<E>]?: E[K] extends Function
+        ? E[K]
+        : (payload: E[K]) => void;
 };
 type ElementAttrs$0<T> = T & EventHandlers<Events> & Attributes;
 type NativeElements = {
-    [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs$0<IntrinsicElementAttributes[K]>;
+    [K in StringKeyOf<IntrinsicElementAttributes>]: ElementAttrs$0<
+        IntrinsicElementAttributes[K]
+    >;
 };
 declare global {
     namespace JSX {
-        interface Element extends Virtualdom<any> {
-        }
-        interface ElementClass {
-        }
-        interface ElementAttributesProperty {
-        }
-        interface ElementChildrenAttribute {
-        }
-        interface IntrinsicClassAttributes {
-        }
-        interface IntrinsicAttributes extends Attributes {
-        }
+        interface Element extends Virtualdom<any> {}
+        interface ElementClass {}
+        interface ElementAttributesProperty {}
+        interface ElementChildrenAttribute {}
+        interface IntrinsicClassAttributes {}
+        interface IntrinsicAttributes extends Attributes {}
         interface IntrinsicElements extends NativeElements {
             [name: string]: any;
         }
     }
 }
-declare const Condition: (conditon: boolean | ReactiveState<boolean>, iftrue?: string | Virtualdom<any> | undefined, iffalse?: string | Virtualdom<any> | undefined) => Virtualdom<Htmlelementconstructor>;
-declare function Switchable(funstate: ReactiveState<Htmlelementconstructor | Custom>): Virtualdom<Htmlelementconstructor>;
-declare function html(...args: any[]): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
+declare const Condition: (
+    conditon: boolean | ReactiveState<boolean>,
+    iftrue?: string | Virtualdom<any> | undefined,
+    iffalse?: string | Virtualdom<any> | undefined
+) => Virtualdom<Htmlelementconstructor>;
+declare function Switchable(
+    funstate: ReactiveState<Htmlelementconstructor | Custom>
+): Virtualdom<Htmlelementconstructor>;
+declare function html(
+    ...args: any[]
+): Virtualdom<any> | Vdomchildren | string | number | ReactiveState<any>;
 interface Ref<T = any | undefined> {
     value: T | undefined;
 }
 declare function createRef<T = any | undefined>(value?: T): Ref<T>;
 interface Extendfun {
-    (value: unknown, element: Element, vdom: Virtualdom<any>, onmounted: (call: () => void) => void, onunmounted: (call: () => void) => void, onupdated: (call: () => void) => void): void;
+    (
+        value: unknown,
+        element: Element,
+        vdom: Virtualdom<any>,
+        onmounted: (call: () => void) => void,
+        onunmounted: (call: () => void) => void,
+        onupdated: (call: () => void) => void
+    ): void;
 }
 declare function extenddirectives(name: string, fun: Extendfun): void;
 declare const Directives: typeof extenddirectives;
@@ -1190,22 +1320,76 @@ declare function useCreated(fun: () => void): void;
 declare function useUpdated(fun: () => void): void;
 declare function useMounted(fun: () => void): void;
 declare function useUnMounted(fun: () => void): void;
-declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
+declare function MountElement<T extends Element>(
+    vdom: VaildVDom | Node | Element | Array<Node | Element>,
+    container: T
+): T;
 type CancelWatchfun = () => void;
-type UnwrapedState = any;
-interface gettercallback {
-    (...args: UnwrapedState[]): any;
+type any = any;
+interface gettercallback<T> {
+    (...args: any[]): T;
 }
-declare function watch<T extends UnwrapedState>(state: ReactiveState<T> | Array<ReactiveState<T>>, callback: gettercallback): CancelWatchfun;
-declare const computed: <T extends any>(state: ReactiveState<T> | ReactiveState<T>[], callback: gettercallback, setter?: SetterFun | undefined) => ReactiveState<any>;
+declare function watch<T extends any>(
+    state: ReactiveState<T> | Array<ReactiveState<T>>,
+    callback: gettercallback<void>
+): CancelWatchfun;
+declare const computed: <T extends any>(
+    state: ReactiveState<T> | ReactiveState<T>[],
+    callback: gettercallback<T>,
+    setter?: SetterFun | undefined
+) => ReactiveState<T>;
 type SetterFun = (v: any) => void;
-declare function createState<T extends UnwrapedState>(init: ReactiveState<T>): ReactiveState<T>;
-declare function createState<T extends UnwrapedState>(init: Exclude<T, ReactiveState<any>> | undefined): ReactiveState<T>;
-declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
-declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
-declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
-declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
-declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
-declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
-declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
-export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, useUpdated, useCreated, JSX };
+declare function createState<T extends any>(
+    init: ReactiveState<T>
+): ReactiveState<T>;
+declare function createState<T extends any>(
+    init: Exclude<T, ReactiveState<any>> | undefined
+): ReactiveState<T>;
+declare function render(
+    vdom: Virtualdom<any> | string,
+    namespace?: string
+): Node;
+declare function render(
+    vdom: Virtualdom<string | Function>,
+    namespace?: string
+): Element;
+declare function render(
+    vdom: Virtualdom<"script" | "" | "html">,
+    namespace?: string
+): Node;
+declare function render(
+    vdom: Vdomchildren,
+    namespace?: string
+): Array<Node | Element>;
+declare function render(
+    vdom: string | ReactiveState<any> | number,
+    namespace?: string
+): Node;
+declare function render(
+    vdom: Array<Virtualdom<any>>,
+    namespace?: string
+): Array<Element>;
+declare function render(
+    vdom: Array<string | ReactiveState<any> | number>,
+    namespace?: string
+): Array<Node>;
+export {
+    render,
+    computed,
+    useMounted,
+    useUnMounted,
+    createComponent,
+    html,
+    h,
+    h as createElement,
+    MountElement,
+    createRef,
+    createState,
+    watch,
+    Directives,
+    Condition,
+    Switchable,
+    useUpdated,
+    useCreated,
+    JSX
+};

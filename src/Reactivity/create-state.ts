@@ -8,20 +8,18 @@ import ReactiveState, {
     invalid_primitive_or_object_state,
     isReactiveState
 } from "./reactivestate.js";
-import { UnwrapedState } from "./watch";
+// import { any } from "./watch";
 import { combineproxy } from "src/others/combineproxy";
 export const set_prototype = Set.prototype;
 
 export default createState;
 export { createState };
-function createState<T extends UnwrapedState>(
-    init: ReactiveState<T>
-): ReactiveState<T>;
-function createState<T extends UnwrapedState>(
+function createState<T extends any>(init: ReactiveState<T>): ReactiveState<T>;
+function createState<T extends any>(
     init: Exclude<T, ReactiveState<any>> | undefined
 ): ReactiveState<T>;
 
-function createState<T extends UnwrapedState>(
+function createState<T extends any>(
     init: Exclude<T, ReactiveState<any>> | ReactiveState<T> | undefined
 ) {
     /*   if (!(isprimitive(init) || isobject(init) || isReactiveState(init))) {
