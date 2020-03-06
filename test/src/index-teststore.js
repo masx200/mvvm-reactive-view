@@ -51,18 +51,19 @@ let vdom = [
 document.body.appendChild(MountElement(vdom, document.createElement("div")));
 
 setTimeout(() => {
-    vdom.forEach((vdom) => {
+   /*
+ vdom.forEach((vdom) => {
         const element = vdom.element;
         // element.parentNode.removeChild(element);
         element.forEach((e) => e.remove());
-    });
+    });*/
     // @ts-ignore
-    number.value = -50;
-
+    number.value = Math.round(Math.random()*100);
+/*
     vdom.forEach((vdom) => {
         const element = vdom.element;
         // document.body.appendChild(element);
         element.forEach((e) => document.body.appendChild(e));
-    });
+    });*/
     vdom = undefined;
 }, 5000);
