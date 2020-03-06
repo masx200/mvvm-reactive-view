@@ -39,7 +39,7 @@ function createVirtualElement<
     const vdom = virtual;
     [
         "onevent",
-        "element",
+        
         "type",
         "props",
         "children",
@@ -51,7 +51,7 @@ function createVirtualElement<
         });
     });
 
-    vdom.element = [];
+   
     Object.assign(virtual, {
         type,
         bindattr: Object.fromEntries(
@@ -111,7 +111,7 @@ function createVirtualElement<
 
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
-    readonly element: Element[];
+   
     readonly type: T;
     readonly props: ElementAttrs;
     readonly children: Vdomchildren;
@@ -120,8 +120,6 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly onevent: Record<string, Array<EventListener>>;
 
     readonly bindattr: Record<string, ReactiveState<any>>;
-    /* {
-    [key: string]: ReactiveState<any>;
-  }; */
+  
 }
 export default Virtualdom;
