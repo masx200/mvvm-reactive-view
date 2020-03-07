@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+"useDefineForClassFields":true,
         "plugins": [],
         "allowJs": true,
         "paths": {
