@@ -36,18 +36,9 @@
         "forceConsistentCasingInFileNames": true
     },
     "include": [
-        "./src/*/*.ts",
+       
         "./src/*.ts",
-        "./src/**/*.ts",
-        "src/AttributeClass/*.ts",
-        "src/Reactivity/*.ts",
-        "src/Directives/*.ts",
-        "src/ScopedCSS/*.ts",
-        "src/RenderVirtual/*.ts",
-        "src/UtilTools/*.ts",
-        "src/CreateElement/*.ts",
-        "src/CustomClass/*.ts",
-        "src/MountElement/*.ts"
+        "./src/**/*.ts"
     ],
     "exclude": []
 }
