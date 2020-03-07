@@ -180,7 +180,7 @@ MountElement(vdom, document.getElementById("root"));
 
 但是与`react-jsx`有一些不同，例如 属性名不使用驼峰命名等等
 
-## 可在 `webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
+## 可在 `rollup`或`webpack` 中, 使用 `babel-plugin-htm` 或者 `@babel/plugin-transform-react-jsx`预编译成`虚拟 dom`
 
 https://github.com/developit/htm
 
@@ -219,7 +219,12 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
             {
                 "corejs": 3,
                 "useBuiltIns": "usage",
-                "targets": { "esmodules": true }
+                "targets": [
+                    "last 1 edge version",
+                    "last 1 safari version",
+                    "last 1 chrome version",
+                    "last 1 firefox version"
+                ]
             }
         ]
     ]
