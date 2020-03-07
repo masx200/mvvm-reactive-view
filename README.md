@@ -22,7 +22,7 @@
 
 浏览器要求原生支持`Proxy`和`ECMASCRIPT2017`以上
 
-EDGE,CHROME,FIREFOX,SAFARI
+`EDGE,CHROME,FIREFOX,SAFARI`
 
 # 安装 `npm` 模块
 
@@ -121,7 +121,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
 const inputref = createRef();
 const state1 = createState("hello");
-const stylestate = createState({ display: "block", width: "700px" });
+const stylestate = createState({ display: "block", width: "700px",color:"" });
 const vdom = html`
     <div style=${{ display: "block", width: "500px" }}>hello world!</div>
     <input
