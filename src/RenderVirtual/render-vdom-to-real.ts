@@ -45,25 +45,24 @@ function throwinvalideletype(type?: any): never {
     throw TypeError(/*"invalid element type!"*/);
 }
 export default function render(
-    vdom: Virtualdom<any> | string,
-    namespace?: string
-): Node;
-export default function render(
-    vdom: Virtualdom<string | Function>,
-    namespace?: string
-): Element;
-export default function render(
     vdom: Virtualdom< "" >,
     namespace?: string
 ): Node;
 export default function render(
-    vdom: Vdomchildren,
-    namespace?: string
-): Array<Node | Element>;
-export default function render(
     vdom: string | ReactiveState<any> | number,
     namespace?: string
 ): Node;
+
+export default function render(
+    vdom: Virtualdom<string | Function>,
+    namespace?: string
+): Element;
+
+export default function render(
+    vdom: Vdomchildren,
+    namespace?: string
+): Array<Node | Element>;
+
 export default function render(
     vdom: Array<Virtualdom<any>>,
     namespace?: string
