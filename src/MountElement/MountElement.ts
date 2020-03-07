@@ -6,10 +6,10 @@ import { toArray } from "../UtilTools/toArray";
 import { isArray } from "../UtilTools/util";
 import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import { isNode, isNodeArray } from "./isNodeArray";
-export default function MountElement(
+export default function MountElement <T extends Element>(
     vdom: VaildVDom | Node | Element | Array<Node | Element>,
-    container: Element
-): void {
+    container: T
+): T {
     if (isArray(vdom)) {
         vdom = vdom.flat(Infinity);
         if (!vdom.length) {
@@ -47,5 +47,5 @@ export default function MountElement(
     }
 
     //
-    // return container;
+     return container;
 }
