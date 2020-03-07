@@ -90,15 +90,11 @@ export default function render(
         const textnode = createtextnode(vdom);
 
         return textnode;
-    } else if (isReactiveState(vdom) /*instanceof ReactiveState*/) {
+    } else if (isReactiveState(vdom) ) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
 
-        /*  try {
-      reactive[textnodesymbol] = textnode;
-    } catch (error) {
-      console.warn(error);
-    } */
+        
 
         watch(reactive, (/* state: ReactiveState<any> */) => {
             const state = reactive;
@@ -143,11 +139,11 @@ export default function render(
 
                 return fragmentnode;
             } else if (type === "html") {
-                const fragmentnode = createElementNS("never", "html");
+                const fragmentelement = createElementNS("never", "html");
 
-                mount(render(vdom.children), fragmentnode);
+                mount(render(vdom.children), fragmentelement);
 
-                return fragmentnode;
+                return fragmentelement;
             } else {
                 element = namespace
                     ? createElementNS(namespace, type)
