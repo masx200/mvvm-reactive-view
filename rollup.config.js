@@ -41,7 +41,14 @@ extensions:[".ts",".tsx",".js",".jsx"],
         "@babel/plugin-proposal-optional-catch-binding",
         "@babel/plugin-proposal-nullish-coalescing-operator"
     ],
-    presets: [["@babel/preset-typescript",{isTSX:true,allExtensions: true}],
+    presets: [["@babel/preset-typescript",
+{
+
+isTSX:true,allExtensions: true,
+
+jsxPragma:"h"
+
+}],
         [
             "@babel/preset-env",
             {
