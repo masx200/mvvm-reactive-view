@@ -1,4 +1,6 @@
 import { dispatchcreated } from "src/others/addlistener-mount-unmount-updated";
+import { addmountedlistner } from "src/others/addmountedlistner";
+import { addunmountedlistner } from "src/others/addunmountedlistner";
 
 import { autocreateclass } from "../AttributeClass/createComponent";
 import { iscomponent } from "../AttributeClass/iscomponent";
@@ -95,16 +97,23 @@ function render(
     } else if (isReactiveState(vdom) ) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
+const element = textnode;
+let cancel:undefined | (() => void)
+      addmountedlistner(element, () => {  
 
-        
-
-        watch(reactive, (/* state: ReactiveState<any> */) => {
+       cancel= watch(reactive, () => {
             const state = reactive;
             if (isconnected(element)) {
                 changetext(textnode, String(state));
             }
         });
-        const element = textnode;
+
+})
+addunmountedlistner(element, () => {
+        cancel &&
+            cancel()
+    });
+        
         set(element, bindstatesymbol, new Set());
 
         (get(element, bindstatesymbol) as Set<ReactiveState<any>>).add(
