@@ -29,7 +29,7 @@ const inputOptions1 = {
                 ...resolvedConfig,
                 declaration: false,
                 // jsx: "preserve",
-                declarationDir: null
+                declarationDir: "test/dist"
             })
         }),
 
