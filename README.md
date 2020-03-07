@@ -743,9 +743,9 @@ const com2 = createComponent(() => {
 const com3 = createComponent(() => {
     return <h1>component 3</h1>;
 });
-const com4 = () => {
+const com4 = createComponent(() => {
     return <h1>component 4</h1>;
-};
+});
 const mystate = createState(com1);
 const vdom = Switchable(mystate);
 const element = render(vdom);
@@ -949,9 +949,9 @@ console.log(lirefs);
 <input type="radio" $checked={state} />
 ```
 
-### 指令`mounted`,当元素挂载到`document.body`中时,会触发回调函数,值类型为`() => void`
+### 指令`mounted`,当元素挂载到`document.body`的子节点中时,会触发回调函数,值类型为`() => void`
 
-### 指令`unmounted`,当元素从`document.body`中卸载时,会触发回调函数,值类型为`() => void`
+### 指令`unmounted`,当元素从`document.body`的子节点中卸载时,会触发回调函数,值类型为`() => void`
 
 ### 指令`updated`,当元素及其子节点更新时,会触发回调函数,值类型为`() => void`
 
