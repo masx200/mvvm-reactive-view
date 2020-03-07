@@ -78,7 +78,7 @@ export default class ReactiveState<T> {
         useststerecord(this);
     }
     private [tagtypesym]: string;
-    value!: T extends Array<any>
+    value: T extends Array<any>
         ? Array<any>
         : T extends Function
         ? Function
