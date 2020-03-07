@@ -53,7 +53,7 @@ export default function render(
     namespace?: string
 ): Element;
 export default function render(
-    vdom: Virtualdom<"script" | "" | "html">,
+    vdom: Virtualdom< "" >,
     namespace?: string
 ): Node;
 export default function render(
