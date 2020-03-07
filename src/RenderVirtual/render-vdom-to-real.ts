@@ -67,10 +67,12 @@ export default function render(
     vdom: Array<Virtualdom<any>>,
     namespace?: string
 ): Array<Element>;
+
 export default function render(
-    vdom: Array<string | ReactiveState<any> | number>,
+    vdom: Array<string | ReactiveState<any> | number|Virtualdom< "" >>,
     namespace?: string
 ): Array<Node>;
+
 export default function render(
     vdom: Virtualdom<any> | string | number | ReactiveState<any> | Vdomchildren,
     namespace?: string
