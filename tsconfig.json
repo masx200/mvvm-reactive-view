@@ -17,7 +17,7 @@
         "noUnusedLocals": true,
         "module": "esnext",
         "target": "es2019",
-        "jsx": "preserve",
+        "jsx": "react",
         "removeComments": true,
         "pretty": true,
         "strict": true,
