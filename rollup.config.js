@@ -14,12 +14,14 @@ const window = globalThis;
 const global = globalThis;
 const {WeakSet,WeakMap,Date, RegExp, Event, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, JSON, Map, clearTimeout, setTimeout, parseInt} = globalThis;
 `;
-const babeljsxplugin = babel({
+const babeltsxplugin = babel({
+extensions:[".ts",".tsx"],
     sourceMaps: true,
     inputSourceMap: true,
     babelHelpers: "bundled",
     plugins: [
-        "@babel/plugin-transform-typescript",
+[
+        "@babel/plugin-transform-typescript",{}],
         [
             "@babel/plugin-transform-react-jsx",
             {
@@ -38,7 +40,7 @@ const babeljsxplugin = babel({
         "@babel/plugin-proposal-optional-catch-binding",
         "@babel/plugin-proposal-nullish-coalescing-operator"
     ],
-    presets: [
+    presets: [["@babel/preset-typescript",{}],
         [
             "@babel/preset-env",
             {
@@ -188,7 +190,7 @@ export default [
             }
         ],
         plugins: [
-            babeljsxplugin,
+            babeltsxplugin,
             // sourcemaps(),
 
             json(),
