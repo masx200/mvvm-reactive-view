@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     computed,
-    createElement,
     createRef,
     createState,
     h,
     MountElement,
     watch
 } from "./mvvm-view";
-console.log([h, createElement]);
+// console.log([h, createElement]);
 const lirefs = [];
 // console.log()
 // export{vdom}

@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import modulecss from "./main.b9c7ffd191cff11a9b96.css";
 import {
     createComponent,
     createElement,
     //   createElement,
     createRef,
     createState,
-    h,
     html,
     MountElement,
     watch
 } from "./mvvm-view";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import modulecss from "./main.b9c7ffd191cff11a9b96.css";
-console.log([h, createElement]);
+// console.log([h, createElement]);
 const mycomapp = createComponent(() => {
     const inputpassword = createState("");
     const inputref = createRef();
@@ -24,10 +23,7 @@ const mycomapp = createComponent(() => {
     const vdom = html`
         <h1 style="padding-top: 127.6px;">
             <svg
-                style="
-      width: 100%;
-      height: 200px;
-  "
+                style="      width: 100%;      height: 200px;  "
                 class="octicon octicon-book"
                 viewBox="0 0 16 16"
                 version="1.1"
@@ -42,10 +38,7 @@ const mycomapp = createComponent(() => {
             ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 3046.7 875.7"
-                style="
-      width: 100%;
-      height: 200px;
-  "
+                style="      width: 100%;      height: 200px;  "
             >
                 <title>logo-on-dark-bg</title>
                 <rect Color="#FFF" x="0" y="0" width="3046.7" height="875.7" />
@@ -235,12 +228,12 @@ const mycomapp = createComponent(() => {
                                             <p>
                                                 <input
                                                     *ref=${inputref}
-                                                    @change=${(e) =>
+                                                    @change=${(e: any) =>
                                                         console.log(
                                                             e,
                                                             inputref
                                                         )}
-                                                    @input=${(e) =>
+                                                    @input=${(e: any) =>
                                                         console.log(e)}
                                                     id="password"
                                                     placeholder="输入密码"
@@ -259,7 +252,7 @@ const mycomapp = createComponent(() => {
                                                 <input
                                                     *ref=${inputref2}
                                                     *value=${inputpassword}
-                                                    @input=${(e) =>
+                                                    @input=${(e: any) =>
                                                         console.log(e)}
                                                     id="key"
                                                     placeholder="输入代号"
@@ -342,10 +335,7 @@ const mycomapp = createComponent(() => {
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="1.1"
                 baseProfile="full"
-                style="
-      width:600px;
-      height: 600px;
-  "
+                style="      width:600px;      height: 600px;  "
             >
                 <g fill-opacity="0.7" stroke="black" stroke-width="0.1cm">
                     <circle
@@ -373,10 +363,7 @@ const mycomapp = createComponent(() => {
             </svg>
 
             <svg
-                style="
-      width: 100%;
-      height: 200px;
-  "
+                style="      width: 100%;      height: 200px;  "
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 3046.7 875.7"
             >

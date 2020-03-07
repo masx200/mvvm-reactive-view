@@ -15,14 +15,20 @@ const global = globalThis;
 const {WeakSet,WeakMap,Date, RegExp, Event, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, JSON, Map, clearTimeout, setTimeout, parseInt} = globalThis;
 `;
 const babeltsxplugin = babel({
-
-extensions:[".ts",".tsx",".js",".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
     sourceMaps: true,
     inputSourceMap: true,
     babelHelpers: "bundled",
     plugins: [
-[
-        "@babel/plugin-transform-typescript",{}],
+        [
+            "@babel/plugin-transform-typescript",
+            {
+                isTSX: true,
+                allExtensions: true,
+
+                jsxPragma: "h"
+            }
+        ],
         [
             "@babel/plugin-transform-react-jsx",
             {
@@ -41,15 +47,16 @@ extensions:[".ts",".tsx",".js",".jsx"],
         "@babel/plugin-proposal-optional-catch-binding",
         "@babel/plugin-proposal-nullish-coalescing-operator"
     ],
-    presets: [["@babel/preset-typescript",
-{
+    presets: [
+        [
+            "@babel/preset-typescript",
+            {
+                isTSX: true,
+                allExtensions: true,
 
-isTSX:true,
-allExtensions: true,
-
-jsxPragma:"h"
-
-}],
+                jsxPragma: "h"
+            }
+        ],
         [
             "@babel/preset-env",
             {
@@ -135,25 +142,25 @@ export default [
             beautifyterserplugin
         ]
     },
-    {
-        input: "./dist/index.js",
-        output: [
-            {
-                // sourceMap: true,
-                file: "./dist/index.js",
-                format: "esm",
-                sourcemap: true
-            }
-        ],
-        plugins: [
-            mybabelplugin,
-            json(),
-            resolve(),
-            commonjs(),
-            // sourcemaps(),
-            beautifyterserplugin
-        ]
-    },
+    // {
+    //     input: "./dist/index.js",
+    //     output: [
+    //         {
+    //             // sourceMap: true,
+    //             file: "./dist/index.js",
+    //             format: "esm",
+    //             sourcemap: true
+    //         }
+    //     ],
+    //     plugins: [
+    //         mybabelplugin,
+    //         json(),
+    //         resolve(),
+    //         commonjs(),
+    //         // sourcemaps(),
+    //         beautifyterserplugin
+    //     ]
+    // },
     {
         input: "./dist/index.js",
         output: [

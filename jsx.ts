@@ -1,4 +1,4 @@
-import * as CSS from "csstype";
+import CSS from "csstype";
 import Virtualdom from "./src/CreateElement/VirtualElement";
 import ReactiveState from "./src/Reactivity/reactivestate";
 interface attrfor<T> extends Array<any> {

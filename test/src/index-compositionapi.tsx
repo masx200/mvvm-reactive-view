@@ -1,39 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-    useUpdated,
-    watch,
     computed,
     createComponent,
     createElement,
-    //   createElement,
-    createState,
-    h,
     MountElement,
-    useMounted,
-    useUnMounted,
-    render
+    useUpdated,
+    watch
 } from "./mvvm-view";
-console.log([h, createElement]);
-function useMousePosition() {
-    const x = createState(0);
-    const y = createState(0);
-
-    function update(e) {
-        x.value = e.pageX;
-        y.value = e.pageY;
-    }
-
-    useMounted(() => {
-        window.addEventListener("mousemove", update);
-    });
-
-    useUnMounted(() => {
-        window.removeEventListener("mousemove", update);
-    });
-
-    return { x, y };
-}
-
+import { useMousePosition } from "./useMousePosition";
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
     const plus = computed(x, (x) => {
@@ -83,15 +57,6 @@ p{color:blue !important;}
 `;
 var vdom = createElement(mycomapp);
 // MountElement(vdom, document.getElementById("root"));
-const container = document.createElement("div");
+export const container = document.createElement("div");
 MountElement(vdom, container);
 document.body.appendChild(container);
-const removecom = () => (
-    <button
-        $text="移除当前容器元素"
-        onClick={() => {
-            container.remove();
-        }}
-    />
-);
-document.body.appendChild(render(h(removecom)));

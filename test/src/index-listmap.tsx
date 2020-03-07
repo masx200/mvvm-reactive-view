@@ -2,12 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     Condition,
-    // ListMap,
-    // @ts-ignore
-    computed,
-    // @ts-ignore
-    createElement,
-    createRef,
     createState,
     // @ts-ignore
     h,

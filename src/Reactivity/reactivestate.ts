@@ -1,7 +1,7 @@
 import debounce from "lodash/debounce";
 import { useststerecord } from "../life-cycle-context/useststerecord";
 import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
-import { defineProperty } from "../UtilTools/reflect";
+// import { defineProperty } from "../UtilTools/reflect";
 import { isobject, isSet, gettagtype } from "../UtilTools/util";
 import ObserverTarget, { Listener } from "./custom-observer-target";
 
@@ -9,16 +9,16 @@ export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 
 export const cancelsubscribe = Symbol("cancelsubscribe");
-const debouncedispatch = Symbol("debouncedispatch");
+// const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
     "invalid primitive or object state";
-const Targetsymbol = Symbol("eventtatget");
-const memlisteners = Symbol("memlisteners");
+// const Targetsymbol = Symbol("eventtatget");
+// const memlisteners = Symbol("memlisteners");
 export const dispatchsymbol = Symbol("dispatch");
 export const subscribesymbol = Symbol("subscribe");
 export const removeallistenerssymbol = Symbol("removeallisteners");
 export const addallistenerssymbol = Symbol("addallisteners");
-const tagtypesym = Symbol("tagtype");
+// const tagtypesym = Symbol("tagtype");
 export default class ReactiveState<T> {
     constructor(init: { value: T });
     constructor(init: { get: () => T; set?: (v: T) => void });
@@ -29,7 +29,7 @@ export default class ReactiveState<T> {
         if ("value" in init) {
             let value = init.value;
             this[tagtypesym] = gettagtype(value);
-            defineProperty(this, "value", {
+            Object.defineProperty(this, "value", {
                 configurable: false,
                 get: () => value,
                 set: (v: T) => {
@@ -48,7 +48,7 @@ export default class ReactiveState<T> {
             }
             this[tagtypesym] = gettagtype(getter());
             if (setter) {
-                defineProperty(this, "value", {
+                Object.defineProperty(this, "value", {
                     configurable: false,
                     get: getter,
                     set: (v: T) => {
@@ -60,7 +60,7 @@ export default class ReactiveState<T> {
                     }
                 });
             } else {
-                defineProperty(this, "value", {
+                Object.defineProperty(this, "value", {
                     configurable: false,
                     get: getter
                 });
@@ -78,25 +78,7 @@ export default class ReactiveState<T> {
         useststerecord(this);
     }
     private [tagtypesym]: string;
-    value: T extends Array<any>
-        ? Array<any>
-        : T extends Function
-        ? Function
-        : T extends string
-        ? string
-        : T extends number
-        ? number
-        : T extends boolean
-        ? boolean
-        : T extends void
-        ? void
-        : T extends symbol
-        ? symbol
-        : T extends bigint
-        ? bigint
-        : T extends object
-        ? T
-        : never;
+    value!: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
 
     readonly [Symbol.toStringTag] = "ReactiveState";
 

@@ -1,9 +1,9 @@
 import {
-    Switchable,
     createComponent,
     createState,
-    render,
     h,
+    render,
+    Switchable,
     watch
 } from "./mvvm-view";
 // import { watch } from "../../dist";

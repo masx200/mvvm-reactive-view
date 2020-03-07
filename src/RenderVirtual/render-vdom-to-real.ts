@@ -47,10 +47,7 @@ function throwinvalideletype(type?: any): never {
     throw TypeError(/*"invalid element type!"*/);
 }
 export default render;
- function render(
-    vdom: Virtualdom< "" >,
-    namespace?: string
-): Node;
+function render(vdom: Virtualdom<"">, namespace?: string): Node;
 function render(
     vdom: string | ReactiveState<any> | number,
     namespace?: string
@@ -61,12 +58,9 @@ function render(
     namespace?: string
 ): Element;
 
+function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
 function render(
-    vdom: Vdomchildren,
-    namespace?: string
-): Array<Node | Element>;
- function render(
-    vdom: Array<string | ReactiveState<any> | number|Virtualdom< "" >>,
+    vdom: Array<string | ReactiveState<any> | number | Virtualdom<"">>,
     namespace?: string
 ): Array<Node>;
 
@@ -74,7 +68,6 @@ function render(
     vdom: Array<Virtualdom<any>>,
     namespace?: string
 ): Array<Element>;
-
 
 function render(
     vdom: Virtualdom<any> | string | number | ReactiveState<any> | Vdomchildren,
@@ -94,26 +87,23 @@ function render(
         const textnode = createtextnode(vdom);
 
         return textnode;
-    } else if (isReactiveState(vdom) ) {
+    } else if (isReactiveState(vdom)) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
-const element = textnode;
-let cancel:undefined | (() => void)
-      addmountedlistner(element, () => {  
-
-       cancel= watch(reactive, () => {
-            const state = reactive;
-            if (isconnected(element)) {
-                changetext(textnode, String(state));
-            }
+        const element = textnode;
+        let cancel: undefined | (() => void);
+        addmountedlistner(element, () => {
+            cancel = watch(reactive, () => {
+                const state = reactive;
+                if (isconnected(element)) {
+                    changetext(textnode, String(state));
+                }
+            });
+        });
+        addunmountedlistner(element, () => {
+            cancel && cancel();
         });
 
-})
-addunmountedlistner(element, () => {
-        cancel &&
-            cancel()
-    });
-        
         set(element, bindstatesymbol, new Set());
 
         (get(element, bindstatesymbol) as Set<ReactiveState<any>>).add(

@@ -9,7 +9,7 @@ import {
     MountElement,
     watch
 } from "./mvvm-view";
-console.log([h, createElement]);
+// console.log([h, createElement]);
 const number = createState(10);
 function increment() {
     // @ts-ignore
@@ -52,19 +52,5 @@ const container = document.createElement("div");
 MountElement(vdom, container);
 document.body.appendChild(container);
 setTimeout(() => {
-    /*
- vdom.forEach((vdom) => {
-        const element = vdom.element;
-        // element.parentNode.removeChild(element);
-        element.forEach((e) => e.remove());
-    });*/
-    // @ts-ignore
     number.value = Math.round(Math.random() * 100);
-    /*
-    vdom.forEach((vdom) => {
-        const element = vdom.element;
-        // document.body.appendChild(element);
-        element.forEach((e) => document.body.appendChild(e));
-    });*/
-    vdom = undefined;
 }, 5000);

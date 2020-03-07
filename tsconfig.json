@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-"jsxFactory":"h",
-"useDefineForClassFields":true,
+        "jsxFactory": "h",
+        "useDefineForClassFields": true,
         "plugins": [],
         "allowJs": true,
         "paths": {
@@ -17,7 +17,7 @@
         "noUnusedLocals": true,
         "module": "esnext",
         "target": "es2019",
-        "jsx": "react",
+        "jsx": "preserve",
         "removeComments": true,
         "pretty": true,
         "strict": true,
@@ -35,10 +35,6 @@
         "alwaysStrict": true,
         "forceConsistentCasingInFileNames": true
     },
-    "include": [
-       
-        "./src/*.ts",
-        "./src/**/*.ts"
-    ],
+    "include": ["./src/*.ts", "./src/**/*.ts", "./test/src/*.ts"],
     "exclude": []
 }

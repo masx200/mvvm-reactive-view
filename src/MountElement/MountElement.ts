@@ -6,7 +6,7 @@ import { toArray } from "../UtilTools/toArray";
 import { isArray } from "../UtilTools/util";
 import { isvalidvdom, VaildVDom } from "../CreateElement/isvalidvdom";
 import { isNode, isNodeArray } from "./isNodeArray";
-export default function MountElement <T extends Element>(
+export default function MountElement<T extends Element>(
     vdom: VaildVDom | Node | Element | Array<Node | Element>,
     container: T
 ): T {
@@ -47,5 +47,5 @@ export default function MountElement <T extends Element>(
     }
 
     //
-     return container;
+    return container;
 }

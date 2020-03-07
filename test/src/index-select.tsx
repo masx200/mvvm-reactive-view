@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    createComponent,
-    createElement,
-    createState,
-    h,
-    //   createElement,
-    html,
-    MountElement,
-    watch
-} from "./mvvm-view";
-console.log([h, createElement]);
+import { h, MountElement } from "./mvvm-view";
+// console.log([h, createElement]);
 const vdom = (
     <select
         onchange={(e) => console.log(e)}
