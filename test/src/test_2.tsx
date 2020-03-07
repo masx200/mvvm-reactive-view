@@ -1,7 +1,8 @@
-import { createState, html, MountElement, watch } from "./mvvm-view.ts";
+import { createState, html, MountElement, watch } from "./mvvm-view";
 function test_2() {
     const state1 = createState("<a>绑定textcontent</a>");
     const state2 = createState("<a>绑定innerhtml</a>");
+    Object.getOwnPropertyDescriptors(state2);
     /* setInterval(() => {
   state2.value = state2.value + "qw";
   //   if (state2.value.length > 60) {

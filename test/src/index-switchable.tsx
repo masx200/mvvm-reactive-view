@@ -5,7 +5,7 @@ import {
     render,
     Switchable,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 // import { watch } from "../../dist";
 const com1 = createComponent(() => {
     return <h1>component 1</h1>;
@@ -16,9 +16,9 @@ const com2 = createComponent(() => {
 const com3 = createComponent(() => {
     return <h1>component 3</h1>;
 });
-const com4 = () => {
+const com4 = createComponent(() => {
     return <h1>component 4</h1>;
-};
+});
 const mystate = createState(com1);
 const vdom = Switchable(mystate);
 const element = render(vdom);

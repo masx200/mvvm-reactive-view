@@ -1,4 +1,4 @@
-import { updatedeventname } from "./addlistener-mount-unmount-updated";
+import { updatedeventname } from "./mutationobserverwatch";
 export function addupdatedlistner(ele: Element, call: () => void) {
     ele.addEventListener(updatedeventname, call);
 }

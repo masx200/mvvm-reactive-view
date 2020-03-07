@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createState, html, MountElement, watch } from "./mvvm-view.ts";
+import { createState, html, MountElement, watch } from "./mvvm-view";
 
 // console.log(MountElement);
 // console.log(h);
@@ -18,7 +18,7 @@ import { createState, html, MountElement, watch } from "./mvvm-view.ts";
     setTimeout(() => {
         //
         objstate.length = 10;
-        objstate2.value = 2222222222222;
+        objstate2.value = " 2222222222222";
         //   objstate.push(Math.random());
         //   objstate.push(Math.random());
     }, 2000);
@@ -30,7 +30,7 @@ import { createState, html, MountElement, watch } from "./mvvm-view.ts";
         "test"
     ]);
     const stylestate = createState({ display: "block", width: "100%" });
-
+    Object.getOwnPropertyDescriptors(stylestate);
     //
     const classsetstate = createState(
         new Set(["xxxxxxx", "wwwwwww", "eeeeeeee"])
@@ -66,8 +66,8 @@ import { createState, html, MountElement, watch } from "./mvvm-view.ts";
     setTimeout(() => {
         clearInterval(timer);
     }, 10000);
-    console.log([objstate2, createState(objstate2)]);
-    //   console.log(Object.getOwnPropertyDescriptors(objstatearray));
+    console.log([objstate2 /*  createState(objstate2) */]);
+    console.log(Object.getOwnPropertyDescriptors(objstatearray));
     console.log(Object.entries(objstate));
     const vdomobj = html`
         <div style=${{ display: "block", width: "100%" }}>${objstate2}</div>

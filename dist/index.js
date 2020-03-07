@@ -8,6 +8,115 @@ const global = globalThis;
 
 const {WeakSet: WeakSet, WeakMap: WeakMap, Date: Date, RegExp: RegExp, Event: Event, requestAnimationFrame: requestAnimationFrame, URL: URL, Blob: Blob, Element: Element, Node: Node, String: String, Array: Array, document: document, Object: Object, Reflect: Reflect, Proxy: Proxy, Symbol: Symbol, Boolean: Boolean, Promise: Promise, Set: Set, Math: Math, Error: Error, TypeError: TypeError, JSON: JSON, Map: Map, clearTimeout: clearTimeout, setTimeout: setTimeout, parseInt: parseInt} = globalThis;
 
+function isObject(value) {
+    var type = typeof value;
+    return value != null && (type == "object" || type == "function");
+}
+
+var isObject_1 = isObject;
+
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+
+var freeGlobal = commonjsGlobal;
+
+var _freeGlobal = freeGlobal;
+
+var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+
+var root = _freeGlobal || freeSelf || Function("return this")();
+
+var _root = root;
+
+var now = function() {
+    return _root.Date.now();
+};
+
+var now_1 = now;
+
+var FUNC_ERROR_TEXT = "Expected a function";
+
+var nativeMax = Math.max, nativeMin = Math.min;
+
+function debounce(func, wait = 0, options) {
+    var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+    if (typeof func != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    wait = Number(wait) || 0;
+    if (isObject_1(options)) {
+        leading = !!options.leading;
+        maxing = "maxWait" in options;
+        maxWait = maxing ? nativeMax(Number(options.maxWait) || 0, wait) : maxWait;
+        trailing = "trailing" in options ? !!options.trailing : trailing;
+    }
+    function invokeFunc(time) {
+        var args = lastArgs || [], thisArg = lastThis;
+        lastArgs = lastThis = undefined;
+        lastInvokeTime = time;
+        result = Reflect.apply(func, thisArg, args);
+        return result;
+    }
+    function leadingEdge(time) {
+        lastInvokeTime = time;
+        timerId = setTimeout(timerExpired, wait);
+        return leading ? invokeFunc(time) : result;
+    }
+    function remainingWait(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+        return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+    }
+    function shouldInvoke(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+        return lastCallTime === undefined || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+    }
+    function timerExpired() {
+        var time = now_1();
+        if (shouldInvoke(time)) {
+            return trailingEdge(time);
+        }
+        timerId = setTimeout(timerExpired, remainingWait(time));
+    }
+    function trailingEdge(time) {
+        timerId = undefined;
+        if (trailing && lastArgs) {
+            return invokeFunc(time);
+        }
+        lastArgs = lastThis = undefined;
+        return result;
+    }
+    function debounced(...args) {
+        var time = now_1(), isInvoking = shouldInvoke(time);
+        lastArgs = args;
+        lastThis = this;
+        lastCallTime = time;
+        if (isInvoking) {
+            if (timerId === undefined) {
+                return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+                clearTimeout(timerId);
+                timerId = setTimeout(timerExpired, wait);
+                return invokeFunc(lastCallTime);
+            }
+        }
+        if (timerId === undefined) {
+            timerId = setTimeout(timerExpired, wait);
+        }
+        return result;
+    }
+    return debounced;
+}
+
+var debounce_1 = debounce;
+
+function clearMounted() {
+    mountedctx.clear();
+}
+
+function clearUnMounted() {
+    unmountedctx.clear();
+}
+
 function isprimitive(a) {
     return isstring(a) || isnumber(a) || isboolean(a) || isundefined(a) || isbigint(a);
 }
@@ -64,235 +173,6 @@ function isMap(a) {
 
 function isWeakMap(a) {
     return a instanceof WeakMap;
-}
-
-const {HTMLElement: HTMLElement$1, customElements: customElements, Proxy: Proxy$1} = window;
-
-if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElements)) {
-    console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
-    throw new TypeError;
-}
-
-function isObject(value) {
-    var type = typeof value;
-    return value != null && (type == "object" || type == "function");
-}
-
-var isObject_1 = isObject;
-
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-
-var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
-
-var _freeGlobal = freeGlobal;
-
-var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-
-var root = _freeGlobal || freeSelf || Function("return this")();
-
-var _root = root;
-
-var now = function() {
-    return _root.Date.now();
-};
-
-var now_1 = now;
-
-var Symbol$1 = _root.Symbol;
-
-var _Symbol = Symbol$1;
-
-var objectProto = Object.prototype;
-
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-var nativeObjectToString = objectProto.toString;
-
-var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
-
-function getRawTag(value) {
-    var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-    try {
-        value[symToStringTag] = undefined;
-        var unmasked = true;
-    } catch (e) {}
-    var result = nativeObjectToString.call(value);
-    if (unmasked) {
-        if (isOwn) {
-            value[symToStringTag] = tag;
-        } else {
-            delete value[symToStringTag];
-        }
-    }
-    return result;
-}
-
-var _getRawTag = getRawTag;
-
-var objectProto$1 = Object.prototype;
-
-var nativeObjectToString$1 = objectProto$1.toString;
-
-function objectToString(value) {
-    return nativeObjectToString$1.call(value);
-}
-
-var _objectToString = objectToString;
-
-var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
-
-var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
-
-function baseGetTag(value) {
-    if (value == null) {
-        return value === undefined ? undefinedTag : nullTag;
-    }
-    return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
-}
-
-var _baseGetTag = baseGetTag;
-
-function isObjectLike(value) {
-    return value != null && typeof value == "object";
-}
-
-var isObjectLike_1 = isObjectLike;
-
-var symbolTag = "[object Symbol]";
-
-function isSymbol(value) {
-    return typeof value == "symbol" || isObjectLike_1(value) && _baseGetTag(value) == symbolTag;
-}
-
-var isSymbol_1 = isSymbol;
-
-var NAN = 0 / 0;
-
-var reTrim = /^\s+|\s+$/g;
-
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-var reIsBinary = /^0b[01]+$/i;
-
-var reIsOctal = /^0o[0-7]+$/i;
-
-var freeParseInt = parseInt;
-
-function toNumber(value) {
-    if (typeof value == "number") {
-        return value;
-    }
-    if (isSymbol_1(value)) {
-        return NAN;
-    }
-    if (isObject_1(value)) {
-        var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-        value = isObject_1(other) ? other + "" : other;
-    }
-    if (typeof value != "string") {
-        return value === 0 ? value : +value;
-    }
-    value = value.replace(reTrim, "");
-    var isBinary = reIsBinary.test(value);
-    return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-}
-
-var toNumber_1 = toNumber;
-
-var FUNC_ERROR_TEXT = "Expected a function";
-
-var nativeMax = Math.max, nativeMin = Math.min;
-
-function debounce(func, wait, options) {
-    var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
-    if (typeof func != "function") {
-        throw new TypeError(FUNC_ERROR_TEXT);
-    }
-    wait = toNumber_1(wait) || 0;
-    if (isObject_1(options)) {
-        leading = !!options.leading;
-        maxing = "maxWait" in options;
-        maxWait = maxing ? nativeMax(toNumber_1(options.maxWait) || 0, wait) : maxWait;
-        trailing = "trailing" in options ? !!options.trailing : trailing;
-    }
-    function invokeFunc(time) {
-        var args = lastArgs, thisArg = lastThis;
-        lastArgs = lastThis = undefined;
-        lastInvokeTime = time;
-        result = func.apply(thisArg, args);
-        return result;
-    }
-    function leadingEdge(time) {
-        lastInvokeTime = time;
-        timerId = setTimeout(timerExpired, wait);
-        return leading ? invokeFunc(time) : result;
-    }
-    function remainingWait(time) {
-        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
-        return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
-    }
-    function shouldInvoke(time) {
-        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
-        return lastCallTime === undefined || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
-    }
-    function timerExpired() {
-        var time = now_1();
-        if (shouldInvoke(time)) {
-            return trailingEdge(time);
-        }
-        timerId = setTimeout(timerExpired, remainingWait(time));
-    }
-    function trailingEdge(time) {
-        timerId = undefined;
-        if (trailing && lastArgs) {
-            return invokeFunc(time);
-        }
-        lastArgs = lastThis = undefined;
-        return result;
-    }
-    function cancel() {
-        if (timerId !== undefined) {
-            clearTimeout(timerId);
-        }
-        lastInvokeTime = 0;
-        lastArgs = lastCallTime = lastThis = timerId = undefined;
-    }
-    function flush() {
-        return timerId === undefined ? result : trailingEdge(now_1());
-    }
-    function debounced() {
-        var time = now_1(), isInvoking = shouldInvoke(time);
-        lastArgs = arguments;
-        lastThis = this;
-        lastCallTime = time;
-        if (isInvoking) {
-            if (timerId === undefined) {
-                return leadingEdge(lastCallTime);
-            }
-            if (maxing) {
-                clearTimeout(timerId);
-                timerId = setTimeout(timerExpired, wait);
-                return invokeFunc(lastCallTime);
-            }
-        }
-        if (timerId === undefined) {
-            timerId = setTimeout(timerExpired, wait);
-        }
-        return result;
-    }
-    debounced.cancel = cancel;
-    debounced.flush = flush;
-    return debounced;
-}
-
-var debounce_1 = debounce;
-
-function clearMounted() {
-    mountedctx.clear();
-}
-
-function clearUnMounted() {
-    unmountedctx.clear();
 }
 
 function checkctxandcallbck(callback) {
@@ -422,22 +302,7 @@ class ObserverTarget {
     }
 }
 
-var __classPrivateFieldSet = undefined && undefined.__classPrivateFieldSet || function(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-};
-
-var __classPrivateFieldGet = undefined && undefined.__classPrivateFieldGet || function(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-};
-
-var _tagtypesym, _debouncedispatch, _Targetsymbol, _memlisteners;
+var _a, _b, _c;
 
 const addonelistner = Symbol("addonelistner");
 
@@ -445,7 +310,13 @@ const removeonelistner = Symbol("removeonelistner");
 
 const cancelsubscribe = Symbol("cancelsubscribe");
 
+const debouncedispatch = Symbol("debouncedispatch");
+
 const invalid_primitive_or_object_state = "invalid primitive or object state";
+
+const Targetsymbol = Symbol("eventtatget");
+
+const memlisteners = Symbol("memlisteners");
 
 const dispatchsymbol = Symbol("dispatch");
 
@@ -455,30 +326,31 @@ const removeallistenerssymbol = Symbol("removeallisteners");
 
 const addallistenerssymbol = Symbol("addallisteners");
 
+const tagtypesym = Symbol("tagtype");
+
 class ReactiveState {
     constructor(init) {
-        _tagtypesym.set(this, void 0);
         this[Symbol.toStringTag] = "ReactiveState";
-        _debouncedispatch.set(this, (() => {
+        this[_a] = (() => {
             const debouncedfun = debounce_1(() => {
-                __classPrivateFieldGet(this, _Targetsymbol).dispatch();
+                this[Targetsymbol].dispatch();
             });
             return () => {
                 debouncedfun();
             };
-        })());
-        _Targetsymbol.set(this, new ObserverTarget);
-        _memlisteners.set(this, new Set);
+        })();
+        this[_b] = new ObserverTarget;
+        this[_c] = new Set;
         this.valueOf = () => this.value;
         if ("value" in init) {
             let value = init.value;
-            __classPrivateFieldSet(this, _tagtypesym, gettagtype(value));
+            this[tagtypesym] = gettagtype(value);
             Object.defineProperty(this, "value", {
-                configurable: false,
+                configurable: true,
                 get: () => value,
                 set: v => {
                     const tag = gettagtype(v);
-                    if (tag !== __classPrivateFieldGet(this, _tagtypesym)) {
+                    if (tag !== this[tagtypesym]) {
                         throw TypeError();
                     }
                     value = v;
@@ -490,14 +362,14 @@ class ReactiveState {
             if (!getter) {
                 throw TypeError();
             }
-            __classPrivateFieldSet(this, _tagtypesym, gettagtype(getter()));
+            this[tagtypesym] = gettagtype(getter());
             if (setter) {
                 Object.defineProperty(this, "value", {
-                    configurable: false,
+                    configurable: true,
                     get: getter,
                     set: v => {
                         const tag = gettagtype(v);
-                        if (tag !== __classPrivateFieldGet(this, _tagtypesym)) {
+                        if (tag !== this[tagtypesym]) {
                             throw TypeError();
                         }
                         setter(v);
@@ -505,27 +377,26 @@ class ReactiveState {
                 });
             } else {
                 Object.defineProperty(this, "value", {
-                    configurable: false,
+                    configurable: true,
                     get: getter
                 });
             }
         }
         useststerecord(this);
     }
-    [(_tagtypesym = new WeakMap, _debouncedispatch = new WeakMap, _Targetsymbol = new WeakMap, 
-    _memlisteners = new WeakMap, removeallistenerssymbol)]() {
-        __classPrivateFieldGet(this, _memlisteners).forEach(callback => {
+    [(_a = debouncedispatch, removeallistenerssymbol)]() {
+        this[memlisteners].forEach(callback => {
             this[removeonelistner](callback);
         });
     }
     [removeonelistner](callback) {
-        __classPrivateFieldGet(this, _Targetsymbol).removeListener(callback);
+        this[Targetsymbol].removeListener(callback);
     }
     [addonelistner](callback) {
-        __classPrivateFieldGet(this, _Targetsymbol).addListener(callback);
+        this[Targetsymbol].addListener(callback);
     }
     [addallistenerssymbol]() {
-        __classPrivateFieldGet(this, _memlisteners).forEach(callback => {
+        this[memlisteners].forEach(callback => {
             this[addonelistner](callback);
         });
     }
@@ -533,16 +404,16 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [dispatchsymbol]() {
-        __classPrivateFieldGet(this, _debouncedispatch).call(this);
+    [(_b = Targetsymbol, _c = memlisteners, dispatchsymbol)]() {
+        this[debouncedispatch]();
     }
     [subscribesymbol](eventlistener) {
-        __classPrivateFieldGet(this, _memlisteners).add(eventlistener);
+        this[memlisteners].add(eventlistener);
         this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener) {
         if (eventlistener) {
-            __classPrivateFieldGet(this, _memlisteners).delete(eventlistener);
+            this[memlisteners].delete(eventlistener);
             this[removeonelistner](eventlistener);
         }
     }
@@ -742,6 +613,14 @@ function getupdated() {
     return updatedctx.getall();
 }
 
+function istextnode(e) {
+    return gettagtype(e) === "Text";
+}
+
+function gettextnodes(container) {
+    return [ ...container.childNodes ].filter(e => istextnode(e));
+}
+
 const rootnode = document.body;
 
 const connectedeventname = Symbol("mounted").toString();
@@ -754,8 +633,9 @@ const callback = function(mutations) {
         const addedNodes = [ ...record.addedNodes ];
         addedNodes.forEach(e => {
             if (e instanceof Element) {
-                const subnodes = [ ...e.querySelectorAll("*"), e ];
-                subnodes.forEach(n => {
+                const subeles = [ ...e.querySelectorAll("*"), e ];
+                const subtexts = subeles.map(e => gettextnodes(e));
+                [ ...subeles, ...subtexts ].flat(1 / 0).forEach(n => {
                     dispatchconnected(n);
                 });
             }
@@ -763,8 +643,9 @@ const callback = function(mutations) {
         const removedNodes = [ ...record.removedNodes ];
         removedNodes.forEach(e => {
             if (e instanceof Element) {
-                const subnodes = [ ...e.querySelectorAll("*"), e ];
-                subnodes.forEach(n => {
+                const subeles = [ ...e.querySelectorAll("*"), e ];
+                const subtexts = subeles.map(e => gettextnodes(e));
+                [ ...subeles, ...subtexts ].flat(1 / 0).forEach(n => {
                     dispatchdisconnected(n);
                 });
             }
@@ -1055,14 +936,14 @@ const elementmap = Symbol.for("elementmap");
 
 const {CustomElementRegistry: CustomElementRegistry} = window;
 
-const customElements$1 = window.customElements;
+const customElements = window.customElements;
 
-if (!has(customElements$1, elementset)) {
-    Reflect.set(customElements$1, elementset, new Set);
+if (!has(customElements, elementset)) {
+    Reflect.set(customElements, elementset, new Set);
 }
 
-if (!has(customElements$1, elementmap)) {
-    Reflect.set(customElements$1, elementmap, {});
+if (!has(customElements, elementmap)) {
+    Reflect.set(customElements, elementmap, {});
 }
 
 var RandomDefineCustomElement = (initclass, extendsname) => RandomDefineCustomElement$1(initclass, extendsname);
@@ -1073,44 +954,44 @@ function RandomDefineCustomElement$1(initclass, extendsname, length = 1) {
         console.error(invalid_custom_element_class);
         throw TypeError();
     }
-    if (!get(customElements$1, elementset).has(initclass)) {
+    if (!get(customElements, elementset).has(initclass)) {
         const elementname = getrandomstringandnumber(length);
-        if (customElements$1.get(elementname)) {
+        if (customElements.get(elementname)) {
             return RandomDefineCustomElement$1(initclass, extendsname, length + 1);
         } else {
             if (extendsname) {
-                customElements$1.define(elementname, initclass, {
+                customElements.define(elementname, initclass, {
                     extends: extendsname
                 });
             } else {
-                customElements$1.define(elementname, initclass);
+                customElements.define(elementname, initclass);
             }
         }
         return elementname;
     } else {
-        return Usevaluetoquerythekeyfromthetable(get(customElements$1, elementmap), initclass);
+        return Usevaluetoquerythekeyfromthetable(get(customElements, elementmap), initclass);
     }
 }
 
-customElements$1.define = function(name, constructor, options) {
+customElements.define = function(name, constructor, options) {
     if (!isclassextendsHTMLElement(constructor)) {
         console.error(constructor);
         console.error(invalid_custom_element_class);
         throw TypeError();
     }
-    if (!get(customElements$1, elementset).has(constructor)) {
-        if (has(customElements$1[elementmap], name)) {
+    if (!get(customElements, elementset).has(constructor)) {
+        if (has(customElements[elementmap], name)) {
             RandomDefineCustomElement$1(constructor, options ? options.extends : undefined);
         } else {
-            CustomElementRegistry.prototype.define.call(customElements$1, name, constructor, options);
-            customElements$1[elementset].add(constructor);
-            customElements$1[elementmap][name] = constructor;
+            CustomElementRegistry.prototype.define.call(customElements, name, constructor, options);
+            customElements[elementset].add(constructor);
+            customElements[elementmap][name] = constructor;
         }
     }
 };
 
-set(customElements$1, Symbol.iterator, () => {
-    const entries = Object.entries(customElements$1[elementmap]);
+set(customElements, Symbol.iterator, () => {
+    const entries = Object.entries(customElements[elementmap]);
     return entries[Symbol.iterator].call(entries);
 });
 
@@ -1406,21 +1287,23 @@ function combineproxy(target, newhandler) {
     }
 }
 
+const handler = {
+    set() {
+        return true;
+    },
+    defineProperty() {
+        return false;
+    },
+    deleteProperty() {
+        return false;
+    },
+    setPrototypeOf() {
+        return false;
+    }
+};
+
 function readonlyproxy(target) {
-    return combineproxy(target, {
-        set() {
-            return true;
-        },
-        defineProperty() {
-            return false;
-        },
-        deleteProperty() {
-            return false;
-        },
-        setPrototypeOf() {
-            return false;
-        }
-    });
+    return combineproxy(target, Object.assign({}, handler));
 }
 
 const componentsstylesheet = new Map;
@@ -1638,7 +1521,7 @@ function onunmounted(ele) {
 
 const readysymbol = Symbol("readystate");
 
-var _a;
+var _a$1;
 
 const attributeChangedCallback = Symbol("attributeChanged");
 
@@ -1655,7 +1538,7 @@ function disconnectedCallback(componentelement) {
 class AttrChange extends HTMLElement {
     constructor() {
         super();
-        this[_a] = false;
+        this[_a$1] = false;
         const defaultProps = get(this.constructor, "defaultProps");
         const attrs = createeleattragentreadwrite(this);
         if (isobject(defaultProps)) {
@@ -1697,7 +1580,7 @@ class AttrChange extends HTMLElement {
     }
 }
 
-_a = readysymbol;
+_a$1 = readysymbol;
 
 const waittranformcsssymbol = Symbol("waittranformcss");
 
@@ -2062,8 +1945,10 @@ function htm(s) {
     }(s)), r), arguments, [])).length > 1 ? r : r[0];
 }
 
+const myhtm = htm;
+
 function htmlold(...inargs) {
-    return apply(htm, h, inargs);
+    return apply(myhtm, h, inargs);
 }
 
 function html(...args) {
@@ -2076,12 +1961,6 @@ function html(...args) {
         console.error(invalid_Virtualdom);
         throw new TypeError;
     }
-}
-
-function createRef(value) {
-    return {
-        value: value
-    };
 }
 
 function extenddirectives(name, fun) {
@@ -2154,40 +2033,46 @@ const Localcreated = (call, ele, vdom, onmount, onunmount, onupdated) => {
     }
 };
 
-function getproperyreadproxy(a) {
-    const __proto__ = "__proto__";
-    const target = a;
-    return combineproxy(target, {
-        getOwnPropertyDescriptor(target, key) {
-            if (issymbol(key)) {
-                return;
-            } else {
-                return getOwnPropertyDescriptor(target, key);
-            }
-        },
-        ownKeys(target) {
+const handler$1 = {
+    getOwnPropertyDescriptor(target, key) {
+        if (issymbol(key)) {
+            return;
+        } else {
             let myvalue = get(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
-        },
-        has(target, key) {
+            const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
+            if (descripter) {
+                descripter.configurable = true;
+            }
+            return descripter;
+        }
+    },
+    ownKeys(target) {
+        let myvalue = get(target, "value");
+        const myvalueobj = isobject(myvalue) ? myvalue : {};
+        return Array.from(new Set([ ...ownKeys(target), ...ownKeys(myvalueobj) ]));
+    },
+    has(target, key) {
+        const myvalue = get(target, "value");
+        const myvalueobj = isobject(myvalue) ? myvalue : {};
+        return has(target, key) || has(myvalueobj, key);
+    },
+    get(target, key) {
+        if (has(target, key)) {
+            return get(target, key);
+        } else {
             const myvalue = get(target, "value");
-            const myvalueobj = isobject(myvalue) ? myvalue : myvalue[__proto__];
-            return has(target, key) || has(myvalueobj, key);
-        },
-        get(target, key) {
-            if (has(target, key)) {
-                return get(target, key);
-            } else {
-                const myvalue = get(target, "value");
-                const myvalueobj = Object(myvalue);
-                if (has(myvalueobj, key)) {
-                    const property = get(myvalueobj, key);
-                    return isfunction(property) ? property.bind(myvalueobj) : property;
-                }
+            const myvalueobj = Object(myvalue);
+            if (has(myvalueobj, key)) {
+                const property = get(myvalueobj, key);
+                return isfunction(property) ? property.bind(myvalueobj) : property;
             }
         }
-    });
+    }
+};
+
+function getproperyreadproxy(a) {
+    const target = a;
+    return combineproxy(target, Object.assign({}, handler$1));
 }
 
 function computedmany(state, callback, setter) {
@@ -2423,6 +2308,19 @@ function useUnMounted(fun) {
     unmountedctx.add(fun);
 }
 
+const {HTMLElement: HTMLElement$1, customElements: customElements$1, Proxy: Proxy$1} = window;
+
+if (!isfunction(HTMLElement$1) || !isfunction(Proxy$1) || !isobject(customElements$1)) {
+    console.error("Proxy,HTMLElement ,customElements ,browser not supported !");
+    throw new TypeError;
+}
+
+function createRef(value) {
+    return {
+        value: value
+    };
+}
+
 const e$1 = Set.prototype, t$2 = Map.prototype;
 
 function r$1(e) {
@@ -2529,162 +2427,170 @@ function handleobjectstate(init) {
             });
         });
     }
-    const objproxyhandler = {};
-    objproxyhandler.ownKeys = target => Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
-    objproxyhandler.setPrototypeOf = () => false;
-    objproxyhandler.defineProperty = () => false;
-    objproxyhandler.getOwnPropertyDescriptor = (target, key) => {
-        if (issymbol(key)) {
-            return;
-        }
-        const myvalue = get(target, "value");
-        const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
-        if (descripter) {
-            descripter.configurable = true;
-        }
-        return descripter;
-    };
-    objproxyhandler.deleteProperty = (target, key) => {
-        const myvalue = get(target, "value");
-        if (has(myvalue, key)) {
-            deleteProperty(myvalue, key);
+    return combineproxy(reactive, Object.assign({}, handler$2));
+}
+
+const handler$2 = {};
+
+handler$2.ownKeys = target => Array.from(new Set([ ...ownKeys(target), ...ownKeys(get(target, "value")) ]));
+
+handler$2.setPrototypeOf = () => false;
+
+handler$2.defineProperty = () => false;
+
+handler$2.getOwnPropertyDescriptor = (target, key) => {
+    if (issymbol(key)) {
+        return;
+    }
+    const myvalue = get(target, "value");
+    const descripter = getOwnPropertyDescriptor(target, key) || getOwnPropertyDescriptor(myvalue, key);
+    if (descripter) {
+        descripter.configurable = true;
+    }
+    return descripter;
+};
+
+handler$2.deleteProperty = (target, key) => {
+    const myvalue = get(target, "value");
+    if (has(myvalue, key)) {
+        deleteProperty(myvalue, key);
+        target[dispatchsymbol]();
+        return true;
+    } else {
+        return true;
+    }
+};
+
+handler$2.has = (target, key) => {
+    const myvalue = get(target, "value");
+    return has(target, key) || has(myvalue, key);
+};
+
+handler$2.get = (target, key) => {
+    const value = get(target, "value");
+    const deepflage = isarray(value) || isplainobject(value);
+    if (key === "value" && deepflage) {
+        return deepobserve(get(target, key), (_target_, _patharray) => {
             target[dispatchsymbol]();
-            return true;
-        } else {
-            return true;
-        }
-    };
-    objproxyhandler.has = (target, key) => {
-        const myvalue = get(target, "value");
-        return has(target, key) || has(myvalue, key);
-    };
-    objproxyhandler.get = (target, key) => {
-        const value = get(target, "value");
-        const deepflage = isarray(value) || isplainobject(value);
-        if (key === "value" && deepflage) {
-            return deepobserve(get(target, key), (_target_, patharray) => {
+        });
+    } else if (has(target, key)) {
+        return get(target, key);
+    } else if (has(value, key)) {
+        const resultvalue = get(value, key);
+        if (isSet(value)) {
+            if (key === "add" || key === "clear" || key === "delete") {
+                switch (key) {
+                  case "add":
+                    {
+                        return (add => {
+                            if (!set_prototype.has.call(value, add)) {
+                                const returnvalue = set_prototype[key].call(value, add);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+
+                  case "delete":
+                    {
+                        return (dele => {
+                            if (set_prototype.has.call(value, dele)) {
+                                const returnvalue = set_prototype[key].call(value, dele);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+
+                  case "clear":
+                    {
+                        return (() => {
+                            if (value.size) {
+                                const returnvalue = set_prototype[key].call(value);
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+                }
+            } else {
+                return isfunction(resultvalue) ? resultvalue.bind(value) : resultvalue;
+            }
+        } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
+            return deepobserve(resultvalue, () => {
                 target[dispatchsymbol]();
             });
-        } else if (has(target, key)) {
-            return get(target, key);
-        } else if (has(value, key)) {
-            const resultvalue = get(value, key);
-            if (isSet(value)) {
-                if (key === "add" || key === "clear" || key === "delete") {
-                    switch (key) {
-                      case "add":
-                        {
-                            return (add => {
-                                if (!set_prototype.has.call(value, add)) {
-                                    const returnvalue = set_prototype[key].call(value, add);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-
-                      case "delete":
-                        {
-                            return (dele => {
-                                if (set_prototype.has.call(value, dele)) {
-                                    const returnvalue = set_prototype[key].call(value, dele);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-
-                      case "clear":
-                        {
-                            return (() => {
-                                if (value.size) {
-                                    const returnvalue = set_prototype[key].call(value);
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-                    }
-                } else {
-                    return isfunction(resultvalue) ? resultvalue.bind(value) : resultvalue;
-                }
-            } else if (deepflage && (isarray(resultvalue) || isplainobject(resultvalue))) {
-                return deepobserve(resultvalue, () => {
-                    target[dispatchsymbol]();
-                });
-            } else {
-                return resultvalue;
-            }
+        } else {
+            return resultvalue;
         }
-    };
-    objproxyhandler.set = (target, key, value) => {
-        if (isReactiveState(value)) {
-            value = value.valueOf();
+    }
+};
+
+handler$2.set = (target, key, value) => {
+    if (isReactiveState(value)) {
+        value = value.valueOf();
+    }
+    const myvalue = get(target, "value");
+    if (key === "value" && isobject(value)) {
+        if (target[key] !== value) {
+            set(target, key, value);
+            target[dispatchsymbol]();
         }
-        const myvalue = get(target, "value");
-        if (key === "value" && isobject(value) && (isarray(init) && isarray(value) || !isarray(init) && !isarray(value))) {
+        return true;
+    } else if (!has(target, key)) {
+        if (myvalue[key] !== value) {
+            set(myvalue, key, value);
+            target[dispatchsymbol]();
+        }
+        return true;
+    } else {
+        console.error(value);
+        console.error(invalid_primitive_or_object_state);
+        throw TypeError();
+    }
+};
+
+const set_prototype = Set.prototype;
+
+const handler$3 = {
+    defineProperty() {
+        return false;
+    },
+    deleteProperty() {
+        return false;
+    },
+    set(target, key, value) {
+        if (key === "value") {
             if (target[key] !== value) {
                 set(target, key, value);
                 target[dispatchsymbol]();
             }
             return true;
-        } else if (!has(target, key)) {
-            if (myvalue[key] !== value) {
-                set(myvalue, key, value);
-                target[dispatchsymbol]();
-            }
-            return true;
         } else {
             console.error(value);
-            console.error(init);
             console.error(invalid_primitive_or_object_state);
             throw TypeError();
         }
-    };
-    return combineproxy(reactive, objproxyhandler);
-}
-
-const set_prototype = Set.prototype;
+    },
+    setPrototypeOf() {
+        return false;
+    }
+};
 
 function createState(init) {
     if (isprimitive(init) || isfunction(init)) {
-        const handler = {
-            defineProperty() {
-                return false;
-            },
-            deleteProperty() {
-                return false;
-            },
-            set(target, key, value) {
-                if (key === "value" && (isprimitive(value) && isprimitive(init) || isfunction(value) && isfunction(init))) {
-                    if (target[key] !== value) {
-                        set(target, key, value);
-                        target[dispatchsymbol]();
-                    }
-                    return true;
-                } else {
-                    console.error(value);
-                    console.error(init);
-                    console.error(invalid_primitive_or_object_state);
-                    throw TypeError();
-                }
-            },
-            setPrototypeOf() {
-                return false;
-            }
-        };
         return getproperyreadproxy(combineproxy(new ReactiveState({
             value: init
-        }), handler));
+        }), Object.assign({}, handler$3)));
     } else if (isReactiveState(init)) {
-        return createState(init.valueOf());
+        throw TypeError();
     } else if (isobject(init)) {
         return handleobjectstate(init);
     } else {
-        throw Error();
+        throw TypeError();
     }
 }
 

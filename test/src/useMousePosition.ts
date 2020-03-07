@@ -2,10 +2,15 @@ import {
     //   createElement,
     createState,
     useMounted,
-    useUnMounted
-} from "./mvvm-view.ts";
+    useUnMounted,
+    StateType
+} from "./mvvm-view";
+// import type ReactiveState from "src/Reactivity/reactivestate";
 // console.log([h, createElement]);
-export function useMousePosition() {
+export function useMousePosition(): {
+    x: StateType<number>;
+    y: StateType<number>;
+} {
     const x = createState(0);
     const y = createState(0);
     function update(e: MouseEvent) {

@@ -1,8 +1,8 @@
 {
+    "typings": "./@types/all.d.ts",
     "type": "module",
-    "version": "1.7.1",
+    "version": "1.8.0",
     "main": "./dist/index.min.js",
-    "types": "./dist/index.d.ts",
     "module": "./dist/index.min.js",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
@@ -10,7 +10,9 @@
     "name": "@masx200/mvvm-reactive-view",
     "description": "轻量级,响应式,mvvm,构建视图,声明式,组件化,基于webcomponent ,前端 javascript 库",
     "scripts": {
-        "build": "rollup -c rollup.config.js",
+        "build_main": "rollup -c ./rollup/rollup-main.js",
+        "build_polyfill": "rollup -c ./rollup/rollup-polyfill.js",
+        "build_test": "rollup -c ./rollup/rollup-test.js",
         "test": "live-server test",
         "prettier": "prettier *.js  *.json --write  *.md *.ts ./src/**/*.ts  ./test/src/*.ts ./src/*.ts  ./test/src/*.tsx "
     },
@@ -22,7 +24,10 @@
         "url": "https://github.com/masx200/mvvm-reactive-view/issues"
     },
     "homepage": "https://github.com/masx200/mvvm-reactive-view#readme",
-    "dependencies": {},
+    "dependencies": {
+        "@rollup/plugin-replace": "^2.3.1",
+        "acorn-jsx": "^5.2.0"
+    },
     "devDependencies": {
         "@babel/core": "^7.8.7",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
@@ -37,6 +42,7 @@
         "@rollup/plugin-commonjs": "^11.0.2",
         "@rollup/plugin-json": "^4.0.2",
         "@rollup/plugin-node-resolve": "^7.1.1",
+        "@rollup/plugin-typescript": "^4.0.0",
         "@types/estree": "^0.0.42",
         "@types/lodash": "^4.14.149",
         "@types/node": "^13.9.0",
@@ -81,10 +87,11 @@
         "postcss-selector-parser": "^6.0.2",
         "postcss-value-parser": "^4.0.3",
         "prettier": "^1.19.1",
-        "rollup": "^2.0.0",
+        "rollup": "^2.0.2",
         "rollup-plugin-babel": "^5.0.0-alpha.1",
-        "rollup-plugin-postcss": "^2.2.0",
+        "rollup-plugin-postcss": "^2.3.0",
         "rollup-plugin-sourcemaps": "^0.5.0",
+        "rollup-plugin-string": "^3.0.0",
         "rollup-plugin-terser": "^5.2.0",
         "rollup-plugin-ts": "^1.2.14",
         "safe-buffer": "^5.2.0",

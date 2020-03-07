@@ -335,7 +335,7 @@ document.body.appendChild(container);
 
 最后给组件初始化函数包裹一个`createComponent`函数,返回一个`web component custom element`
 
-## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `postcss`或者`to-string-loader`引入外部 `css` 文件转成字符串
+## 组件局部 `css` 样式,设置组件初始化函数的`css`属性即可,可以使用 `rollup-plugin-postcss`或者`to-string-loader`引入外部 `css` 文件转成字符串
 
 ### webpack to-string-loader
 
@@ -1049,9 +1049,9 @@ const vdomobj = html`
 
 # `API` : 可在 `TypeScript` 类型声明文件中查看更多
 
-https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
+https://github.com/masx200/mvvm-reactive-view/blob/master/@types/index.d.ts
 
-https://github.com/masx200/mvvm-reactive-view/blob/master/jsx.ts
+https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
 ## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
 

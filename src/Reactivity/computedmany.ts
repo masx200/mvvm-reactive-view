@@ -9,11 +9,12 @@ import { isReactiveState } from "./isReactiveState";
 import watch from "./watch";
 import { UnWrapState } from "./unwrapstate";
 import { UnWrapArray } from "./UnWrapArray";
+import { StateType } from "./create-state";
 export function computedmany<T extends any, Y extends ReactiveState<any>[]>(
     state: Y,
     callback: gettercallback<T, UnWrapState<UnWrapArray<Y>>[]>,
     setter?: SetterFun
-): ReactiveState<T> {
+): StateType<T> {
     const getter = () => {
         const value = apply(
             callback,
@@ -48,5 +49,5 @@ export function computedmany<T extends any, Y extends ReactiveState<any>[]>(
             //
         });
     });
-    return getproperyreadproxy(reactivestate);
+    return getproperyreadproxy(reactivestate) as StateType<T>;
 }

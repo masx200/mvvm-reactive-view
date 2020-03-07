@@ -5,9 +5,11 @@ import {
     createElement,
     MountElement,
     useUpdated,
-    watch
-} from "./mvvm-view.ts";
-import { useMousePosition } from "./useMousePosition.ts";
+    watch,
+    render,
+    h
+} from "./mvvm-view";
+import { useMousePosition } from "./useMousePosition";
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
     const plus = computed(x, (x) => {
@@ -60,3 +62,12 @@ var vdom = createElement(mycomapp);
 export const container = document.createElement("div");
 MountElement(vdom, container);
 document.body.appendChild(container);
+const removecom = () => (
+    <button
+        $text="移除鼠标组件当前容器元素"
+        onClick={() => {
+            container.remove();
+        }}
+    />
+);
+document.body.appendChild(render(h(removecom)));

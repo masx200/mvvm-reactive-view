@@ -11,7 +11,7 @@ import {
     html,
     MountElement,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 // console.log([h, createElement]);
 const mycomapp = createComponent(() => {
     const inputpassword = createState("");
@@ -394,4 +394,8 @@ const mycomapp = createComponent(() => {
 });
 mycomapp.css = modulecss;
 var vdom = createElement(mycomapp);
-MountElement(vdom, document.getElementById("root"));
+MountElement(
+    vdom,
+    document.getElementById("root") ||
+        document.body.appendChild(document.createElement("div"))
+);

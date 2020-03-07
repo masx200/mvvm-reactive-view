@@ -9,21 +9,22 @@ import ReactiveState from "./reactivestate.js";
 import { isReactiveState } from "./isReactiveState";
 import { UnWrapState } from "./unwrapstate";
 import { UnWrapArray } from "./UnWrapArray";
+import { StateType } from "src";
 function computed<T extends any, Y extends ReactiveState<any>>(
     state: Y,
     callback: gettercallback<T, [UnWrapState<Y>]>,
     setter?: SetterFun
-): ReactiveState<T>;
+): StateType<T>;
 function computed<T extends any, Y extends ReactiveState<any>[]>(
     state: Y,
     callback: gettercallback<T, UnWrapState<UnWrapArray<Y>>[]>,
     setter?: SetterFun
-): ReactiveState<T>;
+): StateType<T>;
 function computed(
     state: ReactiveState<any> | Array<ReactiveState<any>>,
     callback: gettercallback<any, any[]>,
     setter?: SetterFun
-): ReactiveState<any> {
+): StateType<any> {
     if (!((isArray(state) || isReactiveState(state)) && isFunction(callback))) {
         console.error(state);
         console.error(callback);

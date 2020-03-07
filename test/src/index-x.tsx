@@ -6,9 +6,9 @@ import {
     h,
     MountElement,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 // console.log([h, createElement]);
-const lirefs = [];
+const lirefs: Element[] = [];
 // console.log()
 // export{vdom}
 const temp$ref = createRef();

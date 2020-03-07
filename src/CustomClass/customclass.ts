@@ -6,9 +6,9 @@ export { Htmlelementconstructor };
 
 export interface Custom {
     (
-        props?: Record<string, ReactiveState<string>>,
+        props: Record<string, ReactiveState<string>>,
 
-        children?: Vdomchildren
+        children: Vdomchildren
     ): VaildVDom;
     defaultProps?: Record<string, string>;
     css?: string;

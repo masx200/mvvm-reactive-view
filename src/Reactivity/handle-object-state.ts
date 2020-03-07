@@ -1,10 +1,5 @@
 import deepobserve from "@masx200/deep-observe-agent-proxy";
-import { set_prototype } from "./create-state";
-import ReactiveState, {
-    dispatchsymbol,
-    invalid_primitive_or_object_state
-} from "./reactivestate.js";
-import { isReactiveState } from "./isReactiveState";
+import { combineproxy } from "src/others/combineproxy";
 import {
     defineProperty,
     deleteProperty,
@@ -15,18 +10,24 @@ import {
     set
 } from "../UtilTools/reflect";
 import {
-    isArray,
     isarray,
+    isfunction,
     isobject,
     isplainobject,
     isSet,
-    issymbol,
-    isfunction
+    issymbol
 } from "../UtilTools/util";
+import { set_prototype } from "./create-state";
+import { isReactiveState } from "./isReactiveState";
+import ReactiveState, {
+    dispatchsymbol,
+    invalid_primitive_or_object_state
+} from "./reactivestate.js";
 import watch from "./watch";
-import { combineproxy } from "src/others/combineproxy";
 
-export default function(init: object): ReactiveState<object> {
+export default function<T extends Exclude<object, ReactiveState<any>>>(
+    init: T
+): ReactiveState<T> & T {
     let initobj = init;
     const containReactiveState =
         isplainobject(init) &&
@@ -63,156 +64,155 @@ export default function(init: object): ReactiveState<object> {
     }
     // reactive.value = initobj;
 
-    const objproxyhandler: ProxyHandler<object> = {};
-    objproxyhandler.ownKeys = (target) => {
-        return Array.from(
-            new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
-        );
-    };
-    objproxyhandler.setPrototypeOf = () => {
-        return false;
-    };
-    objproxyhandler.defineProperty = () => {
-        return false;
-    };
-    objproxyhandler.getOwnPropertyDescriptor = (
-        target: ReactiveState<object>,
-        key
-    ) => {
-        if (issymbol(key)) {
-            return;
-        }
-        const myvalue = get(target, "value");
-
-        const descripter =
-            getOwnPropertyDescriptor(target, key) ||
-            getOwnPropertyDescriptor(myvalue, key);
-        if (descripter) {
-            descripter.configurable = true;
-        }
-
-        return descripter;
-    };
-    objproxyhandler.deleteProperty = (target: ReactiveState<object>, key) => {
-        const myvalue = get(target, "value");
-        if (has(myvalue, key)) {
-            deleteProperty(myvalue, key);
-            target[dispatchsymbol]();
-            return true;
-        } else {
-            return true;
-        }
-    };
-    objproxyhandler.has = (target: ReactiveState<object>, key) => {
-        const myvalue = get(target, "value");
-        return has(target, key) || has(myvalue, key);
-    };
-    objproxyhandler.get = (target: ReactiveState<object>, key) => {
-        const value = get(target, "value");
-        const deepflage = isarray(value) || isplainobject(value);
-        if (key === "value" && deepflage) {
-            return deepobserve(get(target, key), (_target_, patharray) => {
-                target[dispatchsymbol]();
-            });
-        } else if (has(target, key)) {
-            return get(target, key);
-        } else if (has(value, key)) {
-            const resultvalue = get(value, key);
-            if (isSet(value)) {
-                if (key === "add" || key === "clear" || key === "delete") {
-                    switch (key) {
-                        case "add": {
-                            return ((add: any) => {
-                                if (!set_prototype.has.call(value, add)) {
-                                    const returnvalue = set_prototype[key].call(
-                                        value,
-                                        add
-                                    );
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-
-                        case "delete": {
-                            return ((dele: any) => {
-                                if (set_prototype.has.call(value, dele)) {
-                                    const returnvalue = set_prototype[key].call(
-                                        value,
-                                        dele
-                                    );
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-
-                        case "clear": {
-                            return (() => {
-                                if (value.size) {
-                                    const returnvalue = set_prototype[key].call(
-                                        value
-                                    );
-                                    target[dispatchsymbol]();
-                                    return returnvalue;
-                                }
-                                return;
-                            }).bind(value);
-                        }
-                    }
-                } else {
-                    return isfunction(resultvalue)
-                        ? resultvalue.bind(value)
-                        : resultvalue;
-                }
-            } else if (
-                deepflage &&
-                (isarray(resultvalue) || isplainobject(resultvalue))
-            ) {
-                return deepobserve(resultvalue, () => {
-                    target[dispatchsymbol]();
-                });
-            } else {
-                return resultvalue;
-            }
-        }
-    };
-    objproxyhandler.set = (target: ReactiveState<object>, key, value) => {
-        if (isReactiveState(value)) {
-            value = value.valueOf();
-        }
-        const myvalue = get(target, "value");
-
-        if (
-            key === "value" &&
-            isobject(value) &&
-            ((isArray(init) && isarray(value)) ||
-                (!isArray(init) && !isarray(value)))
-        ) {
-            if (target[key] !== value) {
-                set(target, key, value);
-                target[dispatchsymbol]();
-            }
-            return true;
-        } else if (!has(target, key)) {
-            if (myvalue[key] !== value) {
-                set(myvalue, key, value);
-                target[dispatchsymbol]();
-            }
-            return true;
-            //
-        } else {
-            console.error(value);
-            console.error(init);
-            console.error(invalid_primitive_or_object_state);
-            throw TypeError();
-        }
-    };
     return combineproxy(
         reactive,
 
-        objproxyhandler
-    ) as ReactiveState<object>;
+        Object.assign({}, handler)
+    ) as ReactiveState<T> & T;
 }
+const handler: ProxyHandler<object> = {};
+handler.ownKeys = (target) => {
+    return Array.from(
+        new Set([...ownKeys(target), ...ownKeys(get(target, "value"))])
+    );
+};
+handler.setPrototypeOf = () => {
+    return false;
+};
+handler.defineProperty = () => {
+    return false;
+};
+handler.getOwnPropertyDescriptor = (target: ReactiveState<object>, key) => {
+    if (issymbol(key)) {
+        return;
+    }
+    const myvalue = get(target, "value");
+
+    const descripter =
+        getOwnPropertyDescriptor(target, key) ||
+        getOwnPropertyDescriptor(myvalue, key);
+    if (descripter) {
+        descripter.configurable = true;
+    }
+
+    return descripter;
+};
+handler.deleteProperty = (target: ReactiveState<object>, key) => {
+    const myvalue = get(target, "value");
+    if (has(myvalue, key)) {
+        deleteProperty(myvalue, key);
+        target[dispatchsymbol]();
+        return true;
+    } else {
+        return true;
+    }
+};
+handler.has = (target: ReactiveState<object>, key) => {
+    const myvalue = get(target, "value");
+    return has(target, key) || has(myvalue, key);
+};
+handler.get = (target: ReactiveState<object>, key) => {
+    const value = get(target, "value");
+    const deepflage = isarray(value) || isplainobject(value);
+    if (key === "value" && deepflage) {
+        return deepobserve(get(target, key), (_target_, _patharray) => {
+            target[dispatchsymbol]();
+        });
+    } else if (has(target, key)) {
+        return get(target, key);
+    } else if (has(value, key)) {
+        const resultvalue = get(value, key);
+        if (isSet(value)) {
+            if (key === "add" || key === "clear" || key === "delete") {
+                switch (key) {
+                    case "add": {
+                        return ((add: any) => {
+                            if (!set_prototype.has.call(value, add)) {
+                                const returnvalue = set_prototype[key].call(
+                                    value,
+                                    add
+                                );
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+
+                    case "delete": {
+                        return ((dele: any) => {
+                            if (set_prototype.has.call(value, dele)) {
+                                const returnvalue = set_prototype[key].call(
+                                    value,
+                                    dele
+                                );
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+
+                    case "clear": {
+                        return (() => {
+                            if (value.size) {
+                                const returnvalue = set_prototype[key].call(
+                                    value
+                                );
+                                target[dispatchsymbol]();
+                                return returnvalue;
+                            }
+                            return;
+                        }).bind(value);
+                    }
+                }
+            } else {
+                return isfunction(resultvalue)
+                    ? resultvalue.bind(value)
+                    : resultvalue;
+            }
+        } else if (
+            deepflage &&
+            (isarray(resultvalue) || isplainobject(resultvalue))
+        ) {
+            return deepobserve(resultvalue, () => {
+                target[dispatchsymbol]();
+            });
+        } else {
+            return resultvalue;
+        }
+    }
+};
+handler.set = (target: ReactiveState<object>, key, value) => {
+    if (isReactiveState(value)) {
+        value = value.valueOf();
+    }
+    const myvalue = get(target, "value");
+
+    if (
+        key === "value" &&
+        isobject(
+            value
+        ) /* &&
+        ((isArray(init) && isarray(value)) ||
+            (!isArray(init) && !isarray(value))) */
+    ) {
+        if (target[key] !== value) {
+            set(target, key, value);
+            target[dispatchsymbol]();
+        }
+        return true;
+    } else if (!has(target, key)) {
+        if (myvalue[key] !== value) {
+            set(myvalue, key, value);
+            target[dispatchsymbol]();
+        }
+        return true;
+        //
+    } else {
+        console.error(value);
+        // console.error(init);
+        console.error(invalid_primitive_or_object_state);
+        throw TypeError();
+    }
+};

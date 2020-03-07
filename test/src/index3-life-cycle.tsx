@@ -13,15 +13,20 @@ import {
     useUnMounted,
     useUpdated,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import mycss from "./test.css";
+import ReactiveState from "src/Reactivity/reactivestate";
+import { Vdomchildren } from "src/CreateElement/VirtualElement";
 // console.log([h, createElement]);
 
 var mycom = createComponent(
     Object.assign(
-        (props, children) => {
+        (
+            props: Record<string, ReactiveState<string>>,
+            children: Vdomchildren
+        ) => {
             const number = createState(1);
             useCreated(() => {
                 console.log("life-cycle-created");

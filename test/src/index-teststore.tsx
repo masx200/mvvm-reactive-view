@@ -8,7 +8,7 @@ import {
     h,
     MountElement,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 // console.log([h, createElement]);
 const number = createState(10);
 function increment() {

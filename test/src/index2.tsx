@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createElement, MountElement } from "./mvvm-view.ts";
+import { createElement, MountElement } from "./mvvm-view";
 // console.log([h, createElement]);
 
 // setTimeout(

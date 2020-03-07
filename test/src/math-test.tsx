@@ -1,4 +1,4 @@
-import { html, MountElement } from "./mvvm-view.ts";
+import { html, MountElement } from "./mvvm-view";
 (() => {
     var vdom = html`
         <math>

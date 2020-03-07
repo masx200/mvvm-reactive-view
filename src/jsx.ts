@@ -1,6 +1,6 @@
-import CSS from "csstype";
-import Virtualdom from "./src/CreateElement/VirtualElement";
-import ReactiveState from "./src/Reactivity/reactivestate";
+import CSS from "csstype/index";
+import Virtualdom from "./CreateElement/VirtualElement";
+import ReactiveState from "./Reactivity/reactivestate";
 interface attrfor<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
     1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;

@@ -1,24 +1,50 @@
-import debounce from "lodash/debounce";
+import debounce from "src/UtilTools/debounce";
+// import debounce from "lodash/debounce";
 import { useststerecord } from "../life-cycle-context/useststerecord";
 import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 // import { defineProperty } from "../UtilTools/reflect";
 import { isobject, isSet, gettagtype } from "../UtilTools/util";
 import ObserverTarget, { Listener } from "./custom-observer-target";
-
+import { Htmlelementconstructor } from "src/AttributeClass/createComponent";
+import { Custom } from "src/CustomClass/customclass";
+export type GetParentType<T> = T extends Custom
+    ? Custom
+    : T extends Htmlelementconstructor
+    ? Htmlelementconstructor
+    : T extends Array<any>
+    ? Array<any>
+    : T extends Function
+    ? Function
+    : T extends string
+    ? string
+    : T extends number
+    ? number
+    : T extends boolean
+    ? boolean
+    : T extends void
+    ? void
+    : T extends symbol
+    ? symbol
+    : T extends bigint
+    ? bigint
+    : T extends object
+    ? T
+    : never;
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 
 export const cancelsubscribe = Symbol("cancelsubscribe");
-// const debouncedispatch = Symbol("debouncedispatch");
+const debouncedispatch = Symbol("debouncedispatch");
 export const invalid_primitive_or_object_state =
     "invalid primitive or object state";
-// const Targetsymbol = Symbol("eventtatget");
-// const memlisteners = Symbol("memlisteners");
+const Targetsymbol = Symbol("eventtatget");
+const memlisteners = Symbol("memlisteners");
 export const dispatchsymbol = Symbol("dispatch");
 export const subscribesymbol = Symbol("subscribe");
 export const removeallistenerssymbol = Symbol("removeallisteners");
 export const addallistenerssymbol = Symbol("addallisteners");
-// const tagtypesym = Symbol("tagtype");
+const tagtypesym = Symbol("tagtype");
+
 export default class ReactiveState<T> {
     constructor(init: { value: T });
     constructor(init: { get: () => T; set?: (v: T) => void });
@@ -28,13 +54,14 @@ export default class ReactiveState<T> {
 
         if ("value" in init) {
             let value = init.value;
-            this.#tagtypesym = gettagtype(value);
+            this[tagtypesym] = gettagtype(value);
             Object.defineProperty(this, "value", {
-                configurable: false,
+                // Uncaught TypeError: 'getOwnPropertyDescriptor' on proxy: trap returned descriptor for property 'value' that is incompatible with the existing property in the proxy target
+                configurable: true,
                 get: () => value,
                 set: (v: T) => {
                     const tag = gettagtype(v);
-                    if (tag !== this.#tagtypesym) {
+                    if (tag !== this[tagtypesym]) {
                         throw TypeError();
                     }
                     value = v;
@@ -46,14 +73,14 @@ export default class ReactiveState<T> {
             if (!getter) {
                 throw TypeError();
             }
-            this.#tagtypesym = gettagtype(getter());
+            this[tagtypesym] = gettagtype(getter());
             if (setter) {
                 Object.defineProperty(this, "value", {
-                    configurable: false,
+                    configurable: true,
                     get: getter,
                     set: (v: T) => {
                         const tag = gettagtype(v);
-                        if (tag !== this.#tagtypesym) {
+                        if (tag !== this[tagtypesym]) {
                             throw TypeError();
                         }
                         setter(v);
@@ -61,7 +88,7 @@ export default class ReactiveState<T> {
                 });
             } else {
                 Object.defineProperty(this, "value", {
-                    configurable: false,
+                    configurable: true,
                     get: getter
                 });
             }
@@ -77,14 +104,14 @@ export default class ReactiveState<T> {
 
         useststerecord(this);
     }
-    #tagtypesym: string;
-    value!: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
+    private [tagtypesym]: string;
+    value!: T;
 
     readonly [Symbol.toStringTag] = "ReactiveState";
 
-    #debouncedispatch: () => void = (() => {
+    private [debouncedispatch]: () => void = (() => {
         const debouncedfun = debounce(() => {
-            this.#Targetsymbol.dispatch();
+            this[Targetsymbol].dispatch();
         });
         return () => {
             debouncedfun();
@@ -92,24 +119,24 @@ export default class ReactiveState<T> {
     })();
 
     [removeallistenerssymbol]() {
-        this.#memlisteners.forEach((callback) => {
+        this[memlisteners].forEach((callback) => {
             this[removeonelistner](callback);
         });
     }
     [removeonelistner](callback: Listener) {
-        this.#Targetsymbol.removeListener(callback);
+        this[Targetsymbol].removeListener(callback);
     }
     [addonelistner](callback: Listener) {
-        this.#Targetsymbol.addListener(callback);
+        this[Targetsymbol].addListener(callback);
     }
     [addallistenerssymbol]() {
-        this.#memlisteners.forEach((callback) => {
+        this[memlisteners].forEach((callback) => {
             this[addonelistner](callback);
         });
     }
 
-    #Targetsymbol = new ObserverTarget();
-    #memlisteners = new Set<Listener>();
+    private [Targetsymbol] = new ObserverTarget();
+    private [memlisteners] = new Set<Listener>();
 
     valueOf = () => {
         return this.value;
@@ -126,15 +153,15 @@ export default class ReactiveState<T> {
     }
 
     [dispatchsymbol]() {
-        this.#debouncedispatch();
+        this[debouncedispatch]();
     }
     [subscribesymbol](eventlistener: Listener) {
-        this.#memlisteners.add(eventlistener);
+        this[memlisteners].add(eventlistener);
         this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener: Listener) {
         if (eventlistener) {
-            this.#memlisteners.delete(eventlistener);
+            this[memlisteners].delete(eventlistener);
             this[removeonelistner](eventlistener);
         }
     }

@@ -4,7 +4,7 @@ import {
     html,
     MountElement,
     watch
-} from "./mvvm-view.ts";
+} from "./mvvm-view";
 (() => {
     const colortext = createState("blue");
     const stylestate = createState({

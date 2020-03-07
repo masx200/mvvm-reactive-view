@@ -1,5 +1,5 @@
-import { createElement, MountElement } from "./mvvm-view.ts";
-import { myclasscomponent } from "./index3-life-cycle.tsx";
+import { createElement, MountElement } from "./mvvm-view";
+import { myclasscomponent } from "./index3-life-cycle";
 {
     const vdom2 = createElement(myclasscomponent, [
         <form

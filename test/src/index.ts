@@ -12,7 +12,7 @@ import "./index-fun-state.tsx";
 import "./index-switchable.tsx";
 import "./custom-directives.tsx";
 import "./Filetestx-2.tsx";
-import "./removecom.tsx";
+
 import "./testxfile-1.tsx";
 import "./testxfile-3.tsx";
 import "./xFile-4.tsx";

@@ -1,3 +1,12 @@
+import { gettagtype } from "src/UtilTools/util";
+function istextnode(e: any): e is Text {
+    return gettagtype(e) === "Text";
+}
+function gettextnodes(container: Element): Text[] {
+    return [...container.childNodes].filter((e) => {
+        return istextnode(e);
+    }) as Text[];
+}
 const rootnode = document.body;
 export const connectedeventname = Symbol("mounted").toString();
 export const disconnectedeventname = Symbol("unmounted").toString();
@@ -8,8 +17,9 @@ const callback = function(mutations: MutationRecord[]) {
         const addedNodes = [...record.addedNodes];
         addedNodes.forEach((e) => {
             if (e instanceof Element) {
-                const subnodes = [...e.querySelectorAll("*"), e];
-                subnodes.forEach((n) => {
+                const subeles = [...e.querySelectorAll("*"), e];
+                const subtexts = subeles.map((e) => gettextnodes(e));
+                [...subeles, ...subtexts].flat(1 / 0).forEach((n) => {
                     dispatchconnected(n);
                 });
             }
@@ -17,15 +27,16 @@ const callback = function(mutations: MutationRecord[]) {
         const removedNodes = [...record.removedNodes];
         removedNodes.forEach((e) => {
             if (e instanceof Element) {
-                const subnodes = [...e.querySelectorAll("*"), e];
-                subnodes.forEach((n) => {
+                const subeles = [...e.querySelectorAll("*"), e];
+                const subtexts = subeles.map((e) => gettextnodes(e));
+                [...subeles, ...subtexts].flat(1 / 0).forEach((n) => {
                     dispatchdisconnected(n);
                 });
             }
         });
     });
 };
-function dispatchconnected(e: Node) {
+function dispatchconnected(e: Node | Text) {
     e.dispatchEvent(new Event(connectedeventname));
 }
 function dispatchdisconnected(e: Node) {

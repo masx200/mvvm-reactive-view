@@ -1,4 +1,4 @@
-import htm from "htm";
+import htm from "../../@types/htm/index";
 
 import { invalid_Virtualdom } from "../MountElement/MountElement";
 import { apply } from "../UtilTools/reflect";
