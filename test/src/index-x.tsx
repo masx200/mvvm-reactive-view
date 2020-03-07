@@ -6,7 +6,7 @@ import {
     h,
     MountElement,
     watch
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 // console.log([h, createElement]);
 const lirefs = [];
 // console.log()

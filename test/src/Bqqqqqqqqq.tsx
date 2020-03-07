@@ -1,4 +1,4 @@
-import { createElement, h, MountElement } from "./mvvm-view";
+import { createElement, h, MountElement } from "./mvvm-view.ts";
 class Bqqqqqqqqq extends HTMLElement {}
 class Aqqqqqqqqq extends HTMLElement {}
 console.log(customElements, [...customElements]);

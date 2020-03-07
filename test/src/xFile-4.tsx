@@ -5,7 +5,7 @@ import {
     html,
     MountElement,
     watch
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 (() => {
     const stylestate = createState({ display: "block", width: "100%" });
     const inputref = createRef();

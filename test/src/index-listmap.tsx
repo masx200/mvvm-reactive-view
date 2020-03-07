@@ -8,7 +8,7 @@ import {
     MountElement,
     // @ts-ignore
     watch
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 const refarray = [];
 const liststate = createState(
     Array(10)

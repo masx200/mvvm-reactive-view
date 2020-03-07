@@ -3,12 +3,12 @@ import {
     createState,
     useMounted,
     useUnMounted
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 // console.log([h, createElement]);
 export function useMousePosition() {
     const x = createState(0);
     const y = createState(0);
-    function update(e) {
+    function update(e: MouseEvent) {
         x.value = e.pageX;
         y.value = e.pageY;
     }

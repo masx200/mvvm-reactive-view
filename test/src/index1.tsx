@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createState, html, MountElement, watch } from "./mvvm-view";
+import { createState, html, MountElement, watch } from "./mvvm-view.ts";
 
 // console.log(MountElement);
 // console.log(h);

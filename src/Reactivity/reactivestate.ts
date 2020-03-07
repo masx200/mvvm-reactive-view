@@ -28,13 +28,13 @@ export default class ReactiveState<T> {
 
         if ("value" in init) {
             let value = init.value;
-            this[tagtypesym] = gettagtype(value);
+            this.#tagtypesym = gettagtype(value);
             Object.defineProperty(this, "value", {
                 configurable: false,
                 get: () => value,
                 set: (v: T) => {
                     const tag = gettagtype(v);
-                    if (tag !== this[tagtypesym]) {
+                    if (tag !== this.#tagtypesym) {
                         throw TypeError();
                     }
                     value = v;
@@ -46,14 +46,14 @@ export default class ReactiveState<T> {
             if (!getter) {
                 throw TypeError();
             }
-            this[tagtypesym] = gettagtype(getter());
+            this.#tagtypesym = gettagtype(getter());
             if (setter) {
                 Object.defineProperty(this, "value", {
                     configurable: false,
                     get: getter,
                     set: (v: T) => {
                         const tag = gettagtype(v);
-                        if (tag !== this[tagtypesym]) {
+                        if (tag !== this.#tagtypesym) {
                             throw TypeError();
                         }
                         setter(v);
@@ -77,14 +77,14 @@ export default class ReactiveState<T> {
 
         useststerecord(this);
     }
-    private [tagtypesym]: string;
+    #tagtypesym: string;
     value!: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
 
     readonly [Symbol.toStringTag] = "ReactiveState";
 
-    private [debouncedispatch]: () => void = (() => {
+    #debouncedispatch: () => void = (() => {
         const debouncedfun = debounce(() => {
-            this[Targetsymbol].dispatch();
+            this.#Targetsymbol.dispatch();
         });
         return () => {
             debouncedfun();
@@ -92,24 +92,24 @@ export default class ReactiveState<T> {
     })();
 
     [removeallistenerssymbol]() {
-        this[memlisteners].forEach((callback) => {
+        this.#memlisteners.forEach((callback) => {
             this[removeonelistner](callback);
         });
     }
     [removeonelistner](callback: Listener) {
-        this[Targetsymbol].removeListener(callback);
+        this.#Targetsymbol.removeListener(callback);
     }
     [addonelistner](callback: Listener) {
-        this[Targetsymbol].addListener(callback);
+        this.#Targetsymbol.addListener(callback);
     }
     [addallistenerssymbol]() {
-        this[memlisteners].forEach((callback) => {
+        this.#memlisteners.forEach((callback) => {
             this[addonelistner](callback);
         });
     }
 
-    private [Targetsymbol] = new ObserverTarget();
-    private [memlisteners] = new Set<Listener>();
+    #Targetsymbol = new ObserverTarget();
+    #memlisteners = new Set<Listener>();
 
     valueOf = () => {
         return this.value;
@@ -126,15 +126,15 @@ export default class ReactiveState<T> {
     }
 
     [dispatchsymbol]() {
-        this[debouncedispatch]();
+        this.#debouncedispatch();
     }
     [subscribesymbol](eventlistener: Listener) {
-        this[memlisteners].add(eventlistener);
+        this.#memlisteners.add(eventlistener);
         this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener: Listener) {
         if (eventlistener) {
-            this[memlisteners].delete(eventlistener);
+            this.#memlisteners.delete(eventlistener);
             this[removeonelistner](eventlistener);
         }
     }

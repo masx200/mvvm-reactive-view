@@ -11,7 +11,7 @@ import {
     html,
     MountElement,
     watch
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 // console.log([h, createElement]);
 const mycomapp = createComponent(() => {
     const inputpassword = createState("");

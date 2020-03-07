@@ -3,7 +3,7 @@ import {
     createElement,
     createState,
     MountElement
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 (() => {
     var mystate = createState(true);
     //   watch(mystate, console.log);

@@ -1,4 +1,4 @@
-import { createState, watch } from "./mvvm-view";
+import { createState, watch } from "./mvvm-view.ts";
 
 const funstate = createState(() => {});
 watch(funstate, (fun) => {

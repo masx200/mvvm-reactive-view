@@ -5,7 +5,7 @@ import {
     render,
     Switchable,
     watch
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 // import { watch } from "../../dist";
 const com1 = createComponent(() => {
     return <h1>component 1</h1>;

@@ -1,4 +1,4 @@
-import { h, render } from "./mvvm-view";
+import { h, render } from "./mvvm-view.ts";
 import { container } from "./index-compositionapi";
 const removecom = () => (
     <button

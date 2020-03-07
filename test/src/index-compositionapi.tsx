@@ -6,8 +6,8 @@ import {
     MountElement,
     useUpdated,
     watch
-} from "./mvvm-view";
-import { useMousePosition } from "./useMousePosition";
+} from "./mvvm-view.ts";
+import { useMousePosition } from "./useMousePosition.ts";
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
     const plus = computed(x, (x) => {

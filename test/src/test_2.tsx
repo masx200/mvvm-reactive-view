@@ -1,4 +1,4 @@
-import { createState, html, MountElement, watch } from "./mvvm-view";
+import { createState, html, MountElement, watch } from "./mvvm-view.ts";
 function test_2() {
     const state1 = createState("<a>绑定textcontent</a>");
     const state2 = createState("<a>绑定innerhtml</a>");
@@ -11,17 +11,17 @@ function test_2() {
 }, 2000); */
     const vdom3 = html`
   <textarea value=${state1} @input=${[
-        (e: { target: { value: string; }; }) => {
+        (e: { target: { value: string } }) => {
             state1.value = e.target.value;
         }
     ]}></textarea>
   <input value=${state2} style='width:100%' @change=${[
-        (e: { target: { value: string; }; }) => {
+        (e: { target: { value: string } }) => {
             state2.value = e.target.value;
         }
     ]}  
 @input=${[
-        (e: { target: { value: string; }; }) => {
+        (e: { target: { value: string } }) => {
             state2.value = e.target.value;
         }
     ]}

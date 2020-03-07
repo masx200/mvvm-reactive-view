@@ -400,25 +400,6 @@ function useststerecord(state) {
     }
 }
 
-const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
-
-function get(target, propertyKey) {
-    if (isMap(target) || isWeakMap(target)) {
-        return target.get(propertyKey);
-    } else {
-        return Reflect.get(target, propertyKey);
-    }
-}
-
-function set(target, propertyKey, value) {
-    if (isMap(target) || isWeakMap(target)) {
-        target.set(propertyKey, value);
-        return true;
-    } else {
-        return Reflect.set(target, propertyKey, value);
-    }
-}
-
 class ObserverTarget {
     constructor() {
         this.Listeners = new Set;
@@ -441,7 +422,22 @@ class ObserverTarget {
     }
 }
 
-var _a, _b, _c;
+var __classPrivateFieldSet = undefined && undefined.__classPrivateFieldSet || function(receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
+};
+
+var __classPrivateFieldGet = undefined && undefined.__classPrivateFieldGet || function(receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
+
+var _tagtypesym, _debouncedispatch, _Targetsymbol, _memlisteners;
 
 const addonelistner = Symbol("addonelistner");
 
@@ -449,13 +445,7 @@ const removeonelistner = Symbol("removeonelistner");
 
 const cancelsubscribe = Symbol("cancelsubscribe");
 
-const debouncedispatch = Symbol("debouncedispatch");
-
 const invalid_primitive_or_object_state = "invalid primitive or object state";
-
-const Targetsymbol = Symbol("eventtatget");
-
-const memlisteners = Symbol("memlisteners");
 
 const dispatchsymbol = Symbol("dispatch");
 
@@ -465,31 +455,30 @@ const removeallistenerssymbol = Symbol("removeallisteners");
 
 const addallistenerssymbol = Symbol("addallisteners");
 
-const tagtypesym = Symbol("tagtype");
-
 class ReactiveState {
     constructor(init) {
+        _tagtypesym.set(this, void 0);
         this[Symbol.toStringTag] = "ReactiveState";
-        this[_a] = (() => {
+        _debouncedispatch.set(this, (() => {
             const debouncedfun = debounce_1(() => {
-                this[Targetsymbol].dispatch();
+                __classPrivateFieldGet(this, _Targetsymbol).dispatch();
             });
             return () => {
                 debouncedfun();
             };
-        })();
-        this[_b] = new ObserverTarget;
-        this[_c] = new Set;
+        })());
+        _Targetsymbol.set(this, new ObserverTarget);
+        _memlisteners.set(this, new Set);
         this.valueOf = () => this.value;
         if ("value" in init) {
             let value = init.value;
-            this[tagtypesym] = gettagtype(value);
-            defineProperty(this, "value", {
+            __classPrivateFieldSet(this, _tagtypesym, gettagtype(value));
+            Object.defineProperty(this, "value", {
                 configurable: false,
                 get: () => value,
                 set: v => {
                     const tag = gettagtype(v);
-                    if (tag !== this[tagtypesym]) {
+                    if (tag !== __classPrivateFieldGet(this, _tagtypesym)) {
                         throw TypeError();
                     }
                     value = v;
@@ -501,21 +490,21 @@ class ReactiveState {
             if (!getter) {
                 throw TypeError();
             }
-            this[tagtypesym] = gettagtype(getter());
+            __classPrivateFieldSet(this, _tagtypesym, gettagtype(getter()));
             if (setter) {
-                defineProperty(this, "value", {
+                Object.defineProperty(this, "value", {
                     configurable: false,
                     get: getter,
                     set: v => {
                         const tag = gettagtype(v);
-                        if (tag !== this[tagtypesym]) {
+                        if (tag !== __classPrivateFieldGet(this, _tagtypesym)) {
                             throw TypeError();
                         }
                         setter(v);
                     }
                 });
             } else {
-                defineProperty(this, "value", {
+                Object.defineProperty(this, "value", {
                     configurable: false,
                     get: getter
                 });
@@ -523,19 +512,20 @@ class ReactiveState {
         }
         useststerecord(this);
     }
-    [(_a = debouncedispatch, removeallistenerssymbol)]() {
-        this[memlisteners].forEach(callback => {
+    [(_tagtypesym = new WeakMap, _debouncedispatch = new WeakMap, _Targetsymbol = new WeakMap, 
+    _memlisteners = new WeakMap, removeallistenerssymbol)]() {
+        __classPrivateFieldGet(this, _memlisteners).forEach(callback => {
             this[removeonelistner](callback);
         });
     }
     [removeonelistner](callback) {
-        this[Targetsymbol].removeListener(callback);
+        __classPrivateFieldGet(this, _Targetsymbol).removeListener(callback);
     }
     [addonelistner](callback) {
-        this[Targetsymbol].addListener(callback);
+        __classPrivateFieldGet(this, _Targetsymbol).addListener(callback);
     }
     [addallistenerssymbol]() {
-        this[memlisteners].forEach(callback => {
+        __classPrivateFieldGet(this, _memlisteners).forEach(callback => {
             this[addonelistner](callback);
         });
     }
@@ -543,16 +533,16 @@ class ReactiveState {
         const value = this.valueOf();
         return isprimitive(value) ? String(value) : isSet(value) ? JSON.stringify([ ...value ]) : isobject(value) ? JSON.stringify(value) : "";
     }
-    [(_b = Targetsymbol, _c = memlisteners, dispatchsymbol)]() {
-        this[debouncedispatch]();
+    [dispatchsymbol]() {
+        __classPrivateFieldGet(this, _debouncedispatch).call(this);
     }
     [subscribesymbol](eventlistener) {
-        this[memlisteners].add(eventlistener);
+        __classPrivateFieldGet(this, _memlisteners).add(eventlistener);
         this[addonelistner](eventlistener);
     }
     [cancelsubscribe](eventlistener) {
         if (eventlistener) {
-            this[memlisteners].delete(eventlistener);
+            __classPrivateFieldGet(this, _memlisteners).delete(eventlistener);
             this[removeonelistner](eventlistener);
         }
     }
@@ -625,6 +615,25 @@ function watch(state, callback) {
         console.error(callback);
         console.error(invalid_ReactiveState + invalid_Function);
         throw new TypeError;
+    }
+}
+
+const {apply: apply, construct: construct, defineProperty: defineProperty, deleteProperty: deleteProperty, getOwnPropertyDescriptor: getOwnPropertyDescriptor, getPrototypeOf: getPrototypeOf, has: has, ownKeys: ownKeys, preventExtensions: preventExtensions} = Reflect;
+
+function get(target, propertyKey) {
+    if (isMap(target) || isWeakMap(target)) {
+        return target.get(propertyKey);
+    } else {
+        return Reflect.get(target, propertyKey);
+    }
+}
+
+function set(target, propertyKey, value) {
+    if (isMap(target) || isWeakMap(target)) {
+        target.set(propertyKey, value);
+        return true;
+    } else {
+        return Reflect.set(target, propertyKey, value);
     }
 }
 
@@ -1246,13 +1255,19 @@ function render(vdom, namespace) {
     } else if (isReactiveState(vdom)) {
         const reactive = vdom;
         const textnode = createtextnode(String(reactive));
-        watch(reactive, () => {
-            const state = reactive;
-            if (isconnected(element)) {
-                changetext(textnode, String(state));
-            }
-        });
         const element = textnode;
+        let cancel;
+        addmountedlistner(element, () => {
+            cancel = watch(reactive, () => {
+                const state = reactive;
+                if (isconnected(element)) {
+                    changetext(textnode, String(state));
+                }
+            });
+        });
+        addunmountedlistner(element, () => {
+            cancel && cancel();
+        });
         set(element, bindstatesymbol, new Set);
         get(element, bindstatesymbol).add(reactive);
         return textnode;
@@ -1274,9 +1289,9 @@ function render(vdom, namespace) {
                 mountrealelement(render(vdom.children), fragmentnode);
                 return fragmentnode;
             } else if (type === "html") {
-                const fragmentnode = createElementNS("never", "html");
-                mountrealelement(render(vdom.children), fragmentnode);
-                return fragmentnode;
+                const fragmentelement = createElementNS("never", "html");
+                mountrealelement(render(vdom.children), fragmentelement);
+                return fragmentelement;
             } else {
                 element = namespace ? createElementNS(namespace, type) : createnativeelement(type);
             }
@@ -1363,6 +1378,7 @@ function MountElement(vdom, container) {
         console.error(invalid_Virtualdom);
         throw TypeError();
     }
+    return container;
 }
 
 const proxyset = new WeakSet;
@@ -1622,7 +1638,7 @@ function onunmounted(ele) {
 
 const readysymbol = Symbol("readystate");
 
-var _a$1;
+var _a;
 
 const attributeChangedCallback = Symbol("attributeChanged");
 
@@ -1639,7 +1655,7 @@ function disconnectedCallback(componentelement) {
 class AttrChange extends HTMLElement {
     constructor() {
         super();
-        this[_a$1] = false;
+        this[_a] = false;
         const defaultProps = get(this.constructor, "defaultProps");
         const attrs = createeleattragentreadwrite(this);
         if (isobject(defaultProps)) {
@@ -1681,7 +1697,7 @@ class AttrChange extends HTMLElement {
     }
 }
 
-_a$1 = readysymbol;
+_a = readysymbol;
 
 const waittranformcsssymbol = Symbol("waittranformcss");
 

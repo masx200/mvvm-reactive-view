@@ -3,7 +3,7 @@ import {
     //   createElement,
     html,
     MountElement
-} from "./mvvm-view";
+} from "./mvvm-view.ts";
 {
     const vdom = createElement("div", [
         html`

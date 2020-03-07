@@ -1,4 +1,4 @@
-import { html, MountElement } from "./mvvm-view";
+import { html, MountElement } from "./mvvm-view.ts";
 function testunction() {
     const vdom2 = html`
         <div *text=${"<a>绑定textcontent</a>"}></div>

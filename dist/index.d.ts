@@ -1,4 +1,4 @@
-import * as CSS from "csstype";
+import CSS from "csstype";
 interface Htmlelementconstructor {
     new (): HTMLElement;
     prototype: HTMLElement;
@@ -13,15 +13,12 @@ interface Listener {
 declare const addonelistner: unique symbol;
 declare const removeonelistner: unique symbol;
 declare const cancelsubscribe: unique symbol;
-declare const debouncedispatch: unique symbol;
-declare const Targetsymbol: unique symbol;
-declare const memlisteners: unique symbol;
 declare const dispatchsymbol: unique symbol;
 declare const subscribesymbol: unique symbol;
 declare const removeallistenerssymbol: unique symbol;
 declare const addallistenerssymbol: unique symbol;
-declare const tagtypesym: unique symbol;
 declare class ReactiveState<T> {
+    #private;
     constructor(init: {
         value: T;
     });
@@ -29,16 +26,12 @@ declare class ReactiveState<T> {
         get: () => T;
         set?: (v: T) => void;
     });
-    private [tagtypesym];
     value: T extends Array<any> ? Array<any> : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
     readonly [Symbol.toStringTag] = "ReactiveState";
-    private [debouncedispatch];
     [removeallistenerssymbol](): void;
     [removeonelistner](callback: Listener): void;
     [addonelistner](callback: Listener): void;
     [addallistenerssymbol](): void;
-    private [Targetsymbol];
-    private [memlisteners];
     valueOf: () => T extends any[] ? any[] : T extends Function ? Function : T extends string ? string : T extends number ? number : T extends boolean ? boolean : T extends void ? void : T extends symbol ? symbol : T extends bigint ? bigint : T extends object ? T : never;
     toString(): string;
     [dispatchsymbol](): void;
@@ -1190,7 +1183,7 @@ declare function useCreated(fun: () => void): void;
 declare function useUpdated(fun: () => void): void;
 declare function useMounted(fun: () => void): void;
 declare function useUnMounted(fun: () => void): void;
-declare function MountElement(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: Element): void;
+declare function MountElement<T extends Element>(vdom: VaildVDom | Node | Element | Array<Node | Element>, container: T): T;
 interface gettercallback<T, P extends Array<any>> {
     (...args: P): T;
 }
@@ -1204,11 +1197,10 @@ declare function createState<T extends any>(init: Exclude<T, ReactiveState<any>>
 type CancelWatchfun = () => void;
 declare function watch<T extends any, Y extends ReactiveState<T>>(state: Y, callback: gettercallback<void, [UnWrapState<Y>]>): CancelWatchfun;
 declare function watch<T extends any, Y extends Array<ReactiveState<T>>>(state: Y, callback: gettercallback<void, UnWrapState<UnWrapArray<Y>>[]>): CancelWatchfun;
-declare function render(vdom: Virtualdom<any> | string, namespace?: string): Node;
-declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
-declare function render(vdom: Virtualdom<"script" | "" | "html">, namespace?: string): Node;
-declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
+declare function render(vdom: Virtualdom<"">, namespace?: string): Node;
 declare function render(vdom: string | ReactiveState<any> | number, namespace?: string): Node;
+declare function render(vdom: Virtualdom<string | Function>, namespace?: string): Element;
+declare function render(vdom: Vdomchildren, namespace?: string): Array<Node | Element>;
+declare function render(vdom: Array<string | ReactiveState<any> | number | Virtualdom<"">>, namespace?: string): Array<Node>;
 declare function render(vdom: Array<Virtualdom<any>>, namespace?: string): Array<Element>;
-declare function render(vdom: Array<string | ReactiveState<any> | number>, namespace?: string): Array<Node>;
 export { render, computed, useMounted, useUnMounted, createComponent, html, h, h as createElement, MountElement, createRef, createState, watch, Directives, Condition, Switchable, useUpdated, useCreated, JSX };
