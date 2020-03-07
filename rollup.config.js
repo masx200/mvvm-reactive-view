@@ -15,7 +15,7 @@ const global = globalThis;
 const {WeakSet,WeakMap,Date, RegExp, Event, requestAnimationFrame, URL, Blob, Element, Node, String, Array, document, Object, Reflect, Proxy, Symbol, Boolean, Promise, Set, Math, Error, TypeError, JSON, Map, clearTimeout, setTimeout, parseInt} = globalThis;
 `;
 const babeltsxplugin = babel({
-allExtensions: true,
+
 extensions:[".ts",".tsx",".js",".jsx"],
     sourceMaps: true,
     inputSourceMap: true,
@@ -44,7 +44,8 @@ extensions:[".ts",".tsx",".js",".jsx"],
     presets: [["@babel/preset-typescript",
 {
 
-isTSX:true,allExtensions: true,
+isTSX:true,
+allExtensions: true,
 
 jsxPragma:"h"
 
