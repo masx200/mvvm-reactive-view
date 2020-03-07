@@ -44,36 +44,37 @@ function throwinvalideletype(type?: any): never {
     console.error(invalid_Virtualdom);
     throw TypeError(/*"invalid element type!"*/);
 }
-export default function render(
+export default render;
+ function render(
     vdom: Virtualdom< "" >,
     namespace?: string
 ): Node;
-export default function render(
+function render(
     vdom: string | ReactiveState<any> | number,
     namespace?: string
 ): Node;
 
-export default function render(
+function render(
     vdom: Virtualdom<string | Function>,
     namespace?: string
 ): Element;
 
-export default function render(
+function render(
     vdom: Vdomchildren,
     namespace?: string
 ): Array<Node | Element>;
-
-export default function render(
-    vdom: Array<Virtualdom<any>>,
-    namespace?: string
-): Array<Element>;
-
-export default function render(
+ function render(
     vdom: Array<string | ReactiveState<any> | number|Virtualdom< "" >>,
     namespace?: string
 ): Array<Node>;
 
-export default function render(
+function render(
+    vdom: Array<Virtualdom<any>>,
+    namespace?: string
+): Array<Element>;
+
+
+function render(
     vdom: Virtualdom<any> | string | number | ReactiveState<any> | Vdomchildren,
     namespace?: string
 ): Array<Node | Element> | Element | Node {
