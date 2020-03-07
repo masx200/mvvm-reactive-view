@@ -211,6 +211,9 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
                 "pragma": "h"
             }
         ],
+"@babel/plugin-proposal-optional-catch-binding",
+        "@babel/plugin-proposal-nullish-coalescing-operator"
+   ,
         "@babel/plugin-proposal-class-properties"
     ],
     "presets": [
@@ -243,7 +246,7 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 
 ### 可修改其`value`属性来改变状态的值，
 
-### 初始值类型有四种，原始基本类型，函数类型，数组类型，其他对象类型
+### 初始值类型一旦确定，后续只能把相同类型的值赋给它
 
 ### 创建之后，对其`value`赋值，必须和初始类型相同
 
