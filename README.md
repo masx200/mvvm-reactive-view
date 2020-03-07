@@ -1067,6 +1067,8 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
 ## 使用`createState`来生成一个引用形式响应式的状态，
 
+在初始创建时,其类型已经确定,后续只能把相同类型的值赋给其'value'属性,如果后续修改类型不一致,则报错
+
 ## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
 
 ### 如果初始值是原始类型则不能修改为对象类型，
