@@ -1191,17 +1191,17 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
 其回调函数的参数依次是:
 
-1.指令绑定的值,
+1.指令绑定的值,`any`
 
-2.真实`dom`元素,
+2.真实`dom`元素,`Element`
 
-3.虚拟元素,
+3.虚拟元素,`Virtualdom<any>`
 
-4.注册挂载时回调函数的函数
+4.注册挂载时回调函数的函数,`(call: () => void) => void`
 
-5.注册卸载时回调函数的函数,
+5.注册卸载时回调函数的函数,`(call: () => void) => void`
 
-6.注册更新时回调函数的函数,
+6.注册更新时回调函数的函数,`(call: () => void) => void`
 
 ## 函数`html`
 
