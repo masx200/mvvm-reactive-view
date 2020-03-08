@@ -3,12 +3,12 @@ import { isReactiveState } from "../Reactivity/isReactiveState";
 import watch from "../Reactivity/watch";
 import { isconnected } from "../UtilTools/isconnected";
 import { isstring } from "../UtilTools/util";
+import { getstatetype } from "src/Reactivity/getstatetype.js";
+import { TagType } from "src/Reactivity/TagType.js";
 
 export { createhtmlandtextdirective };
 function createhtmlandtextdirective(
-    seteletext: {
-        (e: Element, v: string): void;
-    },
+    seteletext: (e: Element, v: string) => void,
     errorname: string,
     ele: Element,
     text: string | ReactiveState<any>,
@@ -22,6 +22,9 @@ function createhtmlandtextdirective(
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
+            if (getstatetype(text) !== TagType.String) {
+                throw new TypeError();
+            }
             let cancel: undefined | (() => void);
             onmount(() => {
                 cancel = watch(text, () => {

@@ -5,31 +5,6 @@ import isprimitive, { Primitivetype } from "../UtilTools/isprimitive";
 // import { defineProperty } from "../UtilTools/reflect";
 import { isobject, isSet, gettagtype } from "../UtilTools/util";
 import ObserverTarget, { Listener } from "./custom-observer-target";
-import { Htmlelementconstructor } from "src/AttributeClass/createComponent";
-import { Custom } from "src/CustomClass/customclass";
-export type GetParentType<T> = T extends Custom
-    ? Custom
-    : T extends Htmlelementconstructor
-    ? Htmlelementconstructor
-    : T extends Array<any>
-    ? Array<any>
-    : T extends Function
-    ? Function
-    : T extends string
-    ? string
-    : T extends number
-    ? number
-    : T extends boolean
-    ? boolean
-    : T extends void
-    ? void
-    : T extends symbol
-    ? symbol
-    : T extends bigint
-    ? bigint
-    : T extends object
-    ? T
-    : never;
 export const addonelistner = Symbol("addonelistner");
 export const removeonelistner = Symbol("removeonelistner");
 
@@ -43,7 +18,7 @@ export const dispatchsymbol = Symbol("dispatch");
 export const subscribesymbol = Symbol("subscribe");
 export const removeallistenerssymbol = Symbol("removeallisteners");
 export const addallistenerssymbol = Symbol("addallisteners");
-const tagtypesym = Symbol("tagtype");
+export const tagtypesym = Symbol("tagtype");
 
 export default class ReactiveState<T> {
     constructor(init: { value: T });
@@ -104,7 +79,7 @@ export default class ReactiveState<T> {
 
         useststerecord(this);
     }
-    private [tagtypesym]: string;
+    [tagtypesym]: string;
     value!: T;
 
     readonly [Symbol.toStringTag] = "ReactiveState";
@@ -175,3 +150,4 @@ export default class ReactiveState<T> {
             : void 0;
     }
 }
+

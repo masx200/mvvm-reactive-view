@@ -6,9 +6,8 @@ import { getproperyreadproxy } from "./getproperyread-proxy";
 import handleobjectstate from "./handle-object-state";
 import ReactiveState, {
     dispatchsymbol,
-    invalid_primitive_or_object_state,
-    GetParentType
-} from "./reactivestate.js";
+    invalid_primitive_or_object_state} from "./reactivestate.js";
+import { GetParentType } from "./GetParentType";
 import { isReactiveState } from "./isReactiveState";
 export type StateType<T> = ReactiveState<GetParentType<T>> & GetParentType<T>;
 export const set_prototype = Set.prototype;
@@ -61,7 +60,7 @@ function createState<T extends Exclude<any, ReactiveState<any>>>(
     } else if (isobject(init)) {
         //
 
-        return handleobjectstate(init);
+        return handleobjectstate(init) as StateType<T>;
     } else {
         throw TypeError();
     }

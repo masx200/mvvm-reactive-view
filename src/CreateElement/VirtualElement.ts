@@ -7,7 +7,7 @@ import { isReactiveState } from "../Reactivity/isReactiveState";
 import { merge_entries } from "../UtilTools/merge-entries";
 import { defineProperty, preventExtensions } from "../UtilTools/reflect";
 import { isstring } from "../UtilTools/util";
-import { ElementAttrs } from "./create-element";
+import { ElementAttributes } from "./create-element";
 import { VaildVDom } from "./isvalidvdom";
 
 export function isVirtualdom(a: any): a is Virtualdom<any> {
@@ -20,7 +20,7 @@ function createVirtualElement<
     T extends Htmlelementconstructor | string | Function
 >(
     type: T,
-    props: ElementAttrs = {},
+    props: ElementAttributes = {},
     children: Vdomchildren = []
 ): Virtualdom<T> {
     props = Object.assign({}, props);
@@ -105,7 +105,7 @@ interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
 
     readonly type: T;
-    readonly props: ElementAttrs;
+    readonly props: ElementAttributes;
     readonly children: Vdomchildren;
     readonly directives: Record<string, any>;
 

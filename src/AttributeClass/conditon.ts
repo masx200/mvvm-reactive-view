@@ -1,15 +1,15 @@
 import watch from "src/Reactivity/watch";
 import { get } from "src/UtilTools/reflect";
 import { toArray } from "src/UtilTools/toArray";
-
 import createElement from "../CreateElement/create-element";
 import Virtualdom, { isVirtualdom } from "../CreateElement/VirtualElement";
 import { invalid_Virtualdom } from "../MountElement/MountElement";
-import ReactiveState from "../Reactivity/reactivestate.js";
 import { isReactiveState } from "../Reactivity/isReactiveState";
+import ReactiveState from "../Reactivity/reactivestate.js";
+import { getstatetype } from "../Reactivity/getstatetype";
 import render from "../RenderVirtual/render-vdom-to-real";
 import { replaceChild } from "../UtilTools/dom";
-import { isboolean, isstring, isundefined } from "../UtilTools/util";
+import { isstring, isundefined } from "../UtilTools/util";
 import {
     AttrChange,
     connectedCallback,
@@ -19,6 +19,7 @@ import {
 import { Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+import { TagType } from "src/Reactivity/TagType";
 
 export const invalid_ReactiveState = "invalid ReactiveState";
 const truevdomsymbol = Symbol("truevdom");
@@ -30,15 +31,19 @@ const handlefalse = Symbol("handlefalse");
 const currentelementsymbol = Symbol("currentelement");
 
 const Condition = function(
-    conditon: ReactiveState<boolean> | boolean,
+    conditon: ReactiveState<boolean>,
     iftrue?: Virtualdom<any> | string,
     iffalse?: Virtualdom<any> | string
 ): Virtualdom<Htmlelementconstructor> {
-    if (!(isReactiveState(conditon) || isboolean(conditon))) {
+    if (!isReactiveState(conditon)) {
         console.error(conditon);
         console.error(invalid_ReactiveState);
         throw TypeError();
     }
+    if (getstatetype(conditon) !== TagType.Boolean) {
+        throw new TypeError();
+    }
+
     [iftrue, iffalse].forEach((a) => {
         if (!(isundefined(a) || isVirtualdom(a) || isstring(a))) {
             console.error(a);
@@ -55,15 +60,7 @@ const Condition = function(
         [readysymbol] = false;
         [truevdomsymbol]: (Virtualdom<any> | string)[] = toArray(optionstrue);
 
-        /*isarray(optionstrue)
-    ? optionstrue.filter(Boolean)
-    : */
-
         [falsevdomsymbol]: (Virtualdom<any> | string)[] = toArray(optionsfalse);
-
-        /* isarray(optionsfalse)
-    ? optionsfalse.filter(Boolean)
-    : */
 
         [falseelesymbol]: Node[];
         [trueelesymbol]: Node[];
@@ -111,23 +108,6 @@ const Condition = function(
         }
         connectedCallback() {
             connectedCallback(this);
-
-            /*   if (!this[readysymbol]) {
-        
-        this[readysymbol] = true;
-
-        const attrs: { [key: string]: any } = createeleattr(this);
-        
-        if (true === attrs["value"]) {
-          get(this, handletrue).call(this);
-        }
-        if (false === attrs["value"]) {
-          get(this, handlefalse).call(this);
-          //
-        }
-      } */
-
-            //
         }
         disconnectedCallback() {
             disconnectedCallback(this);

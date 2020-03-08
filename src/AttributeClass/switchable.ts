@@ -17,6 +17,8 @@ import {
 import { autocreateclass, Htmlelementconstructor } from "./createComponent";
 import { componentsymbol } from "./iscomponent";
 import { readysymbol } from "./readysymbol";
+import { getstatetype } from "src/Reactivity/getstatetype";
+import { TagType } from "src/Reactivity/TagType";
 
 const cancel_watch_symbol = Symbol("cancel_watch");
 const cached_class_element = Symbol("cached_class_element");
@@ -28,6 +30,9 @@ function Switchable(
 ): Virtualdom<Htmlelementconstructor> {
     if (!isReactiveState(funstate)) {
         console.error(funstate);
+        throw new TypeError();
+    }
+    if (getstatetype(funstate) !== TagType.Function) {
         throw new TypeError();
     }
     class Switchable extends AttrChange {
@@ -47,19 +52,18 @@ function Switchable(
         static [componentsymbol] = componentsymbol;
         [readysymbol] = false;
         [switch_mount_symbol](eleclass: Custom | Htmlelementconstructor) {
-            eleclass = autocreateclass(eleclass);
-            /*  if (!isclassextendsHTMLElement(eleclass)) {
-        console.error(eleclass);
-        throw new TypeError();
-      } */
+            const eleclassconstructor = autocreateclass(eleclass);
 
-            const eleme = this[cached_class_element].get(eleclass);
+            const eleme = this[cached_class_element].get(eleclassconstructor);
             if (eleme) {
                 mountrealelement(eleme, this);
             } else {
-                const elementreal = render(h(eleclass));
+                const elementreal = render(h(eleclassconstructor));
 
-                this[cached_class_element].set(eleclass, elementreal);
+                this[cached_class_element].set(
+                    eleclassconstructor,
+                    elementreal
+                );
                 mountrealelement(elementreal, this);
             }
         }

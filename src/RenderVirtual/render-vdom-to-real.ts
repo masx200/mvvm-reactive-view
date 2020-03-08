@@ -81,7 +81,7 @@ function render(
             | Virtualdom<any>
         )[])
             .map((a) => render(a as any))
-            .flat(1 / 0);
+            .flat(1 / 0) as Array<Node | Element>;
     }
     if (isnumber(vdom) || isstring(vdom)) {
         const textnode = createtextnode(vdom);
@@ -151,10 +151,6 @@ function render(
                     : createnativeelement(type);
             }
         } else if (typeof type == "function") {
-            /*static defaultProps = {
-        name: 'Omi',
-        myAge: 18
-  }*/
             if (isobject(type["defaultProps"])) {
                 /*  改成了readonly属性 props*/
                 Object.assign(
@@ -166,9 +162,6 @@ function render(
                         })
                     )
                 );
-                /* vdom.props = JSON.parse(
-          JSON.stringify({ ...type["defaultProps"], ...vdom.props })
-        ); */
             }
 
             const propsjson = JSON.parse(
@@ -189,10 +182,6 @@ function render(
         dispatchcreated(element);
 
         applydirects(element, vdom);
-        /*  if (element) {
-      const attribute1: { [key: string]: any } = createeleattr(element);
-      Object.assign(
-        attribute1,
 
         /* 把属性为false的先不设置 */
 
@@ -242,8 +231,5 @@ function render(
     } else {
         throwinvalideletype(vdom);
     }
-
-    /* console.error(vdom);
-  throw new Error(); */
 }
 export { render };

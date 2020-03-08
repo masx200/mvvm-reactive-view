@@ -58,15 +58,19 @@ export interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-function createComponentold(custfun: Custom): Htmlelementconstructor {
+function createComponentold(
+    custfun: Custom,
+    options?: { defaultProps?: Record<string, any>; css?: string }
+): Htmlelementconstructor {
     if (isfunction(custfun)) {
         const cached_class = cached_create_componet.get(custfun);
         if (cached_class) {
             return cached_class;
         }
 
-        const defaultProps = get(custfun, "defaultProps");
-        const css = get(custfun, "css");
+        const defaultProps =
+            options?.defaultProps ?? get(custfun, "defaultProps");
+        const css = options?.css ?? get(custfun, "css");
         class Component extends AttrChange {
             [innerwatchrecords]: [ReactiveState<any>, Function][];
             [attributessymbol]: Record<string, ReactiveState<any>> = {};
@@ -191,7 +195,7 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
 
             [innerstatesymbol]: Array<ReactiveState<any>>;
             static [componentsymbol] = componentsymbol;
-            static css = isstring(css) && css ? css : undefined;
+            static css = !!(css && isstring(css)) ? css : undefined;
             [readysymbol] = false;
 
             static defaultProps = isobject(defaultProps)
@@ -269,16 +273,20 @@ function createComponentold(custfun: Custom): Htmlelementconstructor {
     }
 }
 
-const createComponent = (custfun: Custom | Htmlelementconstructor) =>
-    autocreateclass(custfun);
+const createComponent = autocreateclass;
 export default createComponent;
 export function autocreateclass(
-    custfun: Custom | Htmlelementconstructor
+    custfun: Custom | Htmlelementconstructor,
+    options?: { defaultProps?: Record<string, any>; css?: string }
 ): Htmlelementconstructor {
     if (isclassextendsHTMLElement(custfun)) {
-        return custfun;
+        if (options) {
+            return Object.assign(custfun, options);
+        } else {
+            return custfun;
+        }
     } else if (isfunction(custfun)) {
-        return createComponentold(custfun);
+        return createComponentold(custfun, options);
     } else {
         throw TypeError();
     }

@@ -1,23 +1,10 @@
-import CSS from "csstype/index";
 import Virtualdom from "./CreateElement/VirtualElement";
-import ReactiveState from "./Reactivity/reactivestate";
-interface attrfor<T> extends Array<any> {
-    0: ReactiveState<Array<T>>;
-    1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
-}
-interface Attributes {
-    $ref?: { value?: Element } | ((value: Element) => void);
-    $html?: string | ReactiveState<string>;
-    $text?: string | ReactiveState<string>;
-    $value?: ReactiveState<string>;
-
-    $checked?: ReactiveState<boolean>;
-    $mounted?: () => void;
-    $unmounted?: () => void;
-    $updated?: () => void;
-    $created?: () => void;
-    $for?: attrfor<any>;
-}
+import {
+    ElementAttributes,
+    styleprop,
+    classprop
+} from "./CreateElement/create-element";
+type Attributes = ElementAttributes;
 interface LinkHTMLAttributes extends HTMLAttributes {
     as?: string;
     crossorigin?: string;
@@ -854,20 +841,9 @@ interface AriaAttributes {
 
     "aria-valuetext"?: string;
 }
-type CSSProperties = CSS.Properties<string | number>;
-type Booleanish = boolean | "true" | "false";
-type styleprop =
-    | CSSProperties
-    | string
-    | object
-    | ReactiveState<string>
-    | ReactiveState<object>;
 
-type classprop =
-    | string
-    | Set<string>
-    | Array<string>
-    | ReactiveState<string | Set<string> | Array<string>>;
+type Booleanish = boolean | "true" | "false";
+
 interface HTMLAttributes extends AriaAttributes {
     domPropsInnerHTML?: string;
 

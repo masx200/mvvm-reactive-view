@@ -4,6 +4,8 @@ import { querySelectorAll } from "../UtilTools/dom";
 import { set } from "../UtilTools/reflect";
 import { toArray } from "../UtilTools/toArray";
 import { model } from "./model";
+import { getstatetype } from "src/Reactivity/getstatetype";
+import { TagType } from "src/Reactivity/TagType";
 export const Localchecked = (
     value: unknown,
 
@@ -11,6 +13,9 @@ export const Localchecked = (
     vdom: Virtualdom<any>
 ): void => {
     if (!isReactiveState(value)) {
+        throw new TypeError();
+    }
+    if (getstatetype(value) !== TagType.Boolean) {
         throw new TypeError();
     }
     console.log(element);

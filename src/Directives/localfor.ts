@@ -5,6 +5,8 @@ import render from "src/RenderVirtual/render-vdom-to-real";
 import { removeNode } from "src/UtilTools/dom";
 import { isarray, isfunction } from "src/UtilTools/util";
 import { generatechildrenvdoms } from "./generatechildrenvdoms";
+import { getstatetype } from "src/Reactivity/getstatetype";
+import { TagType } from "src/Reactivity/TagType";
 
 /* interface attrfor<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
@@ -24,6 +26,9 @@ export const localfor = (
     const [list, fun] = value;
     if (!isReactiveState(list) || !isfunction(fun)) {
         throw TypeError();
+    }
+    if (getstatetype(list) !== TagType.Array) {
+        throw new TypeError();
     }
 
     vdom.children.length = 0;

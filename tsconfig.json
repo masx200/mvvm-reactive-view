@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "preserveConstEnums": false,
         "checkJs": false,
         "jsxFactory": "h",
         "useDefineForClassFields": false,

@@ -19,5 +19,5 @@ export default class ObserverTarget {
     }
 }
 export interface Listener {
-    (): any;
+    (): void;
 }

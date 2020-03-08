@@ -1,6 +1,6 @@
-export default h;
+type CSSProperties = CSS.Properties<string | number>;
 
-export { h };
+import CSS from "csstype/index";
 import {
     autocreateclass,
     Htmlelementconstructor
@@ -18,21 +18,37 @@ import Virtualdom, {
     createVirtualElement,
     Vdomchildren
 } from "./VirtualElement";
-type styleprop =
+export type styleprop =
+    | CSSProperties
     | string
-    | object
+    | Record<string, string>
+    | ReactiveState<CSSProperties>
     | ReactiveState<string>
-    | ReactiveState<object>;
-
-type classprop =
+    | ReactiveState<Record<string, string>>;
+export type classprop =
     | string
     | Set<string>
     | Array<string>
     | ReactiveState<string | Set<string> | Array<string>>;
-export interface ElementAttrs {
+interface attrfor<T> extends Array<any> {
+    0: ReactiveState<Array<T>>;
+    1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
+}
+export interface ElementAttributes {
     style?: styleprop;
     class?: classprop;
     [key: string]: any;
+    $ref?: { value?: Element } | ((value: Element) => void);
+    $html?: string | ReactiveState<string>;
+    $text?: string | ReactiveState<string>;
+    $value?: ReactiveState<string>;
+
+    $checked?: ReactiveState<boolean>;
+    $mounted?: () => void;
+    $unmounted?: () => void;
+    $updated?: () => void;
+    $created?: () => void;
+    $for?: attrfor<any>;
 }
 
 function h<T extends Htmlelementconstructor | string | Custom>(
@@ -47,23 +63,18 @@ function h<T extends Vdomchildren>(
 ): T;
 function h<T extends Vdomchildren>(
     type: "",
-    props?: ElementAttrs,
+    props?: ElementAttributes,
     ...children: T
 ): T;
 function h<T extends Htmlelementconstructor | string | Custom>(
     type: T,
-    props?: ElementAttrs,
+    props?: ElementAttributes,
     ...children: Vdomchildren
 ): Virtualdom<T>;
 
-/* 
-h(type,...children)
-h(type,children)
-*/
-
 function h(
     type?: Htmlelementconstructor | string | Custom,
-    propsorchildren?: Vdomchildren | ElementAttrs,
+    propsorchildren?: Vdomchildren | ElementAttributes,
     ...children: Vdomchildren
 ) {
     if (isfunction(type)) {
@@ -91,24 +102,18 @@ function h(
 }
 function createElement<T extends Vdomchildren>(
     type: "",
-    props?: ElementAttrs,
+    props?: ElementAttributes,
     ...children: T
 ): T;
 function createElement<T extends Function | string>(
     type: T,
-    props?: ElementAttrs,
+    props?: ElementAttributes,
     ...children: Vdomchildren
 ): Virtualdom<T>;
 
-/* function createElement<T extends Vdomchildren>(
-  type: "",
-  props?: ElementAttrs,
-  ...children: T
-): T; */
-
 function createElement<T extends Function | string | Htmlelementconstructor>(
     type?: T,
-    props: ElementAttrs = {},
+    props: ElementAttributes = {},
     ...children: Vdomchildren
 ): Virtualdom<T> | Vdomchildren {
     let typenormalized: "" | Function | string =
@@ -149,3 +154,6 @@ function createElement<T extends Function | string | Htmlelementconstructor>(
     ); */
     }
 }
+export default h;
+
+export { h };

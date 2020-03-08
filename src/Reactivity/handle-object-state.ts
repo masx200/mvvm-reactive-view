@@ -17,7 +17,7 @@ import {
     isSet,
     issymbol
 } from "../UtilTools/util";
-import { set_prototype } from "./create-state";
+import { set_prototype, StateType } from "./create-state";
 import { isReactiveState } from "./isReactiveState";
 import ReactiveState, {
     dispatchsymbol,
@@ -27,7 +27,7 @@ import watch from "./watch";
 
 export default function<T extends Exclude<object, ReactiveState<any>>>(
     init: T
-): ReactiveState<T> & T {
+): StateType<T> {
     let initobj = init;
     const containReactiveState =
         isplainobject(init) &&
@@ -68,7 +68,7 @@ export default function<T extends Exclude<object, ReactiveState<any>>>(
         reactive,
 
         Object.assign({}, handler)
-    ) as ReactiveState<T> & T;
+    ) as StateType<T>;
 }
 const handler: ProxyHandler<object> = {};
 handler.ownKeys = (target) => {

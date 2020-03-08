@@ -1,4 +1,4 @@
-interface Ref<T = any | undefined> {
+export interface Ref<T = any | undefined> {
     value: T | undefined;
 }
 
