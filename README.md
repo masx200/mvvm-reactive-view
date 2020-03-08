@@ -121,7 +121,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/index.min.js";
 const inputref = createRef();
 const state1 = createState("hello");
-const stylestate = createState({ display: "block", width: "700px",color:"" });
+const stylestate = createState({ display: "block", width: "700px", color: "" });
 const vdom = html`
     <div style=${{ display: "block", width: "500px" }}>hello world!</div>
     <input
@@ -211,9 +211,8 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
                 "pragma": "h"
             }
         ],
-"@babel/plugin-proposal-optional-catch-binding",
-        "@babel/plugin-proposal-nullish-coalescing-operator"
-   ,
+        "@babel/plugin-proposal-optional-catch-binding",
+        "@babel/plugin-proposal-nullish-coalescing-operator",
         "@babel/plugin-proposal-class-properties"
     ],
     "presets": [

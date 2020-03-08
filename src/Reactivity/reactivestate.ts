@@ -150,4 +150,3 @@ export default class ReactiveState<T> {
             : void 0;
     }
 }
-

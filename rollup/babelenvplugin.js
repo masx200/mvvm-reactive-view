@@ -23,4 +23,4 @@ const babelenvplugin = babel({
         "@babel/plugin-proposal-nullish-coalescing-operator"
     ]
 });
-export{babelenvplugin}
+export { babelenvplugin };

@@ -6,7 +6,8 @@ import { getproperyreadproxy } from "./getproperyread-proxy";
 import handleobjectstate from "./handle-object-state";
 import ReactiveState, {
     dispatchsymbol,
-    invalid_primitive_or_object_state} from "./reactivestate.js";
+    invalid_primitive_or_object_state
+} from "./reactivestate.js";
 import { GetParentType } from "./GetParentType";
 import { isReactiveState } from "./isReactiveState";
 export type StateType<T> = ReactiveState<GetParentType<T>> & GetParentType<T>;
