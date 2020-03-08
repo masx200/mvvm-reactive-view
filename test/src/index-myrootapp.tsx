@@ -3,6 +3,8 @@
 // @ts-ignore
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
 import {
+    // @ts-ignore
+    h,
     createComponent,
     createElement,
     //   createElement,
@@ -12,6 +14,8 @@ import {
     MountElement,
     watch
 } from "./mvvm-view";
+Reflect.set(window, "h", h);
+
 // console.log([h, createElement]);
 const mycomapp = createComponent(() => {
     const inputpassword = createState("");

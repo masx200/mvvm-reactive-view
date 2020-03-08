@@ -35,23 +35,6 @@
         "alwaysStrict": true,
         "forceConsistentCasingInFileNames": true
     },
-    "include": [
-        "*.ts",
-        "*.tsx",
-
-        "**/*.ts",
-        "**/*.tsx"
-        // "./src/*.ts",
-        // "./src/**/*.ts",
-        // "./test/src/*.ts",
-        // "./*.ts",
-        // "./test/src/*.tsx"
-    ],
-    "exclude": [
-        // "./index.ts",
-        // "./dist/*.js",
-        // "node_modules/**/*.js",
-        // "*.js",
-        // "./jsx.ts"
-    ]
+    "include": ["*.ts", "*.tsx", "**/*.ts", "**/*.tsx"],
+    "exclude": []
 }
