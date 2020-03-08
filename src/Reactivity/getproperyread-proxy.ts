@@ -1,13 +1,7 @@
-import { isFunction, isobject, issymbol } from "../UtilTools/util";
-import {
-    get,
-    has,
-    ownKeys,
-    getOwnPropertyDescriptor
-} from "../UtilTools/reflect";
 import { combineproxy } from "src/others/combineproxy";
+import { get, getOwnPropertyDescriptor, has, ownKeys } from "../UtilTools/reflect";
+import { isFunction, isobject, issymbol } from "../UtilTools/util";
 import { StateType } from "./create-state";
-import ReactiveState from "./reactivestate";
 const handler: ProxyHandler<any> = {
     getOwnPropertyDescriptor(target, key) {
         if (issymbol(key)) {
@@ -54,9 +48,7 @@ const handler: ProxyHandler<any> = {
         }
     }
 };
-export function getproperyreadproxy<T extends ReactiveState<any>>(
-    a: T
-): StateType<T> {
+export function getproperyreadproxy<T extends any>(a: T): StateType<T> {
     // Uncaught TypeError: Reflect.getPrototypeOf called on non-object
     // const proto = "__proto__";
 

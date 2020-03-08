@@ -1129,34 +1129,140 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
 返回值为真实`DOM`元素数组
 
-## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
+## 使用`watch`函数
 
-## 使用`createState`来生成一个引用形式响应式的状态，
+用来监听状态的变化,执行回调函数,可在任何地方使用此函数,
 
-### 在其初始创建时,其类型已经确定,后续只能把相同类型的值赋给其'value'属性,如果后续修改类型不一致,则报错
+传参第一个是 `ReactiveState<any>`,或者 `ReactiveState<any>` 数组,
 
-## 响应式状态`ReactiveState`类,可修改其`value`属性来改变状态的值，
+传参第二个是回调函数,其参数是`unwrapped state`的数组,
+
+返回一个取消观察 `cancelwatch`函数`() => void`
+
+## 使用`createState`
+
+用来生成一个引用形式的响应式的状态，
+
+### 在其初始创建时,其类型已经确定,
+
+后续只能把相同类型的值赋给其'value'属性,如果后续修改类型不一致,则报错
+
+其类型来判断的方式是`Object.prototype.toString.call`
+
+### 响应式状态`ReactiveState`类,
+
+可修改其`value`属性来改变状态的值，
 
 ### 如果初始值是原始类型则不能修改为对象类型，
 
 ### 如果初始值是对象类型则不能修改为原始类型，
 
-## 计算属性`computed`,计算属性在处理一些复杂逻辑时是很有用的。
+传参是任意对象`T extends any`除了`ReactiveState<any>`
 
-### 第一个参数是 `ReactiveState`,或者 `ReactiveState` 数组,
+返回值为`ReactiveState<T>&T`
 
-### 第二个参数是回调函数,充当`getter`,返回一个响应式状态对象,回调函数参数是`unwrapped state`的数组
+## 计算属性`computed`,
 
-### 第三个参数可选，是`setter`函数
+计算属性在处理一些复杂逻辑时是很有用的。
 
-## 使用`Directives`函数来扩展指令
+### 第一个参数是
 
-## 函数`html`用来解析字符串模板,调用`createElement`,转换成虚拟 `dom`
+`ReactiveState<any>`,或者 `ReactiveState<any>` 数组,
 
-## 函数`h`等同于`createElement`,用来生成虚拟 `dom`,第一个参数可以是元素的标签名，或者`costum element`的构造函数，第二个参数可以是子元素数组，或者元素的`attributes`,后面的剩余参数都是子元素
+### 第二个参数是
 
-## 使用`MountElement`把"虚拟" `dom` 或者真实`Element`渲染到真实 `dom` 上
+回调函数,充当`getter`,
 
-## 使用`createRef`返回一个引用对象,可绑定到元素的`*ref`属性上,获取当前`dom元素`
+其回调函数参数是`unwrapped state`的数组
+
+### 第三个参数
+
+可选,是`setter`函数
+
+返回一个响应式状态对象,`ReactiveState`
+
+## 使用`Directives`函数
+
+用来扩展自定义指令
+
+第一个参数是指令的名称`string`
+
+第二个参数是创建指令的回调函数
+
+其回调函数的参数依次是:
+
+1.指令绑定的值,
+
+2.真实`dom`元素,
+
+3.虚拟元素,
+
+4.注册挂载时回调函数的函数
+
+5.注册卸载时回调函数的函数,
+
+6.注册更新时回调函数的函数,
+
+## 函数`html`
+
+用来解析字符串模板,
+
+可以使用 `hyperscript`
+
+自动调用`createElement`,
+
+转换成虚拟 `dom`
+
+## 函数`h`
+
+等同于`createElement`,
+
+用来生成虚拟 `dom`,
+
+第一个参数可以是元素的标签名，`string`
+
+或者`costum element`的构造函数，`Htmlelementconstructor | Custom`
+
+第二个参数可以是子元素数组，
+
+或者元素的`attributes`对象,
+
+后面的剩余参数都是子元素
+
+返回值是`Virtualdom`
+
+## 使用`MountElement`
+
+用来把`虚拟dom` 或者真实元素渲染到真实 `dom` 容器上
+
+第一个参数是`虚拟dom` 或真实元素,或真实元素数组,或虚拟元素数组
+
+第二个参数是容器元素,`Element`
+
+返回容器元素
+
+## 使用`createRef`
+
+用来创建一个引用对象,
+
+此函数的第一个参数可选,是引用对象的初始值
+
+返回引用对象`{ value: any | undefined;}`
+
+可绑定到元素的`ref`指令属性上,
+
+获取当前`dom元素`
 
 ## `虚拟 dom` `Virtualdom`接口
+
+属性`type`:是元素的标签名`string`或者组件的构造函数`Htmlelementconstructor`
+
+属性`props`:是绑定的非响应式属性对象
+
+属性`children`:是子元素数组
+
+属性`directives`:是绑定的指令对象
+
+属性`onevent`:是绑定的事件对象
+
+属性`bindattr`:是绑定的响应式属性对象
