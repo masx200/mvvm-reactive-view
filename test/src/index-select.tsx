@@ -1,5 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { h, MountElement } from "./mvvm-view";
+/**@jsx h */
+import { h,  MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 // console.log([h, createElement]);
 const vdom = (
     <select

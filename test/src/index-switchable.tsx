@@ -1,11 +1,8 @@
-import {
-    createComponent,
-    createState,
-    h,
-    render,
-    Switchable,
-    watch
-} from "./mvvm-view";
+/**@jsx h */
+import { createComponent, createState, h,  render, Switchable, watch } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 // import { watch } from "../../dist";
 const com1 = createComponent(() => {
     return <h1>component 1</h1>;

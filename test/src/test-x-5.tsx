@@ -1,9 +1,8 @@
-import {
-    Condition,
-    createElement,
-    createState,
-    MountElement
-} from "./mvvm-view";
+/**@jsx h */
+import { Condition, createElement, createState, h, MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 (() => {
     var mystate = createState(true);
     //   watch(mystate, console.log);

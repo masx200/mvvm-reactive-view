@@ -1,22 +1,18 @@
+/**@jsx h */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import modulecss from "./main.b9c7ffd191cff11a9b96.css";
 import {
-    // @ts-ignore
-    h,
-    createComponent,
-    createElement,
+createComponent, createElement,
     //   createElement,
-    createRef,
-    createState,
-    html,
-    MountElement,
-    watch
+    createRef, createState,
+    // @ts-ignore
+    h, html, MountElement, watch
 } from "./mvvm-view";
-Reflect.set(window, "h", h);
+// Reflect.set(window, "h", h);
 
-// console.log([h, createElement]);
+console.log([h, createElement]);
 const mycomapp = createComponent(() => {
     const inputpassword = createState("");
     const inputref = createRef();

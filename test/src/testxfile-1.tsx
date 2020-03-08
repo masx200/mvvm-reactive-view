@@ -1,10 +1,8 @@
-import {
-    createState,
-    //   createElement,
-    html,
-    MountElement,
-    watch
-} from "./mvvm-view";
+/**@jsx h */
+import { createState, h, html, MountElement, watch } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 (() => {
     const colortext = createState("blue");
     const stylestate = createState({
@@ -32,7 +30,10 @@ import {
         clearInterval(inter);
     }, 10000);
     // @ts-ignore
-    watch([colortext, stylestate], (a, b) => console.log([a, { ...b }]));
+    watch([colortext], (a) => console.log([a]));
+    watch(stylestate, (b) => {
+        console.log([{ ...b }]);
+    });
     document.body.appendChild(
         MountElement(vdom, document.createElement("div"))
     );

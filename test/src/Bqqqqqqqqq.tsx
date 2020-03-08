@@ -1,3 +1,4 @@
+/**@jsx h */
 import { createElement, h, MountElement } from "./mvvm-view";
 class Bqqqqqqqqq extends HTMLElement {}
 class Aqqqqqqqqq extends HTMLElement {}
@@ -13,3 +14,6 @@ document.body.appendChild(
         document.createElement("div")
     )
 );
+
+// console.log(MountElement);
+console.log(h);

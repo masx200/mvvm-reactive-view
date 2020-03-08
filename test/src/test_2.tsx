@@ -1,4 +1,8 @@
-import { createState, html, MountElement, watch } from "./mvvm-view";
+/**@jsx h */
+import { createState, h, html, MountElement, watch } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 function test_2() {
     const state1 = createState("<a>绑定textcontent</a>");
     const state2 = createState("<a>绑定innerhtml</a>");

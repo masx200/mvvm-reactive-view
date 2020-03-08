@@ -1,11 +1,11 @@
+/**@jsx h */
 import {
     //   createElement,
-    createRef,
-    createState,
-    html,
-    MountElement,
-    watch
+    createRef, createState, h, html, MountElement, watch
 } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 (() => {
     const stylestate = createState({
         display: "block",

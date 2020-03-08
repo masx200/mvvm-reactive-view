@@ -1,24 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    createComponent,
-    createElement,
-    //   createElement,
-    createState,
-    h,
-    MountElement,
-    render,
-    useCreated,
-    useMounted,
-    useUnMounted,
-    useUpdated,
-    watch
-} from "./mvvm-view";
+/**@jsx h */
+import { Vdomchildren } from "src/CreateElement/VirtualElement";
+import ReactiveState from "src/Reactivity/reactivestate";
+import { createComponent, createElement, createState, h, MountElement, render, useCreated, useMounted, useUnMounted, useUpdated, watch } from "./mvvm-view";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import mycss from "./test.css";
-import ReactiveState from "src/Reactivity/reactivestate";
-import { Vdomchildren } from "src/CreateElement/VirtualElement";
+
+// console.log(MountElement);
+console.log(h);
 // console.log([h, createElement]);
 
 var mycom = createComponent(

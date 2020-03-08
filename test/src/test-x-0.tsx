@@ -1,9 +1,8 @@
-import {
-    createElement,
-    //   createElement,
-    html,
-    MountElement
-} from "./mvvm-view";
+/**@jsx h */
+import { createElement, h, html, MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 {
     const vdom = createElement("div", [
         html`

@@ -1,9 +1,10 @@
+/**@jsx h */
 // @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createState, html, MountElement, watch } from "./mvvm-view";
+import { createState, h, html, MountElement, watch } from "./mvvm-view";
 
 // console.log(MountElement);
-// console.log(h);
+console.log(h);
 // console.log([].flat);
 
 // console.log(Object.fromEntries);

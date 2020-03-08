@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/**@jsx h */
 import {
     computed,
     createRef,
@@ -7,6 +7,9 @@ import {
     MountElement,
     watch
 } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 // console.log([h, createElement]);
 const lirefs: Element[] = [];
 // console.log()

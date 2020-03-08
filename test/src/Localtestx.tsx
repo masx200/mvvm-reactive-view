@@ -1,4 +1,8 @@
-import { createElement, h, MountElement } from "./mvvm-view";
+/**@jsx h */
+import { createElement, h,  MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 const Localtestx = async () => {
     const defaultProps = { cccccc: "bbbbbbb" };
     const css = await (

@@ -1,6 +1,10 @@
 /**@jsx h */
+import { createRef, h,  MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
+/**@jsx h */
 const container = document.createElement("div");
-import { createRef, h, MountElement } from "./mvvm-view";
 // Directives("mounted", (call, ele, vdom, onmount, onunmount) => {
 //     console.log([call, ele, vdom, onmount, onunmount]);
 //     if (typeof call === "function") {

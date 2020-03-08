@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    computed,
-    createComponent,
-    createElement,
-    MountElement,
-    useUpdated,
-    watch,
-    render,
-    h
-} from "./mvvm-view";
+/**@jsx h */
+import { computed, createComponent, createElement, h,  MountElement, render, useUpdated, watch } from "./mvvm-view";
 import { useMousePosition } from "./useMousePosition";
+
+// console.log(MountElement);
+console.log(h);
 const mycomapp = createComponent(() => {
     const { x, y } = useMousePosition();
     const plus = computed(x, (x) => {

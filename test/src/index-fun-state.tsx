@@ -1,3 +1,4 @@
+/**@jsx h */
 import { createState, watch } from "./mvvm-view";
 
 const funstate = createState(() => {});

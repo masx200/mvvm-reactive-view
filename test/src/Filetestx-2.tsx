@@ -1,5 +1,9 @@
-import { createElement, MountElement } from "./mvvm-view";
+/**@jsx h */
 import { myclasscomponent } from "./index3-life-cycle";
+import { createElement, h, MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 {
     const vdom2 = createElement(myclasscomponent, [
         <form

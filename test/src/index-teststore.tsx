@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    createComponent,
-    createElement,
-    //   createElement,
-    createState,
-    h,
-    MountElement,
-    watch
-} from "./mvvm-view";
+/**@jsx h */
+import { createComponent, createElement, createState,  h, MountElement, watch } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 // console.log([h, createElement]);
 const number = createState(10);
 function increment() {

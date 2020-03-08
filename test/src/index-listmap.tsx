@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/**@jsx h */
 import {
-    Condition,
-    createState,
+Condition, createState,
     // @ts-ignore
-    h,
-    MountElement,
-    // @ts-ignore
-    watch
+    h, MountElement, watch
 } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 const refarray: Element[] = [];
 const liststate = createState(
     Array(10)

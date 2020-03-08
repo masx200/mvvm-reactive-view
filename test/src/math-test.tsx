@@ -1,4 +1,8 @@
-import { html, MountElement } from "./mvvm-view";
+/**@jsx h */
+import { h, html, MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 (() => {
     var vdom = html`
         <math>

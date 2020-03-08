@@ -1,6 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { createElement, MountElement } from "./mvvm-view";
+/**@jsx h */
+import { createElement, h, MountElement } from "./mvvm-view";
+
+// console.log(MountElement);
+console.log(h);
 // console.log([h, createElement]);
 
 // setTimeout(
