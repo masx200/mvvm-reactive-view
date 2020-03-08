@@ -6,9 +6,7 @@
         "useDefineForClassFields": false,
         "plugins": [],
         "allowJs": true,
-        "paths": {
-            // "htm": ["./@types/htm"]
-        },
+        "paths": {},
         "declarationDir": "./@types",
         "resolveJsonModule": true,
         "esModuleInterop": true,
