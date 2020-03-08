@@ -30,7 +30,14 @@ const inputOptions1 = {
         commonjs(),
 
         // sourcemaps(),
-        typescript(),
+        typescript({
+            tsconfig: (resolvedConfig) => ({
+                ...resolvedConfig,
+                declaration: true,
+                // jsx: "preserve",
+                declarationDir: "./@types/"
+            })
+        }),
         beautifyterserplugin
     ]
 };

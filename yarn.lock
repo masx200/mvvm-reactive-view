@@ -800,10 +800,10 @@
   resolved "https://registry.npmjs.org/@masx200/deep-observe-agent-proxy/-/deep-observe-agent-proxy-1.2.1.tgz#31820184860a97f314b90eb49dab409a99ed274b"
   integrity sha512-6PPArgg9Vlhs6yW5bcnD7Qy39gx+S4QLp7Or/q4tNaz1yUdn5J1ITuRg/tLyjOh1zoZ7EA3Q5pvct48E9WX0XQ==
 
-"@masx200/dom-element-attribute-agent-proxy@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@masx200/dom-element-attribute-agent-proxy/-/dom-element-attribute-agent-proxy-1.3.0.tgz#1562da9a436518d8f7b9f2843291c67d02d2e18e"
-  integrity sha512-6IOWwpmbfdHA1WFWAx3Nckdq66CVU5DfwO1iWXK6d/zwgaiQ2VssG3ds8BY1HmaQtn+kTZEqeRuN+vmvXaFa2w==
+"@masx200/dom-element-attribute-agent-proxy@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npmjs.org/@masx200/dom-element-attribute-agent-proxy/-/dom-element-attribute-agent-proxy-1.3.1.tgz#b6d00ee61a299a73a5c28ae489be781ac47f58e8"
+  integrity sha512-iZPFpR9T7j2jua5Pzsy5NPdIKkw+Sl0605LL79/pXymPLvJCNEgr9Ytx59gWH/lmY5dfhX2x8J18UkLeUAj3PQ==
 
 "@rollup/plugin-commonjs@^11.0.2":
   version "11.0.2"

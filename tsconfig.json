@@ -7,7 +7,7 @@
         "plugins": [],
         "allowJs": true,
         "paths": {},
-        "declarationDir": "./@types",
+        "declarationDir": "./dist",
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "allowUnreachableCode": false,

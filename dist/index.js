@@ -512,97 +512,136 @@ const t = [ "input", "textarea", "option", "select" ];
 
 var e = (e, r, n) => "value" === r && t.includes(e) && "button" !== n || "selected" === r && "option" === e || "checked" === r && "input" === e || "muted" === r && "video" === e;
 
-const r = /\B([A-Z])/g, n = t => t.replace(r, "-$1").toLowerCase(), o = window.String, i = window.Reflect, {get: u, set: c, ownKeys: s} = i, f = "value";
-
-function a(t) {
-    return "object" == typeof t && null !== t;
-}
-
-function l(t) {
+function r(t) {
     return "string" == typeof t;
 }
 
-function p(t) {
+function n(t) {
+    return "object" == typeof t && null !== t;
+}
+
+function o(t) {
     return t instanceof Set;
 }
 
-const y = t => "input" === d(t) && ("checkbox" === u(t, "type") || "radio" === u(t, "type"));
-
-function d(t) {
+function i(t) {
     return t.tagName.toLowerCase();
 }
 
-function w(t, e, r) {
+const u = window.String, s = window.Reflect, {get: c, set: a, ownKeys: f} = s, p = t => "input" === i(t) && ("checkbox" === c(t, "type") || "radio" === c(t, "type")), l = /\B([A-Z])/g;
+
+function y(t, e) {
+    return t.getAttribute(e);
+}
+
+function h(t, e, r) {
     return t.setAttribute(e, r);
 }
 
-function g(t, e) {
+function d(t, e) {
     return t.removeAttribute(e);
 }
+
+var w, v = function(t, e) {
+    if (!e.has(t)) throw new TypeError("attempted to get private field on non-instance");
+    return e.get(t);
+};
+
+class g {
+    constructor(t) {
+        w.set(this, void 0), function(t, e, r) {
+            if (!e.has(t)) throw new TypeError("attempted to set private field on non-instance");
+            e.set(t, r);
+        }(this, w, t);
+        const e = g.prototype;
+        Reflect.ownKeys(e).forEach(t => {
+            let r = c(e, t);
+            "function" == typeof r && a(this, t, r.bind(this));
+        });
+    }
+    ownKeys() {
+        const t = v(this, w), e = function(t) {
+            const e = i(t);
+            return "textarea" === e || "select" === e || "input" === e && "text" === c(t, "type");
+        }(t), r = function(t) {
+            return t.getAttributeNames();
+        }(t);
+        return Array.from(new Set([ ...r, p(t) ? "checked" : void 0, e ? "value" : void 0 ].flat(1 / 0).filter(t => !!t)));
+    }
+    get(t, n) {
+        const o = v(this, w);
+        if (e(i(o), u(n), c(o, "type"))) return c(o, u(n));
+        {
+            const t = y(o, u(n));
+            if ("" === t) return !0;
+            if (null === t) return;
+            if (!r(t)) return;
+            try {
+                return JSON.parse(u(t));
+            } catch (e) {
+                return t;
+            }
+        }
+    }
+    set(t, s, f) {
+        const p = v(this, w);
+        if ("function" == typeof f) throw TypeError();
+        if (e(i(p), u(s), c(p, "type"))) return a(p, u(s), f);
+        if ("style" === s) {
+            const t = r(f) ? f : n(f) ? (g = f, g = JSON.parse(JSON.stringify(g)), Object.entries(g).map(([t, e]) => {
+                return [ (r = t, r.replace(l, "-$1").toLowerCase()).trim(), e ];
+                var r;
+            }).map(([t, e]) => t + ":" + e).join(";")) : u(f);
+            return a(c(p, "style"), "cssText", t.trim()), !0;
+        }
+        if ("class" === s && n(f)) {
+            const t = (y = f, Array.isArray(y) ? f.join(" ") : o(f) ? [ ...f ].join(" ") : u(f));
+            return h(p, u(s), t), !0;
+        }
+        return !1 === f || null == f ? (d(p, u(s)), !0) : o(f) ? (h(p, u(s), JSON.stringify([ ...f ])), 
+        !0) : (!0 === f && (f = ""), h(p, u(s), n(f) ? JSON.stringify(f) : u(f)), !0);
+        var y, g;
+    }
+    deleteProperty(t, e) {
+        return d(v(this, w), u(e)), !0;
+    }
+    has(t, e) {
+        return function(t, e) {
+            return t.hasAttribute(e);
+        }(v(this, w), u(e));
+    }
+    defineProperty() {
+        return !1;
+    }
+    getOwnPropertyDescriptor(t, e) {
+        const r = {
+            enumerable: !0,
+            configurable: !0,
+            writable: !0
+        }, n = y(v(this, w), u(e));
+        return void 0 !== n ? {
+            value: n,
+            ...r
+        } : void 0;
+    }
+    setPrototypeOf() {
+        return !1;
+    }
+}
+
+w = new WeakMap;
+
+const b = new WeakMap;
 
 function createeleattragentreadwrite(t) {
     !function(t) {
         if (!(t instanceof Element)) throw TypeError();
     }(t);
+    const e = b.get(t);
+    if (e) return e;
     var r = Object.create(null);
-    const i = new Proxy(r, {
-        ownKeys() {
-            const e = function(t) {
-                const e = d(t);
-                return "textarea" === e || "select" === e || "input" === e && "text" === u(t, "type");
-            }(t), r = function(t) {
-                return t.getAttributeNames();
-            }(t);
-            return Array.from(new Set([ ...r, y(t) ? "checked" : void 0, e ? f : void 0 ].flat(1 / 0).filter(t => !!t)));
-        },
-        get(r, n) {
-            if (e(d(t), o(n), u(t, "type"))) return u(t, o(n));
-            {
-                const e = function(t, e) {
-                    return t.getAttribute(e);
-                }(t, o(n));
-                if ("" === e) return !0;
-                if (null === e) return;
-                if (!l(e)) return;
-                try {
-                    return JSON.parse(o(e));
-                } catch (t) {
-                    return e;
-                }
-            }
-        },
-        set(r, i, s) {
-            if ("function" == typeof s) throw TypeError();
-            if (e(d(t), o(i), u(t, "type"))) return c(t, o(i), s);
-            if ("style" === i) {
-                const e = l(s) ? s : a(s) ? (y = s, y = JSON.parse(JSON.stringify(y)), Object.entries(y).map(([t, e]) => [ n(t).trim(), e ]).map(([t, e]) => t + ":" + e).join(";")) : o(s);
-                return c(u(t, "style"), "cssText", e.trim()), !0;
-            }
-            if ("class" === i && a(s)) {
-                const e = (f = s, Array.isArray(f) ? s.join(" ") : p(s) ? [ ...s ].join(" ") : o(s));
-                return w(t, o(i), e), !0;
-            }
-            return !1 === s || null == s ? (g(t, o(i)), !0) : p(s) ? (w(t, o(i), JSON.stringify([ ...s ])), 
-            !0) : (!0 === s && (s = ""), w(t, o(i), a(s) ? JSON.stringify(s) : o(s)), !0);
-            var f, y;
-        },
-        deleteProperty: (e, r) => (g(t, o(r)), !0),
-        has: (t, e) => s(i).includes(e),
-        defineProperty: () => !1,
-        getOwnPropertyDescriptor(t, e) {
-            const r = {
-                enumerable: !0,
-                configurable: !0,
-                writable: !0
-            }, n = u(i, e);
-            return void 0 !== n ? {
-                value: n,
-                ...r
-            } : void 0;
-        },
-        setPrototypeOf: () => !1
-    });
-    return i;
+    const n = new g(t), o = new Proxy(r, n);
+    return b.set(t, o), o;
 }
 
 function getcreated() {
@@ -1309,7 +1348,7 @@ function readonlyproxy(target) {
 const componentsstylesheet = new Map;
 
 function createlinkstylesheet(url) {
-    return render(h("link", {
+    return render(h$1("link", {
         href: url,
         rel: "stylesheet"
     }));
@@ -1407,7 +1446,7 @@ function prefixcssrules(cssRulesarray, prefix) {
 }
 
 function parsecsstext(text) {
-    const styleelement = render(h("style", [ text ]));
+    const styleelement = render(h$1("style", [ text ]));
     const otherdocument = createanotherhtmldocument();
     appendchild(otherdocument.documentElement, styleelement);
     return Array.from(get(get(styleelement, "sheet"), "cssRules"));
@@ -1594,20 +1633,21 @@ const elementsymbol = Symbol("innerelement");
 
 const inner_vdom_symbol = Symbol("innervdom");
 
-function createComponentold(custfun) {
-    var _a, _b, _c;
+function createComponentold(custfun, options) {
+    var _a, _b;
+    var _c, _d, _e;
     if (isfunction(custfun)) {
         const cached_class = cached_create_componet.get(custfun);
         if (cached_class) {
             return cached_class;
         }
-        const defaultProps = get(custfun, "defaultProps");
-        const css = get(custfun, "css");
+        const defaultProps = (_a = options === null || options === void 0 ? void 0 : options.defaultProps) !== null && _a !== void 0 ? _a : get(custfun, "defaultProps");
+        const css = (_b = options === null || options === void 0 ? void 0 : options.css) !== null && _b !== void 0 ? _b : get(custfun, "css");
         class Component extends AttrChange {
             constructor(propsjson = {}, children = []) {
                 super();
-                this[_a] = {};
-                this[_c] = false;
+                this[_c] = {};
+                this[_e] = false;
                 const css = get(this.constructor, "css");
                 if (css) {
                     const prefix = this.tagName.toLowerCase();
@@ -1674,7 +1714,7 @@ function createComponentold(custfun) {
                     throw TypeError();
                 }
             }
-            [(_a = attributessymbol, _b = componentsymbol, _c = readysymbol, firstinstalledcallback)]() {
+            [(_c = attributessymbol, _d = componentsymbol, _e = readysymbol, firstinstalledcallback)]() {
                 const thencallbackfirst = () => {
                     seteletext(this, "");
                     return waitloadallstyle(prefix, document.head);
@@ -1724,8 +1764,8 @@ function createComponentold(custfun) {
                 }
             }
         }
-        Component[_b] = componentsymbol;
-        Component.css = isstring(css) && css ? css : undefined;
+        Component[_d] = componentsymbol;
+        Component.css = !!(css && isstring(css)) ? css : undefined;
         Component.defaultProps = isobject(defaultProps) ? JSON.parse(JSON.stringify(defaultProps)) : undefined;
         cached_create_componet.set(custfun, Component);
         return Component;
@@ -1736,19 +1776,23 @@ function createComponentold(custfun) {
     }
 }
 
-const createComponent = custfun => autocreateclass(custfun);
+const createComponent = autocreateclass;
 
-function autocreateclass(custfun) {
+function autocreateclass(custfun, options) {
     if (isclassextendsHTMLElement(custfun)) {
-        return custfun;
+        if (options) {
+            return Object.assign(custfun, options);
+        } else {
+            return custfun;
+        }
     } else if (isfunction(custfun)) {
-        return createComponentold(custfun);
+        return createComponentold(custfun, options);
     } else {
         throw TypeError();
     }
 }
 
-function h(type, propsorchildren, ...children) {
+function h$1(type, propsorchildren, ...children) {
     if (isfunction(type)) {
         type = autocreateclass(type);
     }
@@ -1773,6 +1817,10 @@ function createElement(type, props = {}, ...children) {
     }
 }
 
+function getstatetype(state) {
+    return state[tagtypesym];
+}
+
 const invalid_ReactiveState = "invalid ReactiveState";
 
 const truevdomsymbol = Symbol("truevdom");
@@ -1791,10 +1839,13 @@ const currentelementsymbol = Symbol("currentelement");
 
 const Condition = function(conditon, iftrue, iffalse) {
     var _a, _b, _c, _d, _e;
-    if (!(isReactiveState(conditon) || isboolean(conditon))) {
+    if (!isReactiveState(conditon)) {
         console.error(conditon);
         console.error(invalid_ReactiveState);
         throw TypeError();
+    }
+    if (getstatetype(conditon) !== "Boolean") {
+        throw new TypeError;
     }
     [ iftrue, iffalse ].forEach(a => {
         if (!(isundefined(a) || isVirtualdom(a) || isstring(a))) {
@@ -1857,7 +1908,7 @@ const Condition = function(conditon, iftrue, iffalse) {
         }
     }
     Condition[_b] = componentsymbol;
-    const vdom = h(Condition);
+    const vdom = h$1(Condition);
     return vdom;
 };
 
@@ -1871,6 +1922,9 @@ function Switchable(funstate) {
     var _a, _b, _c;
     if (!isReactiveState(funstate)) {
         console.error(funstate);
+        throw new TypeError;
+    }
+    if (getstatetype(funstate) !== "Function") {
         throw new TypeError;
     }
     class Switchable extends AttrChange {
@@ -1888,13 +1942,13 @@ function Switchable(funstate) {
             });
         }
         [(_a = cached_class_element, _b = componentsymbol, _c = readysymbol, switch_mount_symbol)](eleclass) {
-            eleclass = autocreateclass(eleclass);
-            const eleme = this[cached_class_element].get(eleclass);
+            const eleclassconstructor = autocreateclass(eleclass);
+            const eleme = this[cached_class_element].get(eleclassconstructor);
             if (eleme) {
                 mountrealelement(eleme, this);
             } else {
-                const elementreal = render(h(eleclass));
-                this[cached_class_element].set(eleclass, elementreal);
+                const elementreal = render(h$1(eleclassconstructor));
+                this[cached_class_element].set(eleclassconstructor, elementreal);
                 mountrealelement(elementreal, this);
             }
         }
@@ -1912,7 +1966,7 @@ function Switchable(funstate) {
         }
     }
     Switchable[_b] = componentsymbol;
-    return h(Switchable);
+    return h$1(Switchable);
 }
 
 var n$1 = function(t, s, r, e) {
@@ -1948,7 +2002,7 @@ function htm(s) {
 const myhtm = htm;
 
 function htmlold(...inargs) {
-    return apply(myhtm, h, inargs);
+    return apply(myhtm, h$1, inargs);
 }
 
 function html(...args) {
@@ -2005,6 +2059,9 @@ function model(types, bindattribute, domprop, eventnames, value, vdom) {
 
 const Localchecked = (value, element, vdom) => {
     if (!isReactiveState(value)) {
+        throw new TypeError;
+    }
+    if (getstatetype(value) !== "Boolean") {
         throw new TypeError;
     }
     console.log(element);
@@ -2139,6 +2196,9 @@ const localfor = (value, ele, vdom, onmount, onunmount, onupdated) => {
     if (!isReactiveState(list) || !isfunction(fun)) {
         throw TypeError();
     }
+    if (getstatetype(list) !== "Array") {
+        throw new TypeError;
+    }
     vdom.children.length = 0;
     const changecallback = () => {
         const data = list.valueOf();
@@ -2178,6 +2238,9 @@ function createhtmlandtextdirective(seteletext, errorname, ele, text, onmount, o
                 seteletext(ele, text);
             });
         } else if (isReactiveState(text)) {
+            if (getstatetype(text) !== "String") {
+                throw new TypeError;
+            }
             let cancel;
             onmount(() => {
                 cancel = watch(text, () => {
@@ -2263,6 +2326,9 @@ const Localupdated = (call, ele, vdom, onmount, onunmount, onupdated) => {
 
 const Localvalue = (value, element, vdom) => {
     if (isReactiveState(value)) {
+        if (getstatetype(value) !== "String") {
+            throw new TypeError;
+        }
         console.log(element);
         model([ "input", "textarea", "select" ], "value", "value", [ "change", "input" ], value, vdom);
     } else {
@@ -2335,7 +2401,7 @@ function n$2(e) {
     return Array.isArray(e);
 }
 
-const l$1 = window.Reflect, {ownKeys: i$1, deleteProperty: c$1, apply: a$1, construct: d$1, defineProperty: f$1, get: u$1, getOwnPropertyDescriptor: p$1, getPrototypeOf: s$1, has: y$1, set: v, setPrototypeOf: g$1} = l$1;
+const l$1 = window.Reflect, {ownKeys: i$1, deleteProperty: c$1, apply: a$1, construct: d$1, defineProperty: f$1, get: u$1, getOwnPropertyDescriptor: p$1, getPrototypeOf: s$1, has: y$1, set: v$1, setPrototypeOf: g$1} = l$1;
 
 function P(e) {
     return "object" == typeof e && null !== e;
@@ -2354,13 +2420,13 @@ function S(l, h, O = [], x = l) {
     }(l)) return l;
     if (w$1(l) || P(l)) {
         let E;
-        return o$1(l) ? (E = new Set([ ...l ]), v(E, "add", t => (e$1.add.call(l, t), h(x, O, void 0, void 0), 
-        e$1.add.call(E, t))), v(E, "delete", t => (e$1.delete.call(l, t), h(x, O, void 0, void 0), 
-        e$1.delete.call(E, t))), v(E, "clear", () => (e$1.clear.call(l), h(x, O, void 0, void 0), 
-        e$1.clear.call(E)))) : r$1(l) ? (E = new Map([ ...l ]), v(E, "clear", () => (t$2.clear.call(l), 
-        h(x, O, void 0, void 0), t$2.clear.call(E))), v(E, "set", (e, r) => (t$2.set.call(l, e, r), 
-        h(x, O, void 0, void 0), t$2.set.call(E, e, r))), v(E, "delete", e => (t$2.delete.call(l, e), 
-        h(x, O, void 0, void 0), t$2.delete.call(E, e)))) : E = n$2(l) ? [] : w$1(l) ? () => {} : {}, 
+        return o$1(l) ? (E = new Set([ ...l ]), v$1(E, "add", t => (e$1.add.call(l, t), 
+        h(x, O, void 0, void 0), e$1.add.call(E, t))), v$1(E, "delete", t => (e$1.delete.call(l, t), 
+        h(x, O, void 0, void 0), e$1.delete.call(E, t))), v$1(E, "clear", () => (e$1.clear.call(l), 
+        h(x, O, void 0, void 0), e$1.clear.call(E)))) : r$1(l) ? (E = new Map([ ...l ]), 
+        v$1(E, "clear", () => (t$2.clear.call(l), h(x, O, void 0, void 0), t$2.clear.call(E))), 
+        v$1(E, "set", (e, r) => (t$2.set.call(l, e, r), h(x, O, void 0, void 0), t$2.set.call(E, e, r))), 
+        v$1(E, "delete", e => (t$2.delete.call(l, e), h(x, O, void 0, void 0), t$2.delete.call(E, e)))) : E = n$2(l) ? [] : w$1(l) ? () => {} : {}, 
         o$1(l) || r$1(l) || g$1(E, null), new Proxy(E, {
             defineProperty: (e, t, r) => (h(x, [ ...O, String(t) ], y$1(r, "value") ? r.value : w$1(r.get) ? r.get() : void 0, u$1(l, t)), 
             f$1(l, t, r)),
@@ -2379,7 +2445,7 @@ function S(l, h, O = [], x = l) {
                 var r = p$1(l, t);
                 return n$2(l) && "length" === t ? r : r ? (r.configurable = !0, r) : void 0;
             },
-            set: (e, t, r) => (w$1(h) && h(x, [ ...O, String(t) ], r, u$1(l, t)), v(l, t, r)),
+            set: (e, t, r) => (w$1(h) && h(x, [ ...O, String(t) ], r, u$1(l, t)), v$1(l, t, r)),
             get(e, t) {
                 var n = u$1(l, t);
                 return w$1(n) && (o$1(l) || r$1(l)) ? u$1(E, t).bind(E) : w$1(n) || P(n) ? S(n, h, [ ...O, String(t) ], l) : n;
@@ -2594,5 +2660,5 @@ function createState(init) {
     }
 }
 
-export { Condition, extenddirectives as Directives, MountElement, Switchable, computed, createComponent, h as createElement, createRef, createState, h, html, render, useCreated, useMounted, useUnMounted, useUpdated, watch };
+export { Condition, extenddirectives as Directives, MountElement, Switchable, computed, createComponent, h$1 as createElement, createRef, createState, h$1 as h, html, render, useCreated, useMounted, useUnMounted, useUpdated, watch };
 //# sourceMappingURL=index.js.map

@@ -27,7 +27,7 @@ const inputOptions1 = {
         typescript({
             tsconfig: (resolvedConfig) => ({
                 ...resolvedConfig,
-                declaration: false,
+                declaration: true,
                 // jsx: "preserve",
                 declarationDir: "test/dist"
             })
