@@ -5,11 +5,10 @@ interface Htmlelementconstructor {
     defaultProps?: Record<string, any>;
     css?: string;
 }
-declare const createComponent: typeof autocreateclass;
-declare function autocreateclass(custfun: Custom | Htmlelementconstructor, options?: {
-    defaultProps?: Record<string, any>;
-    css?: string;
-}): Htmlelementconstructor;
+declare const createComponent: (custfun: Custom, options?: {
+    defaultProps?: Record<string, any> | undefined;
+    css?: string | undefined;
+} | undefined) => Htmlelementconstructor;
 type Primitivetype = string | number | boolean | undefined | bigint;
 interface Listener {
     (): void;

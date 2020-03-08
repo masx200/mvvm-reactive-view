@@ -273,7 +273,12 @@ function createComponentold(
     }
 }
 
-const createComponent = autocreateclass;
+const createComponent = function(
+    custfun: Custom,
+    options?: { defaultProps?: Record<string, any>; css?: string }
+): Htmlelementconstructor {
+    return autocreateclass(custfun, options);
+};
 export default createComponent;
 export function autocreateclass(
     custfun: Custom | Htmlelementconstructor,

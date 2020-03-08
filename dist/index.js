@@ -1776,7 +1776,9 @@ function createComponentold(custfun, options) {
     }
 }
 
-const createComponent = autocreateclass;
+const createComponent = function(custfun, options) {
+    return autocreateclass(custfun, options);
+};
 
 function autocreateclass(custfun, options) {
     if (isclassextendsHTMLElement(custfun)) {

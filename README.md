@@ -1060,15 +1060,74 @@ https://github.com/masx200/mvvm-reactive-view/blob/master/@types/index.d.ts
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
-## 函数`Switchable`用来生成可自由切换组件的`虚拟DOM`,传入一个`ReactiveState`,修改`ReactiveState`的`value`值,组件就会切换
+## 函数`Switchable`
 
-## 使用`Condition`函数来实现条件渲染,返回值是`虚拟dom`
+用来生成可自由切换组件的`虚拟DOM`,
 
-## 使用`createComponent` 来创建组件,传参是一个组件初始化函数,返回一个`web component custom element`
+传入一个`ReactiveState<Htmlelementconstructor | Custom>`,表示可改变的组件
 
-## 使用`useMounted`和`useUnMounted`来给组件添加挂载和卸载时执行的`callback函数`,
+修改`ReactiveState`的`value`值,组件就会切换,
 
-## 函数`render`把`虚拟dom`转换成真实`dom`元素
+返回`Virtualdom<Htmlelementconstructor>`
+
+## 使用`Condition`函数
+
+用来实现条件渲染,传入三个参数,
+
+第一个是 `ReactiveState<boolean>`,表示可改变的条件真假
+
+第二个是 `string | Virtualdom<any> | undefined`,表示条件为真时的挂载的虚拟元素
+
+第三个是 `string | Virtualdom<any> | undefined`,表示条件为徦时的挂载的虚拟元素
+
+返回值是`Virtualdom<Htmlelementconstructor>`
+
+## 使用`createComponent`
+
+用来定义组件,
+
+第一个参数是一个组件初始化函数,类型为`Custom`
+
+第二个参数可选,为组件的默认属性和`css`样式,其类型为
+
+```
+{
+    defaultProps?: Record<string, any>;
+    css?: string;
+}
+```
+
+返回一个`web component custom element`的`Htmlelementconstructor`
+
+## 注册生命周期函数
+
+使用`useCreated`来添加组件创建之后的回调函数
+
+使用`useMounted`来添加组件挂载之后的回调函数
+
+使用`useUpdated`来添加组件及其子节点更新之后的回调函数
+
+使用`useUnMounted`来添加组件卸载之后的回调函数
+
+来给组件生命周期时执行的`callback函数`,传参类型为`()=>void`
+
+只能在组件定义函数中的顶层使用
+
+## 函数`render`
+
+把`虚拟dom`转换成真实`dom`元素
+
+第一个参数是`虚拟元素`,`Virtualdom<any>`
+
+第二个参数是可选的元素的命名空间,`string`
+
+返回值为真实`DOM`元素
+
+第一个参数是`虚拟元素`数组,`Virtualdom<any>[]`
+
+第二个参数是可选的元素的命名空间,`string`
+
+返回值为真实`DOM`元素数组
 
 ## 使用`watch`函数来监听状态的变化,执行回调函数,可在任何地方使用此函数,传参 `ReactiveState`,或者 `ReactiveState` 数组,回调函数参数是`unwrapped state`的数组,返回一个`取消观察` `cancelwatch`函数
 
