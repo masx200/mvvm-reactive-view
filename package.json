@@ -1,5 +1,5 @@
 {
-    "typings": "./@types/all.d.ts",
+    "typings": "./typesdeclare/all.d.ts",
     "type": "module",
     "version": "1.8.2",
     "main": "./dist/index.min.js",

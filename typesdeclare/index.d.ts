@@ -87,7 +87,7 @@ type Vdomchildren = Array<VaildVDom>;
 interface Virtualdom<T extends Htmlelementconstructor | string | Function> {
     readonly [Symbol.toStringTag]: "VirtualElement";
     readonly type: T;
-    readonly props: ElementAttributes;
+    readonly props: Record<string, any>;
     readonly children: Vdomchildren;
     readonly directives: Record<string, any>;
     readonly onevent: Record<string, Array<EventListener>>;

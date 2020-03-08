@@ -35,7 +35,7 @@ const inputOptions1 = {
                 ...resolvedConfig,
                 declaration: true,
                 // jsx: "preserve",
-                declarationDir: "./@types/"
+                declarationDir: "./typesdeclare/"
             })
         }),
         beautifyterserplugin

@@ -1056,7 +1056,7 @@ const vdomobj = html`
 
 # `API` : 可在 `TypeScript` 类型声明文件中查看更多
 
-https://github.com/masx200/mvvm-reactive-view/blob/master/@types/index.d.ts
+https://github.com/masx200/mvvm-reactive-view/blob/master/typesdeclare/index.d.ts
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 
