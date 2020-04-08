@@ -377,7 +377,26 @@ postcss({
 });
 ```
 
+# 样式隔离实现原理
+
 在运行时,使用浏览器自带的`css`解析器，解析 `css` 文本变成`cssrule`,然后给`selectorText`添加前缀,再转换成 `css` 文本
+
+转换前
+
+```css
+div
+{
+transform:rotate(30deg);
+}
+```
+转换后
+
+```css
+foobar div
+{
+transform:rotate(30deg);
+}
+```
 
 ## 关于组件,元素的生命周期
 
