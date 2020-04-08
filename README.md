@@ -55,7 +55,10 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 ```js
 import "@masx200/mvvm-reactive-view/dist/polyfill.js";
 ```
+```html
 
+<script src="https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/polyfill.js"></script>
+```
 ## 需要`webcomponent` `custom-elements` `polyfill`
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
