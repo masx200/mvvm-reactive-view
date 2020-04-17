@@ -255,23 +255,27 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 ## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 `redux,vuex,mobx`
 
 ```jsx
-const number = createState(10);
-function increment() {
-    number.value++;
+function create(init) {
+    const number = createState(init);
+    function increment() {
+        number.value++;
+    }
+    function decrement() {
+        number.value--;
+    }
+    const get = () => number.value;
+    const store = { get, increment, decrement };
+    return store;
 }
-function decrement() {
-    number.value--;
-}
-const store = { number, increment, decrement };
-
+const count = create(0);
 const mycomappclass = createComponent(() => {
     const vdom = (
         <div>
             <h3> 点击数字</h3>
-            <h2>number:{store.number}</h2>
+            <h2>number:{count.get()}</h2>
 
-            <button onclick={store.increment}>increment</button>
-            <button onclick={store.decrement}>decrement</button>
+            <button onclick={count.increment}>increment</button>
+            <button onclick={count.decrement}>decrement</button>
         </div>
     );
     return vdom;
@@ -279,11 +283,12 @@ const mycomappclass = createComponent(() => {
 const vdom = [
     createElement(mycomappclass),
     createElement(mycomappclass),
-    createElement(mycomappclass)
+    createElement(mycomappclass),
 ];
 const container = document.createElement("div");
 MountElement(vdom, container);
 document.body.appendChild(container);
+
 ```
 
 # 条件渲染
