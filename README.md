@@ -255,7 +255,18 @@ https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
 ## 轻松使用全局共享状态,可以非常简单的集中统一管理,抛弃 `redux,vuex,mobx`
 
 ```jsx
+/**
+ * @param {number} init
+ * @returns{{
+    get: () => number;
+    increment: () => void;
+    decrement: () => void;
+}}
+ */
 function create(init) {
+    /**
+     * @type{{value:number}}
+     */
     const number = createState(init);
     function increment() {
         number.value++;
