@@ -30,7 +30,7 @@ export type classprop =
     | Set<string>
     | Array<string>
     | ReactiveState<string | Set<string> | Array<string>>;
-interface attrfor<T> extends Array<any> {
+export interface ATTRFOR<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
     1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
 }
@@ -48,7 +48,7 @@ export interface ElementAttributes {
     $unmounted?: () => void;
     $updated?: () => void;
     $created?: () => void;
-    $for?: attrfor<any>;
+    $for?: ATTRFOR<any>;
 }
 
 function h<T extends Htmlelementconstructor | string | Custom>(

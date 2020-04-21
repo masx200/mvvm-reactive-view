@@ -8,7 +8,7 @@ import { generatechildrenvdoms } from "./generatechildrenvdoms";
 import { getstatetype } from "src/Reactivity/getstatetype";
 import { TagType } from "src/Reactivity/TagType";
 
-/* interface attrfor<T> extends Array<any> {
+/* interface ATTRFOR<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
     1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
 } */

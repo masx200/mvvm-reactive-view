@@ -1,5 +1,10 @@
 import { combineproxy } from "src/others/combineproxy";
-import { get, getOwnPropertyDescriptor, has, ownKeys } from "../UtilTools/reflect";
+import {
+    get,
+    getOwnPropertyDescriptor,
+    has,
+    ownKeys
+} from "../UtilTools/reflect";
 import { isFunction, isobject, issymbol } from "../UtilTools/util";
 import { StateType } from "./create-state";
 const handler: ProxyHandler<any> = {

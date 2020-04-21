@@ -5,15 +5,16 @@
         "jsxFactory": "h",
         "useDefineForClassFields": false,
         "plugins": [],
-        "allowJs": true,
+        "allowJs": false,
         "paths": {},
-        "declarationDir": "./dist",
+        "declarationDir": "./",
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "allowUnreachableCode": false,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "declaration": true,
+        "declarationMap": true,
         "noUnusedLocals": true,
         "module": "esnext",
         "target": "es2019",
@@ -21,7 +22,7 @@
         "removeComments": true,
         "pretty": true,
         "strict": true,
-        "outDir": "./dist",
+        "outDir": "./",
         "downlevelIteration": true,
         "sourceMap": true,
         "strictNullChecks": true,
@@ -35,6 +36,6 @@
         "alwaysStrict": true,
         "forceConsistentCasingInFileNames": true
     },
-    "include": ["*.ts", "*.tsx", "**/*.ts", "**/*.tsx"],
-    "exclude": []
+    "include": ["*.ts", "*.tsx", "**/*.ts"],
+    "exclude": ["dist/*.*", "test/**/*.*"]
 }

@@ -648,27 +648,27 @@ interface AriaAttributes {
     "aria-busy"?: boolean | "false" | "true";
     /**
      * Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
-     * @see aria-pressed @see aria-selected.
+     *  aria-pressed  aria-selected.
      */
     "aria-checked"?: boolean | "false" | "mixed" | "true";
     /**
      * Defines the total number of columns in a table, grid, or treegrid.
-     * @see aria-colindex.
+     *  aria-colindex.
      */
     "aria-colcount"?: number;
     /**
      * Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid.
-     * @see aria-colcount @see aria-colspan.
+     *  aria-colcount  aria-colspan.
      */
     "aria-colindex"?: number;
     /**
      * Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid.
-     * @see aria-colindex @see aria-rowspan.
+     *  aria-colindex  aria-rowspan.
      */
     "aria-colspan"?: number;
     /**
      * Identifies the element (or elements) whose contents or presence are controlled by the current element.
-     * @see aria-owns.
+     *  aria-owns.
      */
     "aria-controls"?: string;
 
@@ -683,17 +683,17 @@ interface AriaAttributes {
         | "time";
     /**
      * Identifies the element (or elements) that describes the object.
-     * @see aria-labelledby
+     *  aria-labelledby
      */
     "aria-describedby"?: string;
     /**
      * Identifies the element that provides a detailed, extended description for the object.
-     * @see aria-describedby.
+     *  aria-describedby.
      */
     "aria-details"?: string;
     /**
      * Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable.
-     * @see aria-hidden @see aria-readonly.
+     *  aria-hidden  aria-readonly.
      */
     "aria-disabled"?: boolean | "false" | "true";
     /**
@@ -703,7 +703,7 @@ interface AriaAttributes {
     "aria-dropeffect"?: "none" | "copy" | "execute" | "link" | "move" | "popup";
     /**
      * Identifies the element that provides an error message for the object.
-     * @see aria-invalid @see aria-describedby.
+     *  aria-invalid  aria-describedby.
      */
     "aria-errormessage"?: string;
 
@@ -730,24 +730,24 @@ interface AriaAttributes {
         | "dialog";
     /**
      * Indicates whether the element is exposed to an accessibility API.
-     * @see aria-disabled.
+     *  aria-disabled.
      */
     "aria-hidden"?: boolean | "false" | "true";
     /**
      * Indicates the entered value does not conform to the format expected by the application.
-     * @see aria-errormessage.
+     *  aria-errormessage.
      */
     "aria-invalid"?: boolean | "false" | "true" | "grammar" | "spelling";
 
     "aria-keyshortcuts"?: string;
     /**
      * Defines a string value that labels the current element.
-     * @see aria-labelledby.
+     *  aria-labelledby.
      */
     "aria-label"?: string;
     /**
      * Identifies the element (or elements) that labels the current element.
-     * @see aria-describedby.
+     *  aria-describedby.
      */
     "aria-labelledby"?: string;
 
@@ -765,7 +765,7 @@ interface AriaAttributes {
     /**
      * Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
      * between DOM elements where the DOM hierarchy cannot be used to represent the relationship.
-     * @see aria-controls.
+     *  aria-controls.
      */
     "aria-owns"?: string;
     /**
@@ -775,22 +775,22 @@ interface AriaAttributes {
     "aria-placeholder"?: string;
     /**
      * Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
-     * @see aria-setsize.
+     *  aria-setsize.
      */
     "aria-posinset"?: number;
     /**
      * Indicates the current "pressed" state of toggle buttons.
-     * @see aria-checked @see aria-selected.
+     *  aria-checked  aria-selected.
      */
     "aria-pressed"?: boolean | "false" | "mixed" | "true";
     /**
      * Indicates that the element is not editable, but is otherwise operable.
-     * @see aria-disabled.
+     *  aria-disabled.
      */
     "aria-readonly"?: boolean | "false" | "true";
     /**
      * Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified.
-     * @see aria-atomic.
+     *  aria-atomic.
      */
     "aria-relevant"?:
         | "additions"
@@ -804,27 +804,27 @@ interface AriaAttributes {
     "aria-roledescription"?: string;
     /**
      * Defines the total number of rows in a table, grid, or treegrid.
-     * @see aria-rowindex.
+     *  aria-rowindex.
      */
     "aria-rowcount"?: number;
     /**
      * Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid.
-     * @see aria-rowcount @see aria-rowspan.
+     *  aria-rowcount  aria-rowspan.
      */
     "aria-rowindex"?: number;
     /**
      * Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid.
-     * @see aria-rowindex @see aria-colspan.
+     *  aria-rowindex  aria-colspan.
      */
     "aria-rowspan"?: number;
     /**
      * Indicates the current "selected" state of various widgets.
-     * @see aria-checked @see aria-pressed.
+     *  aria-checked  aria-pressed.
      */
     "aria-selected"?: boolean | "false" | "true";
     /**
      * Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
-     * @see aria-posinset.
+     *  aria-posinset.
      */
     "aria-setsize"?: number;
 
@@ -835,7 +835,7 @@ interface AriaAttributes {
     "aria-valuemin"?: number;
     /**
      * Defines the current value for a range widget.
-     * @see aria-valuetext.
+     *  aria-valuetext.
      */
     "aria-valuenow"?: number;
 
@@ -892,7 +892,7 @@ interface HTMLAttributes extends AriaAttributes {
 
     /**
      * Hints at the type of data that might be entered by the user while editing the element or its contents
-     * @see https:
+     *  https:
      */
     inputmode?:
         | "none"
@@ -905,7 +905,7 @@ interface HTMLAttributes extends AriaAttributes {
         | "search";
     /**
      * Specify that a standard HTML element should behave like a defined custom built-in element
-     * @see https:
+     *  https:
      */
     is?: string;
 }

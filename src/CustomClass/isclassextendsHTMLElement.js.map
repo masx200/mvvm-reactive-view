@@ -1,0 +1,1 @@
+{"version":3,"file":"isclassextendsHTMLElement.js","sourceRoot":"","sources":["isclassextendsHTMLElement.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,UAAU,EAAE,MAAM,mBAAmB,CAAC;AAE/C,MAAM,UAAU,yBAAyB,CAAC,SAEzC;IACG,OAAO,CAAC,CAAC,CACL,UAAU,CAAC,SAAS,CAAC;QACrB,SAAS,CAAC,SAAS;QACnB,SAAS,CAAC,SAAS,YAAY,WAAW,CAC7C,CAAC;AACN,CAAC"}

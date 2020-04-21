@@ -55,10 +55,11 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 ```js
 import "@masx200/mvvm-reactive-view/dist/polyfill.js";
 ```
-```html
 
+```html
 <script src="https://cdn.jsdelivr.net/gh/masx200/mvvm-reactive-view@latest/dist/polyfill.js"></script>
 ```
+
 ## 需要`webcomponent` `custom-elements` `polyfill`
 
 https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
@@ -294,12 +295,11 @@ const mycomappclass = createComponent(() => {
 const vdom = [
     createElement(mycomappclass),
     createElement(mycomappclass),
-    createElement(mycomappclass),
+    createElement(mycomappclass)
 ];
 const container = document.createElement("div");
 MountElement(vdom, container);
 document.body.appendChild(container);
-
 ```
 
 # 条件渲染
@@ -403,17 +403,16 @@ postcss({
 转换前
 
 ```css
-div
-{
-transform:rotate(30deg);
+div {
+    transform: rotate(30deg);
 }
 ```
+
 转换后
 
 ```css
-foobar div
-{
-transform:rotate(30deg);
+foobar div {
+    transform: rotate(30deg);
 }
 ```
 
@@ -1014,7 +1013,7 @@ let vdom = (
 其类型为
 
 ```ts
-interface attrfor<T> extends Array<any> {
+interface ATTRFOR<T> extends Array<any> {
     0: ReactiveState<Array<T>>;
     1: (v: ReactiveState<T>, i: number) => Virtualdom<any>;
 }
@@ -1094,7 +1093,7 @@ const vdomobj = html`
 
 # `API` : 可在 `TypeScript` 类型声明文件中查看更多
 
-https://github.com/masx200/mvvm-reactive-view/blob/master/typesdeclare/index.d.ts
+https://github.com/masx200/mvvm-reactive-view/blob/master/dist/index.d.ts
 
 https://github.com/masx200/mvvm-reactive-view/blob/master/src/jsx.ts
 

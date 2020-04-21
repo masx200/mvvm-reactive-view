@@ -1,0 +1,1 @@
+{"version":3,"file":"useMousePosition.d.ts","sourceRoot":"","sources":["useMousePosition.ts"],"names":[],"mappings":"AAAA,OAAO,EAKH,SAAS,EACZ,MAAM,aAAa,CAAC;AAGrB,wBAAgB,gBAAgB,IAAI;IAChC,CAAC,EAAE,SAAS,CAAC,MAAM,CAAC,CAAC;IACrB,CAAC,EAAE,SAAS,CAAC,MAAM,CAAC,CAAC;CACxB,CAcA"}

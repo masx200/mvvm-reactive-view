@@ -1,0 +1,1 @@
+{"version":3,"file":"custom-observer-target.d.ts","sourceRoot":"","sources":["custom-observer-target.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,OAAO,cAAc;IAC/B,SAAS,EAAE,GAAG,CAAC,QAAQ,CAAC,CAAa;IACrC,WAAW,CAAC,QAAQ,EAAE,QAAQ,GAAG,IAAI;IAKrC,QAAQ;IAQR,cAAc,CAAC,QAAQ,EAAE,QAAQ,GAAG,IAAI;CAI3C;AACD,MAAM,WAAW,QAAQ;IACrB,IAAI,IAAI,CAAC;CACZ"}

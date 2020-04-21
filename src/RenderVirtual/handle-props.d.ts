@@ -1,0 +1,5 @@
+import { handleprops } from "./handleprops";
+import { applydirects } from "./applydirects";
+export { applydirects };
+export default handleprops;
+//# sourceMappingURL=handle-props.d.ts.map

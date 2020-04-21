@@ -1,0 +1,1 @@
+{"version":3,"file":"generatechildrenvdoms.d.ts","sourceRoot":"","sources":["generatechildrenvdoms.ts"],"names":[],"mappings":"AAAA,OAAO,UAA4B,MAAM,kCAAkC,CAAC;AAE5E,OAAO,aAAa,MAAM,8BAA8B,CAAC;AACzD,wBAAgB,qBAAqB,CACjC,SAAS,EAAE,aAAa,CAAC,KAAK,CAAC,GAAG,CAAC,CAAC,EACpC,GAAG,EAAE,CAAC,CAAC,EAAE,aAAa,CAAC,GAAG,CAAC,EAAE,CAAC,EAAE,MAAM,KAAK,UAAU,CAAC,GAAG,CAAC,qBAc7D"}
